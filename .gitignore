@@ -1,0 +1,10 @@
+Thumbs.db
+compass_app_log.txt
+*.DS_Store
+*.sass-cache
+*.scssc
+venv
+.DS_Store?
+.Trashes
+*.pyc
+.idea
