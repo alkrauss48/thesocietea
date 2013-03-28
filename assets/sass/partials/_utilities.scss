@@ -28,3 +28,17 @@
 		*zoom:1;
 	}
 }
+
+// put a container around the iframe embed, add this mixing and pass in the video height and width. be sure to remove the heighth and width attributes from the youtube or vimeo embed code.
+@mixin responsive_video($video_height, $video_width) {
+	position:relative;
+	height:0;
+	padding-bottom: $video_height/$video_width + '%';
+	& > iframe {
+		position:absolute;
+		top:0;
+		left:0;
+		width:100%;
+		height:100%;
+	}
+}
