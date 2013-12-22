@@ -6,16 +6,16 @@
 
 /*Start SUSY Grid */
 @import "susy";
-$total-columns 	:	18;
-$column-width	:	4em;
+$total-columns 	:	12;
+$column-width	:	3.5em;
 $gutter-width	:	1.5em;
-$grid-padding	:	0; 
+$grid-padding	:	1.5em; 
 /* End SUSY Grid */
 
 @import "partials/normalize"; 
 @import "partials/utilities"; 
 @import "partials/layout";
 @import "partials/navigation"; 
-@inport "partials/typography";
+@import "partials/typography";
 @import "partials/colors";
 
