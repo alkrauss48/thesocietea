@@ -12,15 +12,6 @@ $gutter-width	:	1.5em;
 $grid-padding	:	1.5em; 
 /* End SUSY Grid */
 
-@import "partials/colors";
-@import "partials/typography";
 @import "partials/normalize"; 
-@import "partials/utilities"; 
-@import "partials/layout";
-@import "partials/navigation"; 
-<<<<<<< HEAD
-@import "partials/typography";
-@import "partials/colors";
-=======
->>>>>>> 294841a902724fa1969094d8ef5aa6ebcb563164
+@import "partials/utilities";
 
