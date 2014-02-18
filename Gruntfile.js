@@ -13,23 +13,17 @@ module.exports = function(grunt) {
 		}
 	  }		  
 	},
-    compass: {
+    sass: {
 	  dist: {
 	    options: {
-	      config: 'config.rb',
-	      sassDir: 'assets/sass',
-	      cssDir: 'assets/css',
-	      environment: 'production',
-	      outputStyle: 'compressed',
-	      relativeAssets: true
-	    }
-	  }
-	},
-	connect: {
-	  server: {
-	    options: {
-	      port: 9001,
-	      base: ''
+	      style: 'compressed',
+	      compass: 'true',
+	      sourcemap: false
+	    },
+	    files: {
+		    'assets/css/screen.css' : [
+		    'assets/sass/screen.scss'
+		   ]
 	    }
 	  }
 	},
@@ -39,10 +33,11 @@ module.exports = function(grunt) {
       },
 	  sass: {
 		files: [
-		  'assets/sass/*.scss'
+		  'assets/sass/*.scss',
+		  'assets/sass/partials/*.scss'
 		],
 		tasks: [
-		  'compass'
+		  'sass'
 		], 
 	  }
     },
@@ -51,14 +46,12 @@ module.exports = function(grunt) {
   // Load the plugin that provides the "uglify" task.
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-compass');
-  grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-sass');
 
   // Default task(s).
   grunt.registerTask('default', [
   	'uglify',
-  	'compass',
-  	'connect',
+  	'sass',
   	'watch'
   	]);
 
