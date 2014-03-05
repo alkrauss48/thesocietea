@@ -14,6 +14,14 @@ module.exports = function (grunt) {
                         'assets/js/ie/*.js'
                     ]
                 }
+            },
+            dev: {
+	            files: {
+		            'assets/js/scripts.min.js': [
+                        'assets/js/lib/*.js',
+                        'assets/js/_*.js'
+                    ]
+	            }
             }
         },
         sass: {
@@ -43,7 +51,15 @@ module.exports = function (grunt) {
                 ],
                 tasks: [
                     'sass'
-                ],
+                ]
+            },
+            uglify: {
+	            files: [
+	            	'assets/js/_*.js'
+	            ],
+	            tasks: [
+	            	'uglify:dev'
+	            ]
             }
         },
     });
@@ -54,7 +70,7 @@ module.exports = function (grunt) {
 
     // Default task(s).
     grunt.registerTask('default', [
-        'uglify',
+        'uglify:dist',
         'sass',
         'watch'
     ]);
