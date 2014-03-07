@@ -3,6 +3,13 @@ module.exports = function (grunt) {
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+        coffee: {
+          compile: {
+            files: {
+              'assets/js/_coffee.js': ['assets/coffee/*.coffee']
+            }
+          }
+        },
         uglify: {
             dist: {
                 files: {
@@ -53,6 +60,12 @@ module.exports = function (grunt) {
                     'sass'
                 ]
             },
+            coffee: {
+              files: [
+                'assets/coffee/*.coffee'
+              ],
+              tasks: ['coffee']
+            },
             uglify: {
 	            files: [
 	            	'assets/js/_*.js'
@@ -67,9 +80,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-coffee');
 
     // Default task(s).
     grunt.registerTask('default', [
+        'coffee',
         'uglify:dist',
         'sass',
         'watch'

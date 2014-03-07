@@ -8,3 +8,4 @@ venv
 .Trashes
 *.pyc
 .idea
+node_modules/
