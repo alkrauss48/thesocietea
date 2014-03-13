@@ -33,6 +33,7 @@ module.exports = function (grunt) {
             dist: {
                 options: {
                     style: 'compressed',
+                    bundleExec: true,
                     compass: true,
                     sourcemap: false,
                     lineNumbers: true,
