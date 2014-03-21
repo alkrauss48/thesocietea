@@ -1,8 +1,12 @@
 {
-    "name": "project_name",
+    "name": "site-start",
     "version": "0.1.0",
-    "author": "author_name <author_email>",
-    "homepage": "author_url",
+    "author": "Staplegun.US",
+    "homepage": "https://github.com/Staplegun-US/site-start",
+    "repository" : {
+      "type"  : "git",
+      "url"   : "https://github.com/Staplegun-US/site-start"
+    },
     "devDependencies": {
         "grunt": "~0.4.2",
         "grunt-contrib-uglify": "~0.3.2",
