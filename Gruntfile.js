@@ -13,17 +13,12 @@ module.exports = function (grunt) {
         uglify: {
             dist: {
                 files: {
-                    'assets/js/scripts.min.js': [
-                        'assets/js/lib/*.js',
-                        'assets/js/_*.js'
-                    ],
-                    'assets/js/ie.min.js': [
-                        'assets/js/ie/*.js'
-                    ]
+                    'assets/js/scripts.min.js': [ 'assets/js/_*.js'   ],
+                    'assets/js/ie.min.js':      [ 'assets/js/ie/*.js' ]
                 },
-		options: {
-			sourceMap: true
-		}
+                options: {
+                  sourceMap: true
+                }
             },
             dev: {
 	            files: {
