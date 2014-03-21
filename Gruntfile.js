@@ -20,7 +20,10 @@ module.exports = function (grunt) {
                     'assets/js/ie.min.js': [
                         'assets/js/ie/*.js'
                     ]
-                }
+                },
+		options: {
+			sourceMap: true
+		}
             },
             dev: {
 	            files: {
