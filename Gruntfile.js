@@ -32,24 +32,30 @@ module.exports = function (grunt) {
                     require: 'susy'
                 },
                 files: {
-                    'assets/css/screen.css': [
-                        'assets/sass/screen.scss'
-                    ]
+                    'assets/css/screen.css': [ 'assets/sass/concat.scss' ]
                 }
             }
+        },
+        concat: {
+          options: {
+            separator: ';',
+          },
+          dist: {
+            src: ['assets/sass/*.scss', '!assets/sass/concat.scss'],
+            dest: 'assets/sass/concat.scss'
+          }
         },
         watch: {
             options: {
                 livereload: true
             },
+            concat: {
+              files: ['assets/sass/*.scss', '!assets/sass/concat.scss'],
+              tasks: [ 'concat:dist' ]
+            },
             sass: {
-                files: [
-                    'assets/sass/*.scss',
-                    'assets/sass/partials/*.scss'
-                ],
-                tasks: [
-                    'sass'
-                ]
+                files: [ 'assets/sass/concat.scss' ],
+                tasks: [ 'sass' ]
             },
             coffee: {
               files: [
@@ -72,11 +78,13 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-coffee');
+    grunt.loadNpmTasks('grunt-contrib-concat');
 
     // Default task(s).
     grunt.registerTask('default', [
         'coffee',
         'uglify:dist',
+        'concat:dist',
         'sass',
         'watch'
     ]);
