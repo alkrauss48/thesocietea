@@ -50,7 +50,7 @@ module.exports = function (grunt) {
                 livereload: true
             },
             concat: {
-              files: ['assets/sass/*.scss', '!assets/sass/concat.scss'],
+              files: ['assets/sass/*.scss', 'assets/sass/partials/*.scss', '!assets/sass/concat.scss'],
               tasks: [ 'concat:dist' ]
             },
             sass: {
