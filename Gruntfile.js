@@ -20,14 +20,6 @@ module.exports = function (grunt) {
                   sourceMap: true
                 }
             },
-            dev: {
-	            files: {
-		            'assets/js/scripts.min.js': [
-                        'assets/js/lib/*.js',
-                        'assets/js/_*.js'
-                    ]
-	            }
-            }
         },
         sass: {
             dist: {
@@ -70,7 +62,7 @@ module.exports = function (grunt) {
 	            	'assets/js/_*.js'
 	            ],
 	            tasks: [
-	            	'uglify:dev'
+	            	'uglify:dist'
 	            ]
             }
         },
