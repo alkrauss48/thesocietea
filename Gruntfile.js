@@ -6,7 +6,7 @@ module.exports = function (grunt) {
         coffee: {
           compile: {
             files: {
-              'assets/js/_coffee.js': ['assets/coffee/*.coffee']
+              'assets/js/_coffee.js': ['assets/coffee/_*.coffee']
             }
           }
         },
@@ -58,7 +58,7 @@ module.exports = function (grunt) {
                 tasks: [ 'sass' ]
             },
             coffee: {
-              files: [ 'assets/coffee/*.coffee' ],
+              files: [ 'assets/coffee/_*.coffee' ],
               tasks: ['coffee']
             },
             uglify: {
