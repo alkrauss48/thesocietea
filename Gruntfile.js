@@ -41,7 +41,7 @@ module.exports = function (grunt) {
             separator: ';',
           },
           dist: {
-            src: ['assets/sass/*.scss', '!assets/sass/concat.scss'],
+            src: ['assets/sass/_*.scss'],
             dest: 'assets/sass/concat.scss'
           }
         },
@@ -50,7 +50,7 @@ module.exports = function (grunt) {
                 livereload: true
             },
             concat: {
-              files: ['assets/sass/*.scss', 'assets/sass/partials/*.scss', '!assets/sass/concat.scss'],
+              files: ['assets/sass/_*.scss', 'assets/sass/partials/*.scss'],
               tasks: [ 'concat:dist' ]
             },
             sass: {
@@ -58,9 +58,7 @@ module.exports = function (grunt) {
                 tasks: [ 'sass' ]
             },
             coffee: {
-              files: [
-                'assets/coffee/*.coffee'
-              ],
+              files: [ 'assets/coffee/*.coffee' ],
               tasks: ['coffee']
             },
             uglify: {
