@@ -1,16 +1,19 @@
 /* Welcome to Compass.
  * In this file you should write your main styles. (or centralize your imports)
- * Import this file using the following HTML or equivalent:
- * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
-@import "compass/css3";
+ */
 
-/*Start SUSY Grid */
 @import "susy";
-$total-columns 	:	12;
-$column-width	:	3.5em;
-$gutter-width	:	1.5em;
-$grid-padding	:	1.5em; 
-/* End SUSY Grid */
 
-@import "partials/normalize"; 
+@import "partials/normalize";
 @import "partials/utilities";
+
+/* Start SUSY Grid */
+$susy: (
+  columns: 12,  // The number of columns in your grid
+  gutters: 2/3, // The size of a gutter in relation to a single column
+  column-width: 3em,
+  use-custom: (
+    clearfix: true
+  )
+);
+/* End SUSY Grid */
