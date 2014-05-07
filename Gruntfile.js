@@ -6,15 +6,15 @@ module.exports = function (grunt) {
         coffee: {
           compile: {
             files: {
-              'assets/js/_coffee.js': ['assets/coffee/_*.coffee']
+              'assets/js/coffee.js': ['assets/coffee/application.coffee']
             }
           }
         },
         uglify: {
             dist: {
                 files: {
-                    'assets/js/scripts.min.js': [ 'assets/js/_*.js'   ],
-                    'assets/js/ie.min.js':      [ 'assets/js/ie/*.js' ]
+                    'assets/js/scripts.min.js': [ 'assets/js/application.js'   ],
+                    'assets/js/ie.min.js':      [ 'assets/js/ie/application.js' ]
                 },
                 options: {
                   sourceMap: true
@@ -32,18 +32,9 @@ module.exports = function (grunt) {
                     require: 'susy'
                 },
                 files: {
-                    'assets/css/screen.css': [ 'assets/sass/concat.scss' ]
+                    'assets/css/screen.css': [ 'assets/sass/application.scss' ]
                 }
             }
-        },
-        concat: {
-          options: {
-            separator: ';',
-          },
-          dist: {
-            src: ['assets/sass/_*.scss'],
-            dest: 'assets/sass/concat.scss'
-          }
         },
         imagemin: {
           dynamic: {
@@ -59,21 +50,17 @@ module.exports = function (grunt) {
             options: {
                 livereload: true
             },
-            concat: {
-              files: ['assets/sass/_*.scss', 'assets/sass/partials/*.scss'],
-              tasks: [ 'concat:dist' ]
-            },
             sass: {
-                files: [ 'assets/sass/concat.scss' ],
+                files: [ 'assets/sass/*.scss' ],
                 tasks: [ 'sass' ]
             },
             coffee: {
-              files: [ 'assets/coffee/_*.coffee' ],
+              files: [ 'assets/coffee/*.coffee' ],
               tasks: ['coffee']
             },
             uglify: {
 	            files: [
-	            	'assets/js/_*.js'
+	            	'assets/js/*.js'
 	            ],
 	            tasks: [
 	            	'uglify:dist'
@@ -86,7 +73,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-coffee');
-    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-imagemin');
     grunt.loadNpmTasks('grunt-newer');
 
@@ -94,7 +80,6 @@ module.exports = function (grunt) {
     grunt.registerTask('default', [
         'coffee',
         'uglify:dist',
-        'concat:dist',
         'sass',
         'watch'
       ]);
