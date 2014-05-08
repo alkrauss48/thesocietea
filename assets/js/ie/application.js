@@ -1,3 +1,3 @@
-//= css3-mediaqueries
-//= html5shiv
-//= selectivizr-min
+//= css3-mediaqueries.js
+//= html5shiv.js
+//= selectivizr-min.js
