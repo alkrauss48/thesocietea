@@ -45,6 +45,16 @@ module.exports = function (grunt) {
             dest: 'assets/sass/concat.scss'
           }
         },
+        imagemin: {
+          dynamic: {
+            files: [{
+              expand: true,               // Enable dynamic expansion
+              cwd: 'assets/images/src/',  // Src matches are relative to this path
+              src: ['*.{png,jpg,gif}'],   // Actual patterns to match
+              dest: 'assets/images/dist/' // Destination path prefix
+            }]
+          }
+        },
         watch: {
             options: {
                 livereload: true
@@ -77,6 +87,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-coffee');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-imagemin');
+    grunt.loadNpmTasks('grunt-newer');
 
     // Default task(s).
     grunt.registerTask('default', [
@@ -85,6 +97,6 @@ module.exports = function (grunt) {
         'concat:dist',
         'sass',
         'watch'
-    ]);
-
+      ]);
+    grunt.registerTask( 'images', [ 'newer:imagemin'] );
 };
