@@ -40,5 +40,19 @@ $(function() {
 */
 
 $(document).ready( function()	{
+  if($('.header-content-wrapper').length > 0){
+    setInterval(function(){
+      if(window.pageYOffset + 70 > parseInt($('.header-content-wrapper').css('height'))){
+        $('.sticky').addClass('affixed');
+      }else{
+        $('.sticky').removeClass('affixed');
+      }
 
+      if(window.pageYOffset + 50 > parseInt($('.header-content-wrapper').css('height'))){
+        $('.sticky').addClass('mini');
+      }else{
+        $('.sticky').removeClass('mini');
+      }
+    }, 60);
+  }
 });
