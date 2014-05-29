@@ -17,6 +17,9 @@ $gray: #414141;
 $lighter-gray: #5a5a5a;
 $teal: #00e7ad;
 $orange: #ff5f00;
+$light-orange: #ff9e00;
+
+$transition-time: .25s;
 /* End SUSY Grid */
 
 .container {
@@ -32,6 +35,27 @@ body {
   font-family: 'Merriweather Sans', serif;
   height: 100%;
 }
+
+@keyframes blink{
+  0% { opacity:1; }
+  50% { opacity:0; }
+  100% { opacity:1; }
+}
+@-webkit-keyframes blink {
+  0% { opacity:1; }
+  50% { opacity:0; }
+  100% { opacity:1; }
+}
+
+#typed-cursor{
+  opacity: 1;
+  font-weight: 100;
+  // add prefixes
+  @include animation(blink .7s infinite)
+}
+
+span.light-orange { color: $light-orange; }
+span.orange { color: $orange; }
 
 body > header {
   background: $gray; /* Old browsers */
@@ -50,20 +74,18 @@ body > header {
     margin-left: 0;
     list-style: none;
     li {
-      @include transition(line-height .3s ease);
+      @include transition(line-height $transition-time ease);
       float: left;
       margin-left: 2em;
       line-height: 2.4;
       a {
-        @include transition(color .3s ease);
+        @include transition(color $transition-time ease);
         text-decoration: none;
         font-weight: bold;
         color: white;
-        &:hover {
-          color: $teal;
-        }
+        &:hover { color: $teal; }
         &.nav-call-action {
-          @include transition(background-color .3s ease);
+          @include transition(background-color $transition-time ease, padding $transition-time ease);
           text-transform: uppercase;
           font-size: 80%;
           font-weight: normal;
@@ -84,14 +106,67 @@ body > header {
 
 .header-content-wrapper {
   height: 100%;
+  position: absolute;
   background-image: url('/assets/images/dist/home-header-back.jpg');
   background-size: cover;
   background-position: center bottom;
-  // background-attachment: fixed;
+  background-attachment: fixed;
 }
 
 .home-content {
   height: 200%;
+}
+
+.header-text {
+  position: absolute;
+  left: 0;
+  top: 20%;
+  font-size: 200%;
+  width: 100%;
+  text-align: center;
+  h2, h3 {
+    margin: 0;
+    color: white;
+    @include text-shadow(1px 1px 1px black);
+  }
+  h1 {
+    @include text-shadow(1px 1px 2px black);
+    margin: 0;
+    color: $teal;
+  }
+}
+
+.header-icons {
+  display: inline-block;
+  list-style: none;
+  margin-left: auto;
+  margin-right: auto;
+  padding: .5em;
+  background-color: rgba(0, 0, 0, .25);
+  @include border-radius(10px 10px);
+  li {
+    float: left;
+    margin: 0 1em;
+    a {
+      font-size: 80%;
+      @include text-shadow(1px 1px 2px black);
+      @include transition(color $transition-time ease);
+      text-decoration: none;
+      color: white;
+      &:hover { color: $teal; }
+    }
+  }
+}
+
+hr.header-hr {
+  width: 50%;
+  border: 0;
+  margin-left: 25%;
+  height: 1px;
+  background-image: -webkit-linear-gradient(left, rgba(255, 255, 255, 0), white, rgba(255, 255, 255, 0));
+  background-image: -moz-linear-gradient(left, rgba(255, 255, 255, 0), white, rgba(255, 255, 255, 0));
+  background-image: -ms-linear-gradient(left, rgba(255, 255, 255, 0), white, rgba(255, 255, 255, 0));
+  background-image: -o-linear-gradient(left, rgba(255, 255, 255, 0), white, rgba(255, 255, 255, 0));
 }
 
 .spanner {
@@ -99,7 +174,7 @@ body > header {
 }
 
 .sticky {
-  @include transition(height .3s ease);
+  @include transition(height $transition-time ease);
   border-bottom: 2px solid $teal;
   height: 70px;
   top: 100%;
@@ -107,7 +182,7 @@ body > header {
   position: absolute;
   margin-top: -70px;
   img {
-    @include transition(width .3s ease);
+    @include transition(width $transition-time ease);
     margin-top: .5em;
     width: 60px;
   }
@@ -117,16 +192,16 @@ body > header {
     margin-top: 0;
   }
   &.mini {
-    height: 50px;
+    height: 40px;
     img {
       margin-top: .5em;
-      width: 40px;
+      width: 30px;
     }
     .nav {
       li {
-        line-height: 1;
+        line-height: .4;
         a.nav-call-action {
-          padding: .8em 1em;
+          padding: .4em 1em;
         }
       }
     }

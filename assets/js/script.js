@@ -41,7 +41,7 @@ $(function() {
 
 $(document).ready( function()	{
   if($('.header-content-wrapper').length > 0){
-    setInterval(function(){
+    $(window).on('scroll', function(){
       if(window.pageYOffset + 70 > parseInt($('.header-content-wrapper').css('height'))){
         $('.sticky').addClass('affixed');
       }else{
@@ -53,6 +53,12 @@ $(document).ready( function()	{
       }else{
         $('.sticky').removeClass('mini');
       }
-    }, 60);
+    });
+
+    $(".typed .light-orange").typed({
+      strings: ["Tea Enthusiast", "Dog Lover", "Developer"],
+      typeSpeed: 30,
+    });
+    var s = skrollr.init();
   }
 });

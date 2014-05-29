@@ -2,5 +2,7 @@
 //= jquery.sidr.min.js
 //= jquery.touchwipe.min.js
 //= sidr-custom.js
+//= typed.js
+//= skrollr.min.js
 //= coffee.js
 //= script.js
