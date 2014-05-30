@@ -16,6 +16,7 @@ $susy: (
 $gray: #414141;
 $lighter-gray: #5a5a5a;
 $teal: #00e7ad;
+$blue: #1470e7;
 $orange: #ff5f00;
 $light-orange: #ff9e00;
 
@@ -33,7 +34,7 @@ html {
 body {
   // font-family: 'Merriweather', serif;
   font-family: 'Merriweather Sans', serif;
-  height: 100%;
+  height: 100% !important;
 }
 
 @keyframes blink{
@@ -106,7 +107,7 @@ body > header {
 
 .header-content-wrapper {
   height: 100%;
-  position: absolute;
+  // position: absolute;
   background-image: url('/assets/images/dist/home-header-back.jpg');
   background-size: cover;
   background-position: center bottom;
@@ -115,6 +116,18 @@ body > header {
 
 .home-content {
   height: 200%;
+  h2 {
+    margin: 3em 0 1em 0;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-align: center;
+  }
+  h3 {
+    text-align: center;
+    font-weight: 300;
+    font-style: italic;
+    color: $lighter-gray;
+  }
 }
 
 .header-text {
@@ -175,6 +188,7 @@ hr.header-hr {
 
 .sticky {
   @include transition(height $transition-time ease);
+  z-index: 100;
   border-bottom: 2px solid $teal;
   height: 70px;
   top: 100%;
@@ -207,3 +221,64 @@ hr.header-hr {
     }
   }
 }
+
+.home-offerings-wrapper {
+  @include container;
+  margin-top: 4em;
+  margin-bottom: 4em;
+}
+@mixin offering-link($color){
+  background-color: $color;
+  border-color: $color;
+  &:hover {
+    color: $color;
+  }
+}
+
+.home-offerings {
+  @include span(4 of 12);
+  text-align: center;
+
+  .icon-wrapper {
+    width: 100%;
+    padding: 3em 0;
+    background-color: rgb(237,237,237);
+    @include border-radius(10px 10px);
+  }
+  i {
+    @include transition(all .125s ease);
+    font-size: 800%;
+    display: inline-block;
+    position: relative;
+    top: 0;
+  }
+
+  a {
+    @include border-radius(10px 10px);
+    @include transition(all .125s ease);
+    @include box-sizing(border-box);
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+    display: block;
+    width: 100%;
+    height: 3em;
+    margin: 1em 0;
+    line-height: 3em;
+    border: 2px solid white;
+    &.development {
+      @include offering-link($teal);
+    }
+    &.design {
+      @include offering-link($blue);
+    }
+    &.training {
+      @include offering-link($orange);
+    }
+    &:hover {
+      background-color: white;
+    }
+  }
+}
+
+.home-offerings + .home-offerings + .home-offerings { @include last; }

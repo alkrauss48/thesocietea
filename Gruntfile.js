@@ -65,6 +65,10 @@ module.exports = function (grunt) {
                 files: [ 'assets/sass/*.scss' ],
                 tasks: [ 'sass' ]
             },
+            images: {
+                files: [ 'assets/images/src/*' ],
+                tasks: [ 'newer:imagemin' ]
+            },
             coffee: {
               files: [ 'assets/coffee/*.coffee' ],
               tasks: ['rig:coffee', 'coffee']

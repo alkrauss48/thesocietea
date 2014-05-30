@@ -61,4 +61,10 @@ $(document).ready( function()	{
     });
     var s = skrollr.init();
   }
+
+  $('.home-offerings').find('a').hover(function(){
+    $(this).closest('div').find('i').css('top', '-20px');
+  },function(){
+    $(this).closest('div').find('i').css('top', '0px');
+  });
 });
