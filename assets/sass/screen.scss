@@ -404,7 +404,7 @@ hr.header-hr {
 .home-project {
   position: relative;
   @include span(3);
-  &:nth-of-type(4n+3) { @include last; }
+  &:nth-of-type(4n+4) { @include last; }
   padding-bottom: 3em;
   text-align: center;
   .project-image {
@@ -437,6 +437,7 @@ hr.header-hr {
 .site-title {
   @include transition(bottom $transition-time ease);
   position: absolute;
+  font-weight: 300;
   left: 10%;
   bottom: 0;
   display: inline-block;
@@ -463,4 +464,9 @@ hr.header-hr {
     margin-top: -1em;
     border-bottom: 10px solid $gray;
   }
+}
+
+.icon2-play {
+  margin-left: .3em;
+  font-size: 80%;
 }
