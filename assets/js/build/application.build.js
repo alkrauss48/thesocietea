@@ -395,4 +395,10 @@ $(document).ready( function()	{
   },function(){
     $(this).closest('div').find('i').css('top', '0px');
   });
+
+  $('a.project-hover').hover(function(){
+    $(this).closest('div').find('a.site-title').css('bottom', '-3.5em');
+  },function(){
+    $(this).closest('div').find('a.site-title').css('bottom', '0em');
+  });
 });

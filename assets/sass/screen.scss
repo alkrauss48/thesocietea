@@ -69,6 +69,13 @@ body > header {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr="#{$lighter-gray}", endColorstr="#{$gray}",GradientType=0 ); /* IE6-9 */
 }
 
+body > footer {
+  background-color: $gray;
+  .down-triangle {
+    border-top: 20px solid white;
+  }
+}
+
 .nav {
   float: right;
   ul {
@@ -115,9 +122,9 @@ body > header {
 }
 
 .home-content {
-  height: 200%;
   h2 {
-    margin: 3em 0 1em 0;
+    margin: 0;
+    padding: 3em 0 1em 0;
     text-transform: uppercase;
     font-weight: bold;
     text-align: center;
@@ -149,14 +156,9 @@ body > header {
   }
 }
 
-.header-icons {
+@mixin icons {
   display: inline-block;
   list-style: none;
-  margin-left: auto;
-  margin-right: auto;
-  padding: .5em;
-  background-color: rgba(0, 0, 0, .25);
-  @include border-radius(10px 10px);
   li {
     float: left;
     margin: 0 1em;
@@ -169,6 +171,22 @@ body > header {
       &:hover { color: $teal; }
     }
   }
+
+}
+
+.header-icons{
+  @include icons;
+  padding: .5em;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: rgba(0, 0, 0, .25);
+  @include border-radius(10px 10px);
+}
+
+.footer-icons {
+  @include icons;
+  margin: 0;
+  li { line-height: 2.2em; }
 }
 
 hr.header-hr {
@@ -282,3 +300,167 @@ hr.header-hr {
 }
 
 .home-offerings + .home-offerings + .home-offerings { @include last; }
+
+.home-about {
+  width: 100;
+  background-color: $gray;
+  h2 {
+    padding: 0;
+    color: $teal;
+    text-align: left;
+  }
+  color: white;
+  .container { padding: 4em 0; }
+  .down-triangle {
+    border-top: 20px solid white;
+  }
+}
+
+.down-triangle {
+  position: absolute;
+  left: 50%;
+  display: inline;
+  margin-left: -20px;
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+
+}
+
+.up-triangle {
+  position: absolute;
+  left: 50%;
+  display: inline-block;
+  margin-left: -10px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  margin-top: -20px;
+  border-bottom: 10px solid $gray;
+}
+
+.home-picture {
+  @include span(3);
+  img {
+    position: relative;
+    top: 0; left: 0;
+    width: 100%;
+    @include box-shadow(4px 4px 10px $lighter-gray);
+  }
+}
+
+.home-about-desc {
+  @include span(9 last);
+  p {
+    font-size: 90%;
+    font-weight: 300;
+  }
+}
+
+.orange-learn-more {
+  @include transition(all $transition-time ease);
+  @include box-sizing(border-box);
+  display: inline-block;
+  background-color: $orange;
+  color: white;
+  font-weight: bold;
+  padding: .5em 1.25em;
+  text-decoration: none;
+  border: 2px solid $orange;
+  &:hover {
+    color: $orange;
+    background-color: white;
+  }
+}
+
+.home-projects {
+  .down-triangle {
+    border-top: 20px solid $gray;
+  }
+}
+
+.footer-content {
+  @include span(6);
+  color: white;
+  font-size: 70%;
+}
+
+.footer-logos {
+  @include span(6 last);
+  ul { float: right; }
+}
+
+.home-projects-list {
+  @include container;
+  text-align: center;
+  padding-bottom: 4em;
+  .orange-learn-more {
+    margin-top: 1em;
+  }
+}
+
+.home-project {
+  position: relative;
+  @include span(3);
+  &:nth-of-type(4n+3) { @include last; }
+  padding-bottom: 3em;
+  text-align: center;
+  .project-image {
+    position: relative;
+    @include box-shadow(4px 4px 10px $lighter-gray);
+    background-size: cover;
+    background-position: center center;
+    height: 10em;
+    width: 100%;
+    a.project-hover {
+      display: block;
+      width: 100%;
+      height: 100%;
+      text-decoration: none;
+      p {
+        visibility: hidden;
+        font-weight: bold;
+        line-height: 10em;
+        color: $light-orange;
+        @include text-shadow(1px 1px 2px black);
+      }
+      &:hover {
+        p { visibility: visible; }
+        background-color: rgba(20, 112, 231, .8);
+      }
+    }
+  }
+}
+
+.site-title {
+  @include transition(bottom $transition-time ease);
+  position: absolute;
+  left: 10%;
+  bottom: 0;
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  text-decoration: none;
+  color: $teal;
+  width: 80%;
+  padding: .5em 0;
+  font-size: 90%;
+  z-index: -1;
+  background-color: $gray;
+  &:before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    display: inline-block;
+    margin-left: -10px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    margin-top: -1em;
+    border-bottom: 10px solid $gray;
+  }
+}
