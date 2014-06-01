@@ -39,7 +39,7 @@ $transition-time: .25s;
 
   @media screen and (max-width: $first-breakpoint) and (min-width: $mid-breakpoint){
     &:nth-of-type(4n+4) {
-      margin-right: auto;
+      margin-right: gutter();
       float: left;
     }
     @include span(4);
@@ -48,20 +48,12 @@ $transition-time: .25s;
 
   @media screen and (max-width: $mid-breakpoint){
     &:nth-of-type(3n+3) {
-      margin-right: auto;
+      margin-right: gutter();
       float: left;
     }
     @include span(6);
     &:nth-of-type(2n+2) { @include last; }
   }
-//
-//   @media screen and (max-width: $second-breakpoint){
-//     &:nth-of-type(2n+2) {
-//       margin-right: auto;
-//       float: left;
-//     }
-//     @include span(12);
-//   }
 }
 
 .container {
@@ -229,7 +221,7 @@ body > footer {
   padding: .5em;
   margin-left: auto;
   margin-right: auto;
-  @media screen and (max-width: $second-breakpoint){
+  @media screen and (max-width: $mid-breakpoint){
     li {
       font-size: 80%;
       margin: 0 .5em;
@@ -267,6 +259,7 @@ hr.header-hr {
   height: 70px;
   top: 100%;
   left: 0;
+  @media screen and (max-width: $first-breakpoint){ left: auto; }
   position: absolute;
   margin-top: -70px;
   img {
@@ -280,6 +273,9 @@ hr.header-hr {
     margin-top: 0;
   }
   &.mini {
+    #mobile-navigation {
+      ul { margin: .25em 0; }
+    }
     height: 40px;
     img {
       margin-top: .5em;
@@ -308,6 +304,13 @@ hr.header-hr {
   @media screen and (max-width: $first-breakpoint){
     display: inline-block;
   }
+  li { font-size: 200%; }
+}
+
+#responsive-menu-icon {
+  display: block;
+  @include transition(transform $transition-time ease);
+  &.active-mobile { @include rotate(-90deg); }
 }
 
 .home-offerings-wrapper {
@@ -329,7 +332,7 @@ hr.header-hr {
   @include span(4 of 12);
   @media screen and (max-width: $mid-breakpoint){
     &:nth-of-type(n+3) {
-      margin-right: auto;
+      margin-right: gutter();
       float: left;
     }
     @include span(12);
@@ -337,6 +340,8 @@ hr.header-hr {
   text-align: center;
 
   .icon-wrapper {
+    position: relative;
+    top: 0; left: 0;
     width: 100%;
     padding: 3em 0;
     @media screen and (max-width: $second-breakpoint){

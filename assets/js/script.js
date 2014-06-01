@@ -41,25 +41,30 @@ $(function() {
 
 $(document).ready( function()	{
   if($('.header-content-wrapper').length > 0){
-    $(window).on('scroll', function(){
-      if(window.pageYOffset + 70 > parseInt($('.header-content-wrapper').css('height'))){
-        $('.sticky').addClass('affixed');
-      }else{
-        $('.sticky').removeClass('affixed');
-      }
+    if(Modernizr.mq('screen and (min-width: 876px)')){
+      var s = skrollr.init();
+      $(window).on('scroll', function(){
+        if(window.pageYOffset + 70 > parseInt($('.header-content-wrapper').css('height'))){
+          $('.sticky').addClass('affixed');
+        }else{
+          $('.sticky').removeClass('affixed');
+        }
 
-      if(window.pageYOffset + 50 > parseInt($('.header-content-wrapper').css('height'))){
-        $('.sticky').addClass('mini');
-      }else{
-        $('.sticky').removeClass('mini');
-      }
-    });
+        if(window.pageYOffset + 50 > parseInt($('.header-content-wrapper').css('height'))){
+          $('.sticky').addClass('mini');
+        }else{
+          $('.sticky').removeClass('mini');
+        }
+      });
+    }else{
+      $('.sticky').addClass('affixed');
+      $('.sticky').addClass('mini');
+    }
 
     $(".typed .light-orange").typed({
       strings: ["Tea Enthusiast", "Dog Lover", "Developer"],
       typeSpeed: 30,
     });
-    var s = skrollr.init();
   }
 
   $('.home-offerings').find('a').hover(function(){
