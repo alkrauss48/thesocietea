@@ -118,9 +118,11 @@ body > footer {
     border-top: 20px solid white;
   }
 }
+.nav-wrapper {
+  float: right;
+}
 
 .nav {
-  float: right;
   ul {
     margin-left: 0;
     list-style: none;
@@ -291,6 +293,20 @@ hr.header-hr {
         }
       }
     }
+  }
+}
+
+#navigation {
+  display: inline-block;
+  @media screen and (max-width: $first-breakpoint){
+    display: none;
+  }
+}
+
+#mobile-navigation {
+  display: none;
+  @media screen and (max-width: $first-breakpoint){
+    display: inline-block;
   }
 }
 

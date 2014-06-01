@@ -1,8 +1,8 @@
 $(document).ready( function()	{
 
-  $('#responsive-menu-button').sidr({
+  $('#responsive-menu-icon').sidr({
     name: 'sidr-main',
-    source: '#normal-nav-wrapper',
+    source: '#navigation',
     side: 'right',
     onOpen:   function() { $('#responsive-menu-button').addClass('active-mobile'); },
     onClose:  function() { $('#responsive-menu-button').removeClass('active-mobile'); }
