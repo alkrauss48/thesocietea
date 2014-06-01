@@ -20,12 +20,55 @@ $blue: #1470e7;
 $orange: #ff5f00;
 $light-orange: #ff9e00;
 
+$first-breakpoint: 876px;
+$mid-breakpoint: 650px;
+$second-breakpoint: 425px;
+
 $transition-time: .25s;
 /* End SUSY Grid */
+
+@mixin responsive-padding {
+  @media screen and (max-width: $first-breakpoint){
+    padding: 0 1em;
+  }
+}
+
+@mixin four-three-two-one {
+  @include span(3);
+  &:nth-of-type(4n+4) { @include last; }
+
+  @media screen and (max-width: $first-breakpoint) and (min-width: $mid-breakpoint){
+    &:nth-of-type(4n+4) {
+      margin-right: auto;
+      float: left;
+    }
+    @include span(4);
+    &:nth-of-type(3n+3) { @include last; }
+  }
+
+  @media screen and (max-width: $mid-breakpoint){
+    &:nth-of-type(3n+3) {
+      margin-right: auto;
+      float: left;
+    }
+    @include span(6);
+    &:nth-of-type(2n+2) { @include last; }
+  }
+//
+//   @media screen and (max-width: $second-breakpoint){
+//     &:nth-of-type(2n+2) {
+//       margin-right: auto;
+//       float: left;
+//     }
+//     @include span(12);
+//   }
+}
 
 .container {
   @include container;
 }
+
+.container-padding { @include responsive-padding; }
 
 html {
   height: 100%;
@@ -154,6 +197,11 @@ body > footer {
     margin: 0;
     color: $teal;
   }
+  @media screen and (max-width: $mid-breakpoint){
+    h1 { font-size: 175%; }
+    h2 { font-size: 125%; }
+    h3 { font-size: 80%; }
+  }
 }
 
 @mixin icons {
@@ -179,6 +227,12 @@ body > footer {
   padding: .5em;
   margin-left: auto;
   margin-right: auto;
+  @media screen and (max-width: $second-breakpoint){
+    li {
+      font-size: 80%;
+      margin: 0 .5em;
+    }
+  }
   background-color: rgba(0, 0, 0, .25);
   @include border-radius(10px 10px);
 }
@@ -253,13 +307,25 @@ hr.header-hr {
   }
 }
 
+.home-offerings + .home-offerings + .home-offerings { @include last; }
+
 .home-offerings {
   @include span(4 of 12);
+  @media screen and (max-width: $mid-breakpoint){
+    &:nth-of-type(n+3) {
+      margin-right: auto;
+      float: left;
+    }
+    @include span(12);
+  }
   text-align: center;
 
   .icon-wrapper {
     width: 100%;
     padding: 3em 0;
+    @media screen and (max-width: $second-breakpoint){
+      padding: 1em 0;
+    }
     background-color: rgb(237,237,237);
     @include border-radius(10px 10px);
   }
@@ -299,8 +365,6 @@ hr.header-hr {
   }
 }
 
-.home-offerings + .home-offerings + .home-offerings { @include last; }
-
 .home-about {
   width: 100;
   background-color: $gray;
@@ -310,7 +374,7 @@ hr.header-hr {
     text-align: left;
   }
   color: white;
-  .container { padding: 4em 0; }
+  .container { padding: 4em 0 3em 0; }
   .down-triangle {
     border-top: 20px solid white;
   }
@@ -344,15 +408,33 @@ hr.header-hr {
 .home-picture {
   @include span(3);
   img {
+    margin-bottom: 1em;
     position: relative;
     top: 0; left: 0;
     width: 100%;
     @include box-shadow(4px 4px 10px $lighter-gray);
   }
+  @media screen and (max-width: $mid-breakpoint){
+    @include span(12);
+    img {
+      width: 50%;
+      display: inline-block;
+      position: inherit;
+      margin-left: 25%;
+      margin-right: 25%;
+    }
+  }
 }
 
 .home-about-desc {
   @include span(9 last);
+  @media screen and (max-width: $mid-breakpoint){
+    text-align: center;
+    h2 { text-align: center; }
+    @include span(12);
+    margin-right: auto;
+    float: left;
+  }
   p {
     font-size: 90%;
     font-weight: 300;
@@ -379,32 +461,47 @@ hr.header-hr {
   .down-triangle {
     border-top: 20px solid $gray;
   }
+  .orange-learn-more {
+    margin-top: 1em;
+  }
+  text-align: center;
+  padding-bottom: 4em;
 }
 
 .footer-content {
   @include span(6);
+  @media screen and (max-width: $mid-breakpoint){
+    text-align: center;
+    @include span(12);
+    padding-top: 2em;
+  }
   color: white;
   font-size: 70%;
 }
 
 .footer-logos {
+  ul {
+    float: right;
+    padding: 0;
+  }
   @include span(6 last);
-  ul { float: right; }
+  @media screen and (max-width: $mid-breakpoint){
+    @include span(12);
+    float: left;
+    margin-right: auto;
+    text-align: center;
+    ul { float: none; }
+  }
 }
 
 .home-projects-list {
   @include container;
   text-align: center;
-  padding-bottom: 4em;
-  .orange-learn-more {
-    margin-top: 1em;
-  }
 }
 
 .home-project {
+  @include four-three-two-one;
   position: relative;
-  @include span(3);
-  &:nth-of-type(4n+4) { @include last; }
   padding-bottom: 3em;
   text-align: center;
   .project-image {
@@ -436,6 +533,7 @@ hr.header-hr {
 
 .site-title {
   @include transition(bottom $transition-time ease);
+  @include border-radius(4px 4px);
   position: absolute;
   font-weight: 300;
   left: 10%;
@@ -448,7 +546,7 @@ hr.header-hr {
   color: $teal;
   width: 80%;
   padding: .5em 0;
-  font-size: 90%;
+  font-size: 80%;
   z-index: -1;
   background-color: $gray;
   &:before {
