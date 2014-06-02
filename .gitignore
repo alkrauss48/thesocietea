@@ -10,3 +10,4 @@ venv
 .idea
 .gems
 node_modules/
+wp-config.php
