@@ -177,7 +177,7 @@ body > footer {
 .header-text {
   position: absolute;
   left: 0;
-  top: 20%;
+  top: 15%;
   font-size: 200%;
   width: 100%;
   text-align: center;
@@ -192,7 +192,7 @@ body > footer {
     color: $teal;
   }
   @media screen and (max-width: $mid-breakpoint){
-    h1 { font-size: 175%; }
+    h1 { font-size: 150%; }
     h2 { font-size: 125%; }
     h3 { font-size: 80%; }
   }
@@ -345,7 +345,7 @@ hr.header-hr {
     width: 100%;
     padding: 3em 0;
     @media screen and (max-width: $second-breakpoint){
-      padding: 1em 0;
+      padding: 1.5em 0;
     }
     background-color: rgb(237,237,237);
     @include border-radius(10px 10px);
@@ -457,6 +457,7 @@ hr.header-hr {
     float: left;
   }
   p {
+    line-height: 1.5em;
     font-size: 90%;
     font-weight: 300;
   }
