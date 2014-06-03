@@ -1,0 +1,497 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Custom Field Suite v1.7.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-11-26 02:30+0100\n"
+"PO-Revision-Date: 2012-11-26 02:39+0100\n"
+"Last-Translator: Szijártó József <hutchington@gmail.com>\n"
+"Language-Team: \n"
+"Language: hu_HU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
+"_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
+"X-Poedit-Basepath: ../\n"
+"X-Textdomain-Support: yes\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-SearchPath-0: .\n"
+
+# @ cfs
+#: cfs.php:84 cfs.php:398 includes/actions/init.php:13
+msgid "Field Groups"
+msgstr "Mezőcsoportok"
+
+# @ cfs
+#: cfs.php:85 includes/actions/init.php:14
+msgid "Field Group"
+msgstr "Mezőcsoport"
+
+# @ cfs
+#: cfs.php:86 includes/actions/init.php:15
+msgid "Add New"
+msgstr "Új hozzáadása"
+
+# @ cfs
+#: cfs.php:87 includes/actions/init.php:16
+msgid "Add New Field Group"
+msgstr "Új mezőcsoport hozzáadása"
+
+# @ cfs
+#: cfs.php:88 includes/actions/init.php:17
+msgid "Edit Field Group"
+msgstr "Mezőcsoport szerkesztése"
+
+# @ cfs
+#: cfs.php:89 includes/actions/init.php:18
+msgid "New Field Group"
+msgstr "Új mezőcsoport"
+
+# @ cfs
+#: cfs.php:90 includes/actions/init.php:19
+msgid "View Field Group"
+msgstr "Mezőcsoport megtekintése"
+
+# @ cfs
+#: cfs.php:91 includes/actions/init.php:20
+msgid "Search Field Groups"
+msgstr "Mezőcsoportok keresése"
+
+# @ cfs
+#: cfs.php:92 includes/actions/init.php:21
+msgid "No Field Groups found"
+msgstr "Nem találhatók mezőcsoportok"
+
+# @ cfs
+#: cfs.php:93 includes/actions/init.php:22
+msgid "No Field Groups found in Trash"
+msgstr "Nincsenek mezőcsoportok a kukában"
+
+# @ cfs
+#: cfs.php:121 includes/actions/init.php:49
+msgid "Title"
+msgstr "Cím"
+
+# @ cfs
+#: cfs.php:381
+msgid "Fields"
+msgstr "Mezők"
+
+# @ cfs
+#: cfs.php:382
+msgid "Placement Rules"
+msgstr "Elhelyezési szabályok"
+
+# @ cfs
+#: cfs.php:383
+msgid "Extras"
+msgstr "Extrák"
+
+# @ cfs
+#: cfs.php:399
+msgid "Tools"
+msgstr "Eszközök"
+
+# @ cfs
+#: includes/actions/admin_footer.php:67
+msgid "Custom Field Suite"
+msgstr "Custom Field Suite"
+
+# @ cfs
+#: includes/actions/admin_footer.php:71
+msgid "Homepage"
+msgstr "Főoldal"
+
+# @ cfs
+#: includes/actions/admin_footer.php:72
+msgid "User Guide"
+msgstr "Használati útmutató"
+
+# @ cfs
+#: includes/actions/admin_footer.php:73
+msgid "Changelog"
+msgstr "Módosítási napló"
+
+# @ cfs
+#: includes/actions/admin_footer.php:78
+msgid "Donate"
+msgstr "Támogatás"
+
+# @ cfs
+#: includes/actions/admin_footer.php:79
+msgid "Rate the plugin"
+msgstr "Bővítmény értékelése"
+
+# @ cfs
+#: templates/field_html.php:30
+msgid "Label"
+msgstr "Címke"
+
+# @ cfs
+#: templates/field_html.php:32
+msgid "The field label that editors will see."
+msgstr "A mező névét csak a szerkesztők látják"
+
+# @ cfs
+#: templates/field_html.php:39
+msgid "Name"
+msgstr "Név"
+
+#: templates/field_html.php:42
+msgid ""
+"The field name is passed into get() to retrieve values. Use only lowercase "
+"letters, numbers, and underscores."
+msgstr ""
+"Ezt a mezőnevet lehet majd a get()-el lekérni. Kis betűket, számokat, és "
+"aláhúzást tartalmazhat."
+
+# @ cfs
+#: templates/field_html.php:49
+msgid "Field Type"
+msgstr "Mező típusa"
+
+# @ cfs
+#: templates/field_html.php:67
+msgid "Notes"
+msgstr "Utasítás"
+
+# @ cfs
+#: templates/field_html.php:69
+msgid "Notes for editors during data entry"
+msgstr "Tipp a szerkesztőknek, ha kitöltik a mezőt"
+
+# @ default
+#: templates/field_html.php:82
+msgid "Close"
+msgstr "Bezár"
+
+# @ cfs
+#: templates/field_html.php:83
+msgid "or"
+msgstr "vagy"
+
+# @ cfs
+#: templates/field_html.php:83
+msgid "delete"
+msgstr "törlés"
+
+# @ cfs
+#: templates/meta_box_extras.php:39
+msgid "Content Editor"
+msgstr "Tartalomszerkesztő"
+
+# @ cfs
+#: templates/meta_box_extras.php:48
+msgid "Hide the content editor"
+msgstr "Tartalomszerkesztő elrejtése"
+
+# @ cfs
+#: templates/meta_box_extras.php:55
+msgid "Gravity Forms Integration"
+msgstr "Gravity Froms integráció"
+
+#: templates/meta_box_extras.php:75
+msgid "Your Gravity Form and CFS field labels must match exactly"
+msgstr "A Gravity Form és a CFS mezők címkéje meg kell egyezzen"
+
+#: templates/meta_box_extras.php:79
+msgid "Please install"
+msgstr "Kérem telepítse"
+
+#: templates/meta_box_extras.php:79
+msgid "to use this feature"
+msgstr "hogy használni tudja ezt a funkciót"
+
+# @ cfs
+#: templates/meta_box_fields.php:60
+msgid "Add New Field"
+msgstr "Új mező hozzáadása"
+
+# @ cfs
+#: templates/meta_box_rules.php:5
+msgid "equals"
+msgstr "egyenlő"
+
+# @ cfs
+#: templates/meta_box_rules.php:6
+msgid "is not"
+msgstr "nem"
+
+# @ cfs
+#: templates/meta_box_rules.php:82 templates/meta_box_rules.php:87
+msgid "Leave blank to skip this rule"
+msgstr "A szabály mellőzéséhez hagyja üresen"
+
+# @ cfs
+#: templates/meta_box_rules.php:120 includes/fields/relationship.php:89
+msgid "Post Types"
+msgstr "Bejegyzéstípusok"
+
+# @ cfs
+#: templates/meta_box_rules.php:151
+msgid "User Roles"
+msgstr "Felhasználói szintek"
+
+# @ cfs
+#: templates/meta_box_rules.php:182
+msgid "Posts"
+msgstr "Bejegyzések"
+
+# @ cfs
+#: templates/meta_box_rules.php:205
+msgid "Taxonomy Terms"
+msgstr "Taxonómiai feltételek"
+
+# @ cfs
+#: templates/meta_box_rules.php:236
+msgid "Page Template"
+msgstr "Oldalsablon"
+
+#: templates/page_tools.php:64 templates/page_tools.php:86
+msgid "Export"
+msgstr "Exportálás"
+
+# @ cfs
+#: templates/page_tools.php:65 templates/page_tools.php:111
+msgid "Import"
+msgstr "Importálás"
+
+#: templates/page_tools.php:66
+msgid "Debug"
+msgstr "Hibakeresés"
+
+#: templates/page_tools.php:74
+msgid "Which field groups would you like to export?"
+msgstr "Melyik mezőcsoportokat szeretné exportálni?"
+
+#: templates/page_tools.php:103
+msgid "Paste the import code below. Existing field groups will be skipped."
+msgstr ""
+"Illessze be az alábbi importáló kódot. A meglévő mezőcsoportok kihagyásra "
+"kerülnek."
+
+# @ cfs
+#: templates/page_tools.php:124
+msgid "Your site uses the following software:"
+msgstr "Az ön oldala a következő szoftvereket használja:"
+
+# @ cfs
+#: includes/ajax.php:174
+msgid "Imported"
+msgstr "Importált"
+
+# @ cfs
+#: includes/ajax.php:178
+msgid "Skipped"
+msgstr "Mellőzött"
+
+# @ cfs
+#: includes/ajax.php:184
+msgid "Nothing to import"
+msgstr "Nem importált"
+
+# @ cfs
+#: includes/ajax.php:271
+msgid "No field groups selected"
+msgstr "Nincsenek mezőcsoportok kijelölve"
+
+# @ cfs
+#: includes/field.php:21 includes/fields/field.php:21 includes/fields/text.php:9
+msgid "Text"
+msgstr "Szöveg"
+
+#: includes/field.php:57 includes/fields/file.php:77
+#: includes/fields/relationship.php:106 includes/fields/select.php:125
+#: includes/fields/text.php:33 includes/fields/textarea.php:61
+#: includes/fields/true_false.php:44
+msgid "Validation"
+msgstr "Érvényesítés"
+
+# @ cfs
+#: includes/field.php:66 includes/fields/file.php:86
+#: includes/fields/relationship.php:115 includes/fields/select.php:134
+#: includes/fields/text.php:42 includes/fields/textarea.php:70
+#: includes/fields/true_false.php:53
+msgid "This is a required field"
+msgstr "Ez egy kötelező mező"
+
+# @ cfs
+#: includes/fields/file.php:9
+msgid "File Upload"
+msgstr "Fájlfeltöltés"
+
+# @ cfs
+#: includes/fields/file.php:45
+msgid "Add File"
+msgstr "Fájl hozzáadása"
+
+# @ cfs
+#: includes/fields/file.php:46
+msgid "Remove"
+msgstr "Eltávolítás"
+
+# @ cfs
+#: includes/fields/file.php:56
+msgid "Return Value"
+msgstr "Visszatérési érték"
+
+# @ cfs
+#: includes/fields/file.php:65
+msgid "File URL"
+msgstr "Fájl URL"
+
+# @ cfs
+#: includes/fields/file.php:66
+msgid "Attachment ID"
+msgstr "Csatolmány ID"
+
+# @ cfs
+#: includes/fields/file.php:117
+msgid "Use This File"
+msgstr "Fájl használata"
+
+# @ cfs
+#: includes/fields/file.php:170
+msgid "Attach file"
+msgstr "Fájl csatolása"
+
+# @ cfs
+#: includes/fields/loop.php:9
+msgid "Loop"
+msgstr "Hurok"
+
+# @ cfs
+#: includes/fields/loop.php:36
+msgid "Row Display"
+msgstr "Sor megjelenítés"
+
+# @ cfs
+#: includes/fields/loop.php:45
+msgid "Show the values by default"
+msgstr "Mutassa az értékeket alapértelmezetten"
+
+# @ cfs
+#: includes/fields/loop.php:52
+msgid "Row Label"
+msgstr "Sor címkéje"
+
+# @ cfs
+#: includes/fields/loop.php:60 includes/fields/loop.php:91 includes/fields/loop.php:162
+msgid "Loop Row"
+msgstr "Hurok sor"
+
+# @ cfs
+#: includes/fields/loop.php:67
+msgid "Button Label"
+msgstr "Gomb címkéje"
+
+# @ cfs
+#: includes/fields/loop.php:75 includes/fields/loop.php:117 includes/fields/loop.php:163
+msgid "Add Row"
+msgstr "Sor hozzáadása"
+
+# @ cfs
+#: includes/fields/relationship.php:9
+msgid "Relationship"
+msgstr "Viszony"
+
+# @ cfs
+#: includes/fields/relationship.php:90
+msgid "Limit posts to the following types"
+msgstr "Bejegyzések szűkítése a következő típusokra"
+
+# @ cfs
+#: includes/fields/select.php:9
+msgid "Select"
+msgstr "Kiválasztás"
+
+# @ cfs
+#: includes/fields/select.php:93
+msgid "Choices"
+msgstr "Lehetőségek"
+
+# @ cfs
+#: includes/fields/select.php:94
+msgid "Enter one choice per line"
+msgstr "Írjon egy lehetőséget soronként"
+
+#: includes/fields/select.php:109
+msgid "Multi-select?"
+msgstr "Több kiválasztható?"
+
+# @ cfs
+#: includes/fields/select.php:118
+msgid "This is a multi-select field"
+msgstr "Ez egy több kiválasztós mező"
+
+# @ cfs
+#: includes/fields/text.php:18 includes/fields/textarea.php:25
+msgid "Default Value"
+msgstr "Alapértelmezett érték"
+
+# @ cfs
+#: includes/fields/textarea.php:9
+msgid "Textarea"
+msgstr "Szövegterület"
+
+# @ cfs
+#: includes/fields/textarea.php:40 includes/fields/wysiwyg.php:34
+msgid "Formatting"
+msgstr "Formázás"
+
+# @ cfs
+#: includes/fields/textarea.php:49
+msgid "None"
+msgstr "Nem"
+
+# @ cfs
+#: includes/fields/textarea.php:50
+msgid "Convert newlines to <br />"
+msgstr "Új sorok konvertálása <br />-re"
+
+# @ cfs
+#: includes/fields/true_false.php:9
+msgid "True / False"
+msgstr "Igaz / Hamis"
+
+# @ cfs
+#: includes/fields/true_false.php:28
+msgid "Message"
+msgstr "Üzenet"
+
+# @ cfs
+#: includes/fields/true_false.php:29
+msgid "The text beside the checkbox"
+msgstr "A szöveg melletti jelölőnégyzet"
+
+# @ cfs
+#: includes/fields/user.php:9
+msgid "User"
+msgstr "Felhasználó"
+
+# @ cfs
+#: includes/fields/wysiwyg.php:9
+msgid "Wysiwyg Editor"
+msgstr "Wysiwyg szerkesztő"
+
+# @ cfs
+#: includes/fields/wysiwyg.php:43
+msgid "Default"
+msgstr "Alapértelmezett"
+
+# @ cfs
+#: includes/fields/wysiwyg.php:44
+msgid "None (bypass filters)"
+msgstr "Nincs (szűrő mellőzése)"
+
+# @ cfs
+#: includes/fields/color/color.php:17
+msgid "Color"
+msgstr "Szín"
+
+# @ cfs
+#: includes/fields/date/date.php:9
+msgid "Date"
+msgstr "Dátum"

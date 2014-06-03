@@ -65,6 +65,9 @@ $(document).ready( function()	{
       strings: ["Tea Enthusiast", "Dog Lover", "Developer"],
       typeSpeed: 30,
     });
+  }else{
+    $('.sticky').addClass('affixed');
+    $('.sticky').addClass('mini');
   }
 
   $('.home-offerings').find('a').hover(function(){

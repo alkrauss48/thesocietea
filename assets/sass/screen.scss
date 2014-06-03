@@ -20,6 +20,8 @@ $blue: #1470e7;
 $orange: #ff5f00;
 $light-orange: #ff9e00;
 
+$opaque-orange: rgba(255, 95, 0, .8);
+
 $first-breakpoint: 876px;
 $mid-breakpoint: 650px;
 $second-breakpoint: 425px;
@@ -129,19 +131,19 @@ body > footer {
         font-weight: bold;
         color: white;
         &:hover { color: $teal; }
-        &.nav-call-action {
-          @include transition(background-color $transition-time ease, padding $transition-time ease);
-          text-transform: uppercase;
-          font-size: 80%;
-          font-weight: normal;
-          color: white;
-          padding: 1em 1em;
-          @include border-radius(4px 4px);
-          background-color: $orange;
-          &:hover {
-            color: $orange;
-            background-color: white;
-          }
+      }
+      &.nav-call-action a {
+        @include transition(background-color $transition-time ease, padding $transition-time ease);
+        text-transform: uppercase;
+        font-size: 80%;
+        font-weight: normal;
+        color: white;
+        padding: 1em 1em;
+        @include border-radius(4px 4px);
+        background-color: $orange;
+        &:hover {
+          color: $orange;
+          background-color: white;
         }
       }
     }
@@ -284,7 +286,7 @@ hr.header-hr {
     .nav {
       li {
         line-height: .4;
-        a.nav-call-action {
+        &.nav-call-action a {
           padding: .4em 1em;
         }
       }
@@ -589,4 +591,56 @@ hr.header-hr {
 .icon2-play {
   margin-left: .3em;
   font-size: 80%;
+}
+
+.subpage-header-image {
+  position: fixed;
+  background-size: cover;
+  background-position: center center;
+  width: 100%;
+  height: 380px;
+  z-index: -5;
+  @media screen and (max-width: $second-breakpoint){ height: 228px }
+}
+
+.subpage-title {
+  width: 100%;
+  background-color: $opaque-orange;
+  // filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#{$opaque-gold-ms-hex}",endColorstr="#{$opaque-gold-ms-hex}");
+  padding: 3em 0 1em 0;
+  margin-top: -2em;
+  h1 {
+    margin: 0;
+    color: white;
+    text-transform: uppercase;
+  }
+}
+
+.subpage-header-overlay {
+  width: 100%;
+  height: 380px;
+  z-index: -5;
+  @media screen and (max-width: $second-breakpoint){ height: 228px }
+}
+
+#main-content.plain {
+  padding-top: 2em;
+}
+#main-content {
+  @include responsive-padding;
+  background-color: white;
+  // h3 {
+  //   font-weight: bold;
+  //   color: $blue;
+  // }
+  // h2 {
+  //   color: $gold;
+  //   margin: .5em 0;
+  //   margin-top: 1em;
+  //   font-size: 200%;
+  // }
+  // h4, h5, h6 {
+  //   color: $grey;
+  //   margin: 2em 0 -.5em 0;
+  // }
 }

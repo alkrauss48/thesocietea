@@ -55,16 +55,20 @@
     <header class="spanner sticky">
       <div class="container-padding">
         <div class="container">
-          <a href="#"><img src="/assets/images/dist/ak_logo_trimmed.png" alt="" /></a>
+          <a href="/"><img src="/assets/images/dist/ak_logo_trimmed.png" alt="" /></a>
           <div class="nav-wrapper" id="navigation">
             <nav class="nav">
-              <ul>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Blog</a></li>
-                <li><a href="#">Projects</a></li>
-                <li><a href="#">Resume</a></li>
-                <li><a href="#" class="nav-call-action">Hire Me</a></li>
-              </ul>
+              <?php wp_nav_menu(array(
+                'menu' => 'Main Menu',
+                ));
+              ?>
+              <!-- <ul> -->
+              <!--   <li><a href="#">About</a></li> -->
+              <!--   <li><a href="#">Blog</a></li> -->
+              <!--   <li><a href="#">Projects</a></li> -->
+              <!--   <li><a href="#">Resume</a></li> -->
+              <!--   <li><a href="#" class="nav&#45;call&#45;action">Hire Me</a></li> -->
+              <!-- </ul> -->
             </nav>
           </div>
           <div class="nav-wrapper" id="mobile-navigation">
