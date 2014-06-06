@@ -8,8 +8,8 @@ get_header(); ?>
 	<div id="about" class="content-area">
 		<main id="main" class="site-main" role="main">
 <div 
-  data-center="background-position: 50% 0px;"
-  data-top-bottom="background-position: 50% -150px;"
+  data-center="background-position: 50% 60%;"
+  data-top-bottom="background-position: 60% 40%;"
   id="slide1" class="slide" style="background-image: url('assets/images/dist/stockvault-water121514.jpg');">
   <div class="container">
     <div class="content">
@@ -42,18 +42,17 @@ get_header(); ?>
   <div class="container">
     <div class="content">
       <h2
-    data-0="opacity: 0;"
     data-600="opacity: 0;"
-    data-750="opacity: 1; letter-spacing: 0px"
-    data-1050="opacity: 1; letter-spacing: 4px;"
+    data-750="opacity: 1;"
+    data-1050="opacity: 1;"
     data-1100="opacity: 0;"
 >Background</h2>
     </div>
   </div>
 </div>
 <div id="slide3" class="slide"  style="background-image: url('assets/images/dist/stockvault-morning-pier-semisarahcom134386.jpg');"
-  data-bottom-top="background-position: 50% 0px;"
-  data-top-bottom="background-position: 50% -150px;"
+  data-bottom-top="background-position: 50% 60%;"
+  data-top-bottom="background-position: 50% 40%;"
 >
     <div class="curtain"
     data-900="top: -100%; opacity: 0;"
@@ -127,8 +126,8 @@ get_header(); ?>
 
 </div>
 <div id="slide5" class="slide"  style="background-image: url('assets/images/dist/stockvault-city-skyline-at-sunset-113039.jpg');"
-  data-bottom-top="background-position: 50% -150px;"
-  data-top-bottom="background-position: 50% 0px;"
+  data-bottom-top="background-position: 50% 60%;"
+  data-top-bottom="background-position: 50% 40%;"
 >
 <div class='content'>
   <div class="container">
@@ -160,8 +159,8 @@ get_header(); ?>
 
 </div>
 <div id="slide6" class="slide"  style="background-image: url('assets/images/dist/stockvault-red-landscape127092.jpg');"
-    data-4970="top: 0em"
-    data-5020="top: -8em"
+    data-40-end="top: 0em"
+    data-end="top: -8em"
 >
 <div class='content'>
   <div class="container">
@@ -187,7 +186,7 @@ get_header(); ?>
     data-4600="opacity: 0;top: -8em; left: -8em;"
     data-4800="opacity: 1;top: 0em; left: 0em;"
 >
-        <p>I love Layla. We have been dating for over 7 years; and it’s been nothing but bliss.
+        <p>I love <span class="hi">Layla</span>. We have been dating for over 7 years; and it’s been nothing but bliss.
           She makes me a better person in all the areas that I would otherwise fail miserably at, like being thoughtful, building relationships with people, and keeping the house clean ;).
           I couldn’t imagine a life without her, and hanging out with her – doing anything – is always my favorite thing to do. I love her.
           She’s an incredibly talented cake decorator too!</p>
