@@ -84,4 +84,15 @@ $(document).ready( function()	{
   },function(){
     $(this).closest('div').find('a.site-title').css('bottom', '0em');
   });
+
+  if($('.project-screenshot')){
+    $('.project-screenshot').magnificPopup({
+      delegate: 'a', // child items selector, by clicking on it popup will open
+      type: 'image',
+      // other options
+      gallery: {
+        enabled: true
+      }
+    });
+  }
 });

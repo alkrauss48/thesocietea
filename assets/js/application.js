@@ -4,5 +4,6 @@
 //= sidr-custom.js
 //= typed.js
 //= skrollr.min.js
+//= jquery.magnific-popup.min.js
 //= coffee.js
 //= script.js

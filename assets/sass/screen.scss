@@ -848,6 +848,7 @@ hr.header-hr {
     display: block;
     border: 3px solid transparent;
     height: 100%;
+    box-sizing: border-box;
     &:hover {
       border: 3px solid $blue;
       @include box-shadow(4px 4px 10px $lighter-gray);
@@ -863,3 +864,8 @@ hr.header-hr {
 }
 
 .project-screenshot + .project-screenshot + .project-screenshot + .project-screenshot { @include last; }
+
+.project-screenshots {
+  background-color: lightgray;
+  padding: 2em 0;
+}

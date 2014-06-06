@@ -8,11 +8,15 @@
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
   <header class="entry-header">
-    <?php the_title( '<h2 class="entry-title">', '</h2>' ); ?>
+    <div class="container">
+      <?php the_title( '<h2 class="entry-title">', '</h2>' ); ?>
+    </div>
   </header>
 
   <div class="entry-content">
-    <?php the_content(); ?>
+    <div class="container">
+      <?php the_content(); ?>
+    </div>
   </div>
   <footer class="project-screenshots">
     <div class="container">
