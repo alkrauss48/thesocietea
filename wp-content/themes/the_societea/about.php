@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Name: Subpage
+ * Template Name: About
  */
 
 get_header(); ?>

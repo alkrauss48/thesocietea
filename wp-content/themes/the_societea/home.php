@@ -111,7 +111,7 @@ get_header(); ?>
             </div>
             <div class="home-project"
               data-bottom-top="left: -15px; opacity:0;"
-              data-center-center="left: 0px; opacity: 1;"
+              data-end="left: 0px; opacity: 1;"
               >
               <div class="project-image" style="background-image: url('/assets/images/dist/th-soundingboard.png');">
                 <a class="site-title" href="#">Soundingboard</a>
@@ -120,7 +120,7 @@ get_header(); ?>
             </div>
             <div class="home-project"
               data-bottom-top="left: -15px; opacity:0;"
-              data-center-center="left: 0px; opacity: 1;"
+              data-end="left: 0px; opacity: 1;"
               >
               <div class="project-image" style="background-image: url('/assets/images/dist/th-tea-timers.png');">
                 <a class="site-title" href="#">Tea Timers</a>
@@ -129,7 +129,7 @@ get_header(); ?>
             </div>
             <div class="home-project"
               data-bottom-top="left: 15px; opacity:0;"
-              data-center-center="left: 0px; opacity: 1;"
+              data-end="left: 0px; opacity: 1;"
               >
               <div class="project-image" style="background-image: url('/assets/images/dist/th-tea-chart.png');">
                 <a class="site-title" href="#">Tea Chart</a>
@@ -138,7 +138,7 @@ get_header(); ?>
             </div>
             <div class="home-project"
               data-bottom-top="left: 15px; opacity:0;"
-              data-center-center="left: 0px; opacity: 1;"
+              data-end="left: 0px; opacity: 1;"
               >
               <div class="project-image" style="background-image: url('/assets/images/dist/th-carnegie-chart.png');">
                 <a class="site-title" href="#">Carnegie Chart</a>
