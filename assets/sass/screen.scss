@@ -108,6 +108,7 @@ body > header {
 
 body > footer {
   background-color: $gray;
+  z-index: 10;
   .down-triangle {
     border-top: 20px solid white;
   }
@@ -643,4 +644,199 @@ hr.header-hr {
   //   color: $grey;
   //   margin: 2em 0 -.5em 0;
   // }
+}
+
+.slide {
+ height: 70em;
+ width: 100%;
+ background-size: cover;
+ background-attachment: fixed;
+ background-position: center center;
+}
+
+#slide1 {
+  .content {
+    @include span(6 last);
+    @include pre(6);
+    text-align: center;
+    h1  {
+      position: relative;
+      top: 0; left: 0;
+      background-color: rgba(0, 0, 0, .25);
+      @include border-radius(10px 10px);
+      margin-top: 3em;
+      font-size: 5em;
+      @include text-shadow(1px 1px 2px black);
+      color: $teal;
+    }
+    h3 {
+      position: relative;
+      top: 0; left: 0;
+      @include text-shadow(2px 2px 4px black, -2px -2px 4px black);
+      color: white;
+    }
+    p {
+      line-height: 2;
+      position: relative;
+      top: 0;
+      left: 0;
+      margin-top: 20em;
+      padding: 1em;
+      background-color: rgba(0, 0, 0, .55);
+      @include border-radius(10px 10px);
+      text-align: right;
+      color: white;
+    }
+  }
+}
+
+#slide2 {
+  height: 6em;
+  background-color: $gray;
+  h2 {
+    width: 100%;
+    padding: 1em;
+    font-size: 200%;
+    color: $teal;
+    text-align: center;
+    margin: 0;
+    letter-spacing: 0;
+  }
+}
+
+#slide3 {
+  position: relative;
+  overflow: hidden;
+  .contents {
+    z-index: 5;
+    line-height: 2;
+    position: fixed;
+    width: 100%;
+    top: 4em;
+    left: 0;
+    div[class^=content- ]{
+      position: relative;
+      top: 0; left: 0;
+      @include span(4);
+      opacity: 0;
+      color: white;
+      p { padding: 1em; }
+      @include text-shadow(1px 1px 1px black);
+      @include border-radius(10px 10px);
+    }
+    .content-1 { 
+      background-color: rgba(0, 231, 173, .7);
+      .hi { border-bottom: 2px solid $orange; }
+    }
+    .content-2 { background-color: rgba(20, 112, 231, .7); }
+    div.content-3 { 
+      background-color: rgba(255, 95, 0, .7);
+      @include last;
+      .hi { border-bottom: 2px solid $teal; }
+    }
+    div.content-4 {
+      @include full;
+      background-color: rgba(0, 0, 0, .8);
+      .hi { border-bottom: 2px solid $orange; }
+    }
+  }
+}
+#slide4 {
+  position: relative;
+  overflow: hidden;
+}
+
+.curtain {
+  width: 100%;
+  position: absolute;
+  top: 0; left: 0;
+  background-color: black;
+  height: 100%;
+}
+
+@mixin interest-paragraph {
+  padding: 1em;
+  margin-top: 10em;
+  line-height: 2;
+  @include border-radius(10px 10px);
+  .hi {
+    font-weight: bold;
+  }
+}
+
+#slide5 {
+.content { z-index: 5; }
+  h2 {
+    display: inline-block;
+    position: relative;
+    top: 0; left: 0;
+    @include text-shadow(1px 1px 1px black);
+    @include border-radius(10px 10px);
+    color: $blue;
+    background-color: rgba(249, 249, 231, .9);
+    font-size: 300%;
+    padding: .5em;
+    margin-top: 3em;
+  }
+  p {
+    @include interest-paragraph;
+    background-color: rgba(5, 5, 5, .80);
+    color: white;
+    border: 1px solid $teal;
+    .hi { color: $teal; }
+  }
+}
+
+#slide6 {
+  z-index: 10;
+  position: relative;
+  @include box-shadow(0 5px 25px black);
+
+  p {
+    @include interest-paragraph;
+    margin-top: 6em;
+    background-color: rgba(250, 250, 250, .95);
+    border: 2px solid $blue;
+    .hi { color: $blue; }
+  }
+  img.right { margin-top: 6em; }
+}
+
+#slide7 {
+  margin-top: -8em;
+  height: 8em;
+  text-align: center;
+}
+
+.interest-text-wrapper {
+  position: relative;
+  top: 0; left: 0;
+  @include full;
+  &.small-left {
+    @include span(9);
+  }
+  &.small-right {
+    @include span(9 last);
+  }
+}
+
+.slide {
+  img {
+    margin-top: 10em;
+    width: 100%;
+    position: relative;
+    top: 0; left: 0;
+    @include box-shadow(2px 2px 6px white);
+    &.right {
+      @include span(3 last);
+    }
+
+    &.left {
+      @include span(3);
+    }
+  }
+}
+
+#about {
+  overflow: hidden;
 }
