@@ -368,7 +368,10 @@ $(function() {
 */
 
 $(document).ready( function()	{
-  var s = skrollr.init();
+  if(Modernizr.mq('screen and (min-width: 876px)')){
+    var s = skrollr.init();
+  }
+
   if($('.header-content-wrapper').length > 0){
     if(Modernizr.mq('screen and (min-width: 876px)')){
       $(window).on('scroll', function(){
