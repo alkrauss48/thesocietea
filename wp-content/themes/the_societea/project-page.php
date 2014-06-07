@@ -45,7 +45,8 @@
           <?php foreach($fields as $field): ?>
             <div class="project-screenshot">
               <a href="<?php echo $field['image']; ?>" title="<?php echo $field['caption']; ?>">
-                <div style="background-image: url('<?php echo $field['thumbnail']; ?>');"></div>
+                <div class="project-main" style="background-image: url('<?php echo $field['thumbnail']; ?>');"></div>
+                <div class="project-overlay"><i class="icon2-search-plus"></i></div>
               </a>
             </div>
           <?php endforeach; ?>

@@ -845,6 +845,7 @@ hr.header-hr {
   @include span(3);
   height: 10em;
   a {
+    position: relative;
     display: block;
     // border: 3px solid transparent;
     box-sizing: border-box;
@@ -852,14 +853,29 @@ hr.header-hr {
     height: 100%;
     @include box-shadow(4px 4px 10px $lighter-gray);
     &:hover {
-      opacity: .5;
+      .project-overlay { display: block; }
     // @include box-shadow(0px 0px 0px $lighter-gray);
     }
   }
 
-  div {
+  div.project-main {
     background-size: cover;
     background-position: center center;
+    height: 100%;
+    width: 100%;
+  }
+
+  div.project-overlay {
+    background-color: rgba(20, 112, 231, .7);
+    color: white;
+    display: none;
+    position: absolute;
+    left: 0; top: 0;
+    text-align: center;
+    i {
+      font-size: 200%;
+      line-height: 5em;
+    }
     height: 100%;
     width: 100%;
   }
@@ -879,7 +895,9 @@ hr.header-hr {
 
 h2.entry-title {
   display: inline-block;
+  color: $orange;
 }
+
 @mixin project-link {
   text-decoration: none;
   font-weight: bold;
