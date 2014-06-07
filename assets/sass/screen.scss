@@ -846,12 +846,14 @@ hr.header-hr {
   height: 10em;
   a {
     display: block;
-    border: 3px solid transparent;
-    height: 100%;
+    // border: 3px solid transparent;
     box-sizing: border-box;
+      // border: 3px solid $blue;
+    height: 100%;
+    @include box-shadow(4px 4px 10px $lighter-gray);
     &:hover {
-      border: 3px solid $blue;
-      @include box-shadow(4px 4px 10px $lighter-gray);
+      opacity: .5;
+    // @include box-shadow(0px 0px 0px $lighter-gray);
     }
   }
 
@@ -868,4 +870,36 @@ hr.header-hr {
 .project-screenshots {
   background-color: lightgray;
   padding: 2em 0;
+}
+
+.type-project {
+  padding-top: 2em;
+  margin-bottom: 2em;
+}
+
+h2.entry-title {
+  display: inline-block;
+}
+@mixin project-link {
+  text-decoration: none;
+  font-weight: bold;
+  color: $teal;
+  &:hover {
+    color: $blue;
+  }
+}
+p.entry-title-link {
+  margin-left: 1em;
+  display: inline-block;
+  a {
+    @include project-link;
+  }
+}
+
+a.project-link {
+  @include project-link;
+}
+
+.entry-content {
+  margin-bottom: 1em;
 }
