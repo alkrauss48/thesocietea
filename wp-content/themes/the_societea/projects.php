@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Name: Projects
+ * Template Name: Posts
  */
 
 get_header(); ?>
@@ -29,10 +29,11 @@ get_header(); ?>
           </div>
         </div>
         <?php
-          $args=array('post_type' => 'project', 'post_status' => 'publish');
+          $post_type = $cfs->get('post_type');
+          $args=array('post_type' => $post_type, 'post_status' => 'publish');
           $my_query = new WP_Query($args);
           while ( $my_query->have_posts() ) : $my_query->the_post(); ?>
-            <?php get_template_part( 'project', 'page' ); ?>
+            <?php get_template_part( $post_type, 'page' ); ?>
           <?php endwhile; ?>
       </div>
 

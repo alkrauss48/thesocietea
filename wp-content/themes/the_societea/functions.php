@@ -101,6 +101,10 @@ function create_post_type() {
   );
 }
 add_action( 'widgets_init', 'the_societea_widgets_init' );
+function new_excerpt_more( $more ) {
+    return '...';
+}
+add_filter('excerpt_more', 'new_excerpt_more');
 
 /**
  * Enqueue scripts and styles.

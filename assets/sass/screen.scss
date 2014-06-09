@@ -242,6 +242,20 @@ body > footer {
   li { line-height: 2.2em; }
 }
 
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0;
+}
+
+hr.short {
+  width: 5em;
+  border-top: 3px solid $blue;
+}
+
 hr.header-hr {
   width: 50%;
   border: 0;
@@ -924,5 +938,15 @@ a.project-link {
 }
 
 .entry-content {
+  line-height: 2;
   margin-bottom: 1em;
+}
+
+.posted-on {
+  font-weight: 300;
+  font-size: 80%;
+}
+
+.single-post {
+  margin-top: 6em;
 }
