@@ -5,7 +5,10 @@
 */
 
 get_header(); ?>
-    <div class="header-content-wrapper spanner">
+    <div class="header-content-wrapper spanner"
+      data-top="background-position: 50% 100%;"
+      data-top-bottom="background-position: 50% 0%;"
+    >
       <div class="header-text">
         <h2>Hi, I'm</h2>
         <h1>Aaron Krauss</h1>
@@ -73,78 +76,26 @@ get_header(); ?>
         <h2>Check out some of my projects</h2>
         <div class="container-padding">
           <div class="home-projects-list">
-            <div class="home-project"
-              data-bottom-top="left: -15px; opacity:0;"
-              data-center-center="left: 0px; opacity: 1;"
-              >
-              <div class="project-image" style="background-image: url('/assets/images/dist/th-tle.png');">
-                <a class="site-title" href="#">Total Environment</a>
-                <a class="project-hover" href="http://totalenvironmentinc.com" target="tle"><p>Visit Site <i class="icon2-play"></i></p></a>
-              </div>
-            </div>
-            <div class="home-project"
-              data-bottom-top="left: -15px; opacity:0;"
-              data-center-center="left: 0px; opacity: 1;"
-              >
-              <div class="project-image" style="background-image: url('/assets/images/dist/th-enviro.png');">
-                <a class="site-title" href="#">Enviro Systems</a>
-                <a class="project-hover" href="http://enviro-ok.com" target="enviro"><p>Visit Site <i class="icon2-play"></i></p></a>
-              </div>
-            </div>
-            <div class="home-project"
-              data-bottom-top="left: 15px; opacity:0;"
-              data-center-center="left: 0px; opacity: 1;"
-              >
-              <div class="project-image" style="background-image: url('/assets/images/dist/th-77nrg.png');">
-                <a class="site-title" href="#">77 Energy</a>
-                <a class="project-hover" href="http://77nrg.staplegun.us" target="77nrg"><p>Visit Site <i class="icon2-play"></i></p></a>
-              </div>
-            </div>
-            <div class="home-project"
-              data-bottom-top="left: 15px; opacity:0;"
-              data-center-center="left: 0px; opacity: 1;"
-              >
-              <div class="project-image" style="background-image: url('/assets/images/dist/th-baton.png');">
-                <a class="site-title" href="#">Baton App</a>
-                <a class="project-hover" href="http://batonapp.com" target="baton"><p>Visit Site <i class="icon2-play"></i></p></a>
-              </div>
-            </div>
-            <div class="home-project"
-              data-bottom-top="left: -15px; opacity:0;"
-              data-end="left: 0px; opacity: 1;"
-              >
-              <div class="project-image" style="background-image: url('/assets/images/dist/th-soundingboard.png');">
-                <a class="site-title" href="#">Soundingboard</a>
-                <a class="project-hover" href="http://soundingboard.tv" target="soundingboard"><p>Visit Site <i class="icon2-play"></i></p></a>
-              </div>
-            </div>
-            <div class="home-project"
-              data-bottom-top="left: -15px; opacity:0;"
-              data-end="left: 0px; opacity: 1;"
-              >
-              <div class="project-image" style="background-image: url('/assets/images/dist/th-tea-timers.png');">
-                <a class="site-title" href="#">Tea Timers</a>
-                <a class="project-hover" href="http://thesocietea.org/tea_timer" target="tea-timer"><p>Visit Site <i class="icon2-play"></i></p></a>
-              </div>
-            </div>
-            <div class="home-project"
-              data-bottom-top="left: 15px; opacity:0;"
-              data-end="left: 0px; opacity: 1;"
-              >
-              <div class="project-image" style="background-image: url('/assets/images/dist/th-tea-chart.png');">
-                <a class="site-title" href="#">Tea Chart</a>
-                <a class="project-hover" href="http://thesocietea.org/tea_steep_chart" target="tea-chart"><p>Visit Site <i class="icon2-play"></i></p></a>
-              </div>
-            </div>
-            <div class="home-project"
-              data-bottom-top="left: 15px; opacity:0;"
-              data-end="left: 0px; opacity: 1;"
-              >
-              <div class="project-image" style="background-image: url('/assets/images/dist/th-carnegie-chart.png');">
-                <a class="site-title" href="#">Carnegie Chart</a>
-                <a class="project-hover" href="http://thesocietea.org/carnegie_chart" target="carnegie-chart"><p>Visit Site <i class="icon2-play"></i></p></a>
-              </div>
-            </div>
+            <?php
+              $fields = $cfs->get('projects');
+              if($fields):
+            ?>
+              <?php foreach($fields as $index => $field): ?>
+                <div class="home-project"
+                  <?php if(($index % 4) < 2): ?>
+                    data-bottom-top="left: -15px; opacity:0;"
+                  <?php else: ?>
+                    data-bottom-top="left: 15px; opacity:0;"
+                  <?php endif; ?>
+                  data--50-bottom-bottom="left: 0px; opacity: 1;"
+                  >
+                  <div class="project-image" style="background-image: url('<?php echo $field['thumbnail']; ?>');">
+                    <a class="site-title" href="#"><?php echo $field['label']; ?></a>
+                    <a class="project-hover" href="<?php echo $field['url']; ?>" target="tle"><p>Visit Site <i class="icon2-play"></i></p></a>
+                  </div>
+                </div>
+              <?php endforeach; ?>
+            <?php endif; ?>
           </div>
         </div>
         <a class="orange-learn-more" href="#">See More <i class="icon2-play"></i></a>

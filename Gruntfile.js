@@ -22,9 +22,9 @@ module.exports = function (grunt) {
           }
         },
         uglify: {
-            options: {
-              sourceMap: true
-            },
+            // options: {
+            //   sourceMap: true
+            // },
             dist: {
               files: { 'assets/js/min/scripts.min.js': [ 'assets/js/build/application.build.js'   ], },
             },

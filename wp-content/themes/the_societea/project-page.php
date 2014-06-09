@@ -26,7 +26,7 @@
       <p><strong>Role: </strong><?php echo $cfs->get('role'); ?></p>
       <p><strong>Company: </strong>
       <?php if($cfs->get('company_link')): ?>
-        <a class="project-link" href="<?php echo $cfs->get('company_link') ?>"><?php echo $cfs->get('company') ?></a>
+        <a class="project-link" target="_blank" href="<?php echo $cfs->get('company_link') ?>"><?php echo $cfs->get('company') ?></a>
       <?php else: ?>
         <?php echo $cfs->get('company') ?>
       <?php endif; ?>
@@ -36,6 +36,7 @@
     </div>
   </div>
   <footer class="project-screenshots">
+    <div class="down-triangle"></div>
     <div class="container">
       <div>
         <?php
@@ -53,5 +54,6 @@
         <?php endif; ?>
       </div>
     </div>
+    <div class="down-triangle triangle-second"></div>
   </footer>
 </article>
