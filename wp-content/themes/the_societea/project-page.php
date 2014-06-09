@@ -8,35 +8,40 @@
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
   <header class="entry-header">
-    <div class="container">
-      <?php the_title( '<h2 class="entry-title">', '</h2>' ); ?>
-      <?php
-        $link = $cfs->get('link');
-        if($link):
-      ?>
-        <p class="entry-title-link"><a href="<?php echo $link; ?>" target="_blank">Visit <i class="icon2-play"></i></a></p>
-      <?php endif; ?>
+    <div class="container-padding">
+      <div class="container">
+        <?php the_title( '<h2 class="entry-title">', '</h2>' ); ?>
+        <?php
+          $link = $cfs->get('link');
+          if($link):
+        ?>
+          <p class="entry-title-link"><a href="<?php echo $link; ?>" target="_blank">Visit <i class="icon2-play"></i></a></p>
+        <?php endif; ?>
+      </div>
     </div>
   </header>
 
   <div class="entry-content">
-    <div class="container">
-      <p><strong>Project Type: </strong><?php echo $cfs->get('project_type'); ?></p>
-      <p><strong>Languages Used: </strong><?php echo $cfs->get('languages'); ?></p>
-      <p><strong>Role: </strong><?php echo $cfs->get('role'); ?></p>
-      <p><strong>Company: </strong>
-      <?php if($cfs->get('company_link')): ?>
-        <a class="project-link" target="_blank" href="<?php echo $cfs->get('company_link') ?>"><?php echo $cfs->get('company') ?></a>
-      <?php else: ?>
-        <?php echo $cfs->get('company') ?>
-      <?php endif; ?>
-      </p>
-      <!-- <br /> -->
-      <!-- <?php the_content(); ?> -->
+    <div class="container-padding">
+      <div class="container">
+        <p><strong>Project Type: </strong><?php echo $cfs->get('project_type'); ?></p>
+        <p><strong>Languages Used: </strong><?php echo $cfs->get('languages'); ?></p>
+        <p><strong>Role: </strong><?php echo $cfs->get('role'); ?></p>
+        <p><strong>Company: </strong>
+        <?php if($cfs->get('company_link')): ?>
+          <a class="project-link" target="_blank" href="<?php echo $cfs->get('company_link') ?>"><?php echo $cfs->get('company') ?></a>
+        <?php else: ?>
+          <?php echo $cfs->get('company') ?>
+        <?php endif; ?>
+        </p>
+        <!-- <br /> -->
+        <!-- <?php the_content(); ?> -->
+      </div>
     </div>
   </div>
   <footer class="project-screenshots">
     <div class="down-triangle"></div>
+    <div class="container-padding">
     <div class="container">
       <div>
         <?php
@@ -53,6 +58,7 @@
           <?php endforeach; ?>
         <?php endif; ?>
       </div>
+    </div>
     </div>
     <div class="down-triangle triangle-second"></div>
   </footer>

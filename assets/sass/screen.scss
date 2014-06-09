@@ -148,6 +148,7 @@ body > footer {
           background-color: white;
         }
       }
+      &.current-menu-item a { color: $teal; }
     }
   }
 }
@@ -567,6 +568,7 @@ hr.header-hr {
   font-weight: 300;
   left: 10%;
   bottom: 0;
+  @media screen and (max-width: $first-breakpoint){ bottom: -3.5em; }
   display: inline-block;
   margin-left: auto;
   margin-right: auto;
@@ -632,22 +634,8 @@ hr.header-hr {
   padding-top: 2em;
 }
 #main-content {
-  @include responsive-padding;
+  // @include responsive-padding;
   background-color: white;
-  // h3 {
-  //   font-weight: bold;
-  //   color: $blue;
-  // }
-  // h2 {
-  //   color: $gold;
-  //   margin: .5em 0;
-  //   margin-top: 1em;
-  //   font-size: 200%;
-  // }
-  // h4, h5, h6 {
-  //   color: $grey;
-  //   margin: 2em 0 -.5em 0;
-  // }
 }
 
 .slide {
@@ -847,7 +835,12 @@ hr.header-hr {
 
 .project-screenshot {
   @include span(3);
+  @media screen and (max-width: $first-breakpoint){
+    @include span(6);
+    &:nth-of-type(2n + 2) { @include last; }
+  }
   height: 10em;
+  margin-bottom: 2em;
   a {
     position: relative;
     display: block;
@@ -890,7 +883,7 @@ hr.header-hr {
 .project-screenshots {
   position: relative;
   background-color: lightgray;
-  .container { padding: 2em 0; }
+  .container { padding-top: 2em; }
   .down-triangle {
     border-top: 20px solid white;
     &.triangle-second {

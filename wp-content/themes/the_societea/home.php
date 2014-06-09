@@ -63,10 +63,10 @@ get_header(); ?>
             <div class="home-about-desc">
               <h2>Get to know me</h2>
               <p>Hi, I'm from Edmond, Oklahoma, and I like to program. A lot. My favorite projects are those that are data-heavy involving Ruby,
-              Javascript, APIs, and more. Then, I always enjoy building a solid, responsive front-end using all the new cool-kid tools.</p>
+              Javascript, APIs, Databases, and more. Then, I always enjoy building a solid, responsive front-end using all the new cool-kid tools.</p>
               <p>Other than coding, I like brewing a hot cup of tea, listening to podcasts, walking my dog, and hanging out with my
               super cool girlfriend.</p>
-              <a class="orange-learn-more" href="#">Learn More <i class="icon2-play"></i></a>
+              <a class="orange-learn-more" href="?p=6">Learn More <i class="icon2-play"></i></a>
             </div>
           </div>
         </div>
@@ -98,7 +98,7 @@ get_header(); ?>
             <?php endif; ?>
           </div>
         </div>
-        <a class="orange-learn-more" href="#">See More <i class="icon2-play"></i></a>
+        <a class="orange-learn-more" href="?p=30">See More <i class="icon2-play"></i></a>
       </div>
     </div>
 <?php get_footer(); ?>

@@ -15,14 +15,18 @@ get_header(); ?>
       <div class="subpage-title">
         <div class="container">
           <div class="inner-title-wrapper">
-            <h1><?php the_title(); ?></h1>
+            <div class="container-padding">
+              <h1><?php the_title(); ?></h1>
+            </div>
           </div>
         </div>
       </div>
 
       <div class="plain" id="main-content">
-        <div class="container">
-          <?php the_post();the_content(); ?>
+        <div class="container-padding">
+          <div class="container">
+            <?php the_post();the_content(); ?>
+          </div>
         </div>
         <?php
           $args=array('post_type' => 'project', 'post_status' => 'publish');
