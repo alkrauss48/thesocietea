@@ -14,6 +14,7 @@
       <?php the_societea_posted_on(); ?>
     </div><!-- .entry-meta -->
   </header><!-- .entry-header -->
+<hr class="short" />
 
   <div class="entry-content">
     <?php the_content(); ?>

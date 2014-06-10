@@ -148,6 +148,10 @@ body > footer {
           background-color: white;
         }
       }
+      &.nav-call-action.current-menu-item a {
+        color: $orange;
+        background-color: white;
+      }
       &.current-menu-item a { color: $teal; }
     }
   }
@@ -912,7 +916,7 @@ hr.header-hr {
   margin-bottom: 2em;
 }
 
-h2.entry-title {
+.entry-title {
   display: inline-block;
   color: $orange;
 }
@@ -948,5 +952,12 @@ a.project-link {
 }
 
 .single-post {
-  margin-top: 6em;
+  margin-top: 4em;
+  margin-bottom: 2em;
+  a {
+    color: $teal;
+    font-weight: bold;
+    text-decoration: none;
+    &:hover { color: $blue; }
+  }
 }
