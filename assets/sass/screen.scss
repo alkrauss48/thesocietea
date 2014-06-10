@@ -974,8 +974,13 @@ p.entry-title-link {
     text-align: center;
     font-size: 80%;
     @include span(3);
-    &:nth-of-type(4n + 4) {
-      @include last;
+    &:nth-of-type(4n + 4) { @include last; }
+    @media screen and (max-width: $first-breakpoint) and (min-width: $second-breakpoint){
+      @include span(6);
+      &:nth-of-type(2n + 2) { @include last; }
+    }
+    @media screen and (max-width: $second-breakpoint){
+      @include full;
     }
   }
 }
@@ -989,7 +994,13 @@ p.entry-title-link {
 .design-bar {
   background: $blue;
   @include background( linear-gradient(top, #408cee, $blue));
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff287eec', endColorstr='#ff1470e7', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff408cee', endColorstr='#ff1470e7', GradientType=0);
+}
+
+.tools-bar {
+  background: $orange;
+  @include background( linear-gradient(top, #ff7f33, $orange));
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffff7f33', endColorstr='#ffff5f00', GradientType=0);
 }
 
 .skill-bar-wrapper {

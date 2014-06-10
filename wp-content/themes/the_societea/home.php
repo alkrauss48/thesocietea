@@ -32,21 +32,21 @@ get_header(); ?>
               data-bottom-top="left: -15px; opacity:0;"
               data-center-center="left: 0px; opacity: 1;"
               ><i class="icon2-keyboard"></i></div>
-            <a class="development" href="#">Development</a>
+            <a class="development" href="<?php echo get_permalink(13); ?>">Development</a>
           </div>
           <div class="home-offerings">
             <div class="icon-wrapper"
               data-bottom-top="opacity:0;"
               data-center-center="opacity: 1;"
               ><i class="icon2-pencil"></i></div>
-            <a class="design" href="#">Design</a>
+            <a class="design" href="<?php echo get_permalink(13); ?>">Design</a>
           </div>
           <div class="home-offerings">
             <div class="icon-wrapper"
               data-bottom-top="left: 15px; opacity:0;"
               data-center-center="left: 0px; opacity: 1;"
               ><i class="icon2-users"></i></div>
-            <a class="training" href="#">Training</a>
+            <a class="training" href="<?php echo get_permalink(13); ?>">Training</a>
           </div>
         </div>
       </div>
@@ -66,7 +66,7 @@ get_header(); ?>
               Javascript, APIs, Databases, and more. Then, I always enjoy building a solid, responsive front-end using all the new cool-kid tools.</p>
               <p>Other than coding, I like brewing a hot cup of tea, listening to podcasts, walking my dog, and hanging out with my
               super cool girlfriend.</p>
-              <a class="orange-learn-more" href="?p=6">Learn More <i class="icon2-play"></i></a>
+              <a class="orange-learn-more" href="<?php echo get_permalink(6); ?>">Learn More <i class="icon2-play"></i></a>
             </div>
           </div>
         </div>
@@ -98,7 +98,7 @@ get_header(); ?>
             <?php endif; ?>
           </div>
         </div>
-        <a class="orange-learn-more" href="?p=30">See More <i class="icon2-play"></i></a>
+        <a class="orange-learn-more" href="<?php echo get_permalink(30); ?>">See More <i class="icon2-play"></i></a>
       </div>
     </div>
 <?php get_footer(); ?>
