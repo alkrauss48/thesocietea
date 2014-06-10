@@ -35,6 +35,15 @@ $transition-time: .25s;
   }
 }
 
+@mixin project-link {
+  text-decoration: none;
+  font-weight: bold;
+  color: $teal;
+  &:hover {
+    color: $blue;
+  }
+}
+
 @mixin four-three-two-one {
   @include span(3);
   &:nth-of-type(4n+4) { @include last; }
@@ -849,8 +858,16 @@ hr.header-hr {
 
 #about {
   overflow: hidden;
+  @media screen and (max-width: $first-breakpoint){ display: none; }
 }
 
+#about-responsive {
+  display: none;
+  @media screen and (max-width: $first-breakpoint){ display: block; }
+  h2 { color: $blue; }
+  a { @include project-link; }
+  .hi { border-bottom: 2px solid $orange; }
+}
 .project-screenshot {
   @include span(3);
   @media screen and (max-width: $first-breakpoint){
@@ -921,14 +938,6 @@ hr.header-hr {
   color: $orange;
 }
 
-@mixin project-link {
-  text-decoration: none;
-  font-weight: bold;
-  color: $teal;
-  &:hover {
-    color: $blue;
-  }
-}
 p.entry-title-link {
   margin-left: 1em;
   display: inline-block;
@@ -1017,3 +1026,4 @@ p.entry-title-link {
     height: 100%;
   }
 }
+
