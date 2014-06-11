@@ -10,7 +10,7 @@ get_header(); ?>
 <div 
   data-center="background-position: 50% 60%;"
   data-top-bottom="background-position: 60% 40%;"
-  id="slide1" class="slide" style="background-image: url('assets/images/dist/stockvault-water121514.jpg');">
+  id="slide1" class="slide" style="background-image: url('/assets/images/dist/stockvault-water121514.jpg');">
   <div class="container">
     <div class="content">
         <h1
@@ -37,7 +37,7 @@ get_header(); ?>
     </div>
   </div>
 </div>
-<!-- <div id="slide2" class="slide"  style="background&#45;image: url('assets/images/dist/stockvault&#45;morning&#45;pier&#45;semisarahcom134386.jpg');"> -->
+<!-- <div id="slide2" class="slide"  style="background&#45;image: url('/assets/images/dist/stockvault&#45;morning&#45;pier&#45;semisarahcom134386.jpg');"> -->
 <div id="slide2" class="slide">
   <div class="container">
     <div class="content">
@@ -50,7 +50,7 @@ get_header(); ?>
     </div>
   </div>
 </div>
-<div id="slide3" class="slide"  style="background-image: url('assets/images/dist/stockvault-morning-pier-semisarahcom134386.jpg');"
+<div id="slide3" class="slide"  style="background-image: url('/assets/images/dist/stockvault-morning-pier-semisarahcom134386.jpg');"
   data-bottom-top="background-position: 50% 60%;"
   data-top-bottom="background-position: 50% 40%;"
 >
@@ -118,14 +118,14 @@ get_header(); ?>
 </div>
 
 </div>
-<div id="slide4" class="slide"  style="background-image: url('assets/images/dist/stockvault-snowy-steps110955.jpg');">
+<div id="slide4" class="slide"  style="background-image: url('/assets/images/dist/stockvault-snowy-steps110955.jpg');">
     <div class="curtain"
     data-2300="height: 100%; opacity: .7;"
     data-2700="height: 0%; opacity: 0;"
 ></div>
 
 </div>
-<div id="slide5" class="slide"  style="background-image: url('assets/images/dist/stockvault-city-skyline-at-sunset-113039.jpg');"
+<div id="slide5" class="slide"  style="background-image: url('/assets/images/dist/stockvault-city-skyline-at-sunset-113039.jpg');"
   data-bottom-top="background-position: 50% 60%;"
   data-top-bottom="background-position: 50% 40%;"
 >
@@ -158,7 +158,7 @@ get_header(); ?>
 </div>
 
 </div>
-<div id="slide6" class="slide"  style="background-image: url('assets/images/dist/stockvault-red-landscape127092.jpg');"
+<div id="slide6" class="slide"  style="background-image: url('/assets/images/dist/stockvault-red-landscape127092.jpg');"
     data-40-end="top: 0em"
     data-end="top: -8em"
 >
@@ -210,7 +210,7 @@ get_header(); ?>
 		</main><!-- #main -->
 	</div><!-- #primary -->
 <div id="about-responsive">
-      <div class="subpage-header-image" style="background-image: url('assets/images/dist/stockvault-morning-pier-semisarahcom134386.jpg'); ?>');"
+      <div class="subpage-header-image" style="background-image: url('/assets/images/dist/stockvault-morning-pier-semisarahcom134386.jpg'); ?>');"
   data-start="background-position: 50% 55%;"
   data-400="background-position: 50% 45%;"
 ></div>
