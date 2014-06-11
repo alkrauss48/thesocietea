@@ -169,14 +169,21 @@ body > footer {
 
 .header-content-wrapper {
   height: 100%;
-  // position: absolute;
+  position: relative;
+}
+.header-content-image {
+  position: fixed;
+  top: 0; left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: -5;
   background-image: url('/assets/images/dist/home-header-back.jpg');
   background-size: cover;
-  // background-position: center bottom;
-  background-attachment: fixed;
+  background-position: center 100%;
 }
 
 .home-content {
+  background-color: white;
   h2 {
     margin: 0;
     padding: 3em 0 1em 0;
@@ -561,6 +568,7 @@ hr.header-hr {
   position: relative;
   padding-bottom: 3em;
   text-align: center;
+  z-index: 5;
   .project-image {
     position: relative;
     @include box-shadow(4px 4px 10px $lighter-gray);
@@ -605,6 +613,7 @@ hr.header-hr {
   width: 80%;
   padding: .5em 0;
   font-size: 80%;
+  @media screen and (max-width: $second-breakpoint){ font-size: 70%; }
   z-index: -1;
   background-color: $gray;
   &:before {

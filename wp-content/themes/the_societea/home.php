@@ -5,10 +5,11 @@
 */
 
 get_header(); ?>
-    <div class="header-content-wrapper spanner"
-      data-top="background-position: 50% 100%;"
-      data-top-bottom="background-position: 50% 0%;"
-    >
+    <div class="header-content-wrapper spanner">
+      <div class="header-content-image"
+        data-top="background-position: 50% 100%;"
+        data-top-bottom="background-position: 50% 0%;"
+      ></div>
       <div class="header-text">
         <h2>Hi, I'm</h2>
         <h1>Aaron Krauss</h1>
