@@ -278,6 +278,7 @@ get_header(); ?>
             I couldn’t imagine a life without her, and hanging out with her – doing anything – is always my favorite thing to do. I love her.
             She’s an incredibly talented cake decorator too!
           </p>
+          <p><span class="hi">Note:</span> View this page on a non-mobile device to see some really neat parallax effects!</p>
         </div>
       </div>
     </div>
