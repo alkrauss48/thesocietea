@@ -40,7 +40,7 @@ $(function() {
 */
 
 $(document).ready( function()	{
-  if(Modernizr.mq('screen and (min-width: 876px)')){
+  if(Modernizr.mq('screen and (min-width: 876px)') && !navigator.userAgent.match(/MSIE 8/)){
     var s = skrollr.init();
   }
 
