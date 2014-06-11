@@ -210,8 +210,8 @@ body > footer {
     color: $teal;
   }
   @media screen and (max-width: $mid-breakpoint){
-    h1 { font-size: 150%; }
-    h2 { font-size: 125%; }
+    h1 { font-size: 125%; }
+    h2 { font-size: 110%; }
     h3 { font-size: 80%; }
   }
 }
@@ -301,7 +301,7 @@ hr.header-hr {
   }
   &.affixed {
     position: fixed;
-    top: 0;
+    top: 0; left: auto;
     margin-top: 0;
   }
   &.mini {
@@ -884,9 +884,10 @@ hr.header-hr {
       // border: 3px solid $blue;
     height: 100%;
     @include box-shadow(4px 4px 10px $lighter-gray);
-    &:hover {
-      .project-overlay { display: block; }
-    // @include box-shadow(0px 0px 0px $lighter-gray);
+    @media screen and (min-width: $first-breakpoint){
+      &:hover {
+        .project-overlay { display: block; }
+      }
     }
   }
 
