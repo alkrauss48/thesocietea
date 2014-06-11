@@ -42,8 +42,8 @@
 
     <!-- <link href='http://fonts.googleapis.com/css?family=Merriweather:400,700,900,300' rel='stylesheet' type='text/css'> -->
     <link href='http://fonts.googleapis.com/css?family=Merriweather+Sans:400,700,300' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="assets/css/screen.css">
-    <script src="assets/js/lib/modernizr-2.7.1.min.js"></script>
+    <link rel="stylesheet" href="/assets/css/screen.css">
+    <script src="/assets/js/lib/modernizr-2.7.1.min.js"></script>
     <!--[if lt IE 9]>
       <script src="assets/js/min/ie.min.js"></script>
     <![endif]-->
