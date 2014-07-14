@@ -2,25 +2,14 @@
 
 class cfs_api
 {
-    public $parent;
     public $cache;
-
-
-    /**
-     * Constructor
-     * @param object $parent
-     * @since 1.0.0
-     */
-    public function __construct( $parent ) {
-        $this->parent = $parent;
-    }
 
 
     /**
      * Get a field value
      * @param string $field_name
      * @param mixed $post_id The post ID (false for the current post ID)
-     * @param array $options 
+     * @param array $options
      * @return mixed The field value
      * @since 1.0.0
      */
@@ -32,20 +21,20 @@ class cfs_api
         $post_id = empty( $post_id ) ? $post->ID : (int) $post_id;
 
         // Trigger get_fields if not in cache
-        if ( !isset( $this->cache[$post_id][$options['format']][$field_name] ) ) {
+        if ( ! isset( $this->cache[ $post_id ][ $options['format'] ][ $field_name ] ) ) {
             $fields = $this->get_fields( $post_id, $options );
 
-            return isset( $fields[$field_name] ) ? $fields[$field_name] : null;
+            return isset( $fields[ $field_name ] ) ? $fields[ $field_name ] : null;
         }
 
-        return $this->cache[$post_id][$options['format']][$field_name];
+        return $this->cache[ $post_id ][ $options['format'] ][ $field_name ];
     }
 
 
     /**
      * Get all field values for a specific post
      * @param mixed $post_id The post ID (false for the current post ID)
-     * @param array $options 
+     * @param array $options
      * @return array An associative array of field values
      * @since 1.0.0
      */
@@ -57,8 +46,8 @@ class cfs_api
         $post_id = empty( $post_id ) ? $post->ID : (int) $post_id;
 
         // Return cached results
-        if ( isset( $this->cache[$post_id][$options['format']] ) ) {
-            return $this->cache[$post_id][$options['format']];
+        if ( isset( $this->cache[ $post_id ][ $options['format'] ] ) ) {
+            return $this->cache[ $post_id ][ $options['format'] ];
         }
 
         $fields = array();
@@ -67,14 +56,14 @@ class cfs_api
         // Get all field groups for this post
         $group_ids = $this->get_matching_groups( $post_id, true );
 
-        if ( !empty( $group_ids ) ) {
+        if ( ! empty( $group_ids ) ) {
             $results = $this->find_input_fields( array( 'post_id' => array_keys( $group_ids ) ) );
             foreach ( $results as $result ) {
                 $result = (object) $result;
                 $fields[$result->id] = $result;
             }
 
-            if ( !empty( $fields ) ) {
+            if ( ! empty( $fields ) ) {
                 // Make sure we're using active field groups
                 $field_ids = implode( ',', array_keys( $fields ) );
 
@@ -97,7 +86,7 @@ class cfs_api
                     $field = $fields[$result->field_id];
                     $current_item = "{$result->hierarchy}.{$result->weight}.{$result->field_id}";
 
-                    if ( !empty( $result->hierarchy ) ) {
+                    if ( ! empty( $result->hierarchy ) ) {
                         // Format for API (field names)
                         if ( 'api' == $options['format'] || 'raw' == $options['format'] ) {
                             $tmp = explode( ':', $result->hierarchy );
@@ -175,20 +164,20 @@ class cfs_api
 
     /**
      * Format a field value
-     * @param object $field 
-     * @param mixed $value 
-     * @param array $options 
+     * @param object $field
+     * @param mixed $value
+     * @param array $options
      * @return mixed
      * @since 1.0.0
      */
     private function apply_value_filters( $field, $value, $options ) {
-        $value = $this->parent->fields[$field->type]->prepare_value( $value, $field );
+        $value = CFS()->fields[$field->type]->prepare_value( $value, $field );
 
         if ('api' == $options['format']) {
-            $value = $this->parent->fields[$field->type]->format_value_for_api( $value, $field );
+            $value = CFS()->fields[$field->type]->format_value_for_api( $value, $field );
         }
         elseif ( 'input' == $options['format'] ) {
-            $value = $this->parent->fields[$field->type]->format_value_for_input( $value, $field );
+            $value = CFS()->fields[$field->type]->format_value_for_input( $value, $field );
         }
 
         return $value;
@@ -197,8 +186,8 @@ class cfs_api
 
     /**
      * Get referenced field values (using relationship fields)
-     * @param int $post_id 
-     * @param array $options 
+     * @param int $post_id
+     * @param array $options
      * @return array
      * @since 1.4.4
      */
@@ -287,7 +276,7 @@ class cfs_api
 
     /**
      * Get input fields and their values
-     * @param array $params 
+     * @param array $params
      * @return array
      * @since 1.0.0
      */
@@ -329,7 +318,7 @@ class cfs_api
 
     /**
      * Find input fields
-     * @param array $params 
+     * @param array $params
      * @return array
      * @since 1.8.4
      */
@@ -392,7 +381,7 @@ class cfs_api
 
     /**
      * MySQL "ORDER BY" for PHP associative arrays
-     * @link http://php.net/manual/en/function.array-multisort.php#100534
+     * @link https://gist.github.com/mgibbs189/4634604
      * @return array
      * @since 1.8.4
      */
@@ -400,31 +389,32 @@ class cfs_api
         $args = func_get_args();
         $data = array_shift( $args );
 
-        if ( !is_array( $data ) ) {
-            return false;
+        if ( ! is_array( $data ) ) {
+            return array();
         }
 
         $multisort_params = array();
         foreach ( $args as $n => $field ) {
             if ( is_string( $field ) ) {
-                ${"tmp_$n"} = array();
-                foreach ( $data as $key => $row ) {
-                    ${"tmp_$n"}[$key] = $row[$field];
+                $tmp = array();
+                foreach ( $data as $row ) {
+                    $tmp[] = $row[ $field ];
                 }
-                $multisort_params[$n] = &${"tmp_$n"};
+                $args[ $n ] = $tmp;
             }
+            $multisort_params[] = &$args[ $n ];
         }
 
         $multisort_params[] = &$data;
         call_user_func_array( 'array_multisort', $multisort_params );
-        return array_pop( $multisort_params );
+        return end( $multisort_params );
     }
 
 
     /**
      * Determine which field groups to use for the current post
      * @param int|array $params Post ID or an array of rules to match
-     * @param boolean $skip_roles 
+     * @param boolean $skip_roles
      * @return array
      * @since 1.0.0
      */
@@ -448,29 +438,44 @@ class cfs_api
         }
 
         // Detect post_types / page_templates if they weren't sent
-        if ( !empty( $rule_types[ 'post_ids' ] ) ) {
-            $rule_types[ 'post_ids' ] = array_map( 'absint', (array) $rule_types[ 'post_ids' ] );
+        if ( ! empty( $rule_types[ 'post_ids' ] ) ) {
+            $rule_types['post_ids'] = array_map( 'absint', (array) $rule_types['post_ids'] );
 
-            if ( !isset( $rule_types[ 'post_types' ] ) ) {
-                $rule_types[ 'post_types' ] = array();
+            if ( ! isset( $rule_types['post_types'] ) ) {
+                $rule_types['post_types'] = array();
 
-                foreach ( $rule_types[ 'post_ids' ] as $pid ) {
+                foreach ( $rule_types['post_ids'] as $pid ) {
                     $post_type = get_post_type( $pid );
 
-                    if ( !in_array( $post_type, $rule_types[ 'post_types' ] ) ) {
-                        $rule_types[ 'post_types' ][] = $post_type;
+                    if ( ! in_array( $post_type, $rule_types['post_types'] ) ) {
+                        $rule_types['post_types'][] = $post_type;
                     }
                 }
             }
 
-            if ( !isset( $rule_types[ 'page_templates' ] ) ) {
-                $rule_types[ 'page_templates' ] = array();
+            if ( ! isset( $rule_types['post_formats'] ) ) {
+                $rule_types['post_formats'] = array();
 
-                foreach ( $rule_types[ 'post_ids' ] as $pid ) {
+                foreach ( $rule_types['post_ids'] as $pid ) {
+                    $post_format = get_post_format( $pid );
+
+                    // Prevent post_format = false
+                    $post_format = ( false === $post_format ) ? 'standard' : $post_format;
+
+                    if ( ! in_array( $post_format, $rule_types['post_formats'] ) ) {
+                        $rule_types['post_formats'][] = $post_format;
+                    }
+                }
+            }
+
+            if ( ! isset( $rule_types['page_templates'] ) ) {
+                $rule_types['page_templates'] = array();
+
+                foreach ( $rule_types['post_ids'] as $pid ) {
                     $page_template = get_post_meta( $pid, '_wp_page_template', true );
 
-                    if ( !empty( $page_template ) && !in_array( $page_template, $rule_types[ 'page_templates' ] ) ) {
-                        $rule_types[ 'page_templates' ][] = $page_template;
+                    if ( ! empty( $page_template ) && ! in_array( $page_template, $rule_types['page_templates'] ) ) {
+                        $rule_types['page_templates'][] = $page_template;
                     }
                 }
             }
@@ -480,6 +485,7 @@ class cfs_api
         $rule_types = array_merge(
             array(
                 'post_types'        => array(),
+                'post_formats'      => array(),
                 'user_roles'        => $current_user->roles,
                 'term_ids'          => array(),
                 'post_ids'          => array(),
@@ -488,7 +494,7 @@ class cfs_api
         );
 
         // Cache the query (get rules)
-        if ( !isset($this->cache['cfs_options'] ) ) {
+        if ( ! isset($this->cache['cfs_options'] ) ) {
             $sql = "
             SELECT p.ID, p.post_title, m.meta_value AS rules, m2.meta_value AS extras
             FROM $wpdb->posts p
@@ -513,7 +519,8 @@ class cfs_api
             $extras = unserialize( $result->extras );
 
             foreach ( $rule_types as $rule_type => $value ) {
-                if ( !empty( $rules[ $rule_type ] ) ) {
+                if ( ! empty( $rules[ $rule_type ] ) ) {
+
                     // Only lookup a post's term IDs if the rule exists
                     if ( 'term_ids' == $rule_type ) {
                         $sql = "
@@ -526,7 +533,7 @@ class cfs_api
                     $operator = (array) $rules[$rule_type]['operator'];
                     $in_array = ( 0 < count( array_intersect( (array) $value, $rules[$rule_type]['values'] ) ) );
 
-                    if ( ( $in_array && '!=' == $operator[0] ) || ( !$in_array && '==' == $operator[0] ) ) {
+                    if ( ( $in_array && '!=' == $operator[0] ) || ( ! $in_array && '==' == $operator[0] ) ) {
                         $fail = true;
                     }
                 }
@@ -540,14 +547,14 @@ class cfs_api
                 );
             }
         }
-        
+
         $matches = array();
 
         // Sort the field groups
         if ( !empty( $temp ) ) {
             $temp = $this->array_orderby( $temp, 'order' );
             foreach ( $temp as $values ) {
-                $matches[$values['post_id']] = $values['post_title'];
+                $matches[ $values['post_id'] ] = $values['post_title'];
             }
         }
 
@@ -558,9 +565,9 @@ class cfs_api
 
     /**
      * Save field values
-     * @param array $field_data 
-     * @param array $post_data 
-     * @param array $options 
+     * @param array $field_data
+     * @param array $post_data
+     * @param array $options
      * @return int The post ID
      * @since 1.1.3
      */
@@ -618,14 +625,14 @@ class cfs_api
             $results = $this->find_input_fields( array( 'post_id' => $group_ids ) );
             foreach ( $results as $result ) {
                 // Store all the field objects for the current field group(s)
-                $fields[$result['id']] = (object) $result;
+                $fields[ $result['id'] ] = (object) $result;
 
                 // Store lookup values for the recursion
-                $field_id_lookup[$result['parent_id'] . ':' . $result['name']] = $result['id'];
+                $field_id_lookup[ $result['parent_id'] . ':' . $result['name'] ] = $result['id'];
 
                 // Store parent fields separately
                 if ( 0 == (int) $result['parent_id'] ) {
-                    $parent_fields[$result['name']] = $result['id'];
+                    $parent_fields[ $result['name'] ] = $result['id'];
                 }
             }
         }
@@ -695,7 +702,7 @@ class cfs_api
 
     /**
      * Extends save_fields method to support loop fields
-     * @param array $params 
+     * @param array $params
      * @since 1.5.0
      */
     private function save_fields_recursive( $params ) {
@@ -721,7 +728,7 @@ class cfs_api
             $values = isset( $field_array['value'] ) ? $field_array['value'] : $field_array;
 
             // Trigger the pre_save hook
-            $values = $this->parent->fields[$field_type]->pre_save( $values, $params['all_fields'][$field_id] );
+            $values = CFS()->fields[$field_type]->pre_save( $values, $params['all_fields'][$field_id] );
 
             $sub_weight = 0;
 

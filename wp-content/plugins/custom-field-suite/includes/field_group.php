@@ -2,22 +2,10 @@
 
 class cfs_field_group
 {
-    public $parent;
-
-
-    /**
-     * Constructor
-     * @param object $parent 
-     * @since 1.8.5
-     */
-    public function __construct( $parent ) {
-        $this->parent = $parent;
-    }
-
 
     /**
      * Import field groups
-     * @param array $options 
+     * @param array $options
      * @return string The response message
      * @since 1.8.5
      */
@@ -93,7 +81,7 @@ class cfs_field_group
 
     /**
      * Export field groups
-     * @param array $options 
+     * @param array $options
      * @return array An array of field group data
      * @since 1.8.5
      */
@@ -135,7 +123,7 @@ class cfs_field_group
 
     /**
      * Save field group settings
-     * @param array $params 
+     * @param array $params
      * @since 1.8.0
      */
     function save( $params = array() ) {
@@ -167,7 +155,7 @@ class cfs_field_group
             $field = stripslashes_deep($field);
 
             // Allow for field customizations
-            $field = $this->parent->fields[$field['type']]->pre_save_field( $field );
+            $field = CFS()->fields[$field['type']]->pre_save_field( $field );
 
             // Set the parent ID
             $field['parent_id'] = empty( $field['parent_id'] ) ? 0 : (int) $field['parent_id'];
@@ -239,7 +227,7 @@ class cfs_field_group
         ---------------------------------------------------------------------------------------------*/
 
         $data = array();
-        $rule_types = array( 'post_types', 'user_roles', 'post_ids', 'term_ids', 'page_templates' );
+        $rule_types = array( 'post_types', 'post_formats', 'user_roles', 'post_ids', 'term_ids', 'page_templates' );
 
         foreach ( $rule_types as $type ) {
             if ( !empty( $params['rules'][$type] ) ) {

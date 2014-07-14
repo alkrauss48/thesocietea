@@ -6,6 +6,7 @@
  *
  * @package the_societea
  */
+  wp_footer();
 ?>
 
     <footer>
