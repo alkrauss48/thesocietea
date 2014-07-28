@@ -25,7 +25,9 @@ get_header(); ?>
       <div class="plain" id="main-content">
         <div class="container-padding">
           <div class="container">
-            <?php the_post();the_content(); ?>
+            <div class="entry-content">
+              <?php the_post();the_content(); ?>
+            </div>
           </div>
         </div>
         <?php
