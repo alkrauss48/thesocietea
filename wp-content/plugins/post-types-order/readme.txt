@@ -3,14 +3,14 @@ Contributors: Nsp Code
 Donate link: http://www.nsp-code.com/donate.php
 Tags: post order, post type order, custom order, admin posts order
 Requires at least: 2.8
-Tested up to: 3.9
-Stable tag: 1.6.8
+Tested up to: 3.9.1
+Stable tag: 1.7.4
 
 Post Order and custom Post Type Objects (posts, any custom post types) using a Drag and Drop Sortable JavaScript AJAX interface. 
 
 == Description ==
 
-<strong>Over 470.000 DOWNLOADS and near PERFECT ratting out of 200 REVIEWS</strong>. <br />
+<strong>Over 630.000 DOWNLOADS and near PERFECT ratting out of 230 REVIEWS</strong>. <br />
 A powerful plugin, Order Posts and Post Types Objects using a Drag and Drop Sortable JavaScript capability.
 It allow to reorder the posts for any custom post types you defined, including the default Posts. Also you can have the admin posts interface sorted per your new sort. Post Order has never been easier.
 
@@ -65,6 +65,16 @@ There's a option you can trigger, to see the post types order as you defined in 
 All ideas are welcome and i put them on my list to be implemented into the new versions. Anyway this may take time, but if you are in a rush, please consider a small donation and we can arrange something.
 
 == Change Log ==
+
+= 1.7.4
+  - Japanese translation - Git6 Sosuke Watanabe  - http://git6.com/  
+  - Portuguese translation update - Pedro Mendonça - http://www.pedromendonca.pt 
+  - Chinese translation - Coolwp coolwp.com@gmail.com
+
+= 1.7.0
+  - Swedish translation - Onlinebyrån - http://onlinebyran.se
+  - Portuguese translation - Pedro Mendonça - http://www.pedromendonca.pt
+  - AJAX save filter
 
 = 1.6.8 = 
  - Edit Gallery - image order fix
@@ -158,6 +168,6 @@ Make sure you get the latest version.
 
 == Localization ==
 
-Available in English, Brazilian Portuguese, Spanish, Romanian, Italian, Dusth, Hebrew, German, Norwegian (norsk), Turkish (türkçe), Hungarian.
-Want to contribute with a translation to your language? Please contact me at electronice_delphi@yahoo.com
+Available in English, Brazilian Portuguese, Spanish, Romanian, Italian, Dusth, Hebrew, German, Norwegian (norsk), Turkish (türkçe), Swedish, Hungarian, Portuguese, Chinese
+Want to contribute with a translation to your language? Please contact us at electronice_delphi@yahoo.com
 http://www.nsp-code.com
