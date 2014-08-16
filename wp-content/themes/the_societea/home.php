@@ -6,6 +6,7 @@
 
 get_header(); ?>
     <div class="header-content-wrapper spanner">
+      <main id="main" class="site-main scene_element scene_element--fadein" role="main">
       <div class="header-content-image"
         data-top="background-position: 50% 100%;"
         data-top-bottom="background-position: 50% 0%;"
@@ -22,6 +23,7 @@ get_header(); ?>
           <li><a class="icon-uniE603" href="mailto:alkrauss48@gmail.com"></a></li>
         </ul>
       </div>
+      </main><!-- #main -->
     </div>
     <div class="home-content">
       <div class="container-padding">

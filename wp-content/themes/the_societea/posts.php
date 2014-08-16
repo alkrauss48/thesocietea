@@ -6,7 +6,7 @@
 get_header(); ?>
 
 	<div id="primary" class="content-area">
-		<main id="main" class="site-main" role="main">
+    <main id="main" class="site-main scene_element scene_element--fadein" role="main">
       <div class="subpage-header-image" style="background-image: url('<?php echo $cfs->get('header_image'); ?>');"
   data-start="background-position: 50% 65%;"
   data-400="background-position: 50% 35%;"

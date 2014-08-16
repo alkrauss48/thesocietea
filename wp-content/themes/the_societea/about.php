@@ -6,7 +6,7 @@
 get_header(); ?>
 
 	<div id="about" class="content-area">
-		<main id="main" class="site-main" role="main">
+    <main id="main" class="site-main scene_element scene_element--fadein" role="main">
 <div 
   data-center="background-position: 50% 60%;"
   data-top-bottom="background-position: 60% 40%;"

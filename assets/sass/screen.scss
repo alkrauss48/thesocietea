@@ -183,6 +183,7 @@ body > footer {
 }
 
 .home-content {
+  position: relative;
   background-color: white;
   h2 {
     margin: 0;
@@ -1041,3 +1042,40 @@ p.entry-title-link {
 .syntaxhighlighter {
   padding: 1em 0;
 }
+
+/*
+ * CSS Animations
+ * Don't forget to add vendor prefixes!
+ */
+.m-scene .scene_element {
+  -webkit-animation-duration: 0.50s;
+  -webkit-transition-timing-function: ease-in;
+  -webkit-animation-fill-mode: both;
+}
+
+.m-scene .scene_element--fadein {
+  -webkit-animation-name: fadeIn;
+}
+
+.m-scene.is-exiting .scene_element {
+  -webkit-animation-direction: alternate-reverse;
+}
+
+/*
+ * Keyframes
+ */
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+#main.home { height: 100%; }
