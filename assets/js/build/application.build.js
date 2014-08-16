@@ -945,6 +945,7 @@ $(document).ready( function()	{
   content = $('#main').smoothState({
     // Runs when a link has been activated
     prefetch: true,
+    blacklist: ".project-screenshot a, a.blog-link",
     onStart: {
       duration: 250, // Duration of our animation
       render: function (url, $container) {
