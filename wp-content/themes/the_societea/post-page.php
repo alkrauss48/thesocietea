@@ -11,7 +11,7 @@
     <div class="container-padding">
       <div class="container">
         <?php the_title( '<h2 class="entry-title">', '</h2>' ); ?>
-        <p class="entry-title-link"><a href="<?php echo get_permalink( get_the_ID() ); ?>">Read <i class="icon2-play"></i></a></p>
+        <p class="entry-title-link"><a class="no-smoothstate" href="<?php echo get_permalink( get_the_ID() ); ?>">Read <i class="icon2-play"></i></a></p>
 		<div class="entry-meta">
 			<?php the_societea_posted_on(); ?>
 		</div><!-- .entry-meta -->

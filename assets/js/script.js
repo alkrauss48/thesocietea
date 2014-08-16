@@ -44,6 +44,7 @@ $(document).ready( function()	{
   var $body = $('html, body'),
   content = $('#main').smoothState({
     // Runs when a link has been activated
+    prefetch: true,
     onStart: {
       duration: 250, // Duration of our animation
       render: function (url, $container) {
