@@ -118,7 +118,10 @@ get_header(); ?>
 </div>
 
 </div>
-<div id="slide4" class="slide"  style="background-image: url('/assets/images/dist/stockvault-snowy-steps110955.jpg');">
+<div id="slide4" class="slide"  style="background-image: url('/assets/images/dist/stockvault-snowy-steps110955.jpg');"
+  data-bottom-top="background-position: 50% 70%;"
+  data-top-bottom="background-position: 50% 30%;"
+>
     <div class="curtain"
     data-2300="height: 100%; opacity: .7;"
     data-2700="height: 0%; opacity: 0;"
