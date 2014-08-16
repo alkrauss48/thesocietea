@@ -10,4 +10,5 @@ venv
 .idea
 .gems
 node_modules/
+bower_components/
 wp-config.php

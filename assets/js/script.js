@@ -40,12 +40,16 @@ $(function() {
 */
 
 $(document).ready( function()	{
+  $('#main').smoothState();
   if(Modernizr.mq('screen and (min-width: 876px)') && !navigator.userAgent.match(/MSIE 8/)){
     var s = skrollr.init();
   }
 
   if($('.header-content-wrapper').length > 0){
     if(Modernizr.mq('screen and (min-width: 876px)')){
+      $('.sticky').removeClass('affixed');
+      $('.sticky').removeClass('mini');
+
       $(window).on('scroll', function(){
         if(window.pageYOffset + 70 > parseInt($('.header-content-wrapper').css('height'))){
           $('.sticky').addClass('affixed');
@@ -80,9 +84,6 @@ $(document).ready( function()	{
       strings: ["Tea Enthusiast", "Dog Lover", "Developer"],
       typeSpeed: 30,
     });
-  }else{
-    $('.sticky').addClass('affixed');
-    $('.sticky').addClass('mini');
   }
 
   if($('.project-screenshot')){
