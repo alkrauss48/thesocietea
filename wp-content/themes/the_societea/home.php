@@ -93,7 +93,7 @@ get_header(); ?>
                   data--50-bottom-bottom="left: 0px; opacity: 1;"
                   >
                   <div class="project-image" style="background-image: url('<?php echo $field['thumbnail']; ?>');">
-                    <a class="site-title" href="#"><?php echo $field['label']; ?></a>
+                    <p class="site-title" href="#"><?php echo $field['label']; ?></p>
                     <a class="project-hover" href="<?php echo $field['url']; ?>" target="tle"><p>Visit Site <i class="icon2-play"></i></p></a>
                   </div>
                 </div>

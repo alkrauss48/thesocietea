@@ -39,7 +39,7 @@ $transition-time: .25s;
   text-decoration: none;
   font-weight: bold;
   color: $teal;
-  &:hover {
+  &:hover, &:focus {
     color: $blue;
   }
 }
@@ -82,6 +82,8 @@ body {
   font-family: 'Merriweather Sans', serif;
   height: 100% !important;
 }
+
+a:focus { outline: 1px solid #ffa500!important; }
 
 @keyframes blink{
   0% { opacity:1; }
@@ -141,7 +143,7 @@ body > footer {
         text-decoration: none;
         font-weight: bold;
         color: white;
-        &:hover { color: $teal; }
+        &:hover, &:focus { color: $teal; }
       }
       &.nav-call-action a {
         @include transition(background-color $transition-time ease, padding $transition-time ease);
@@ -152,7 +154,7 @@ body > footer {
         padding: 1em 1em;
         @include border-radius(4px 4px);
         background-color: $orange;
-        &:hover {
+        &:hover, &:focus {
           color: $orange;
           background-color: white;
         }
@@ -236,7 +238,7 @@ body > footer {
       @include transition(color $transition-time ease);
       text-decoration: none;
       color: white;
-      &:hover { color: $teal; }
+      &:hover, &:focus { color: $teal; }
     }
   }
 
@@ -362,7 +364,7 @@ hr.header-hr {
 @mixin offering-link($color){
   background-color: $color;
   border-color: $color;
-  &:hover {
+  &:hover, &:focus {
     color: $color;
   }
 }
@@ -421,7 +423,7 @@ hr.header-hr {
     &.training {
       @include offering-link($orange);
     }
-    &:hover {
+    &:hover, &:focus {
       background-color: white;
     }
   }
@@ -516,7 +518,7 @@ hr.header-hr {
   padding: .5em 1.25em;
   text-decoration: none;
   border: 2px solid $orange;
-  &:hover {
+  &:hover, &:focus {
     color: $orange;
     background-color: white;
   }
@@ -590,7 +592,7 @@ hr.header-hr {
         color: $light-orange;
         @include text-shadow(1px 1px 2px black);
       }
-      &:hover {
+      &:hover, &:focus {
         p { visibility: visible; }
         background-color: rgba(20, 112, 231, .8);
       }
@@ -598,9 +600,10 @@ hr.header-hr {
   }
 }
 
-.site-title {
+p.site-title {
   @include transition(bottom $transition-time ease);
   @include border-radius(4px 4px);
+  margin: 0;
   position: absolute;
   font-weight: 300;
   left: 10%;
@@ -896,7 +899,7 @@ hr.header-hr {
     height: 100%;
     @include box-shadow(4px 4px 10px $lighter-gray);
     @media screen and (min-width: $first-breakpoint){
-      &:hover {
+      &:hover, &:focus {
         .project-overlay { display: block; }
       }
     }
