@@ -1698,7 +1698,7 @@ class Walker_Comment extends Walker {
 
 		if ( ( 'pingback' == $comment->comment_type || 'trackback' == $comment->comment_type ) && $args['short_ping'] ) {
 			ob_start();
-			// $this->ping( $comment, $depth, $args );
+			$this->ping( $comment, $depth, $args );
 			$output .= ob_get_clean();
 		} elseif ( 'html5' === $args['format'] ) {
 			ob_start();
