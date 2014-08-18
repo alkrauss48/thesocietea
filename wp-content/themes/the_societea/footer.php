@@ -29,6 +29,9 @@
     </footer>
 
     <script src="/assets/js/min/scripts.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="assets/js/ie/ie.js"></script>
+    <![endif]-->
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
