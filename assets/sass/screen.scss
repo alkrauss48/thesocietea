@@ -593,6 +593,7 @@ hr.header-hr {
         visibility: hidden;
         font-weight: bold;
         line-height: 10em;
+        margin: 0;
         color: $light-orange;
         @include text-shadow(1px 1px 2px black);
       }
@@ -903,9 +904,14 @@ p.site-title {
       // border: 3px solid $blue;
     height: 100%;
     @include box-shadow(4px 4px 10px $lighter-gray);
-    @media screen and (min-width: $first-breakpoint){
+
+    &:hover, &:focus {
+      .project-overlay { display: block; }
+    }
+
+    @media screen and (max-width: $first-breakpoint){
       &:hover, &:focus {
-        .project-overlay { display: block; }
+        .project-overlay { display: none; }
       }
     }
   }
@@ -919,6 +925,7 @@ p.site-title {
 
   div.project-overlay {
     background-color: rgba(20, 112, 231, .7);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#B31470e7,endColorstr=#B31470e7);
     color: white;
     display: none;
     position: absolute;
