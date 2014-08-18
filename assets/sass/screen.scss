@@ -659,7 +659,7 @@ p.site-title {
 .subpage-title {
   width: 100%;
   background-color: $opaque-orange;
-  // filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#{$opaque-gold-ms-hex}",endColorstr="#{$opaque-gold-ms-hex}");
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#CCff5f00,endColorstr=#CCff5f00);
   padding: 3em 0 1em 0;
   margin-top: -2em;
   h1 {
