@@ -1002,6 +1002,7 @@ p.entry-title-link {
   li {
     text-align: center;
     font-size: 80%;
+    display: inline-block;
     @include span(3);
     &:nth-child(4n + 4) { @include last; }
     @media screen and (max-width: $first-breakpoint) and (min-width: $second-breakpoint){
