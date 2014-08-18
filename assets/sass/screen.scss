@@ -534,7 +534,7 @@ hr.header-hr {
     border-top: 20px solid $gray;
   }
   .orange-learn-more {
-    margin-top: 1em;
+    margin-top: 2em;
   }
   text-align: center;
   padding-bottom: 4em;
@@ -574,7 +574,7 @@ hr.header-hr {
 .home-project {
   @include four-three-two-one;
   position: relative;
-  padding-bottom: 3em;
+  padding: 2em 0;
   text-align: center;
   z-index: 5;
   .project-image {
@@ -585,7 +585,7 @@ hr.header-hr {
     height: 10em;
     width: 100%;
     a.project-hover {
-      display: block;
+      display: inline-block;
       width: 100%;
       height: 100%;
       text-decoration: none;
