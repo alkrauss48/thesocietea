@@ -1003,10 +1003,10 @@ p.entry-title-link {
     text-align: center;
     font-size: 80%;
     @include span(3);
-    &:nth-of-type(4n + 4) { @include last; }
+    &:nth-child(4n + 4) { @include last; }
     @media screen and (max-width: $first-breakpoint) and (min-width: $second-breakpoint){
       @include span(6);
-      &:nth-of-type(2n + 2) { @include last; }
+      &:nth-child(2n + 2) { @include last; }
     }
     @media screen and (max-width: $second-breakpoint){
       @include full;
