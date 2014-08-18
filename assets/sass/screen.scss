@@ -353,10 +353,46 @@ hr.header-hr {
   li { font-size: 200%; }
 }
 
+.line-one {
+  top: 7px;
+}
+.line-two {
+  top: 14px;
+}
+.line-three {
+  top: 21px;
+}
+
 #responsive-menu-icon {
   display: block;
+  position: relative;
+  width: 25px;
+  height: 25px;
   @include transition(transform $transition-time ease);
-  &.active-mobile { @include rotate(-90deg); }
+  span {
+    @include transition(all 0.35s ease-in-out);
+    height: 3px;
+    width: 25px;
+    background-color: white;
+    display: block;
+    position: absolute;
+    right: 0;
+    opacity: 1;
+  }
+  &.active-mobile {
+    span.line-one {
+      top: 14px;
+      @include rotate(45deg);
+    }
+    span.line-two {
+      top: 14px;
+      @include rotate(45deg);
+    }
+    span.line-three {
+      top: 14px;
+      @include rotate(-45deg);
+    }
+  }
 }
 
 .home-offerings-wrapper {
