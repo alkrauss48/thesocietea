@@ -47,7 +47,7 @@
     <link rel="stylesheet" href="/assets/css/screen.css">
     <script src="/assets/js/lib/modernizr-2.7.1.min.js"></script>
     <!--[if lt IE 9]>
-      <script src="assets/js/min/ie.min.js"></script>
+      <script src="assets/js/ie/selectivizr-min.js"></script>
     <![endif]-->
   </head>
   <body <?php body_class('m-scene'); ?>>
