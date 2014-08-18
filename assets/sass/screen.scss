@@ -117,7 +117,7 @@ body > header {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr="#{$lighter-gray}", endColorstr="#{$gray}",GradientType=0 ); /* IE6-9 */
 }
 
-body > footer {
+footer.main-footer {
   position: relative;
   background-color: $gray;
   z-index: 10;
@@ -256,6 +256,7 @@ body > footer {
     }
   }
   background-color: rgba(0, 0, 0, .25);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#4D000000,endColorstr=#4D000000);
   @include border-radius(10px 10px);
 }
 
@@ -399,6 +400,7 @@ hr.header-hr {
     display: inline-block;
     position: relative;
     top: 0;
+    color: black;
   }
 
   a {
@@ -595,6 +597,7 @@ hr.header-hr {
       &:hover, &:focus {
         p { visibility: visible; }
         background-color: rgba(20, 112, 231, .8);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#CC1470e7,endColorstr=#CC1470e7);
       }
     }
   }

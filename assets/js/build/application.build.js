@@ -947,31 +947,47 @@ function hide_site_title(){
   $(this).closest('div').find('p.site-title').css('bottom', '0em');
 }
 
+function activate_home_offering(){
+  $(this).closest('div').find('i').css('top', '-20px');
+}
+
+function deactivate_home_offering(){
+  $(this).closest('div').find('i').css('top', '0px');
+}
+
 $(document).ready( function()	{
   // $('#main').smoothState();
-  var $body = $('html, body'),
-  content = $('#main').smoothState({
-    // Runs when a link has been activated
-    prefetch: true,
-    blacklist: ".project-screenshot a, a.blog-link",
-    onStart: {
-      duration: 250, // Duration of our animation
-      render: function (url, $container) {
-        // toggleAnimationClass() is a public method for restarting css animations with a class
-        content.toggleAnimationClass('is-exiting');
-        // Scroll user to the top
-        $body.animate({ scrollTop: 0 });
+  if(!navigator.userAgent.match(/MSIE 8/)){
+    var $body = $('html, body'),
+    content = $('#main').smoothState({
+      // Runs when a link has been activated
+      prefetch: true,
+      blacklist: ".project-screenshot a, a.blog-link",
+      onStart: {
+        duration: 250, // Duration of our animation
+        render: function (url, $container) {
+          // toggleAnimationClass() is a public method for restarting css animations with a class
+          content.toggleAnimationClass('is-exiting');
+          // Scroll user to the top
+          $body.animate({ scrollTop: 0 });
+        }
       }
-    }
-  }).data('smoothState');
-  //.data('smoothState') makes public methods available
+    }).data('smoothState');
+    //.data('smoothState') makes public methods available
+
+    $(".typed .light-orange").empty();
+    $(".typed .light-orange").typed({
+      strings: ["Tea Enthusiast", "Dog Lover", "Developer"],
+      typeSpeed: 30,
+    });
+  }
 
   if(Modernizr.mq('screen and (min-width: 876px)') && !navigator.userAgent.match(/MSIE 8/)){
     var s = skrollr.init();
   }
 
   if($('.header-content-wrapper').length > 0){
-    if(Modernizr.mq('screen and (min-width: 876px)')){
+    if($('html').hasClass('lt-ie9') || Modernizr.mq('screen and (min-width: 876px)')){
       $('.sticky').removeClass('affixed');
       $('.sticky').removeClass('mini');
 
@@ -989,11 +1005,9 @@ $(document).ready( function()	{
         }
       });
 
-      $('.home-offerings').find('a').hover(function(){
-        $(this).closest('div').find('i').css('top', '-20px');
-      },function(){
-        $(this).closest('div').find('i').css('top', '0px');
-      });
+      $('.home-offerings').find('a').hover(activate_home_offering, deactivate_home_offering);
+      $('.home-offerings').find('a').focus(activate_home_offering);
+      $('.home-offerings').find('a').blur(deactivate_home_offering);
 
       $('a.project-hover').hover(show_site_title, hide_site_title);
       $('a.project-hover').focus(show_site_title);
@@ -1003,11 +1017,6 @@ $(document).ready( function()	{
       $('.sticky').addClass('affixed');
       $('.sticky').addClass('mini');
     }
-
-    $(".typed .light-orange").typed({
-      strings: ["Tea Enthusiast", "Dog Lover", "Developer"],
-      typeSpeed: 30,
-    });
   }
 
   if($('.project-screenshot')){

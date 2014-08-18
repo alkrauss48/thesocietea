@@ -15,7 +15,7 @@ get_header(); ?>
         <h2>Hi, I'm</h2>
         <h1>Aaron Krauss</h1>
         <hr class="header-hr" />
-        <span class="typed"><h3>I'm a <span class="light-orange"><span></h3></span>
+        <span class="typed"><h3>I'm a <span class="light-orange">Developer<span></h3></span>
         <ul class="header-icons">
           <li><a class="icon-linkedin" target="linkedin"  href="https://linkedin.com/in/alkrauss48/"></a></li>
           <li><a class="icon-twitter" target="twitter" href="https://twitter.com/thecodeboss"></a></li>

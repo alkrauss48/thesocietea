@@ -9,7 +9,7 @@
   wp_footer();
 ?>
 
-    <footer>
+    <footer class="main-footer">
     <div class="container-padding">
       <div class="container">
         <div class="down-triangle"></div>
