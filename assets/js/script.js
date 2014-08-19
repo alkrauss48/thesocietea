@@ -62,6 +62,7 @@ $(document).ready( function()	{
     content = $('#main').smoothState({
       // Runs when a link has been activated
       prefetch: true,
+      pageCacheSize: 5,
       blacklist: ".project-screenshot a, a.blog-link, .entry-content a",
       onStart: {
         duration: 250, // Duration of our animation
