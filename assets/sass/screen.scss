@@ -36,11 +36,42 @@ $transition-time: .25s;
 }
 
 @mixin project-link {
+  position: relative;
+  display: inline-block;
   text-decoration: none;
   font-weight: bold;
   color: $teal;
+  @include transition(color .3s ease);
+  @include perspective-origin(50% 100%);
+  @include perspective(600px);
+  &:before, &:after {
+    position: absolute;
+    top: 0;
+    left: -4px;
+    z-index: -1;
+    box-sizing: content-box;
+    padding: 0 4px;
+    width: 100%;
+    height: 100%;
+    content: '';
+  }
+  &:before {
+    background-color: $teal;
+    @include transition(transform .2s ease);
+    @include transition-timing-function(cubic-bezier(0.7,0,0.3,1));
+    @include rotateX(90deg);
+    @include transform-origin(50%, 100%);
+  }
+  // &:after {
+  //   border-bottom: 2px solid $teal;
+  // }
+
   &:hover, &:focus {
-    color: $blue;
+    // color: $blue;
+    color: white;
+    &:before {
+      @include rotateX(0deg);
+    }
   }
 }
 
