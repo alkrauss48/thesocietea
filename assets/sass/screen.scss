@@ -57,7 +57,7 @@ $transition-time: .25s;
   }
   &:before {
     background-color: $teal;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#FFFFFFFF,endColorstr=#FFFFFFFF);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#33000000,endColorstr=#33000000);
     @include transition(transform .2s ease);
     @include transition-timing-function(cubic-bezier(0.7,0,0.3,1));
     @include rotateX(90deg);
