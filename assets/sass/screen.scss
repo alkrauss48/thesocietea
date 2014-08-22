@@ -42,7 +42,7 @@ $transition-time: .25s;
   font-weight: bold;
   line-height: 2;
   color: $teal;
-  @include transition(color .3s ease);
+  @include transition(color .25s ease);
   @include perspective-origin(50% 100%);
   @include perspective(600px);
   &:before, &:after {
@@ -58,8 +58,8 @@ $transition-time: .25s;
   }
   &:before {
     background-color: $teal;
-    @include transition(transform .2s);
-    @include transition-timing-function(cubic-bezier(0.7,0,0.3,1));
+    @include transition(transform .25s);
+    @include transition-timing-function(cubic-bezier(0.7,0,0.4,1));
     @include rotateX(90deg);
     @include transform-origin(50%, 100%);
   }
