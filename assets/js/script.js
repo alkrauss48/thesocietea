@@ -88,7 +88,7 @@ $(document).ready( function()	{
   }
 
   if($('.header-content-wrapper').length > 0){
-    if($('html').hasClass('lt-ie9') || Modernizr.mq('screen and (min-width: 876px)')){
+    if($('html').hasClass('ie8') || Modernizr.mq('screen and (min-width: 876px)')){
       $('.sticky').removeClass('affixed');
       $('.sticky').removeClass('mini');
 

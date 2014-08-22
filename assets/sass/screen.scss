@@ -40,6 +40,7 @@ $transition-time: .25s;
   display: inline-block;
   text-decoration: none;
   font-weight: bold;
+  line-height: 2;
   color: $teal;
   @include transition(color .3s ease);
   @include perspective-origin(50% 100%);
@@ -57,7 +58,6 @@ $transition-time: .25s;
   }
   &:before {
     background-color: $teal;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#33000000,endColorstr=#33000000);
     @include transition(transform .2s ease);
     @include transition-timing-function(cubic-bezier(0.7,0,0.3,1));
     @include rotateX(90deg);
@@ -113,6 +113,17 @@ body {
   // font-family: 'Merriweather', serif;
   font-family: 'Merriweather Sans', serif;
   height: 100% !important;
+}
+
+html.lte-ie9 {
+  #about-responsive,
+  p.entry-title-link,
+  .entry-content {
+    a {
+      &:before { background-color: white !important; }
+      &:hover { color: $blue !important; }
+    }
+  }
 }
 
 a:focus { outline: 1px solid #ffa500!important; }
