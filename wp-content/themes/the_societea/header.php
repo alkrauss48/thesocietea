@@ -9,9 +9,8 @@
 ?><!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <!DOCTYPE html>
-  <!--[if IE 8]>         <html lang="en" class="no-js ie8"> <![endif]-->
+  <!--[if IE 8]>         <html lang="en" class="no-js ie8 lte-ie9"> <![endif]-->
   <!--[if lte IE 9]>     <html lang="en" class="no-js lte-ie9"> <![endif]-->
-  <!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
