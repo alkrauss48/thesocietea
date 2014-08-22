@@ -58,7 +58,7 @@ $transition-time: .25s;
   }
   &:before {
     background-color: $teal;
-    @include transition(transform .2s ease);
+    @include transition(transform .2s);
     @include transition-timing-function(cubic-bezier(0.7,0,0.3,1));
     @include rotateX(90deg);
     @include transform-origin(50%, 100%);
