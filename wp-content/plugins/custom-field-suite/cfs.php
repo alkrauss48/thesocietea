@@ -3,7 +3,7 @@
 Plugin Name: Custom Field Suite
 Plugin URI: http://customfieldsuite.com/
 Description: Visually add custom fields to your WordPress edit pages.
-Version: 2.3.5
+Version: 2.3.6
 Author: Matt Gibbs
 Author URI: http://customfieldsuite.com/
 License: GPLv2
@@ -25,7 +25,7 @@ class Custom_Field_Suite
     function __construct() {
 
         // setup variables
-        define( 'CFS_VERSION', '2.3.5' );
+        define( 'CFS_VERSION', '2.3.6' );
         define( 'CFS_DIR', dirname( __FILE__ ) );
         define( 'CFS_URL', plugins_url( 'custom-field-suite' ) );
 
@@ -302,9 +302,11 @@ class Custom_Field_Suite
      * @since 1.0.0
      */
     function admin_menu() {
-        add_object_page( __( 'Field Groups', 'cfs' ), __( 'Field Groups', 'cfs' ), 'manage_options', 'edit.php?post_type=cfs', null, CFS_URL . '/assets/images/logo-small.png' );
-        add_submenu_page( 'edit.php?post_type=cfs', __( 'Tools', 'cfs' ), __( 'Tools', 'cfs' ), 'manage_options', 'cfs-tools', array( $this, 'page_tools' ) );
-        add_submenu_page( 'edit.php?post_type=cfs', __( 'Add-ons', 'cfs' ), __( 'Add-ons', 'cfs' ), 'manage_options', 'cfs-addons', array( $this, 'page_addons' ) );
+        if ( false === apply_filters( 'cfs_disable_admin', false ) ) {
+            add_object_page( __( 'Field Groups', 'cfs' ), __( 'Field Groups', 'cfs' ), 'manage_options', 'edit.php?post_type=cfs', null, CFS_URL . '/assets/images/logo-small.png' );
+            add_submenu_page( 'edit.php?post_type=cfs', __( 'Tools', 'cfs' ), __( 'Tools', 'cfs' ), 'manage_options', 'cfs-tools', array( $this, 'page_tools' ) );
+            add_submenu_page( 'edit.php?post_type=cfs', __( 'Add-ons', 'cfs' ), __( 'Add-ons', 'cfs' ), 'manage_options', 'cfs-addons', array( $this, 'page_addons' ) );
+        }
     }
 
 
@@ -464,16 +466,17 @@ class Custom_Field_Suite
                 'user_roles'        => __( 'User Roles', 'cfs' ),
                 'post_ids'          => __( 'Post IDs', 'cfs' ),
                 'term_ids'          => __( 'Term IDs', 'cfs' ),
-                'page_templates'    => __( 'Page Templates', 'cfs' )
+                'page_templates'    => __( 'Page Templates', 'cfs' ),
+                'post_formats'      => __( 'Post Formats', 'cfs' )
             );
 
             $results = $wpdb->get_var( "SELECT meta_value FROM $wpdb->postmeta WHERE post_id = '$post_id' AND meta_key = 'cfs_rules' LIMIT 1" );
             $results = unserialize( $results );
 
             foreach ( $results as $criteria => $values ) {
-                $label = $labels[$criteria];
+                $label = $labels[ $criteria ];
                 $operator = ( '==' == $values['operator'] ) ? '=' : '!=';
-                echo "<div>$label " . $operator . ' [' . implode(' or ', $values['values']) . ']</div>';
+                echo "<div>$label " . $operator . ' [' . implode( ' or ', $values['values'] ) . ']</div>';
             }
         }
     }
