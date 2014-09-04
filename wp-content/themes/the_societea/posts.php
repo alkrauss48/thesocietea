@@ -26,15 +26,14 @@ get_header(); ?>
         <div class="container-padding">
           <div class="container">
             <div class="entry-content">
+              <?php the_post();the_content(); ?>
               <?php
                 global $post;
                 $slug = get_post( $post )->post_name;
               ?>
               <form id="searchform" action="/<?php echo $slug; ?>" method="get">
-                <input id="search" class="text" type="text" name="search" value="" />
-                <input class="submit button" type="submit" value="Search" /></div>
+                <input id="search" class="text" type="text" placeholder="Search" name="search" value="<?php  echo $_GET['search']; ?>" />
               </form>
-              <?php the_post();the_content(); ?>
             </div>
           </div>
         </div>

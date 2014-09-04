@@ -1173,3 +1173,17 @@ p.entry-title-link {
 }
 
 #main.home { height: 100%; }
+
+input#search {
+  @include transition(width .5s ease);
+  background-color: #e7e7e7;
+  @include border-radius(5px);
+  width: 150px;
+  max-width: 90%;
+  border: none;
+  padding: .5em;
+  &:focus {
+    outline: none;
+    width: 300px;
+  }
+}
