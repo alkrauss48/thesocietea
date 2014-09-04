@@ -26,13 +26,21 @@ get_header(); ?>
         <div class="container-padding">
           <div class="container">
             <div class="entry-content">
+              <?php
+                global $post;
+                $slug = get_post( $post )->post_name;
+              ?>
+              <form id="searchform" action="/<?php echo $slug; ?>" method="get">
+                <input id="search" class="text" type="text" name="search" value="" />
+                <input class="submit button" type="submit" value="Search" /></div>
+              </form>
               <?php the_post();the_content(); ?>
             </div>
           </div>
         </div>
         <?php
           $post_type = $cfs->get('post_type');
-          $args=array('post_type' => $post_type, 'post_status' => 'publish');
+          $args=array('post_type' => $post_type, 's' => $_GET['search'], 'post_status' => 'publish');
           $my_query = new WP_Query($args);
           while ( $my_query->have_posts() ) : $my_query->the_post(); ?>
             <?php get_template_part( $post_type, 'page' ); ?>
