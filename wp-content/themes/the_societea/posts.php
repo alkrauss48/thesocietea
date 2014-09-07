@@ -39,11 +39,26 @@ get_header(); ?>
         </div>
         <?php
           $post_type = $cfs->get('post_type');
-          $args=array('post_type' => $post_type, 's' => $_GET['search'], 'post_status' => 'publish');
+          $paged = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
+          $args=array('post_type' => $post_type, 's' => $_GET['search'], 'post_status' => 'publish', 'paged' => $paged);
           $my_query = new WP_Query($args);
-          while ( $my_query->have_posts() ) : $my_query->the_post(); ?>
-            <?php get_template_part( $post_type, 'page' ); ?>
-          <?php endwhile; ?>
+          if ( $my_query->have_posts() ) :
+            while ( $my_query->have_posts() ) : $my_query->the_post();
+              get_template_part( $post_type, 'page' );
+            endwhile;
+          ?>
+          <div class="post-navigation">
+            <div class="post-previous"><?php next_posts_link( 'Next ' . ucfirst($post_type) . 's', $my_query->max_num_pages ); ?></div>
+            <div class="post-next"><?php previous_posts_link( 'Previous  ' . ucfirst($post_type) . 's' ); ?></div>
+          </div>
+          <?php
+            wp_reset_postdata();
+          ?>
+        <?php else : ?>
+            <div class="container">
+              <p><?php _e('Sorry, no posts matched that search.'); ?></p>
+            </div>
+          <?php endif; ?>
       </div>
 
 		</main><!-- #main -->
