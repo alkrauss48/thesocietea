@@ -89,6 +89,9 @@ if (is_uploaded_file($_FILES["userfile"]["tmp_name"])) {
 	$new_filesize = $_FILES["userfile"]["size"];
 	$new_filetype = $filedata["type"];
 	
+	// save original file permissions
+	$original_file_perms = fileperms($current_file) & 0777;
+
 	if ($replace_type == "replace") {
 		// Drop-in replace and we don't even care if you uploaded something that is the wrong file-type.
 		// That's your own fault, because we warned you!
@@ -98,17 +101,15 @@ if (is_uploaded_file($_FILES["userfile"]["tmp_name"])) {
 		// Move new file to old location/name
 		move_uploaded_file($_FILES["userfile"]["tmp_name"], $current_file);
 
-		// Chmod new file to 644
-		chmod($current_file, 0644);
+		// Chmod new file to original file permissions
+		chmod($current_file, $original_file_perms);
 
 		// Make thumb and/or update metadata
 		wp_update_attachment_metadata( (int) $_POST["ID"], wp_generate_attachment_metadata( (int) $_POST["ID"], $current_file ) );
 
 		// Trigger possible updates on CDN and other plugins 
 		update_attached_file( (int) $_POST["ID"], $current_file);
-	}
-
-	else {
+	} elseif ( 'replace_and_search' == $replace_type && apply_filters( 'emr_enable_replace_and_search', true ) ) {
 		// Replace file, replace file name, update meta data, replace links pointing to old file name
 
 		emr_delete_current_files($current_file);
@@ -120,8 +121,8 @@ if (is_uploaded_file($_FILES["userfile"]["tmp_name"])) {
 		$new_file = $current_path . "/" . $new_filename;
 		move_uploaded_file($_FILES["userfile"]["tmp_name"], $new_file);
 
-		// Chmod new file to 644
-		chmod($new_file, 0644);
+		// Chmod new file to original file permissions
+		chmod($current_file, $original_file_perms);
 
 		$new_filetitle = preg_replace('/\.[^.]+$/', '', basename($new_file));
 		$new_filetitle = apply_filters( 'enable_media_replace_title', $new_filetitle ); // Thanks Jonas Lundman (http://wordpress.org/support/topic/add-filter-hook-suggestion-to)
