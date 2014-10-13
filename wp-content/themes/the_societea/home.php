@@ -65,10 +65,7 @@ get_header(); ?>
             </div>
             <div class="home-about-desc">
               <h2>Get to know me</h2>
-              <p>Hi, I'm from Edmond, Oklahoma, and I like to program. A lot. My favorite projects are those that are data-heavy involving Ruby,
-              Javascript, APIs, Databases, and more. Then, I always enjoy building a solid, responsive front-end using all the new cool-kid tools.</p>
-              <p>Other than coding, I like brewing a hot cup of tea, listening to podcasts, walking my dog, and hanging out with my
-              super cool girlfriend.</p>
+              <?php the_content(); ?>
               <a class="orange-learn-more" href="<?php echo get_permalink(6); ?>">Learn More <i class="icon2-play"></i></a>
             </div>
           </div>

@@ -19,9 +19,7 @@
     <link rel="profile" href="http://gmpg.org/xfn/11">
     <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
 
-    <meta name="description" content="I'm Aaron Krauss, a full-stack developer from Edmond, Oklahoma.
-      I currently work at Staplegun in OKC and am available for remote contracts. Check out
-      my skils and see if I can help you with your projects.">
+    <meta name="description" content="<?php the_post();echo get_the_excerpt(); ?>">
     <meta property="og:image" content="http://thesocietea.org/assets/images/dist/aaronkrauss.png">
     <meta property="og:title" content="<?php wp_title( '|', true, 'right' ); ?>">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimal-ui">

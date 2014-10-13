@@ -26,7 +26,7 @@ get_header(); ?>
         <div class="container-padding">
           <div class="container">
             <div class="entry-content">
-              <?php the_post();the_content(); ?>
+              <?php the_content(); ?>
               <?php
                 global $post;
                 $slug = get_post( $post )->post_name;
