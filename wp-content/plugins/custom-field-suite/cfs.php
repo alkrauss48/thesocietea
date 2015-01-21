@@ -3,10 +3,9 @@
 Plugin Name: Custom Field Suite
 Plugin URI: http://customfieldsuite.com/
 Description: Visually add custom fields to your WordPress edit pages.
-Version: 2.3.6
+Version: 2.3.7
 Author: Matt Gibbs
 Author URI: http://customfieldsuite.com/
-License: GPLv2
 Text Domain: cfs
 Domain Path: /languages/
 */
@@ -25,7 +24,7 @@ class Custom_Field_Suite
     function __construct() {
 
         // setup variables
-        define( 'CFS_VERSION', '2.3.6' );
+        define( 'CFS_VERSION', '2.3.7' );
         define( 'CFS_DIR', dirname( __FILE__ ) );
         define( 'CFS_URL', plugins_url( 'custom-field-suite' ) );
 
@@ -471,7 +470,7 @@ class Custom_Field_Suite
             );
 
             $results = $wpdb->get_var( "SELECT meta_value FROM $wpdb->postmeta WHERE post_id = '$post_id' AND meta_key = 'cfs_rules' LIMIT 1" );
-            $results = unserialize( $results );
+            $results = empty( $results ) ? array() : unserialize( $results );
 
             foreach ( $results as $criteria => $values ) {
                 $label = $labels[ $criteria ];
