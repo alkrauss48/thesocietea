@@ -100,7 +100,7 @@ get_header(); ?>
     <p>My background is that of a back-end developer, specializing in object-oriented programming in both software and web development.
       I prefer to program in a Unix-based environment, utilizing the terminal heavily for everything.
       My main skills here are <span class="hi">Ruby/Rails</span>, <span class="hi">PHP</span>, <span class="hi">SQL</span>,
-      <span class="hi">NoSQL</span>, <span class="hi">APIs</span>, and <span class="hi">Ember.js</span>.</p>
+      <span class="hi">NoSQL</span>, <span class="hi">APIs</span>, <span class="hi">Node.js</span>, <span class="hi">Angular.js</span>, <span class="hi">Ember.js</span>, and a little bit of <span class="hi">Go</span>.</p>
   </div>
   <div class="content-4"
     data-2400="top: -12em; opacity: 0;"
