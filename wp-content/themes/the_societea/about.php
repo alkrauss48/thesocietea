@@ -8,8 +8,8 @@ get_header(); ?>
 	<div id="about" class="content-area">
     <main id="main" class="site-main scene_element scene_element--fadein" role="main">
 <div 
-  data-center="background-position: 50% 60%;"
-  data-top-bottom="background-position: 60% 40%;"
+  data-bottom-top="background-position: 50% 60%;"
+  data-top-bottom="background-position: 50% 40%;"
   id="slide1" class="slide" style="background-image: url('/assets/images/dist/stockvault-water121514.jpg');">
   <div class="container">
     <div class="content">
@@ -162,8 +162,8 @@ get_header(); ?>
 
 </div>
 <div id="slide6" class="slide"  style="background-image: url('/assets/images/dist/stockvault-red-landscape127092.jpg');"
-    data-40-end="top: 0em"
-    data-end="top: -8em"
+  data-bottom-top="background-position: 50% 70%;"
+  data-top-bottom="background-position: 50% 30%;"
 >
 <div class='content'>
   <div class="container">
@@ -202,6 +202,8 @@ get_header(); ?>
   </div>
 </div>
 <div id="slide7"
+    data-40-end="top: -8em"
+    data-end="top: 0em"
 >
   <div class="container">
     <h2>Fin</h2>
