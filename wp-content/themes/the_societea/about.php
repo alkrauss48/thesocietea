@@ -118,7 +118,7 @@ get_header(); ?>
 </div>
 
 </div>
-<div id="slide4" class="slide"  style="background-image: url('/assets/images/dist/stockvault-snowy-steps110955.jpg');"
+<div id="slide4" class="slide"  style="background-image: url('/assets/images/dist/sg.gif');"
   data-bottom-top="background-position: 50% 70%;"
   data-top-bottom="background-position: 50% 30%;"
 >
