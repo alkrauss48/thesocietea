@@ -115,6 +115,10 @@ body {
   height: 100% !important;
 }
 
+body.admin-bar .sticky.affixed {
+  top: 28px;
+}
+
 html.lte-ie9 {
   #about-responsive,
   p.entry-title-link,
@@ -126,7 +130,7 @@ html.lte-ie9 {
   }
 }
 
-a:focus { outline: 1px solid #ffa500!important; }
+a:focus { outline: 1px solid #ffa500; }
 
 @keyframes blink{
   0% { opacity:1; }
