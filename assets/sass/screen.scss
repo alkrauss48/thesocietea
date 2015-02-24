@@ -1116,9 +1116,9 @@ p.entry-title-link {
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff5f5f5', endColorstr='#fff9f9f9', GradientType=0);
   @include box-shadow(inset 0 1px 2px rgba(0, 0, 0, 0.1));
-  @include border-radius(10px);
+  @include border-radius(5px);
   .skill-bar {
-    @include border-radius(10px);
+    @include border-radius(5px);
     @include box-shadow(inset 0 -1px 0 rgba(0, 0, 0, 0.15));
     height: 100%;
   }
