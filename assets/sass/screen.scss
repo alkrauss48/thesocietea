@@ -13,7 +13,7 @@ $susy: (
   )
 );
 
-$gray: #414141;
+$gray: #333333;
 $lighter-gray: #5a5a5a;
 $teal: #00e7ad;
 $blue: #1470e7;
@@ -155,13 +155,6 @@ span.orange { color: $orange; }
 
 body > header {
   background: $gray; /* Old browsers */
-  background: -moz-linear-gradient(top, $lighter-gray 0%, $gray 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,$lighter-gray), color-stop(100%,$gray)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, $lighter-gray 0%, $gray 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, $lighter-gray 0%, $gray 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top, $lighter-gray 0%, $gray 100%); /* IE10+ */
-  background: linear-gradient(to bottom, $lighter-gray 0%, $gray 100%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr="#{$lighter-gray}", endColorstr="#{$gray}",GradientType=0 ); /* IE6-9 */
 }
 
 footer.main-footer {
@@ -201,7 +194,6 @@ footer.main-footer {
         font-weight: normal;
         color: white;
         padding: 1em 1em;
-        @include border-radius(4px 4px);
         background-color: $orange;
         &:hover, &:focus {
           color: $orange;
@@ -477,7 +469,6 @@ hr.header-hr {
       padding: 1.5em 0;
     }
     background-color: rgb(237,237,237);
-    @include border-radius(10px 10px);
   }
   i {
     @include transition(all .125s ease);
@@ -489,7 +480,6 @@ hr.header-hr {
   }
 
   a {
-    @include border-radius(10px 10px);
     @include transition(all .125s ease);
     @include box-sizing(border-box);
     font-weight: bold;
@@ -565,7 +555,6 @@ hr.header-hr {
     position: relative;
     top: 0; left: 0;
     width: 100%;
-    @include box-shadow(4px 4px 10px $lighter-gray);
   }
   @media screen and (max-width: $mid-breakpoint){
     @include span(12);
@@ -677,12 +666,12 @@ hr.header-hr {
         font-weight: bold;
         line-height: 10em;
         margin: 0;
-        color: $light-orange;
-        @include text-shadow(1px 1px 2px black);
+        color: white;
+        @include text-shadow(1px 1px 1px black);
       }
       &:hover, &:focus {
         p { visibility: visible; }
-        background-color: rgba(20, 112, 231, .8);
+        background-color: rgba(20, 112, 231, .9);
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#CC1470e7,endColorstr=#CC1470e7);
       }
     }
@@ -691,7 +680,6 @@ hr.header-hr {
 
 p.site-title {
   @include transition(bottom $transition-time ease);
-  @include border-radius(4px 4px);
   margin: 0;
   position: absolute;
   font-weight: 300;
