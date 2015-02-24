@@ -179,7 +179,7 @@ footer.main-footer {
       @include transition(line-height $transition-time ease);
       float: left;
       margin-left: 2em;
-      line-height: 2.4;
+      line-height: 1.4;
       a {
         @include transition(color $transition-time ease);
         text-decoration: none;
@@ -193,7 +193,7 @@ footer.main-footer {
         font-size: 80%;
         font-weight: normal;
         color: white;
-        padding: 1em 1em;
+        padding: .75em 1em;
         background-color: $orange;
         &:hover, &:focus {
           color: $orange;
@@ -298,7 +298,6 @@ footer.main-footer {
   }
   background-color: rgba(0, 0, 0, .25);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#4D000000,endColorstr=#4D000000);
-  @include border-radius(10px 10px);
 }
 
 .footer-icons {
@@ -341,16 +340,16 @@ hr.header-hr {
   @include transition(height $transition-time ease);
   z-index: 100;
   border-bottom: 2px solid $teal;
-  height: 70px;
+  height: 55px;
   top: 100%;
   left: 0;
   @media screen and (max-width: $first-breakpoint){ left: auto; }
   position: absolute;
-  margin-top: -70px;
+  margin-top: -55px;
   img {
     @include transition(width $transition-time ease);
     margin-top: .5em;
-    width: 60px;
+    width: 50px;
   }
   &.affixed {
     position: fixed;
@@ -1168,11 +1167,11 @@ p.entry-title-link {
 
 input#search {
   @include transition(width .5s ease);
-  background-color: #e7e7e7;
-  @include border-radius(5px);
-  width: 150px;
+  color: lightgray;
+  border: 2px solid lightgray;
+  box-sizing: border-box;
+  width: 175px;
   max-width: 90%;
-  border: none;
   padding: .5em;
   &:focus {
     outline: none;

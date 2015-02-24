@@ -1018,13 +1018,13 @@ $(document).ready( function()	{
       $('.sticky').removeClass('mini');
 
       $(window).on('scroll', function(){
-        if(window.pageYOffset + 70 > parseInt($('.header-content-wrapper').css('height'))){
+        if(window.pageYOffset + 55 > parseInt($('.header-content-wrapper').css('height'))){
           $('.sticky').addClass('affixed');
         }else{
           $('.sticky').removeClass('affixed');
         }
 
-        if(window.pageYOffset + 50 > parseInt($('.header-content-wrapper').css('height'))){
+        if(window.pageYOffset + 30 > parseInt($('.header-content-wrapper').css('height'))){
           $('.sticky').addClass('mini');
         }else{
           $('.sticky').removeClass('mini');
