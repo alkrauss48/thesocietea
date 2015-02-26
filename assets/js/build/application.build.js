@@ -960,6 +960,18 @@ var isMobile = {
     }
 };
 
+function bindLightbox(){
+  if($('.project-screenshot')){
+    $('.project-screenshot').magnificPopup({
+      delegate: 'a', // child items selector, by clicking on it popup will open
+      type: 'image',
+      gallery: {
+        enabled: true
+      }
+    });
+  }
+}
+
 function show_site_title(){
   $(this).closest('div').find('p.site-title').css('bottom', '-3.5em');
 }
@@ -992,6 +1004,9 @@ $(document).ready( function()	{
           // Scroll user to the top
           $body.animate({ scrollTop: 0 });
         }
+      },
+      callback : function(url, $container, $content) {
+        bindLightbox();
       }
     }).data('smoothState');
     //.data('smoothState') makes public methods available
@@ -1045,14 +1060,5 @@ $(document).ready( function()	{
     }
   }
 
-  if($('.project-screenshot')){
-    $('.project-screenshot').magnificPopup({
-      delegate: 'a', // child items selector, by clicking on it popup will open
-      type: 'image',
-      // other options
-      gallery: {
-        enabled: true
-      }
-    });
-  }
+  bindLightbox();
 });
