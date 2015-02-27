@@ -14,7 +14,7 @@
       <div class="container">
         <div class="down-triangle"></div>
         <div class="footer-content">
-          <p>&copy;2014 Aaron Krauss. All Rights Reserved.</p>
+          <p>&copy;<script>document.write(new Date().getFullYear())</script><noscript>2015</noscript> Aaron Krauss. All Rights Reserved.</p>
         </div>
         <div class="footer-logos">
           <ul class="footer-icons">
