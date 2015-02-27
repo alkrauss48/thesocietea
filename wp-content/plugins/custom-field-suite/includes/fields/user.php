@@ -28,32 +28,38 @@ class cfs_user extends cfs_field
         }
     ?>
         <div class="filter_posts">
-            <input type="text" class="cfs_filter_input" autocomplete="off" />
-            <div class="cfs_filter_help">
-                <div class="cfs_help_text hidden">
-                    <ul>
-                        <li style="font-size:15px; font-weight:bold">Sample queries</li>
-                        <li>"foobar" (find usernames containing "foobar")</li>
-                        <li></li>
-                    </ul>
-                </div>
-            </div>
+            <input type="text" class="cfs_filter_input" autocomplete="off" placeholder="Search users" />
         </div>
 
         <div class="available_posts post_list">
         <?php foreach ( $available_users as $user ) : ?>
             <?php $class = ( isset( $selected_users[ $user->ID ] ) ) ? ' class="used"' : ''; ?>
-            <div rel="<?php echo $user->ID; ?>"<?php echo $class; ?>><?php echo $user->user_login; ?></div>
+            <div rel="<?php echo $user->ID; ?>"<?php echo $class; ?>><?php echo apply_filters( 'cfs_user_display', $user->user_login, $user->ID, $field ); ?></div>
         <?php endforeach; ?>
         </div>
 
         <div class="selected_posts post_list">
         <?php foreach ( $selected_users as $user ) : ?>
-            <div rel="<?php echo $user->ID; ?>"><span class="remove"></span><?php echo $user->user_login; ?></div>
+            <div rel="<?php echo $user->ID; ?>"><span class="remove"></span><?php echo apply_filters( 'cfs_user_display', $user->user_login, $user->ID, $field ); ?></div>
         <?php endforeach; ?>
         </div>
         <div class="clear"></div>
         <input type="hidden" name="<?php echo $field->input_name; ?>" class="<?php echo $field->input_class; ?>" value="<?php echo $field->value; ?>" />
+    <?php
+    }
+
+
+    function options_html( $key, $field ) {
+    ?>
+        <tr class="field_option field_option_<?php echo $this->name; ?>">
+            <td class="label">
+                <label><?php _e( 'Limits', 'cfs' ); ?></label>
+            </td>
+            <td>
+                <input type="text" name="cfs[fields][<?php echo $key; ?>][options][limit_min]" value="<?php echo $this->get_option( $field, 'limit_min' ); ?>" placeholder="min" style="width:60px" />
+                <input type="text" name="cfs[fields][<?php echo $key; ?>][options][limit_max]" value="<?php echo $this->get_option( $field, 'limit_max' ); ?>" placeholder="max" style="width:60px" />
+            </td>
+        </tr>
     <?php
     }
 
@@ -81,12 +87,6 @@ class cfs_user extends cfs_field
                 this.each(function() {
                     var $this = $(this);
                     $this.addClass('ready');
-
-                    // tooltip
-                    $this.find('.cfs_filter_help').tipTip({
-                        maxWidth: '400px',
-                        content: $this.find('.cfs_help_text').html()
-                    });
 
                     // sortable
                     $this.find('.selected_posts').sortable({

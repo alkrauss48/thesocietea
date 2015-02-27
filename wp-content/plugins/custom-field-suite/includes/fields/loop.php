@@ -80,6 +80,17 @@ class cfs_loop extends cfs_field
                 ?>
             </td>
         </tr>
+        
+        <tr class="field_option field_option_<?php echo $this->name; ?>">
+            <td class="label">
+                <label><?php _e( 'Limits', 'cfs' ); ?></label>
+            </td>
+            <td>
+                <input type="text" name="cfs[fields][<?php echo $key; ?>][options][limit_min]" value="<?php echo $this->get_option( $field, 'limit_min' ); ?>" placeholder="min" style="width:60px" />
+                <input type="text" name="cfs[fields][<?php echo $key; ?>][options][limit_max]" value="<?php echo $this->get_option( $field, 'limit_max' ); ?>" placeholder="max" style="width:60px" />
+            </td>
+        </tr>
+        
     <?php
     }
 
@@ -94,7 +105,7 @@ class cfs_loop extends cfs_field
     {
         $loop_field_ids = array();
         $loop_field = CFS()->api->get_input_fields(array('field_id' => $field_id));
-        $row_label = $this->get_option($loop_field[$field_id], 'row_label', __('Loop Row', 'cfs'));
+        $row_label = $this->dynamic_label($this->get_option($loop_field[$field_id], 'row_label', __('Loop Row', 'cfs')));
 
         // Get the sub-fields
         $results = CFS()->api->get_input_fields(array('group_id' => $group_id, 'parent_id' => $field_id));
@@ -102,7 +113,7 @@ class cfs_loop extends cfs_field
         ob_start();
     ?>
         <div class="loop_wrapper">
-            <div class="cfs_loop_head">
+            <div class="cfs_loop_head open">
                 <a class="cfs_delete_field"></a>
                 <a class="cfs_toggle_field"></a>
                 <span class="label"><?php echo esc_attr($row_label); ?></span>
@@ -160,7 +171,7 @@ class cfs_loop extends cfs_field
         dynamic_label
     ---------------------------------------------------------------------------------------------*/
 
-    function dynamic_label($row_label, $fields, $values)
+    function dynamic_label($row_label, $fields = array(), $values = array())
     {
         preg_match_all("/({(.*?)})/", $row_label, $matches);
         if (!empty($matches))
@@ -172,12 +183,20 @@ class cfs_loop extends cfs_field
                 $all_fields[$field->name] = (int) $field->id;
             }
 
-            foreach ($matches[2] as $field_name)
+            foreach ($matches[2] as $token)
             {
+                //check for fallback
+                $tmp = explode(':', $token);
+                $field_name = $tmp[0];
+                $fallback = isset($tmp[1]) ? $tmp[1] : false;
                 $field_id = isset($all_fields[$field_name]) ? $all_fields[$field_name] : false;
                 if (isset($values[$field_id]))
                 {
-                    $row_label = str_replace('{' . $field_name . '}', $values[$field_id], $row_label);
+                    $row_label = str_replace('{' . $token . '}', $values[$field_id], $row_label);
+                }
+                elseif (false !== $fallback)
+                {
+                     $row_label = str_replace('{' . $token . '}', $fallback, $row_label);
                 }
             }
         }
@@ -213,7 +232,7 @@ class cfs_loop extends cfs_field
                 $row_offset = max($i, $row_offset);
     ?>
         <div class="loop_wrapper">
-            <div class="cfs_loop_head">
+            <div class="cfs_loop_head<?php echo $css_class; ?>">
                 <a class="cfs_delete_field"></a>
                 <a class="cfs_toggle_field"></a>
                 <span class="label"><?php echo esc_attr($this->dynamic_label($row_label, $results, $values[$i])); ?>&nbsp;</span>
@@ -291,12 +310,14 @@ class cfs_loop extends cfs_field
                 });
 
                 $(document).on('click', '.cfs_loop_head', function() {
+                    $(this).toggleClass('open');
                     $(this).siblings('.cfs_loop_body').toggleClass('open');
                 });
 
                 // Hide or show all rows
                 // The HTML is located in includes/form.php
                 $(document).on('click', '.cfs_loop_toggle', function() {
+                    $(this).closest('.field').find('.cfs_loop_head').toggleClass('open');
                     $(this).closest('.field').find('.cfs_loop_body').toggleClass('open');
                 });
 

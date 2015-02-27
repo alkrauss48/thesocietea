@@ -17,10 +17,6 @@ $json = json_decode( $json );
 ?>
 
 <style type="text/css">
-#icon-edit {
-  background: url(<?php echo CFS_URL; ?>/assets/images/logo.png) no-repeat;
-}
-
 .addon {
   float: left;
   width: 220px;
@@ -37,6 +33,7 @@ $json = json_decode( $json );
   padding: 10px 0;
   background: #fcfcfc;
   border-bottom: 1px solid #e1e1e1;
+  height: 128px;
 }
 
 .addon-main {

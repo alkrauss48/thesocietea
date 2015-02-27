@@ -3,7 +3,7 @@
 Plugin Name: Custom Field Suite
 Plugin URI: http://customfieldsuite.com/
 Description: Visually add custom fields to your WordPress edit pages.
-Version: 2.3.7
+Version: 2.4
 Author: Matt Gibbs
 Author URI: http://customfieldsuite.com/
 Text Domain: cfs
@@ -24,7 +24,7 @@ class Custom_Field_Suite
     function __construct() {
 
         // setup variables
-        define( 'CFS_VERSION', '2.3.7' );
+        define( 'CFS_VERSION', '2.4' );
         define( 'CFS_DIR', dirname( __FILE__ ) );
         define( 'CFS_URL', plugins_url( 'custom-field-suite' ) );
 
@@ -71,14 +71,13 @@ class Custom_Field_Suite
         add_action( 'delete_post',              array( $this, 'delete_post' ) );
         add_action( 'add_meta_boxes',           array( $this, 'add_meta_boxes' ) );
         add_action( 'wp_ajax_cfs_ajax_handler', array( $this, 'ajax_handler' ) );
-        add_filter( 'admin_body_class',         array( $this, 'add_body_class' ) );
 
         // Force the $cfs variable
         if ( ! is_admin() ) {
             add_action( 'parse_query', array( $this, 'parse_query' ) );
         }
 
-        foreach ( array( 'api', 'upgrade', 'field', 'field_group', 'session', 'form', 'third_party' ) as $f ) {
+        foreach ( array( 'api', 'upgrade', 'field', 'field_group', 'session', 'form', 'third_party', 'revision' ) as $f ) {
             include( CFS_DIR . "/includes/$f.php" );
         }
 
@@ -145,6 +144,7 @@ class Custom_Field_Suite
             'text'          => CFS_DIR . '/includes/fields/text.php',
             'textarea'      => CFS_DIR . '/includes/fields/textarea.php',
             'wysiwyg'       => CFS_DIR . '/includes/fields/wysiwyg.php',
+            'hyperlink'     => CFS_DIR . '/includes/fields/hyperlink.php',
             'date'          => CFS_DIR . '/includes/fields/date/date.php',
             'color'         => CFS_DIR . '/includes/fields/color/color.php',
             'true_false'    => CFS_DIR . '/includes/fields/true_false.php',
@@ -160,7 +160,7 @@ class Custom_Field_Suite
             $class_name = 'cfs_' . $type;
 
             // allow for multiple classes per file
-            if ( !class_exists( $class_name ) ) {
+            if ( ! class_exists( $class_name ) ) {
                 include_once( $path );
             }
 
@@ -266,7 +266,7 @@ class Custom_Field_Suite
     function admin_head() {
         $screen = get_current_screen();
 
-        if ( 'post' == $screen->base ) {
+        if ( is_object( $screen ) && 'post' == $screen->base ) {
             include( CFS_DIR . '/templates/admin_head.php' );
         }
     }
@@ -303,8 +303,8 @@ class Custom_Field_Suite
     function admin_menu() {
         if ( false === apply_filters( 'cfs_disable_admin', false ) ) {
             add_object_page( __( 'Field Groups', 'cfs' ), __( 'Field Groups', 'cfs' ), 'manage_options', 'edit.php?post_type=cfs', null, CFS_URL . '/assets/images/logo-small.png' );
-            add_submenu_page( 'edit.php?post_type=cfs', __( 'Tools', 'cfs' ), __( 'Tools', 'cfs' ), 'manage_options', 'cfs-tools', array( $this, 'page_tools' ) );
             add_submenu_page( 'edit.php?post_type=cfs', __( 'Add-ons', 'cfs' ), __( 'Add-ons', 'cfs' ), 'manage_options', 'cfs-addons', array( $this, 'page_addons' ) );
+            add_submenu_page( 'edit.php?post_type=cfs', __( 'Tools', 'cfs' ), __( 'Tools', 'cfs' ), 'manage_options', 'cfs-tools', array( $this, 'page_tools' ) );
         }
     }
 
@@ -488,27 +488,10 @@ class Custom_Field_Suite
     function parse_query( $wp_query ) {
         $wp_query->query_vars['cfs'] = $this;
     }
-
-
-    /**
-     * Add a class of 'mp6' if WordPress 3.8-alpha or higher, allowing us to help the UI better match the WordPress admin
-     * Reference: http://make.wordpress.org/ui/2013/11/19/targeting-the-new-dashboard-design-in-a-post-mp6-world/
-     *
-     * @param $classes
-     *
-     * @return array|string
-     */
-    function add_body_class( $classes ) {
-        if ( version_compare( get_bloginfo( 'version' ), '3.8', '>' ) ) {
-            if ( false === strpos( $classes, 'mp6' ) ) {
-                $classes .= ' mp6';
-            }
-        }
-        return $classes;
-    }
 }
 
 
+// Backwards-compatibility
 $cfs = CFS();
 
 

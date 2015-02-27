@@ -3,12 +3,12 @@
 Plugin Name: Search Everything
 Plugin URI: http://wordpress.org/plugins/search-everything/
 Description: Adds search functionality without modifying any template pages: Activate, Configure and Search. Options Include: search highlight, search pages, excerpts, attachments, drafts, comments, tags and custom fields (metadata). Also offers the ability to exclude specific pages and posts. Does not search password-protected content.
-Version: 8.1.2
+Version: 8.1.3
 Author: Zemanta
 Author URI: http://www.zemanta.com
 */
 
-define('SE_VERSION', '8.1.2');
+define('SE_VERSION', '8.1.3');
 
 if (!defined('SE_PLUGIN_FILE'))
 	define('SE_PLUGIN_FILE', plugin_basename(__FILE__));
@@ -608,7 +608,7 @@ class SearchEverything {
 				if ( $this->wp_ver23 ) {
 					$search .= "{$searchand}(tter.name LIKE '{$n}{$term}{$n}')";
 				}
-				$searchand = ' AND ';
+				$searchand = ' OR ';
 			}
 			$sentence_term = esc_sql( $s );
 			if ( count( $search_terms ) > 1 && $search_terms[0] != $sentence_term ) {
@@ -700,10 +700,10 @@ class SearchEverything {
 				}
 				$excl_list = implode( ',', $excluded_cat_list);
 				if ( $this->wp_ver23 ) {
-					$excludeQuery = " AND ( ctax.term_id NOT IN ( ".$excl_list." ))";
+					$excludeQuery = " AND ( ctax.term_id NOT IN ( ".$excl_list." ) OR (wp_posts.post_type IN ( 'page' )))";
 				}
 				else {
-					$excludeQuery = ' AND (c.category_id NOT IN ( '.$excl_list.' ))';
+					$excludeQuery = ' AND (c.category_id NOT IN ( '.$excl_list.' ) OR (wp_posts.post_type IN ( \'page\' )))';
 				}
 			}
 			$this->se_log( "ex category where: ".$excludeQuery );

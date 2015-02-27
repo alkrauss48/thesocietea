@@ -6,11 +6,16 @@
         }
 
         function init_tooltip() {
-            $('.cfs_tooltip:not(.ready)').each(function() {
-                $(this).addClass('ready');
-                $(this).tipTip({
-                    content: $(this).html()
-                });
+            $(document).on('mouseover', '.cfs_tooltip', function() {
+                if ('undefined' == typeof $(this).data('powertip')) {
+                    var content = $(this).find('.tooltip_inner').html();
+                    $(this).data('powertip', content);
+                    $(this).powerTip({
+                        placement: 'e',
+                        mouseOnToPopup: true
+                    });
+                    $.powerTip.show(this);
+                }
             });
         }
 
@@ -75,7 +80,7 @@
         $(document).on('click', '.cfs_edit_field', function() {
             var field = $(this).closest('.field');
             field.toggleClass('form_open');
-            field.find('.field_form').slideToggle();
+            field.find('.field_form').slideToggle('fast');
         });
 
         // Add or replace field_type options

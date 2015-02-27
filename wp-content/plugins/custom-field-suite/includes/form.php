@@ -138,10 +138,10 @@ class cfs_form
 
         wp_enqueue_script( 'jquery-ui-core');
         wp_enqueue_script( 'jquery-ui-sortable');
-        wp_enqueue_script( 'cfs-validation', CFS_URL . '/assets/js/validation.js', array( 'jquery' ) );
-        wp_enqueue_script( 'tiptip', CFS_URL . '/assets/js/tipTip/jquery.tipTip.js', array( 'jquery' ) );
-        wp_enqueue_style( 'tiptip', CFS_URL . '/assets/js/tipTip/tipTip.css' );
-        wp_enqueue_style( 'cfs-input', CFS_URL . '/assets/css/input.css' );
+        wp_enqueue_script( 'cfs-validation', CFS_URL . '/assets/js/validation.js', array( 'jquery' ), CFS_VERSION );
+        wp_enqueue_script( 'jquery-powertip', CFS_URL . '/assets/js/jquery-powertip/jquery.powertip.min.js', array( 'jquery' ), CFS_VERSION );
+        wp_enqueue_style( 'jquery-powertip', CFS_URL . '/assets/js/jquery-powertip/jquery.powertip.css', array(), CFS_VERSION );
+        wp_enqueue_style( 'cfs-input', CFS_URL . '/assets/css/input.css', array(), CFS_VERSION );
     }
 
 
@@ -220,7 +220,7 @@ CFS['loop_buffer'] = [];
         $input_fields = apply_filters( 'cfs_pre_render_fields', $input_fields, $params );
 
         // The SESSION should contain all applicable field group IDs. Since add_meta_box only
-        // passes 1 field group at a time, we use $cfs->group_ids from admin_head.php
+        // passes 1 field group at a time, we use CFS()->group_ids from admin_head.php
         // to store all group IDs needed for the SESSION.
         $all_group_ids = ( false === $params['front_end'] ) ? CFS()->group_ids : $field_groups;
 
@@ -308,7 +308,7 @@ CFS['loop_buffer'] = [];
             if ( 1 > (int) $field->parent_id ) {
                 $validator = '';
 
-                if ( 'relationship' == $field->type ) {
+                if ( in_array( $field->type, array( 'relationship', 'user', 'loop' ) ) ) {
                     $min = empty( $field->options['limit_min'] ) ? 0 : (int) $field->options['limit_min'];
                     $max = empty( $field->options['limit_max'] ) ? 0 : (int) $field->options['limit_max'];
                     $validator = "limit|$min,$max";
