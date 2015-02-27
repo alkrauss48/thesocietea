@@ -189,8 +189,8 @@ get_header(); ?>
     data-4600="opacity: 0;top: -8em; left: -8em;"
     data-4800="opacity: 1;top: 0em; left: 0em;"
 >
-        <p>I love <span class="hi">Layla</span>. We have been dating for over 7 years, and it’s been nothing but bliss.
-          She makes me a better person in all the areas that I would otherwise fail miserably at, like being thoughtful, building relationships with people, and keeping the house clean ;).
+        <p>I love <span class="hi">Layla</span>. We have been dating for over 8 years, and it’s been nothing but bliss.
+          She's the coolest, most down-to-earth person I've ever met, and it's so awesome to be the lucky guy who gets to have her.
           I couldn’t imagine a life without her, and hanging out with her – doing anything – is always my favorite thing to do. I love her.
           She’s an incredibly talented cake decorator too!</p>
       </div>
