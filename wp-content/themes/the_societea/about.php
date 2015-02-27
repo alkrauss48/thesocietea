@@ -171,7 +171,7 @@ get_header(); ?>
     data-4200="opacity: 0;top: -8em; left: -8em;"
     data-4400="opacity: 1;top: 0em; left: 0em;"
 >
-        <p>I love <span class='hi'>podcasts</span>. I’m currently subscribed to 30+ podcasts, updating regularly anywhere from daily to a few times a year, and I usually knock them all out.
+        <p>I love <span class='hi'>podcasts</span>. I’m currently subscribed to 25+ podcasts, updating regularly anywhere from daily to a few times a year, and I usually knock them all out.
           My favorites are those where I can walk away thinking I gained a chunk of tangible knowledge that I didn’t have before.
           HowStuffWorks is easily my favorite network of podcasts.
         </p>
