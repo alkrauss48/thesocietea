@@ -1010,7 +1010,7 @@ p.site-title {
   }
 }
 
-.project-screenshot + .project-screenshot + .project-screenshot + .project-screenshot { @include last; }
+.project-screenshot:nth-of-type(4n+4) { @include last; }
 
 .project-screenshots {
   position: relative;
