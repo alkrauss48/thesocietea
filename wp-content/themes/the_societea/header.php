@@ -20,7 +20,7 @@
     <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
 
     <meta name="description" content="<?php the_post();echo get_the_excerpt(); ?>">
-    <meta property="og:image" content="http://thesocietea.org/assets/images/dist/aaronkrauss.png">
+    <meta property="og:image" content="https://thesocietea.org/assets/images/dist/aaronkrauss.png">
     <meta property="og:title" content="<?php wp_title( '|', true, 'right' ); ?>">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimal-ui">
 
@@ -43,7 +43,7 @@
     <meta name="msapplication-config" content="/assets/images/favicon/browserconfig.xml">
 
     <!-- <link href='http://fonts.googleapis.com/css?family=Merriweather:400,700,900,300' rel='stylesheet' type='text/css'> -->
-    <link href='http://fonts.googleapis.com/css?family=Merriweather+Sans:400,700,300' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Merriweather+Sans:400,700,300' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="/assets/css/screen.css">
     <script src="/assets/js/lib/modernizr-2.7.1.min.js"></script>
     <!--[if lt IE 9]>
