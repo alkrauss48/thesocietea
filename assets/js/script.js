@@ -113,7 +113,12 @@ $(document).ready( function()	{
 
     $(".typed .light-orange").empty();
     $(".typed .light-orange").typed({
-      strings: ["Tea Enthusiast", "Dog Lover", "Developer"],
+      strings: [
+        "Tea Enthusiast",
+        "Dog Lover",
+        "<span class=' font-effect-fire-animation'>Developer</span>"
+      ],
+      contentType: 'html',
       typeSpeed: 30,
     });
   }
