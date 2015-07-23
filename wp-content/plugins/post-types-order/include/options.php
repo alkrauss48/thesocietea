@@ -53,7 +53,7 @@ function cpt_plugin_options()
                                         <tr valign="top">
                                             <th scope="row" style="text-align: right;"><label for="autosort"><?php _e('Auto Sort', 'cpt') ?></label></th>
                                             <td>
-                                                <p><input type="checkbox" <?php if ($options['autosort'] == "1") {echo ' checked="checked"';} ?> id="autosort" value="1" name="autosort"> <?php _e("If checked, the plug-in automatically update the WordPress queries to use the new order (<b>No code update is necessarily</b>)"); ?></p>
+                                                <p><input type="checkbox" <?php if ($options['autosort'] == "1") {echo ' checked="checked"';} ?> id="autosort" value="1" name="autosort"> <?php _e("If checked, the plug-in automatically update the WordPress queries to use the new order (<b>No code update is necessarily</b>)", 'cpt'); ?></p>
                                                 <p class="description"><?php _e("If only certain queries need to use the custom sort, keep this unchecked and include 'orderby' => 'menu_order' into query parameters", 'cpt') ?>.
                                                 <br />
                                                 <a href="http://www.nsp-code.com/sample-code-on-how-to-apply-the-sort-for-post-types-order-plugin/" target="_blank"><?php _e('Additional Description and Examples', 'cpt') ?></a></p>

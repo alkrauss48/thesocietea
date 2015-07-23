@@ -5,7 +5,7 @@ Plugin URI: http://www.nsp-code.com
 Description: Posts Order and Post Types Objects Order using a Drag and Drop Sortable javascript capability
 Author: Nsp Code
 Author URI: http://www.nsp-code.com 
-Version: 1.7.9
+Version: 1.8.2
 */
 
     define('CPTPATH',   plugin_dir_path(__FILE__));
@@ -82,9 +82,9 @@ Version: 1.7.9
             if (is_admin())
                     {
                         
-                        if ($options['adminsort'] == "1" && 
+                        if ($options['adminsort'] == "1" || 
                             //ignore when ajax Gallery Edit default functionality 
-                            !($options['adminsort'] == "1" && defined('DOING_AJAX') && isset($_REQUEST['action']) && $_REQUEST['action'] == 'query-attachments')
+                            (defined('DOING_AJAX') && isset($_REQUEST['action']) && $_REQUEST['action'] == 'query-attachments')
                             )
                             {
                                 $orderBy = "{$wpdb->posts}.menu_order, {$wpdb->posts}.post_date DESC";
@@ -193,11 +193,13 @@ Version: 1.7.9
             if ( empty( $post ) )
                 return $where;
             
-            $_join = '';
-            $_where = '';
-
             //?? WordPress does not pass through this varialbe, so we presume it's category..
             $taxonomy = 'category';
+            if(preg_match('/ tt.taxonomy = \'([^\']+)\'/i',$where, $match)) 
+                $taxonomy   =   $match[1];
+            
+            $_join = '';
+            $_where = '';
             
             if ( $in_same_term || ! empty( $excluded_terms ) ) 
                 {
@@ -271,12 +273,13 @@ Version: 1.7.9
             if ( empty( $post ) )
                 return $where;
             
+            $taxonomy = 'category';
+            if(preg_match('/ tt.taxonomy = \'([^\']+)\'/i',$where, $match)) 
+                $taxonomy   =   $match[1];
+            
             $_join = '';
             $_where = '';
-
-            //?? WordPress does not pass through this varialbe, so we presume it's category..
-            $taxonomy = 'category';
-            
+                        
             if ( $in_same_term || ! empty( $excluded_terms ) ) 
                 {
                     $_join = " INNER JOIN $wpdb->term_relationships AS tr ON p.ID = tr.object_id INNER JOIN $wpdb->term_taxonomy tt ON tr.term_taxonomy_id = tt.term_taxonomy_id";

@@ -52,7 +52,7 @@
                                 {
                                     foreach( $values as $position => $id ) 
                                         {
-                                            $data = array('menu_order' => $position, 'post_parent' => 0);
+                                            $data = array('menu_order' => $position);
                                             $data = apply_filters('post-types-order_save-ajax-order', $data, $key, $id);
                                             
                                             $wpdb->update( $wpdb->posts, $data, array('ID' => $id) );

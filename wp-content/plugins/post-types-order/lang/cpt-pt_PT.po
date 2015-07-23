@@ -2,57 +2,49 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Post Types Order\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-21 16:44+0200\n"
-"PO-Revision-Date: 2014-07-23 01:23-0000\n"
+"POT-Creation-Date: 2015-05-29 16:39-0000\n"
+"PO-Revision-Date: 2015-05-29 16:39-0000\n"
 "Last-Translator: Pedro Mendonça <ped.gaspar@gmail.com>\n"
 "Language-Team: Pedro Mendonça <ped.gaspar@gmail.com>\n"
 "Language: pt_PT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-KeywordsList: __;_e\n"
-"X-Poedit-Basepath: .\n"
-"X-Generator: Poedit 1.6.4\n"
+"X-Generator: Poedit 1.8.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
+"_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_ex:1,2c;"
+"esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SearchPath-0: .\n"
 
-#: post-types-order.php:119
-msgid "Post Types Order must be configured. Please go to"
-msgstr "O plugin Post Types Order tem que ser configurado em"
-
-#: post-types-order.php:119
-msgid "Settings Page"
-msgstr "Página de configurações"
-
-#: post-types-order.php:119
-msgid "make the configuration and save"
-msgstr "Configure e guarde as definições"
-
-#: post-types-order.php:457 post-types-order.php:461 post-types-order.php:472
+#: include/cpto-class.php:107 include/cpto-class.php:109
+#: include/cpto-class.php:113 include/cpto-class.php:124
 msgid "Re-Order"
 msgstr "Reordenar"
 
-#: post-types-order.php:480
+#: include/cpto-class.php:132
 msgid ""
 "This plugin can't work without javascript, because it's use drag and drop "
 "and AJAX."
 msgstr ""
-"Este plugin necessita de JavaScript porque utiliza AJAX para arrastar e "
+"Este plugin não funciona sem JavaScript, porque utiliza AJAX para arrastar e "
 "largar os itens."
 
-#: post-types-order.php:493
+#: include/cpto-class.php:145
 msgid "Update"
 msgstr "Atualizar"
 
-#: post-types-order.php:509
+#: include/cpto-class.php:164
 msgid "Items Order Updated"
 msgstr "Ordem dos itens alterada"
 
-#: post-types-order.php:526
+#: include/cpto-class.php:183
 msgid "Pages"
 msgstr "Páginas"
 
-#: include/functions.php:65
+#: include/functions.php:82
 msgid ""
 "Did you find this plugin useful? Please support our work with a donation or "
 "write an article about this plugin in your blog with a link to our site"
@@ -60,112 +52,162 @@ msgstr ""
 "Considera este plugin útil? Por favor faça um donativo ao autor ou escreva "
 "um artigo sobre este plugin no seu blog com ligação para a nossa página"
 
-#: include/functions.php:66
+#: include/functions.php:83
 msgid "Did you know there is available an Advanced version of this plug-in?"
 msgstr "Sabe que há uma versão Avançada deste plugin?"
 
-#: include/functions.php:66
+#: include/functions.php:83
 msgid "Read more"
-msgstr "Leia mais"
+msgstr "Ler mais"
 
-#: include/functions.php:67
+#: include/functions.php:84
 msgid "Check our"
-msgstr "Verifique o nosso plugin"
+msgstr "Veja o nosso plugin"
 
-#: include/functions.php:67
+#: include/functions.php:84
 msgid ""
 "plugin which allow to custom sort categories and custom taxonomies terms"
 msgstr ""
 "que permite personalizar a ordem das categorias e das taxonomias "
 "personalizadas"
 
-#: include/options.php:16
+#: include/options.php:18
 msgid "Settings Saved"
-msgstr "Configurações guardadas"
+msgstr "Definições guardadas"
 
-#: include/options.php:28
+#: include/options.php:30
 msgid "General Settings"
-msgstr "Configurações gerais"
+msgstr "Definições gerais"
 
-#: include/options.php:34
+#: include/options.php:36
 msgid "General"
 msgstr "Geral"
 
-#: include/options.php:39
+#: include/options.php:41
 msgid "Minimum Level to use this plugin"
 msgstr "Nível mínimo para utilizar este plugin"
 
-#: include/options.php:42
+#: include/options.php:44
 msgid "Subscriber"
 msgstr "Assinante"
 
-#: include/options.php:43
+#: include/options.php:45
 msgid "Contributor"
 msgstr "Colaborador"
 
-#: include/options.php:44
+#: include/options.php:46
 msgid "Author"
 msgstr "Autor"
 
-#: include/options.php:45
+#: include/options.php:47
 msgid "Editor"
 msgstr "Editor"
 
-#: include/options.php:46
+#: include/options.php:48
 msgid "Administrator"
 msgstr "Administrador"
 
-#: include/options.php:52
+#: include/options.php:54
 msgid "Auto Sort"
-msgstr "Ordem Automática"
+msgstr "Ordem automática"
 
 #: include/options.php:56
 msgid ""
-"If checked, the plug-in will automatically update the wp-queries to use the "
-"new order (<b>No code update is necessarily</b>).<br /> If you need more "
-"order customizations you will need to uncheck this and include 'menu_order' "
-"into your theme queries"
+"If checked, the plug-in automatically update the WordPress queries to use "
+"the new order (<b>No code update is necessarily</b>)"
 msgstr ""
-"Se seleccionado, o plugin irá ordenar automaticamente actualizar as <i>wp-"
-"queries</i> para usar a nova ordem <b>sem recorrer a qualquer programação</"
-"b>.<br />Se necessitar de ordenações mais personalizadas, deverá incluir "
-"'menu_order' nas <i>queries</i> do tema e desactivar esta opção."
+"Se seleccionado, o plugin ordena automaticamente as wp-queries para utilizar "
+"a nova ordem (<b>sem recorrer a qualquer programação</b>)"
 
-#: include/options.php:58
-msgid "Show Examples"
-msgstr "Mostrar exemplos"
-
-#: include/options.php:61
-msgid "The following PHP code will still return the post in the set-up Order"
-msgstr "O código PHP abaixo também permite obter o artigo na ordem definida"
-
-#: include/options.php:74
-msgid "Or"
-msgstr "Ou"
-
-#: include/options.php:83
+#: include/options.php:57
 msgid ""
-"If the Auto Sort is uncheck you will need to use the \"orderby\" and \"order"
-"\" parameters"
+"If only certain queries need to use the custom sort, keep this unchecked and "
+"include 'orderby' => 'menu_order' into query parameters"
 msgstr ""
-"Se a Ordem Automática não estiver seleccionada, deverá utilizar os "
-"parâmetros \"orderby\" e \"order\""
+"Se necessitar de ordenações mais personalizadas, desactive esta opção e "
+"inclua 'orderby' => 'menu_order' nos parâmetros da query"
 
-#: include/options.php:98
+#: include/options.php:59
+msgid "Additional Description and Examples"
+msgstr "Descrições e exemplos adicionais"
+
+#: include/options.php:66
 msgid "Admin Sort"
-msgstr "Ordem na Administração"
+msgstr "Ordem na administração"
 
-#: include/options.php:102
+#: include/options.php:70
 msgid ""
 "To affect the admin interface, to see the post types per your new sort, this "
 "need to be checked"
 msgstr ""
-"Active esta opção para afectar o painel de administração e ver os tipos de "
-"artigos pela sua nova ordem"
+"Para afectar o painel de administração e ver os tipos de artigos pela sua "
+"nova ordem, esta opção tem que estar seleccionada"
 
-#: include/options.php:111
+#: include/options.php:75
+msgid "Next / Previous Apply"
+msgstr "Aplicar a Seguinte / Anterior"
+
+#: include/options.php:79
+msgid "Apply the sort on Next / Previous site-wide navigation."
+msgstr "Aplicar a ordenação a toda a navegação Seguinte / Anterior."
+
+#: include/options.php:79
+msgid "This can also be controlled through"
+msgstr "Isto também pode ser controlado por"
+
+#: include/options.php:79
+msgid "code"
+msgstr "código"
+
+#: include/options.php:88
 msgid "Save Settings"
-msgstr "Guardar configurações"
+msgstr "Guardar definições"
+
+#: post-types-order.php:121
+msgid "Post Types Order must be configured. Please go to"
+msgstr "O plugin Post Types Order tem que ser configurado em"
+
+#: post-types-order.php:121
+msgid "Settings Page"
+msgstr "Página das definições"
+
+#: post-types-order.php:121
+msgid "make the configuration and save"
+msgstr "Configure e guarde as definições"
+
+#: post-types-order.php:212 post-types-order.php:290
+#, php-format
+msgid "Use commas instead of %s to separate excluded terms."
+msgstr "Utilize vírgulas em vez de %s para separar termos exluídos."
+
+#~ msgid ""
+#~ "If checked, the plug-in will automatically update the wp-queries to use "
+#~ "the new order (<b>No code update is necessarily</b>).<br /> If you need "
+#~ "more order customizations you will need to uncheck this and include "
+#~ "'menu_order' into your theme queries"
+#~ msgstr ""
+#~ "Se seleccionado, o plugin irá ordenar automaticamente actualizar as <i>wp-"
+#~ "queries</i> para usar a nova ordem <b>sem recorrer a qualquer "
+#~ "programação</b>.<br />Se necessitar de ordenações mais personalizadas, "
+#~ "deverá incluir 'menu_order' nas <i>queries</i> do tema e desactivar esta "
+#~ "opção."
+
+#~ msgid "Show Examples"
+#~ msgstr "Mostrar exemplos"
+
+#~ msgid ""
+#~ "The following PHP code will still return the post in the set-up Order"
+#~ msgstr "O código PHP abaixo também permite obter o artigo na ordem definida"
+
+#~ msgid "Or"
+#~ msgstr "Ou"
+
+#~ msgid ""
+#~ "If the Auto Sort is uncheck you will need to use the \"orderby\" and "
+#~ "\"order\" parameters"
+#~ msgstr ""
+#~ "Se a Ordem Automática não estiver seleccionada, deverá utilizar os "
+#~ "parâmetros \"orderby\" e \"order\""
 
 #~ msgid "Post Types Order"
 #~ msgstr "Ordenar Posts"
