@@ -10,7 +10,7 @@ get_header(); ?>
 <div 
   data-bottom-top="background-position: 50% 60%;"
   data-top-bottom="background-position: 50% 40%;"
-  id="slide1" class="slide" style="background-image: url('/assets/images/dist/stockvault-water121514.jpg');">
+  id="slide1" class="slide" style="background-image: url('/assets/images/dist/gold-hill.jpg');">
   <div class="container">
     <div class="content">
         <h1
@@ -32,7 +32,7 @@ get_header(); ?>
 >
           My name is Aaron Krauss. I’m a Full Stack developer based out of Edmond, Oklahoma (near Oklahoma City).
           I was born in Germany in 1990, grew up in a German culture for 6 years, and still speak moderately fluent German.
-          I currently work at Staplegun Inc. as a web developer and designer, and engage in miscellaneous development on my own time.
+          I currently work at Staplegun Inc. as a web developer and the Director of Awesome, and engage in miscellaneous development on my own time.
         </p>
     </div>
   </div>
@@ -99,7 +99,7 @@ get_header(); ?>
 >
     <p>My background is that of a back-end developer, specializing in object-oriented programming in both software and web development.
       I prefer to program in a Unix-based environment, utilizing the terminal heavily for everything.
-      My main skills here are <span class="hi">Ruby/Rails</span>, <span class="hi">PHP</span>, <span class="hi">SQL</span>,
+      My main skills here are <span class="hi">Ruby/Rails</span>, <span class="hi">PHP</span>, <span class="hi">Python</span>, <span class="hi">SQL</span>,
       <span class="hi">NoSQL</span>, <span class="hi">APIs</span>, <span class="hi">Node.js</span>, <span class="hi">Angular.js</span>, <span class="hi">Ember.js</span>, and a little bit of <span class="hi">Go</span>.</p>
   </div>
   <div class="content-4"
@@ -108,10 +108,10 @@ get_header(); ?>
     data-2700="top: -8em; opacity: 1;"
     data-2900="top: -14em; opacity: 0;"
 >
-    <p>Recently, I’ve been doing a lot of front-end development, getting my hands dirty with a bunch of <span class="hi">HTML5</span>, <span class="hi">Sass</span>,
-      <span class="hi">Javascript</span>, <span class="hi">Grunt.js</span>, and CMSs like <span class="hi">Wordpress</span>,
-      <span class="hi">ModX</span>, and <span class="hi">Craft.</span> I have used <span class="hi">Foundation</span> heavily in the past,
-      and a bit of <span class="hi">Bootstrap</span>, but now I choose to build my own responsive styles using just a tiny sass plugin to provide a grid.
+    <p>Recently at Staplegun I’ve been doing a lot of full-stack development, getting my hands dirty with a bunch of <span class="hi">HTML5</span>, <span class="hi">Sass</span>,
+      <span class="hi">Javascript</span>, <span class="hi">Grunt.js</span>, CMSs like <span class="hi">Wordpress</span>,
+      <span class="hi">ModX</span>, and <span class="hi">Craft</span>, and some enterprise web app development using <span class="hi">Rails</span> and <span class="hi">Angular</span>. I use <span class="hi">Foundation</span> and
+      <span class="hi">Bootstrap</span> when I need to, but I usually opt to build completely custom styles using just a tiny sass plugin to provide a grid.
       Check out my projects to see what I’ve been working on, or you can hire me if you have a cool project and need a remote developer!</p>
   </div>
 </div>
@@ -128,7 +128,7 @@ get_header(); ?>
 ></div>
 
 </div>
-<div id="slide5" class="slide"  style="background-image: url('/assets/images/dist/stockvault-city-skyline-at-sunset-113039.jpg');"
+<div id="slide5" class="slide"  style="background-image: url('/assets/images/dist/jackson-large.jpg');"
   data-bottom-top="background-position: 50% 60%;"
   data-top-bottom="background-position: 50% 40%;"
 >
@@ -161,7 +161,7 @@ get_header(); ?>
 </div>
 
 </div>
-<div id="slide6" class="slide"  style="background-image: url('/assets/images/dist/stockvault-red-landscape127092.jpg');"
+<div id="slide6" class="slide"  style="background-image: url('/assets/images/dist/layla.jpg');"
   data-bottom-top="background-position: 50% 70%;"
   data-top-bottom="background-position: 50% 30%;"
 >
@@ -171,7 +171,7 @@ get_header(); ?>
     data-4200="opacity: 0;top: -8em; left: -8em;"
     data-4400="opacity: 1;top: 0em; left: 0em;"
 >
-        <p>I love <span class='hi'>podcasts</span>. I’m currently subscribed to 25+ podcasts, updating regularly anywhere from daily to a few times a year, and I usually knock them all out.
+        <p>I love <span class='hi'>podcasts</span>. I’m currently subscribed to several podcasts, updating regularly anywhere from daily to a few times a year, and I usually knock them all out.
           My favorites are those where I can walk away thinking I gained a chunk of tangible knowledge that I didn’t have before.
           HowStuffWorks is easily my favorite network of podcasts.
         </p>
@@ -215,7 +215,7 @@ get_header(); ?>
 		</main><!-- #main -->
 	</div><!-- #primary -->
 <div id="about-responsive">
-  <div class="subpage-header-image" style="background-image: url('/assets/images/dist/stockvault-morning-pier-semisarahcom134386.jpg'); ?>');"
+  <div class="subpage-header-image" style="background-image: url('/assets/images/dist/gold-hill.jpg'); ?>');"
     data-start="background-position: 50% 55%;"
     data-400="background-position: 50% 45%;"
   ></div>
