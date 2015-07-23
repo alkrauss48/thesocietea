@@ -5,7 +5,7 @@ Plugin URI: http://www.nsp-code.com
 Description: Posts Order and Post Types Objects Order using a Drag and Drop Sortable javascript capability
 Author: Nsp Code
 Author URI: http://www.nsp-code.com 
-Version: 1.7.7
+Version: 1.7.9
 */
 
     define('CPTPATH',   plugin_dir_path(__FILE__));
@@ -17,15 +17,7 @@ Version: 1.7.7
 
     function CPTO_activated() 
         {
-            //make sure the vars are set as default
-            $options = get_option('cpto_options');
-            
-            $defaults   = array (
-                                    'autosort'                  =>  1,
-                                    'adminsort'                 =>  1,
-                                    'capability'                =>  'install_plugins'
-                                );
-            $options          = wp_parse_args( $options, $defaults );
+            $options          =     cpt_get_options();
                 
             update_option('cpto_options', $options);
         }
@@ -48,7 +40,7 @@ Version: 1.7.7
                 { return $query; }  // Stop running the function if this is a virtual page
             //--
                
-            $options = get_option('cpto_options');
+            $options          =     cpt_get_options();
             if (is_admin())
                 {
                     //no need if it's admin interface
@@ -75,12 +67,16 @@ Version: 1.7.7
         {
             global $wpdb;
             
-            $options = get_option('cpto_options');
+            $options          =     cpt_get_options();
             
             //ignore the bbpress
             if (isset($query->query_vars['post_type']) && ((is_array($query->query_vars['post_type']) && in_array("reply", $query->query_vars['post_type'])) || ($query->query_vars['post_type'] == "reply")))
                 return $orderBy;
             if (isset($query->query_vars['post_type']) && ((is_array($query->query_vars['post_type']) && in_array("topic", $query->query_vars['post_type'])) || ($query->query_vars['post_type'] == "topic")))
+                return $orderBy;
+                
+            //check for orderby GET paramether in which case return default data
+            if (isset($_GET['orderby']) && $_GET['orderby'] !=  'menu_order')
                 return $orderBy;
             
             if (is_admin())
@@ -147,7 +143,7 @@ Version: 1.7.7
         {
 	        global $custom_post_type_order, $userdata;
 
-            $options = get_option('cpto_options');
+            $options          =     cpt_get_options();
 
             if (is_admin())
                 {
@@ -169,11 +165,26 @@ Version: 1.7.7
         }
         
         
-        
-    add_filter('get_previous_post_where', 'cpto_get_previous_post_where',   99, 3);
-    add_filter('get_previous_post_sort', 'cpto_get_previous_post_sort');
-    add_filter('get_next_post_where', 'cpto_get_next_post_where',           99, 3);
-    add_filter('get_next_post_sort', 'cpto_get_next_post_sort');
+    add_filter('init', 'cpto_setup_theme');
+    function cpto_setup_theme()    
+        {
+            if(is_admin())
+                return;
+            
+            //check the navigation_sort_apply option
+            $options          =     cpt_get_options();
+            
+            $navigation_sort_apply   =  ($options['navigation_sort_apply'] ==  "1")    ?   TRUE    :   FALSE;
+            $navigation_sort_apply   =  apply_filters('cpto/navigation_sort_apply', $navigation_sort_apply);
+            
+            if( !   $navigation_sort_apply)
+                return;
+            
+            add_filter('get_previous_post_where', 'cpto_get_previous_post_where',   99, 3);
+            add_filter('get_previous_post_sort', 'cpto_get_previous_post_sort');
+            add_filter('get_next_post_where', 'cpto_get_next_post_where',           99, 3);
+            add_filter('get_next_post_sort', 'cpto_get_next_post_sort');
+        }
     
     function cpto_get_previous_post_where($where, $in_same_term, $excluded_terms)
         {

@@ -3,14 +3,14 @@ Contributors: Nsp Code
 Donate link: http://www.nsp-code.com/donate.php
 Tags: post order, post type order, custom order, admin posts order
 Requires at least: 2.8
-Tested up to: 4.1
-Stable tag: 1.7.7
+Tested up to: 4.2.2
+Stable tag: 1.7.9
 
 Post Order and custom Post Type Objects (posts, any custom post types) using a Drag and Drop Sortable JavaScript AJAX interface. 
 
 == Description ==
 
-<strong>Over 800.000 DOWNLOADS and near PERFECT ratting out of 250 REVIEWS</strong>. <br />
+<strong>Over 1.000.000 DOWNLOADS and near PERFECT ratting out of 150 REVIEWS</strong>. <br />
 A powerful plugin, Order Posts and Post Types Objects using a Drag and Drop Sortable JavaScript capability.
 It allow to reorder the posts for any custom post types you defined, including the default Posts. Also you can have the admin posts interface sorted per your new sort. Post Order has never been easier.
 
@@ -44,7 +44,7 @@ If for some reason the post order does not update on your front side, you either
 
 == Screenshots ==
 
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif).
+1. The ReOrder interface through which the sort can be created.
 
 == Frequently Asked Questions  ==
 
@@ -56,7 +56,7 @@ Absolutely you can! Unlike many other plugins, you don't have to do any code cha
 
 = What kind of posts/pages this plugin allow me to sort? =
 
-You can sort ALL post types that you have defined into your wordpress as long they are not hierarhically defined: Posts (default WordPress custom post type), Movies, Reviews, Data etc..
+You can sort ALL post types that you have defined into your wordpress as long they are not <strong>hierarhically</strong> defined: Posts (default WordPress custom post type), Movies, Reviews, Data etc..
 
 = Ok, i understand about the template post types order, how about the admin interface? =
 
@@ -67,6 +67,14 @@ There's a option you can trigger, to see the post types order as you defined in 
 All ideas are welcome and i put them on my list to be implemented into the new versions. Anyway this may take time, but if you are in a rush, please consider a small donation and we can arrange something.
 
 == Change Log ==
+
+= 1.7.9 =
+  - Next / Previous sorting apply option
+  - Filter for Next / Previous sorting applpy
+  - Help updates
+  - Appearance /css updates
+  - Admin columns sort fix
+  - Media re-order
 
 = 1.7.7 =
   - Next / Previous post link functionality update

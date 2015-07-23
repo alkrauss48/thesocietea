@@ -78,7 +78,7 @@
                     //put a menu for all custom_type
                     $post_types = get_post_types();
                     
-                    $options = get_option('cpto_options'); 
+                    $options          =     cpt_get_options();
                     //get the required user capability
                     $capability = '';
                     if(isset($options['capability']) && !empty($options['capability']))
@@ -105,6 +105,8 @@
                             
                             if ($post_type_name == 'post')
                                 add_submenu_page('edit.php', __('Re-Order', 'cpt'), __('Re-Order', 'cpt'), $capability, 'order-post-types-'.$post_type_name, array(&$this, 'SortPage') );
+                            elseif ($post_type_name == 'attachment') 
+                                add_submenu_page('upload.php', __('Re-Order', 'cpt'), __('Re-Order', 'cpt'), $capability, 'order-post-types-'.$post_type_name, array(&$this, 'SortPage') ); 
                             else
                                 {
                                     if (!is_post_type_hierarchical($post_type_name))
@@ -173,12 +175,19 @@
             function listPages($args = '') 
                 {
                     $defaults = array(
-                        'depth' => 0, 'show_date' => '',
-                        'date_format' => get_option('date_format'),
-                        'child_of' => 0, 'exclude' => '',
-                        'title_li' => __('Pages'), 'echo' => 1,
-                        'authors' => '', 'sort_column' => 'menu_order',
-                        'link_before' => '', 'link_after' => '', 'walker' => ''
+                        'depth'             => 0, 
+                        'show_date'         => '',
+                        'date_format'       => get_option('date_format'),
+                        'child_of'          => 0, 
+                        'exclude'           => '',
+                        'title_li'          => __('Pages'), 
+                        'echo'              => 1,
+                        'authors'           => '', 
+                        'sort_column'       => 'menu_order',
+                        'link_before'       => '', 
+                        'link_after'        => '', 
+                        'walker'            => '',
+                        'post_status'       =>  'any' 
                     );
 
                     $r = wp_parse_args( $args, $defaults );
@@ -193,10 +202,11 @@
                     // Query pages.
                     $r['hierarchical'] = 0;
                     $args = array(
-                                'sort_column'   =>  'menu_order',
-                                'post_type'     =>  $post_type,
-                                'posts_per_page' => -1,
-                                'orderby'        => array(
+                                'sort_column'       =>  'menu_order',
+                                'post_type'         =>  $post_type,
+                                'posts_per_page'    => -1,
+                                'post_status'       =>  'any',
+                                'orderby'            => array(
                                                             'menu_order'    => 'ASC',
                                                             'post_date'     =>  'DESC'
                                                             )

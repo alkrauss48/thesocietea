@@ -13,3 +13,4 @@ node_modules/
 bower_components/
 wp-config.php
 .sql
+backup.sql

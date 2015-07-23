@@ -26,6 +26,23 @@
             return ($user_level);
         }
         
+    
+    function cpt_get_options()
+        {
+            //make sure the vars are set as default
+            $options = get_option('cpto_options');
+            
+            $defaults   = array (
+                                    'autosort'                  =>  1,
+                                    'adminsort'                 =>  1,
+                                    'capability'                =>  'install_plugins',
+                                    'navigation_sort_apply'     =>  1,
+                                    
+                                );
+            $options          = wp_parse_args( $options, $defaults );
+            
+            return $options;            
+        }
         
     function cpt_info_box()
         {

@@ -3,7 +3,7 @@
 
 function cpt_plugin_options()
     {
-        $options = get_option('cpto_options');
+        $options          =     cpt_get_options();
         
         if (isset($_POST['form_submit']))
             {
@@ -12,7 +12,9 @@ function cpt_plugin_options()
                 
                 $options['autosort']    = isset($_POST['autosort'])     ? $_POST['autosort']    : '';
                 $options['adminsort']   = isset($_POST['adminsort'])    ? $_POST['adminsort']   : '';
-                    
+                
+                $options['navigation_sort_apply']   = isset($_POST['navigation_sort_apply'])    ? $_POST['navigation_sort_apply']   : '';
+                                    
                 echo '<div class="updated fade"><p>' . __('Settings Saved', 'cpt') . '</p></div>';
 
                 update_option('cpto_options', $options);
@@ -49,57 +51,32 @@ function cpt_plugin_options()
                                         </tr>
                                         
                                         <tr valign="top">
-                                            <th scope="row" style="text-align: right;"><label><?php _e('Auto Sort', 'cpt') ?></label></th>
+                                            <th scope="row" style="text-align: right;"><label for="autosort"><?php _e('Auto Sort', 'cpt') ?></label></th>
                                             <td>
-                                                <label for="users_can_register">
-                                                <input type="checkbox" <?php if ($options['autosort'] == "1") {echo ' checked="checked"';} ?> value="1" name="autosort">
-                                                <?php _e("If checked, the plug-in will automatically update the wp-queries to use the new order (<b>No code update is necessarily</b>).<br /> If you need more order customizations you will need to uncheck this and include 'menu_order' into your theme queries", 'cpt') ?>.</label>
+                                                <p><input type="checkbox" <?php if ($options['autosort'] == "1") {echo ' checked="checked"';} ?> id="autosort" value="1" name="autosort"> <?php _e("If checked, the plug-in automatically update the WordPress queries to use the new order (<b>No code update is necessarily</b>)"); ?></p>
+                                                <p class="description"><?php _e("If only certain queries need to use the custom sort, keep this unchecked and include 'orderby' => 'menu_order' into query parameters", 'cpt') ?>.
+                                                <br />
+                                                <a href="http://www.nsp-code.com/sample-code-on-how-to-apply-the-sort-for-post-types-order-plugin/" target="_blank"><?php _e('Additional Description and Examples', 'cpt') ?></a></p>
                                                 
-                                                <p><a href="javascript:;" onclick="jQuery('#example1').slideToggle();;return false;"><?php _e('Show Examples', 'cpt') ?></a></p>
-                                                <div id="example1" style="display: none">
-                                                
-                                                <p class="example"><br /><?php _e('The following PHP code will still return the post in the set-up Order', 'cpt') ?>:</p>
-                                                <pre class="example">
-$args = array(
-              'post_type' => 'feature'
-            );
-
-$my_query = new WP_Query($args);
-while ($my_query->have_posts())
-    {
-        $my_query->the_post();
-        (..your code..)          
-    }
-</pre>
-<p class="example"><br /><?php _e('Or', 'cpt') ?>:</p>
-                                                <pre class="example">
-$posts = get_posts($args);
-foreach ($posts as $post)
-    {
-        (..your code..)     
-    }
-                                                </pre>
-                                                
-<p class="example"><br /><?php _e('If the Auto Sort is uncheck you will need to use the "orderby" and "order" parameters', 'cpt') ?>:</p>
-<pre class="example">
-$args = array(
-              'post_type' => 'feature',
-              'orderby'   => 'menu_order',
-              'order'     => 'ASC'
-            );
-</pre>
-                                                
-                                                </div>
                                             </td>
                                         </tr>
                                         
                                         
                                         <tr valign="top">
-                                            <th scope="row" style="text-align: right;"><label><?php _e('Admin Sort', 'cpt') ?></label></th>
+                                            <th scope="row" style="text-align: right;"><label for="adminsort"><?php _e('Admin Sort', 'cpt') ?></label></th>
                                             <td>
-                                                <label for="users_can_register">
-                                                <input type="checkbox" <?php if ($options['adminsort'] == "1") {echo ' checked="checked"';} ?> value="1" name="adminsort">
-                                                <?php _e("To affect the admin interface, to see the post types per your new sort, this need to be checked", 'cpt') ?>.</label>
+                                                <p>
+                                                <input type="checkbox" <?php if ($options['adminsort'] == "1") {echo ' checked="checked"';} ?> id="adminsort" value="1" name="adminsort">
+                                                <?php _e("To affect the admin interface, to see the post types per your new sort, this need to be checked", 'cpt') ?>.</p>
+                                            </td>
+                                        </tr>
+                                        
+                                        <tr valign="top">
+                                            <th scope="row" style="text-align: right;"><label for="navigation_sort_apply"><?php _e('Next / Previous Apply', 'cpt') ?></label></th>
+                                            <td>
+                                                <p>
+                                                <input type="checkbox" <?php if ($options['navigation_sort_apply'] == "1") {echo ' checked="checked"';} ?> id="navigation_sort_apply" value="1" name="navigation_sort_apply">
+                                                <?php _e("Apply the sort on Next / Previous site-wide navigation.", 'cpt') ?> <?php _e('This can also be controlled through', 'cpt') ?> <a href="http://www.nsp-code.com/apply-custom-sorting-for-next-previous-site-wide-navigation/" target="_blank"><?php _e('code', 'cpt') ?></a></p>
                                             </td>
                                         </tr>
                                         
