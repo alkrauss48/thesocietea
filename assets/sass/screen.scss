@@ -404,8 +404,8 @@ hr.header-hr {
 #responsive-menu-icon {
   display: block;
   position: relative;
-  width: 25px;
-  height: 25px;
+  width: 35px;
+  height: 35px;
   @include transition(transform $transition-time ease);
   span {
     @include transition(all 0.35s ease-in-out);
