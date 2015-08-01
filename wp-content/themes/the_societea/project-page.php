@@ -55,8 +55,14 @@
                 <div class="project-overlay"><i class="icon2-search-plus"></i></div>
               </a>
             </div>
-          <?php endforeach; ?>
-        <?php endif; ?>
+        <?php
+            endforeach;
+          else:
+?>
+  <p class="no-screenshots">No screenshots to show for this project</p>
+<?php
+          endif;
+        ?>
       </div>
     </div>
     </div>
