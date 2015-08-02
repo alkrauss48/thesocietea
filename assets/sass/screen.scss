@@ -1053,6 +1053,8 @@ p.entry-title-link {
     @include project-link;
   }
 
+  h2 { color: $blue; }
+
   img {
     max-width: 100%;
   }
