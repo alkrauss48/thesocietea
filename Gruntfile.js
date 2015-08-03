@@ -74,7 +74,7 @@ module.exports = function (grunt) {
               tasks: ['rig:coffee', 'coffee']
             },
             uglify_dist: {
-	            files: [ 'assets/js/*.js' ],
+	            files: [ 'assets/js/*.js', 'assets/js/lib/*.js' ],
 	            tasks: [ 'rig:dist', 'uglify:dist' ]
             },
             uglify_ie: {

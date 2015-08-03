@@ -212,6 +212,9 @@ footer.main-footer {
 
 .header-content-wrapper {
   height: 100%;
+  @media screen and (max-width: $second-breakpoint){
+    height: auto;
+  }
   position: relative;
 }
 .header-content-image {
@@ -244,12 +247,17 @@ footer.main-footer {
 }
 
 .header-text {
-  position: absolute;
-  left: 0;
-  top: 15%;
   font-size: 200%;
-  width: 100%;
+  @media screen and (max-width: $second-breakpoint){
+    padding-top: 2em;
+  }
+  padding-top: 1em;
+  max-width: 18em;
+  margin-left: auto;
+  margin-right: auto;
   text-align: center;
+  background-color: rgba(0, 0, 0, .6);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#4D000000,endColorstr=#4D000000);
   h2, h3 {
     margin: 0;
     color: white;
@@ -288,6 +296,7 @@ footer.main-footer {
 .header-icons{
   @include icons;
   padding: .5em;
+  margin: 1em 0 0 0;
   margin-left: auto;
   margin-right: auto;
   @media screen and (max-width: $mid-breakpoint){
@@ -296,8 +305,6 @@ footer.main-footer {
       margin: 0 .5em;
     }
   }
-  background-color: rgba(0, 0, 0, .25);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#4D000000,endColorstr=#4D000000);
 }
 
 .footer-icons {
@@ -1178,6 +1185,12 @@ p.entry-title-link {
 }
 
 #main.home { height: 100%; }
+body.home #main.site-main {
+  padding-top: 8%;
+  @media screen and (max-width: $second-breakpoint){
+    padding-top: 0;
+  }
+}
 
 input#search {
   @include transition(width .5s ease);

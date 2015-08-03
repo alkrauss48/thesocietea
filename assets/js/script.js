@@ -116,7 +116,7 @@ $(document).ready( function()	{
       strings: [
         "Tea Enthusiast",
         "Dog Lover",
-        "<span class=' font-effect-fire-animation'>Developer</span>"
+        "Developer"
       ],
       contentType: 'html',
       typeSpeed: 30,

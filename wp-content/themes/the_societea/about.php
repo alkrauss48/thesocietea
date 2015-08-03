@@ -10,7 +10,7 @@ get_header(); ?>
 <div 
   data-bottom-top="background-position: 50% 60%;"
   data-top-bottom="background-position: 50% 40%;"
-  id="slide1" class="slide" style="background-image: url('/assets/images/dist/gold-hill.jpg');">
+  id="slide1" class="slide" style="background-image: url('/assets/images/dist/golden-hill.jpg');">
   <div class="container">
     <div class="content">
         <h1
@@ -215,7 +215,7 @@ get_header(); ?>
 		</main><!-- #main -->
 	</div><!-- #primary -->
 <div id="about-responsive">
-  <div class="subpage-header-image" style="background-image: url('/assets/images/dist/gold-hill.jpg'); ?>');"
+  <div class="subpage-header-image" style="background-image: url('/assets/images/dist/golden-hill.jpg'); ?>');"
     data-start="background-position: 50% 55%;"
     data-400="background-position: 50% 45%;"
   ></div>

@@ -7,7 +7,7 @@
 get_header(); ?>
     <div class="header-content-wrapper spanner">
       <main id="main" class="site-main scene_element scene_element--fadein" role="main">
-      <div class="header-content-image"></div>
+      <div id="header-wrapper" class="header-content-image"></div>
       <div class="header-text">
         <h2>Hi, I'm</h2>
         <h1>Aaron Krauss</h1>
@@ -28,24 +28,15 @@ get_header(); ?>
         <h3>Get in touch with me if you need help with development, design, or training</h3>
         <div class="home-offerings-wrapper">
           <div class="home-offerings">
-            <div class="icon-wrapper"
-              data-bottom-top="left: -15px; opacity:0;"
-              data-center-center="left: 0px; opacity: 1;"
-              ><i class="icon2-keyboard"></i></div>
+            <div class="icon-wrapper"><i class="icon2-keyboard"></i></div>
             <a class="development" href="<?php echo get_permalink(13); ?>">Development</a>
           </div>
           <div class="home-offerings">
-            <div class="icon-wrapper"
-              data-bottom-top="opacity:0;"
-              data-center-center="opacity: 1;"
-              ><i class="icon2-pencil"></i></div>
+            <div class="icon-wrapper"><i class="icon2-pencil"></i></div>
             <a class="design" href="<?php echo get_permalink(13); ?>">Design</a>
           </div>
           <div class="home-offerings">
-            <div class="icon-wrapper"
-              data-bottom-top="left: 15px; opacity:0;"
-              data-center-center="left: 0px; opacity: 1;"
-              ><i class="icon2-users"></i></div>
+            <div class="icon-wrapper"><i class="icon2-users"></i></div>
             <a class="training" href="<?php echo get_permalink(13); ?>">Training</a>
           </div>
         </div>
@@ -55,10 +46,7 @@ get_header(); ?>
         <div class="container-padding">
           <div class="container">
             <div class="home-picture">
-              <img src="/assets/images/dist/aaronkrauss.png" alt="Aaron Krauss"
-              data-bottom-top="left: -15px; opacity:0;"
-              data-center-center="left: 0px; opacity: 1;"
-              />
+              <img src="/assets/images/dist/aaronkrauss.png" alt="Aaron Krauss" />
             </div>
             <div class="home-about-desc">
               <h2>Get to know me</h2>
@@ -78,14 +66,7 @@ get_header(); ?>
               if($fields):
             ?>
               <?php foreach($fields as $index => $field): ?>
-                <div class="home-project"
-                  <?php if(($index % 4) < 2): ?>
-                    data-bottom-top="left: -15px; opacity:0;"
-                  <?php else: ?>
-                    data-bottom-top="left: 15px; opacity:0;"
-                  <?php endif; ?>
-                  data--50-bottom-bottom="left: 0px; opacity: 1;"
-                  >
+                <div class="home-project">
                   <div class="project-image" style="background-image: url('<?php echo $field['thumbnail']; ?>');">
                     <p class="site-title" href="#"><?php echo $field['label']; ?></p>
                     <a class="project-hover" href="<?php echo $field['url']; ?>" target="tle"><p>Visit Site <i class="icon2-play"></i></p></a>
@@ -98,4 +79,5 @@ get_header(); ?>
         <a class="orange-learn-more" href="<?php echo get_permalink(30); ?>">See More <i class="icon2-play"></i></a>
       </div>
     </div>
+  <script src="/assets/js/lib/three.min.js"type="text/javascript" charset="utf-8"></script>
 <?php get_footer(); ?>

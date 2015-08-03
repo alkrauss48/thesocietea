@@ -8,3 +8,5 @@
 //= jquery.magnific-popup.min.js
 //= coffee.js
 //= script.js
+//= lib/Detector.js
+//= lib/custom_threejs.js
