@@ -18,9 +18,9 @@
         </div>
         <div class="footer-logos">
           <ul class="footer-icons">
-          <li><a class="icon-linkedin" title="LinkedIn" target="linkedin"  href="https://linkedin.com/in/alkrauss48/"></a></li>
-          <li><a class="icon-twitter" title="Twitter" target="twitter" href="https://twitter.com/thecodeboss"></a></li>
           <li><a class="icon-github" title="GitHub" target="github" href="https://github.com/alkrauss48"></a></li>
+          <li><a class="icon-twitter" title="Twitter" target="twitter" href="https://twitter.com/thecodeboss"></a></li>
+          <li><a class="icon3-untappd" title="Untappd" target="untappd"  href="https://untappd.com/user/thecodeboss"></a></li>
           <li><a class="icon-uniE603" title="Email" href="mailto:alkrauss48@gmail.com"></a></li>
           </ul>
         </div>
