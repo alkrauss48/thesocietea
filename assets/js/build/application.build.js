@@ -738,11 +738,12 @@ $(document).ready( function()	{
     }).data('smoothState');
     //.data('smoothState') makes public methods available
 
-    $(".typed .light-orange").empty();
-    $(".typed .light-orange").typed({
+    $(".typed span").empty();
+    $(".typed span").typed({
       strings: [
         "Tea Enthusiast",
         "Dog Lover",
+        "Beer Drinker",
         "Developer"
       ],
       contentType: 'html',

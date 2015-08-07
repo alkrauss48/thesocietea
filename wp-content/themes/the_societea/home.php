@@ -12,7 +12,7 @@ get_header(); ?>
         <h2>Hi, I'm</h2>
         <h1>Aaron Krauss</h1>
         <hr class="header-hr" />
-        <span class="typed"><h3>I'm a <span class="light-orange">Developer<span></h3></span>
+        <span class="typed"><h3>I'm a <span class="orange">Developer<span></h3></span>
         <ul class="header-icons">
           <li><a class="icon-github" title="GitHub" target="github" href="https://github.com/alkrauss48"></a></li>
           <li><a class="icon-twitter" title="Twitter" target="twitter" href="https://twitter.com/thecodeboss"></a></li>
@@ -24,20 +24,20 @@ get_header(); ?>
     </div>
     <div class="home-content">
       <div class="container-padding">
-        <h2>Let me help you with your project</h2>
-        <h3>Get in touch with me if you need help with development, design, or training</h3>
+        <h2>One Very Sassy Developer</h2>
+        <h3>Building cool things all day - every day</h3>
         <div class="home-offerings-wrapper">
           <div class="home-offerings">
             <div class="icon-wrapper"><i class="icon2-keyboard"></i></div>
-            <a class="development" href="<?php echo get_permalink(13); ?>">Development</a>
+            <a class="development" href="<?php echo get_permalink(30); ?>">Projects</a>
           </div>
           <div class="home-offerings">
             <div class="icon-wrapper"><i class="icon2-pencil"></i></div>
-            <a class="design" href="<?php echo get_permalink(13); ?>">Design</a>
+            <a class="design" href="<?php echo get_permalink(16); ?>">Blog</a>
           </div>
           <div class="home-offerings">
-            <div class="icon-wrapper"><i class="icon2-users"></i></div>
-            <a class="training" href="<?php echo get_permalink(13); ?>">Training</a>
+            <div class="icon-wrapper"><i class="icon3-lab"></i></div>
+            <a class="training" href="http://labs.thesocietea.org">Labs</a>
           </div>
         </div>
       </div>
@@ -51,7 +51,7 @@ get_header(); ?>
             <div class="home-about-desc">
               <h2>Get to know me</h2>
               <?php the_content(); ?>
-              <a class="orange-learn-more" href="<?php echo get_permalink(6); ?>">Learn More <i class="icon2-play"></i></a>
+              <a class="orange-learn-more" href="<?php echo get_permalink(6); ?>">About Me <i class="icon2-play"></i></a>
             </div>
           </div>
         </div>
@@ -76,7 +76,7 @@ get_header(); ?>
             <?php endif; ?>
           </div>
         </div>
-        <a class="orange-learn-more" href="<?php echo get_permalink(30); ?>">See More <i class="icon2-play"></i></a>
+        <a class="orange-learn-more" href="<?php echo get_permalink(13); ?>">Hire Me <i class="icon2-play"></i></a>
       </div>
     </div>
   <script src="/assets/js/lib/three.min.js"type="text/javascript" charset="utf-8"></script>

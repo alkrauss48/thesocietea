@@ -152,6 +152,7 @@ a:focus { outline: 1px solid #ffa500; }
 
 span.light-orange { color: $light-orange; }
 span.orange { color: $orange; }
+span.blue { color: $blue; }
 
 body > header {
   background: $gray; /* Old browsers */
@@ -241,7 +242,6 @@ footer.main-footer {
   h3 {
     text-align: center;
     font-weight: 300;
-    font-style: italic;
     color: $lighter-gray;
   }
 }
@@ -1239,4 +1239,7 @@ input#search {
   padding-top: 1em;
   text-align: center;
   color: $lighter-gray;
+}
+.italics {
+  font-style: italic;
 }
