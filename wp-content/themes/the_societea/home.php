@@ -24,8 +24,8 @@ get_header(); ?>
     </div>
     <div class="home-content">
       <div class="container-padding">
-        <h2>One Very Sassy Developer</h2>
-        <h3>Building cool things all day - every day</h3>
+        <h2>Probaby the coolest developer you'll ever meet</h2>
+        <h3>I build amazing things all day - every day</h3>
         <div class="home-offerings-wrapper">
           <div class="home-offerings">
             <div class="icon-wrapper"><i class="icon2-keyboard"></i></div>
@@ -46,7 +46,7 @@ get_header(); ?>
         <div class="container-padding">
           <div class="container">
             <div class="home-picture">
-              <img src="/assets/images/dist/aaronkrauss.png" alt="Aaron Krauss" />
+              <img src="/assets/images/dist/aaron-krauss.jpg" alt="Aaron Krauss" />
             </div>
             <div class="home-about-desc">
               <h2>Get to know me</h2>
