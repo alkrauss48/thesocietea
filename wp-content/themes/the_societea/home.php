@@ -24,7 +24,7 @@ get_header(); ?>
     </div>
     <div class="home-content">
       <div class="container-padding">
-        <h2>Probaby the coolest developer you'll ever meet</h2>
+        <h2>Probably the coolest developer you'll ever meet</h2>
         <h3>I build amazing things all day - every day</h3>
         <div class="home-offerings-wrapper">
           <div class="home-offerings">
