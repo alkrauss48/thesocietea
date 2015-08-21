@@ -1065,6 +1065,13 @@ p.entry-title-link {
   img {
     max-width: 100%;
   }
+
+  hr {
+    width: 5em;
+    text-align: left;
+    border-top: 3px solid $blue;
+  }
+
 }
 
 .aligncenter {
