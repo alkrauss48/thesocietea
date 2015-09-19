@@ -3,7 +3,7 @@
  * Plugin Name: Tumblr Crosspostr
  * Plugin URI: https://github.com/meitar/tumblr-crosspostr/#readme
  * Description: Automatically crossposts to your Tumblr blog when you publish a post on your WordPress blog.
- * Version: 0.8.3
+ * Version: 0.8.4
  * Author: Meitar Moscovitz
  * Author URI: http://Cyberbusking.org/
  * Text Domain: tumblr-crosspostr
@@ -73,6 +73,7 @@ class Tumblr_Crosspostr {
     // Detects old options/settings and migrates them to current version.
     public function updateChangedSettings () {
         $options = get_option($this->prefix . '_settings');
+        if (false === $options) { return; } // don't need to migrate anything
         $new_opts = array();
         foreach ($options as $opt_name => $opt_value) {
             switch ($opt_name) {
@@ -127,7 +128,7 @@ class Tumblr_Crosspostr {
 
     private function showError ($msg) {
 ?>
-<div class="error">
+<div class="notice is-dismissible error">
     <p><?php print esc_html($msg);?></p>
 </div>
 <?php
@@ -135,8 +136,8 @@ class Tumblr_Crosspostr {
 
     private function showNotice ($msg) {
 ?>
-<div class="updated">
-    <p><?php print $msg; // No escaping because we want links, so be careful. ?></p>
+<div class="notice is-dismissible updated">
+    <p><?php print strip_tags($msg, '<a>');?></p>
 </div>
 <?php
     }
@@ -509,17 +510,11 @@ END_HTML;
         if ($prepared_post = $this->prepareForTumblr($post_id)) {
             if (isset($_POST[$this->prefix . '_send_tweet'])) {
                 if (!empty($_POST[$this->prefix . '_tweet_text'])) {
-                    $prepared_post->params['tweet'] = sanitize_text_field($_POST[$this->prefix . '_tweet_text']);
+                    $prepared_post->params['tweet'] = stripslashes_deep(sanitize_text_field($_POST[$this->prefix . '_tweet_text']));
                 }
             } else {
                 $prepared_post->params['tweet'] = 'off';
             }
-//            // NOTE: WordPress intentionally adds slashes. Grr.
-//            //       See http://codex.wordpress.org/Function_Reference/stripslashes_deep#Good_Coding_Practice
-//            if (get_magic_quotes_gpc()) {
-//                $prepared_post->params['tweet'] = stripslashes_deep($prepared_post->params['tweet']);
-//            }
-            $prepared_post->params['tweet'] = stripslashes_deep($prepared_post->params['tweet']);
 
             $prepared_post = apply_filters($this->prefix . '_prepared_post', $prepared_post);
             // We still have a post, right? in case someone forgets to return
@@ -707,7 +702,7 @@ END_HTML;
                     : apply_filters('the_content', substr($post_body, $len));
                 break;
             case 'link':
-                $r['title'] = get_post_field('post_title', $post_id);
+                $r['title'] = strip_tags(get_post_field('post_title', $post_id));
                 $r['url'] = ($e && preg_match('/<a.*?href="(.*?)".*?>/', $post_excerpt))
                     ? $this->extractByRegex('/<a.*?href="(.*?)".*?>/', $post_excerpt, 1)
                     : $this->extractByRegex('/<a.*?href="(.*?)".*?>/', $post_body, 1);
@@ -716,7 +711,7 @@ END_HTML;
                     : apply_filters('the_content', $post_body);
                 break;
             case 'chat':
-                $r['title'] = get_post_field('post_title', $post_id);
+                $r['title'] = strip_tags(get_post_field('post_title', $post_id));
                 $r['conversation'] = wp_strip_all_tags($post_body);
                 break;
             case 'audio':
@@ -747,7 +742,7 @@ END_HTML;
                 }
                 break;
             case 'text':
-                $r['title'] = get_post_field('post_title', $post_id);
+                $r['title'] = strip_tags(get_post_field('post_title', $post_id));
                 // fall through
             case 'aside':
             default:
@@ -1057,7 +1052,7 @@ END_HTML;
                 <label for="<?php esc_attr_e($this->prefix);?>_consumer_key"><?php esc_html_e('Tumblr API key/OAuth consumer key', 'tumblr-crosspostr');?></label>
             </th>
             <td>
-                <input id="<?php esc_attr_e($this->prefix);?>_consumer_key" name="<?php esc_attr_e($this->prefix);?>_settings[consumer_key]" value="<?php esc_attr_e($options['consumer_key']);?>" placeholder="<?php esc_attr_e('Paste your API key here', 'tumblr-crosspostr');?>" />
+                <input id="<?php esc_attr_e($this->prefix);?>_consumer_key" name="<?php esc_attr_e($this->prefix);?>_settings[consumer_key]" value="<?php empty($options['consumer_key']) ? print '' : esc_attr_e($options['consumer_key']);?>" placeholder="<?php esc_attr_e('Paste your API key here', 'tumblr-crosspostr');?>" />
                 <p class="description">
                     <?php esc_html_e('Your Tumblr API key is also called your consumer key.', 'tumblr-crosspostr');?>
                     <?php print sprintf(
@@ -1074,7 +1069,7 @@ END_HTML;
                 <label for="<?php esc_attr_e($this->prefix);?>_consumer_secret"><?php esc_html_e('OAuth consumer secret', 'tumblr-crosspostr');?></label>
             </th>
             <td>
-                <input id="<?php esc_attr_e($this->prefix);?>_consumer_secret" name="<?php esc_attr_e($this->prefix);?>_settings[consumer_secret]" value="<?php esc_attr_e($options['consumer_secret']);?>" placeholder="<?php esc_attr_e('Paste your consumer secret here', 'tumblr-crosspostr');?>" />
+                <input id="<?php esc_attr_e($this->prefix);?>_consumer_secret" name="<?php esc_attr_e($this->prefix);?>_settings[consumer_secret]" value="<?php empty($options['consumer_secret']) ? '' : esc_attr_e($options['consumer_secret']);?>" placeholder="<?php esc_attr_e('Paste your consumer secret here', 'tumblr-crosspostr');?>" />
                 <p class="description">
                     <?php esc_html_e('Your consumer secret is like your app password. Never share this with anyone.', 'tumblr-crosspostr');?>
                 </p>
@@ -1262,7 +1257,13 @@ END_HTML;
             </th>
             <td>
                 <ul id="<?php esc_attr_e($this->prefix);?>_sync_content">
-                    <?php print $this->tumblrBlogsListCheckboxes(array('id' => $this->prefix . '_sync_content', 'name' => $this->prefix . '_settings[sync_content][]'), $options['sync_content']);?>
+                    <?php print $this->tumblrBlogsListCheckboxes(
+                        array(
+                            'id' => $this->prefix . '_sync_content',
+                            'name' => $this->prefix . '_settings[sync_content][]'
+                        ),
+                        (empty($options['sync_content'])) ? false : $options['sync_content']
+                    );?>
                 </ul>
                 <p class="description"><?php esc_html_e('Content you create on the Tumblr blogs you select will automatically be copied to this blog.', 'tumblr-crosspostr');?></p>
             </td>

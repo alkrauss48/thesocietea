@@ -1,6 +1,7 @@
 #order-post-type #sortable { list-style-type: none; margin: 10px 0 0; padding: 0; width: 100%; }
 #order-post-type #sortable ul { margin-left:20px; list-style: none; }
 #order-post-type #sortable li { padding: 2px 0px; margin: 4px 0px;  border: 1px solid #DDDDDD; cursor: move; -moz-border-radius:6px; background-color: #f9f9f9;}
+#order-post-type #sortable li:nth-child(2n+1) {    background-color: #fff !important;}
 #order-post-type #sortable li span { display: block; padding: 5px 10px; color:#555; font-size:13px;}
 #order-post-type #sortable li.placeholder{border: dashed 2px #ccc;height:25px; background-color: #FFF;}
 

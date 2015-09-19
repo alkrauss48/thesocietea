@@ -5,7 +5,7 @@ Plugin URI: http://www.nsp-code.com
 Description: Posts Order and Post Types Objects Order using a Drag and Drop Sortable javascript capability
 Author: Nsp Code
 Author URI: http://www.nsp-code.com 
-Version: 1.8.3.1
+Version: 1.8.4.1
 */
 
     define('CPTPATH',   plugin_dir_path(__FILE__));

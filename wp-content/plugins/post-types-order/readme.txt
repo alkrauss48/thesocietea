@@ -1,9 +1,9 @@
 === Post Types Order  ===
 Contributors: Nsp Code
 Donate link: http://www.nsp-code.com/donate.php
-Tags: post order, post type order, custom order, admin posts order
+Tags: post order, posts order, sort, post sort, posts sort, post type order, custom order, admin posts order
 Requires at least: 2.8
-Tested up to: 4.2.4
+Tested up to: 4.3
 
 Post Order and custom Post Type Objects (posts, any custom post types) using a Drag and Drop Sortable JavaScript AJAX interface. 
 
@@ -69,6 +69,11 @@ All ideas are welcome and i put them on my list to be implemented into the new v
 
 == Change Log ==
 
+= 1.8.4.1 =
+  - Sortable interface styling improvments
+  - Portuguese translation update - Pedro Mendonca - http://www.pedromendonca.pt
+  - Text doamin fix for few texts
+
 = 1.8.3.1 =
   - Advanced Custom Fields Page Rule fix
   - Show / Hide Re_order inderface for certain menus. Option available within Settings area.
@@ -80,7 +85,7 @@ All ideas are welcome and i put them on my list to be implemented into the new v
 
 = 1.8.1 =
   - Next / Previous sorting apply bug fix for custom taxonomies
-  - Portuguese translation update - Pedro Mendon?a - http://www.pedromendonca.pt
+  - Portuguese translation update - Pedro Mendonça - http://www.pedromendonca.pt
   - Options - phrase translation fix  
 
 = 1.7.9 =

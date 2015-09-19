@@ -7,14 +7,15 @@ function cpt_plugin_options()
         
         if (isset($_POST['form_submit']))
             {
-                $options['show_reorder_interfaces'] = $_POST['show_reorder_interfaces'];
+                $options['show_reorder_interfaces'] = (array) $_POST['show_reorder_interfaces'];
+                $options['show_reorder_interfaces'] =   array_map( 'sanitize_key', $options['show_reorder_interfaces'] );
                     
-                $options['capability']              = $_POST['capability'];
+                $options['capability']              = sanitize_key($_POST['capability']);
                 
-                $options['autosort']                = isset($_POST['autosort'])     ? $_POST['autosort']    : '';
-                $options['adminsort']               = isset($_POST['adminsort'])    ? $_POST['adminsort']   : '';
+                $options['autosort']                = isset($_POST['autosort'])     ? intval($_POST['autosort'])    : '';
+                $options['adminsort']               = isset($_POST['adminsort'])    ? intval($_POST['adminsort'])   : '';
                 
-                $options['navigation_sort_apply']   = isset($_POST['navigation_sort_apply'])    ? $_POST['navigation_sort_apply']   : '';
+                $options['navigation_sort_apply']   = isset($_POST['navigation_sort_apply'])    ? intval($_POST['navigation_sort_apply'])   : '';
                                     
                 echo '<div class="updated fade"><p>' . __('Settings Saved', 'cpt') . '</p></div>';
 
@@ -65,8 +66,8 @@ function cpt_plugin_options()
                                                 ?>
                                                 <p><label>
                                                     <select name="show_reorder_interfaces[<?php echo $post_type_name ?>]">
-                                                        <option value="show" <?php if(isset($options['show_reorder_interfaces'][$post_type_name]) && $options['show_reorder_interfaces'][$post_type_name] == 'show') {echo ' selected="selected"';} ?>><?php _e( "Show", 'apto' ) ?></option>
-                                                        <option value="hide" <?php if(isset($options['show_reorder_interfaces'][$post_type_name]) && $options['show_reorder_interfaces'][$post_type_name] == 'hide') {echo ' selected="selected"';} ?>><?php _e( "Hide", 'apto' ) ?></option>
+                                                        <option value="show" <?php if(isset($options['show_reorder_interfaces'][$post_type_name]) && $options['show_reorder_interfaces'][$post_type_name] == 'show') {echo ' selected="selected"';} ?>><?php _e( "Show", 'cpt' ) ?></option>
+                                                        <option value="hide" <?php if(isset($options['show_reorder_interfaces'][$post_type_name]) && $options['show_reorder_interfaces'][$post_type_name] == 'hide') {echo ' selected="selected"';} ?>><?php _e( "Hide", 'cpt' ) ?></option>
                                                     </select> &nbsp;&nbsp;<?php echo $post_type_data->labels->singular_name ?>
                                                 </label><br />&nbsp;</p>
                                                 <?php  } ?>
