@@ -33,6 +33,7 @@
             $options = get_option('cpto_options');
             
             $defaults   = array (
+                                    'show_reorder_interfaces'   =>  array(),
                                     'autosort'                  =>  1,
                                     'adminsort'                 =>  1,
                                     'capability'                =>  'install_plugins',

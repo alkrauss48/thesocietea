@@ -7,11 +7,12 @@ function cpt_plugin_options()
         
         if (isset($_POST['form_submit']))
             {
+                $options['show_reorder_interfaces'] = $_POST['show_reorder_interfaces'];
                     
-                $options['capability'] = $_POST['capability'];
+                $options['capability']              = $_POST['capability'];
                 
-                $options['autosort']    = isset($_POST['autosort'])     ? $_POST['autosort']    : '';
-                $options['adminsort']   = isset($_POST['adminsort'])    ? $_POST['adminsort']   : '';
+                $options['autosort']                = isset($_POST['autosort'])     ? $_POST['autosort']    : '';
+                $options['adminsort']               = isset($_POST['adminsort'])    ? $_POST['adminsort']   : '';
                 
                 $options['navigation_sort_apply']   = isset($_POST['navigation_sort_apply'])    ? $_POST['navigation_sort_apply']   : '';
                                     
@@ -36,7 +37,41 @@ function cpt_plugin_options()
                                 <h2 class="subtitle"><?php _e('General', 'cpt') ?></h2>                              
                                 <table class="form-table">
                                     <tbody>
-                            
+                                        <tr valign="top">
+                                            <th scope="row" style="text-align: right;"><label><?php _e('Show / Hide re-order interface', 'cpt') ?></label></th>
+                                            <td>
+                                                <?php
+                                                
+                                                    $post_types = get_post_types();
+                                                    foreach( $post_types as $post_type_name ) 
+                                                        {
+                                                            //ignore list
+                                                            $ignore_post_types  =   array(
+                                                                                            'reply',
+                                                                                            'topic',
+                                                                                            'report',
+                                                                                            'status'  
+                                                                                            );
+                                                            
+                                                            if(in_array($post_type_name, $ignore_post_types))
+                                                                continue;
+                                                            
+                                                            if(is_post_type_hierarchical($post_type_name))
+                                                                continue;
+                                                                
+                                                            $post_type_data = get_post_type_object( $post_type_name );
+                                                            if($post_type_data->show_ui === FALSE)
+                                                                continue;
+                                                ?>
+                                                <p><label>
+                                                    <select name="show_reorder_interfaces[<?php echo $post_type_name ?>]">
+                                                        <option value="show" <?php if(isset($options['show_reorder_interfaces'][$post_type_name]) && $options['show_reorder_interfaces'][$post_type_name] == 'show') {echo ' selected="selected"';} ?>><?php _e( "Show", 'apto' ) ?></option>
+                                                        <option value="hide" <?php if(isset($options['show_reorder_interfaces'][$post_type_name]) && $options['show_reorder_interfaces'][$post_type_name] == 'hide') {echo ' selected="selected"';} ?>><?php _e( "Hide", 'apto' ) ?></option>
+                                                    </select> &nbsp;&nbsp;<?php echo $post_type_data->labels->singular_name ?>
+                                                </label><br />&nbsp;</p>
+                                                <?php  } ?>
+                                            </td>
+                                        </tr>
                                         <tr valign="top">
                                             <th scope="row" style="text-align: right;"><label><?php _e('Minimum Level to use this plugin', 'cpt') ?></label></th>
                                             <td>

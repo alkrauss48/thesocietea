@@ -101,7 +101,17 @@
                                 
                             //ignore bbpress
                             if ($post_type_name == 'reply' || $post_type_name == 'topic')
-                                continue; 
+                                continue;
+                            
+                            if(is_post_type_hierarchical($post_type_name))
+                                continue;
+                                
+                            $post_type_data = get_post_type_object( $post_type_name );
+                            if($post_type_data->show_ui === FALSE)
+                                continue;
+                                
+                            if(isset($options['show_reorder_interfaces'][$post_type_name]) && $options['show_reorder_interfaces'][$post_type_name] != 'show')
+                                continue;
                             
                             if ($post_type_name == 'post')
                                 add_submenu_page('edit.php', __('Re-Order', 'cpt'), __('Re-Order', 'cpt'), $capability, 'order-post-types-'.$post_type_name, array(&$this, 'SortPage') );
@@ -109,8 +119,7 @@
                                 add_submenu_page('upload.php', __('Re-Order', 'cpt'), __('Re-Order', 'cpt'), $capability, 'order-post-types-'.$post_type_name, array(&$this, 'SortPage') ); 
                             else
                                 {
-                                    if (!is_post_type_hierarchical($post_type_name))
-                                        add_submenu_page('edit.php?post_type='.$post_type_name, __('Re-Order', 'cpt'), __('Re-Order', 'cpt'), $capability, 'order-post-types-'.$post_type_name, array(&$this, 'SortPage') );
+                                    add_submenu_page('edit.php?post_type='.$post_type_name, __('Re-Order', 'cpt'), __('Re-Order', 'cpt'), $capability, 'order-post-types-'.$post_type_name, array(&$this, 'SortPage') );    
                                 }
                         }
                 }
@@ -175,7 +184,7 @@
             function listPages($args = '') 
                 {
                     $defaults = array(
-                        'depth'             => 0, 
+                        'depth'             => -1, 
                         'show_date'         => '',
                         'date_format'       => get_option('date_format'),
                         'child_of'          => 0, 
@@ -215,15 +224,10 @@
                     $the_query = new WP_Query($args);
                     $pages = $the_query->posts;
 
-                    if ( !empty($pages) ) {
-                        if ( $r['title_li'] )
-                            $output .= '<li class="pagenav intersect">' . $r['title_li'] . '<ul>';
-                            
-                        $output .= $this->walkTree($pages, $r['depth'], $r);
-
-                        if ( $r['title_li'] )
-                            $output .= '</ul></li>';
-                    }
+                    if ( !empty($pages) ) 
+                        {
+                            $output .= $this->walkTree($pages, $r['depth'], $r);
+                        }
 
                     $output = apply_filters('wp_list_pages', $output, $r);
 

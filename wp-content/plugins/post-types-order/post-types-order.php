@@ -5,7 +5,7 @@ Plugin URI: http://www.nsp-code.com
 Description: Posts Order and Post Types Objects Order using a Drag and Drop Sortable javascript capability
 Author: Nsp Code
 Author URI: http://www.nsp-code.com 
-Version: 1.8.2
+Version: 1.8.3.1
 */
 
     define('CPTPATH',   plugin_dir_path(__FILE__));
@@ -87,6 +87,14 @@ Version: 1.8.2
                             (defined('DOING_AJAX') && isset($_REQUEST['action']) && $_REQUEST['action'] == 'query-attachments')
                             )
                             {
+                                
+                                global $post;
+                                
+                                //temporary ignore ACF group and admin ajax calls, should be fixed within ACF plugin sometime later
+                                if (is_object($post) && $post->post_type    ==  "acf-field-group"
+                                        ||  (defined('DOING_AJAX') && isset($_REQUEST['action']) && strpos($_REQUEST['action'], 'acf/') < 1))
+                                    return $orderBy;
+                                    
                                 $orderBy = "{$wpdb->posts}.menu_order, {$wpdb->posts}.post_date DESC";
                             }
                     }

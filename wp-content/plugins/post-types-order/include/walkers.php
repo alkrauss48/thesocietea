@@ -26,6 +26,7 @@
 
                 extract($args, EXTR_SKIP);
 
+                                
                 $output .= $indent . '<li id="item_'.$page->ID.'"><span>'.apply_filters( 'the_title', $page->post_title, $page->ID ).'</span>';
             }
 

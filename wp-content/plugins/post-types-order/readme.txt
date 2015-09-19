@@ -3,13 +3,13 @@ Contributors: Nsp Code
 Donate link: http://www.nsp-code.com/donate.php
 Tags: post order, post type order, custom order, admin posts order
 Requires at least: 2.8
-Tested up to: 4.2.2
+Tested up to: 4.2.4
 
 Post Order and custom Post Type Objects (posts, any custom post types) using a Drag and Drop Sortable JavaScript AJAX interface. 
 
 == Description ==
 
-<strong>Over 1.000.000 DOWNLOADS and near PERFECT ratting out of 150 REVIEWS</strong>. <br />
+<strong>Over 1.200.000 DOWNLOADS and near PERFECT ratting out of 150 REVIEWS</strong>. <br />
 A powerful plugin, Order Posts and Post Types Objects using a Drag and Drop Sortable JavaScript capability.
 It allow to reorder the posts for any custom post types you defined, including the default Posts. Also you can have the admin posts interface sorted per your new sort. Post Order has never been easier.
 
@@ -27,6 +27,8 @@ This was built considering for everyone to be able to use no matter the WordPres
 
 As you can see just a matter of drag and drop and post ordering will change on front side right away.
 If for some reason the post order does not update on your front side, you either do something wrong or the theme code you are using does not use a standard query per WordPress Codex rules and regulations. But we can still help, use the forum to report your issue as there are many peoples who gladly help or get in touch with us.
+
+<br />Something is wrong with this plugin on your site? Just use the forum or get in touch with us at <a target="_blank" href="http://www.nsp-code.com">Contact</a> and we'll check it out.
 
 <br />Check out the advanced version of this plugin at <a target="_blank" href="http://www.nsp-code.com/premium-plugins/wordpress-plugins/advanced-post-types-order/">Advanced Post Types Order</a>
 
@@ -66,6 +68,12 @@ There's a option you can trigger, to see the post types order as you defined in 
 All ideas are welcome and i put them on my list to be implemented into the new versions. Anyway this may take time, but if you are in a rush, please consider a small donation and we can arrange something.
 
 == Change Log ==
+
+= 1.8.3.1 =
+  - Advanced Custom Fields Page Rule fix
+  - Show / Hide Re_order inderface for certain menus. Option available within Settings area.
+  - Media Sort interface objects order fix, when query-attachments REQUEST
+  - Bug - Thumbnails test code remove
 
 = 1.8.2 =
   - Media Uploaded To after sort fix
