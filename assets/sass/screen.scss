@@ -1250,3 +1250,17 @@ input#search {
 .italics {
   font-style: italic;
 }
+
+.entry-content {
+  figure {
+    a, img {
+      display: block;
+    }
+
+    figcaption {
+      font-size: 12px;
+      font-style: italic;
+      color: lightgray;
+    }
+  }
+}
