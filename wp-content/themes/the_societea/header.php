@@ -43,8 +43,7 @@
     <meta name="msapplication-TileImage" content="/assets/images/favicon/mstile-144x144.png">
     <meta name="msapplication-config" content="/assets/images/favicon/browserconfig.xml">
 
-    <!-- <link href='http://fonts.googleapis.com/css?family=Merriweather:400,700,900,300' rel='stylesheet' type='text/css'> -->
-    <link href='https://fonts.googleapis.com/css?family=Merriweather+Sans:400,700,300&effect=fire-animation' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,800,300' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="/assets/css/screen.css">
     <script src="/assets/js/lib/modernizr-2.7.1.min.js"></script>
     <!--[if lt IE 9]>
