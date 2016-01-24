@@ -1118,19 +1118,19 @@ p.entry-title-link {
   }
 }
 
-.development-bar {
+.back-end-bar {
   background: $teal;
   @include background( linear-gradient(top, #01ffbf, $teal));
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff01ffbf', endColorstr='#ff00e7ad', GradientType=0);
 }
 
-.design-bar {
+.front-end-bar {
   background: $blue;
   @include background( linear-gradient(top, #408cee, $blue));
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff408cee', endColorstr='#ff1470e7', GradientType=0);
 }
 
-.tools-bar {
+.dev-tools-bar {
   background: $orange;
   @include background( linear-gradient(top, #ff7f33, $orange));
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffff7f33', endColorstr='#ffff5f00', GradientType=0);
