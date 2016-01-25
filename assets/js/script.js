@@ -114,9 +114,9 @@ $(document).ready( function()	{
     $(".typed span").empty();
     $(".typed span").typed({
       strings: [
-        "Tea Enthusiast",
+        "Beer Enthusiast",
         "Dog Lover",
-        "Beer Drinker",
+        "Blogger",
         "Developer"
       ],
       contentType: 'html',
