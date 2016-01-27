@@ -223,9 +223,10 @@ footer.main-footer {
   height: 100%;
   width: 100%;
   z-index: -5;
-  background-image: url('/assets/images/dist/home-header-back.jpg');
-  background-size: cover;
-  background-position: center 100%;
+  background-color: black;
+  // background-image: url('/assets/images/dist/home-header-back.jpg');
+  // background-size: cover;
+  // background-position: center 100%;
 }
 
 .home-content {
