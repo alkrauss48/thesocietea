@@ -2,8 +2,8 @@
 Contributors: zemanta
 Tags: search, search highlight, tag search, category search, category exclusion, comment search, page search, admin, seo, post filter, research
 Requires at least: 3.6
-Tested up to: 4.1
-Stable tag: 8.1.3
+Tested up to: 4.4
+Stable tag: 8.1.4
 
 Search Everything increases WordPress' default search functionality in three easy steps.
 
@@ -84,6 +84,7 @@ Note: We changed some labels in settings, old translations might not work and ne
 * Arabic
 * Belarusian
 * China / Chinese
+* Czech
 * Dutch
 * French
 * German
@@ -114,6 +115,11 @@ Before using the plugin please read the full version of [Zemanta Terms of Servic
 
 
 == Changelog ==
+
+= 8.1.4 =
+* Removed unnecessary styles on frontend
+* Fixed php notice showing up sometimes
+* Czech language added
 
 = 8.1.3 =
 * Support for multitag search

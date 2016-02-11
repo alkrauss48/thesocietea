@@ -3,15 +3,13 @@
 Plugin Name: Enable Media Replace
 Plugin URI: http://www.mansjonasson.se/enable-media-replace
 Description: Enable replacing media files by uploading a new file in the "Edit Media" section of the WordPress Media Library.
-Version: 3.0.3
+Version: 3.0.4
 Author: Måns Jonasson
 Author URI: http://www.mansjonasson.se
 
 Dual licensed under the MIT and GPL licenses:
 http://www.opensource.org/licenses/mit-license.php
 http://www.gnu.org/licenses/gpl.html
-
-Developed for .SE (Stiftelsen för Internetinfrastruktur) - http://www.iis.se
 */
 
 /**
@@ -127,14 +125,19 @@ function emr_get_modified_date($atts) {
     // Get path to file
 	$current_file = get_attached_file($id);
 
+	if ( ! file_exists( $current_file ) ) {
+		return false;
+	}
+
 	// Get file modification time
 	$filetime = filemtime($current_file);
 
-	// do date conversion
-	$content = date($format, $filetime);
+	if ( false !== $filetime ) {
+		// do date conversion
+		return date( $format, $filetime );
+	}
 	
-	return $content;
-
+	return false;
 }
 
 // Add Last replaced by EMR plugin in the media edit screen metabox - Thanks Jonas Lundman (http://wordpress.org/support/topic/add-filter-hook-suggestion-to)
@@ -143,9 +146,14 @@ function ua_admin_date_replaced_media_on_edit_media_screen() {
 	global $post;
 	$id = $post->ID;
 	$shortcode = "[file_modified id=$id]";
+
+	$file_modified_time = do_shortcode($shortcode);
+	if ( ! $file_modified_time ) {
+		return;
+	}
 	?>
 	<div class="misc-pub-section curtime">
-		<span id="timestamp"><?php _e( 'Revised', 'enable-media-replace' ); ?>: <b><?php echo do_shortcode($shortcode); ?></b></span>
+		<span id="timestamp"><?php _e( 'Revised', 'enable-media-replace' ); ?>: <b><?php echo $file_modified_time; ?></b></span>
 	</div>
 	<?php
 }

@@ -3,12 +3,12 @@
 Plugin Name: Search Everything
 Plugin URI: http://wordpress.org/plugins/search-everything/
 Description: Adds search functionality without modifying any template pages: Activate, Configure and Search. Options Include: search highlight, search pages, excerpts, attachments, drafts, comments, tags and custom fields (metadata). Also offers the ability to exclude specific pages and posts. Does not search password-protected content.
-Version: 8.1.3
+Version: 8.1.4
 Author: Zemanta
 Author URI: http://www.zemanta.com
 */
 
-define('SE_VERSION', '8.1.3');
+define('SE_VERSION', '8.1.4');
 
 if (!defined('SE_PLUGIN_FILE'))
 	define('SE_PLUGIN_FILE', plugin_basename(__FILE__));
@@ -905,18 +905,12 @@ function search_everything_callback() {
 	die();
 }
 
-function se_enqueue_styles() {
-	wp_enqueue_style('se-link-styles', SE_PLUGIN_URL . '/static/css/se-styles.css');
-}
-
-add_action('wp_enqueue_scripts', 'se_enqueue_styles');
-
 
 
 function se_post_publish_ping($post_id) {
 	//should happen only on first publish
 	$status = false;
-	if( ( $_POST['post_status'] == 'publish' ) && ( $_POST['original_post_status'] != 'publish' ) ) {
+	if( !empty( $_POST['post_status'] ) && ( $_POST['post_status'] == 'publish' ) && ( $_POST['original_post_status'] != 'publish' ) ) {
 		$permalink = get_permalink($post_id);
 		$zemanta_response = se_api(array(
 			'method' => 'zemanta.post_published_ping',

@@ -80,9 +80,9 @@
                         </div>
                     </div>
                     
-                    <p><?php _e('Did you find this plugin useful? Please support our work with a donation or write an article about this plugin in your blog with a link to our site', 'cpt') ?> <a href="http://www.nsp-code.com/" target="_blank"><strong>http://www.nsp-code.com/</strong></a>.</p>
-                    <h4><?php _e('Did you know there is available an Advanced version of this plug-in?', 'cpt') ?> <a target="_blank" href="http://www.nsp-code.com/premium-plugins/wordpress-plugins/advanced-post-types-order/"><?php _e('Read more', 'cpt') ?></a></h4>
-                    <p><?php _e('Check our', 'cpt') ?> <a target="_blank" href="http://wordpress.org/plugins/taxonomy-terms-order/">Category Order - Taxonomy Terms Order</a> <?php _e('plugin which allow to custom sort categories and custom taxonomies terms', 'cpt') ?> </p>
+                    <p><?php _e('Did you find this plugin useful? Please support our work with a donation or write an article about this plugin in your blog with a link to our site', 'post-types-order') ?> <a href="http://www.nsp-code.com/" target="_blank"><strong>http://www.nsp-code.com/</strong></a>.</p>
+                    <h4><?php _e('Did you know there is available an Advanced version of this plug-in?', 'post-types-order') ?> <a target="_blank" href="http://www.nsp-code.com/premium-plugins/wordpress-plugins/advanced-post-types-order/"><?php _e('Read more', 'post-types-order') ?></a></h4>
+                    <p><?php _e('Check our', 'post-types-order') ?> <a target="_blank" href="http://wordpress.org/plugins/taxonomy-terms-order/">Category Order - Taxonomy Terms Order</a> <?php _e('plugin which allow to custom sort categories and custom taxonomies terms', 'post-types-order') ?> </p>
                     
                     <div class="clear"></div>
                 </div>

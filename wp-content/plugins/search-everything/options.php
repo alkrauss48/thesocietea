@@ -282,8 +282,8 @@ function get_sfid() {
 		$response = wp_remote_GET(SE_ZEMANTA_PREFS_URL . '?url=' . urlencode($url));
 		if(!is_wp_error($response)) {
 			$response_json = json_decode($response['body']);
-			$response_state = $response_json->state;
-			if ($response_json->status === 'ok' && !empty($response_json->sfid)) {
+			$response_state = $response_json->status;
+			if ($response_state === 'ok' && !empty($response_json->sfid)) {
 				return array($response_json->sfid, $response_state);
 			}
 		}

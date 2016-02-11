@@ -3,7 +3,8 @@ Contributors: Nsp Code
 Donate link: http://www.nsp-code.com/donate.php
 Tags: post order, posts order, sort, post sort, posts sort, post type order, custom order, admin posts order
 Requires at least: 2.8
-Tested up to: 4.3
+Tested up to: 4.4
+Stable tag: 1.8.5
 
 Post Order and custom Post Type Objects (posts, any custom post types) using a Drag and Drop Sortable JavaScript AJAX interface. 
 
@@ -67,13 +68,22 @@ There's a option you can trigger, to see the post types order as you defined in 
 
 All ideas are welcome and i put them on my list to be implemented into the new versions. Anyway this may take time, but if you are in a rush, please consider a small donation and we can arrange something.
 
+= Can i make certain queries to ignore the custom sort when Autosort is turned On? =
+
+This can be doe by including the ignore_custom_sort within custom query arguments. An example can be found at http://www.nsp-code.com/advanced-post-types-order-api/sample-usage/
+
+
 == Change Log ==
+
+= 1.8.5 =
+  - Text domain change to post-types-order to allow translations at https://translate.wordpress.org/projects/wp-plugins/post-types-order  
+  - New query argument ignore_custom_sort , to be used with Autosort. Ignore any customised sort and return posts in default order.
 
 = 1.8.4.1 =
   - Sortable interface styling improvments
   - Portuguese translation update - Pedro Mendonca - http://www.pedromendonca.pt
   - Text doamin fix for few texts
-
+  
 = 1.8.3.1 =
   - Advanced Custom Fields Page Rule fix
   - Show / Hide Re_order inderface for certain menus. Option available within Settings area.
@@ -85,7 +95,7 @@ All ideas are welcome and i put them on my list to be implemented into the new v
 
 = 1.8.1 =
   - Next / Previous sorting apply bug fix for custom taxonomies
-  - Portuguese translation update - Pedro Mendonça - http://www.pedromendonca.pt
+  - Portuguese translation update - Pedro Mendonca - http://www.pedromendonca.pt
   - Options - phrase translation fix  
 
 = 1.7.9 =

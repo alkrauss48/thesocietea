@@ -5,7 +5,9 @@ Plugin URI: http://www.nsp-code.com
 Description: Posts Order and Post Types Objects Order using a Drag and Drop Sortable javascript capability
 Author: Nsp Code
 Author URI: http://www.nsp-code.com 
-Version: 1.8.4.1
+Version: 1.8.5
+Text Domain: post-types-order
+Domain Path: /languages/
 */
 
     define('CPTPATH',   plugin_dir_path(__FILE__));
@@ -40,12 +42,20 @@ Version: 1.8.4.1
                 { return $query; }  // Stop running the function if this is a virtual page
             //--
                
-            $options          =     cpt_get_options();
+            //no need if it's admin interface
             if (is_admin())
-                {
-                    //no need if it's admin interface
-                    return false;   
-                }
+                return $query;
+            
+            //check for ignore_custom_sort
+            if (isset($query->query_vars['ignore_custom_sort']) && $query->query_vars['ignore_custom_sort'] === TRUE)
+                return $query; 
+            
+            //ignore if  "nav_menu_item"
+            if(isset($query->query_vars)    &&  isset($query->query_vars['post_type'])   && $query->query_vars['post_type'] ==  "nav_menu_item")
+                return $query;    
+                
+            $options          =     cpt_get_options();
+            
             //if auto sort    
             if ($options['autosort'] == "1")
                 {
@@ -68,6 +78,10 @@ Version: 1.8.4.1
             global $wpdb;
             
             $options          =     cpt_get_options();
+            
+            //check for ignore_custom_sort
+            if (isset($query->query_vars['ignore_custom_sort']) && $query->query_vars['ignore_custom_sort'] === TRUE)
+                return $orderBy;  
             
             //ignore the bbpress
             if (isset($query->query_vars['post_type']) && ((is_array($query->query_vars['post_type']) && in_array("reply", $query->query_vars['post_type'])) || ($query->query_vars['post_type'] == "reply")))
@@ -126,7 +140,7 @@ Version: 1.8.4.1
                 return;
             ?>
                 <div class="error fade">
-                    <p><strong><?php _e('Post Types Order must be configured. Please go to', 'cpt') ?> <a href="<?php echo get_admin_url() ?>options-general.php?page=cpto-options"><?php _e('Settings Page', 'cpt') ?></a> <?php _e('make the configuration and save', 'cpt') ?></strong></p>
+                    <p><strong><?php _e('Post Types Order must be configured. Please go to', 'post-types-order') ?> <a href="<?php echo get_admin_url() ?>options-general.php?page=cpto-options"><?php _e('Settings Page', 'post-types-order') ?></a> <?php _e('make the configuration and save', 'post-types-order') ?></strong></p>
                 </div>
             <?php
         }
@@ -135,7 +149,7 @@ Version: 1.8.4.1
     add_action( 'plugins_loaded', 'cpto_load_textdomain'); 
     function cpto_load_textdomain() 
         {
-            load_plugin_textdomain('cpt', FALSE, dirname( plugin_basename( __FILE__ ) ) . '/lang');
+            load_plugin_textdomain('post-types-order', FALSE, dirname( plugin_basename( __FILE__ ) ) . '/languages');
         }
       
     add_action('admin_menu', 'cpto_plugin_menu'); 

@@ -296,6 +296,7 @@ The <span class="se-name">Search Everything</span> writing helper enables you to
 					<li><a href="#">Silver Ghost (RU)</a></li>
 					<li><a href="http://mishkin.se" target="blank">Mikael Jorhult (RU)</a></li>
 					<li><a href="#">Baris Unver (TR)</a></li>
+					<li><a href="#">René Kostka (CZ)</a></li>
 				</ul>
 			</td>
 		</tr>
