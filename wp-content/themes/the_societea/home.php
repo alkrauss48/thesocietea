@@ -58,7 +58,19 @@ get_header(); ?>
       </div>
       <div class="home-projects">
         <div class="down-triangle"></div>
-        <h2>Check out some of my projects</h2>
+        <h2 class="home-projects-title">This is where you may know me from</h2>
+        <div class="container">
+          <a href="https://labs.thesocietea.org/carnegie-chart" class="home-popular-list popular-item-1">
+            <span>Dale Carnegie 30-Day Practice Chart</span>
+          </a>
+          <a href="http://resumehaus.com" class="home-popular-list popular-item-2">
+            <span>ResumeHaus</span>
+          </a>
+          <a href="https://thesocietea.org/2015/02/building-a-json-api-with-rails-part-1-getting-started/" class="home-popular-list popular-item-3">
+            <span>Building a JSON API with Rails Series</span>
+          </a>
+        </div>
+        <h2>But I built these too - and more</h2>
         <div class="container-padding">
           <div class="home-projects-list">
             <?php

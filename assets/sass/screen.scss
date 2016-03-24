@@ -234,7 +234,7 @@ footer.main-footer {
   background-color: white;
   h2 {
     margin: 0;
-    padding: 3em 0 1em 0;
+    padding: 3em 1em 1em 1em;
     text-transform: uppercase;
     font-weight: bold;
     text-align: center;
@@ -1271,4 +1271,65 @@ input#search {
       color: lightgray;
     }
   }
+}
+
+.home-popular-list {
+  position: relative;
+  background-color: red;
+  width: 33.333333%;
+  display: block;
+  float: left;
+  height: 10em;
+  line-height: 10em;
+  text-decoration: none;
+  padding: 0 2em;
+  box-sizing: border-box;
+  span {
+    @include transition(transform .25s ease);
+    @include scale(1);
+    display: inline-block;
+    vertical-align: middle;
+    color: white;
+    line-height: 1.5;
+    font-size: 1.5em;
+    font-weight: bold;
+  }
+
+  &:hover, &:focus {
+    span {
+      @include scale(1.05);
+    }
+  }
+
+  @media screen and (max-width: $mid-breakpoint){
+    width: 100%;
+    height: 8em;
+    line-height: 8em;
+  }
+
+}
+
+.popular-item-1 {
+  background-color: rgba($teal, 1);
+  &:hover, &:focus {
+    background-color: rgba($teal, .8);
+  }
+}
+
+.popular-item-2 {
+  background-color: rgba($blue, 1);
+  &:hover, &:focus {
+    background-color: rgba($blue, .8);
+  }
+}
+
+.popular-item-3 {
+  background-color: rgba($orange, 1);
+  &:hover, &:focus {
+    background-color: rgba($orange, .8);
+  }
+}
+
+h2.home-projects-title {
+  padding-bottom: 2em;
 }
