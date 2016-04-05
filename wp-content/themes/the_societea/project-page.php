@@ -26,7 +26,7 @@
       <div class="container">
         <p><strong>Project Type: </strong><?php echo $cfs->get('project_type'); ?></p>
         <p><strong>Languages Used: </strong><?php echo $cfs->get('languages'); ?></p>
-        <p><strong>Role: </strong><?php echo $cfs->get('role'); ?></p>
+        <!-- <p><strong>Role: </strong><?php echo $cfs->get('role'); ?></p> -->
         <p><strong>Company: </strong>
         <?php if($cfs->get('company_link')): ?>
           <a class="project-link" target="_blank" href="<?php echo $cfs->get('company_link') ?>"><?php echo $cfs->get('company') ?></a>
