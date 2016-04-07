@@ -64,7 +64,7 @@ get_header(); ?>
             <span>Dale Carnegie 30-Day Practice Chart</span>
           </a>
           <a href="http://resumehaus.com" class="home-popular-list popular-item-2">
-            <span>ResumeHaus</span>
+            <span>Resume Haus</span>
           </a>
           <a href="https://thesocietea.org/2015/02/building-a-json-api-with-rails-part-1-getting-started/" class="home-popular-list popular-item-3">
             <span>Building a JSON API with Rails Series</span>
