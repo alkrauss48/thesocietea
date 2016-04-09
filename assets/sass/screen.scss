@@ -1224,18 +1224,20 @@ input#search {
 .post-navigation {
   padding: 1em 0;
   text-align: center;
-  div {
-    a {
-      @include transition(color .25s ease);
-      display: inline-block;
-      color: $teal;
-      font-weight: bold;
-      text-decoration: none;
-      padding-bottom: 1em;
-      line-height: 1.5;
-    }
-    a:hover { color: $blue; }
+  a, span {
+    display: inline-block;
+    margin: 0 .2em;
   }
+
+  a {
+    @include transition(color .25s ease);
+    color: $teal;
+    font-weight: bold;
+    text-decoration: none;
+    padding-bottom: 1em;
+    line-height: 1.5;
+  }
+  a:hover { color: $blue; }
 }
 
 

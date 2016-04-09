@@ -48,8 +48,16 @@ get_header(); ?>
             endwhile;
           ?>
           <div class="post-navigation">
-            <div class="post-previous"><?php next_posts_link( 'Next ' . ucfirst($post_type) . 's', $my_query->max_num_pages ); ?></div>
-            <div class="post-next"><?php previous_posts_link( 'Previous  ' . ucfirst($post_type) . 's' ); ?></div>
+            <?php
+              $big = 999999999; // need an unlikely integer
+
+              echo paginate_links( array(
+                'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+                'format' => '?paged=%#%',
+                'current' => $paged,
+                'total' => $my_query->max_num_pages
+              ) );
+            ?>
           </div>
           <?php
             wp_reset_postdata();
