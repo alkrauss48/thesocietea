@@ -1209,7 +1209,7 @@ body.home #main.site-main {
 
 input#search {
   @include transition(width .5s ease);
-  color: lightgray;
+  color: gray;
   border: 2px solid lightgray;
   box-sizing: border-box;
   width: 175px;
