@@ -120,6 +120,7 @@ body.admin-bar .sticky.affixed {
 
 html.lte-ie9 {
   #about-responsive,
+  .entry-title-link-extra
   .entry-content {
     a {
       &:before { background-color: white !important; }
@@ -1045,6 +1046,14 @@ p.site-title {
   text-decoration: none;
   color: $orange;
   &:hover, &:focus { color: $blue; }
+}
+
+p.entry-title-link-extra {
+  margin-left: 1em;
+  display: inline-block;
+  a {
+    @include project-link;
+  }
 }
 
 // a.project-link {

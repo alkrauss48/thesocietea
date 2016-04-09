@@ -15,7 +15,7 @@
           $link = $cfs->get('link');
           if($link):
         ?>
-          <p class="entry-title-link"><a href="<?php echo $link; ?>" target="_blank">Visit <i class="icon2-play"></i></a></p>
+          <p class="entry-title-link-extra"><a href="<?php echo $link; ?>" target="_blank">Visit <i class="icon2-play"></i></a></p>
         <?php endif; ?>
       </div>
     </div>
