@@ -10,8 +10,7 @@
   <header class="entry-header">
     <div class="container-padding">
       <div class="container">
-        <?php the_title( '<h2 class="entry-title">', '</h2>' ); ?>
-        <p class="entry-title-link"><a class="blog-link" href="<?php echo get_permalink( get_the_ID() ); ?>">Read <i class="icon2-play"></i></a></p>
+        <?php the_title( '<a class="blog-link entry-title-link" href="'. get_permalink( get_the_ID() ) .'"><h2 class="">', ' <i class="icon2-play"></i></h2></a>' ); ?>
 		<div class="entry-meta">
 			<?php the_societea_posted_on(); ?>
 		</div><!-- .entry-meta -->
