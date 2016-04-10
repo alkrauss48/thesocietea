@@ -40,10 +40,7 @@ get_header(); ?>
                         <li>
                           <p><?php echo $skill['skill']; ?></p>
                           <div class="skill-bar-wrapper">
-                            <div class="skill-bar <?php echo str_replace(' ', '-', strtolower($category['category_title'])); ?>-bar" style="width: <?php echo $skill['percentage']; ?>%;"
-                              <!-- data&#45;bottom&#45;top="width: 0%;opacity: 0;" -->
-                              <!-- data&#45;&#45;50&#45;bottom&#45;bottom="width: <?php // echo $skill['percentage']; ?>%; opacity: 1;" -->
-                            ></div>
+                            <div class="skill-bar <?php echo str_replace(' ', '-', strtolower($category['category_title'])); ?>-bar" style="width: <?php echo $skill['percentage']; ?>%;"></div>
                           </div>
                         </li>
                       <?php endforeach; ?>
