@@ -1,35 +1,35 @@
 <?php
-/**
- * The template for displaying all pages.
- *
- * This is the template that displays all pages by default.
- * Please note that this is the WordPress construct of pages
- * and that other 'pages' on your WordPress site will use a
- * different template.
- *
- * @package the_societea
- */
 
 get_header(); ?>
 
 	<div id="primary" class="content-area">
-		<main id="main" class="site-main" role="main">
+    <main id="main" class="site-main scene_element scene_element--fadein" role="main">
+      <div class="subpage-header-image" style="background-image: url('<?php echo $cfs->get('header_image'); ?>');"
+  data-start="background-position: 50% 55%;"
+  data-400="background-position: 50% 40%;"
+></div>
+      <div class="subpage-header-overlay"></div>
+      <div class="subpage-title">
+        <div class="container">
+          <div class="inner-title-wrapper">
+            <div class="container-padding">
+              <h1><?php the_title(); ?></h1>
+            </div>
+          </div>
+        </div>
+      </div>
 
-			<?php while ( have_posts() ) : the_post(); ?>
-
-				<?php get_template_part( 'content', 'page' ); ?>
-
-				<?php
-					// If comments are open or we have at least one comment, load up the comment template
-					if ( comments_open() || '0' != get_comments_number() ) :
-						comments_template();
-					endif;
-				?>
-
-			<?php endwhile; // end of the loop. ?>
+      <div class="plain" id="main-content">
+        <div class="container-padding">
+          <div class="container">
+            <div class="entry-content">
+              <?php the_content(); ?>
+            </div>
+          </div>
+        </div>
+      </div>
 
 		</main><!-- #main -->
 	</div><!-- #primary -->
 
-<?php get_sidebar(); ?>
 <?php get_footer(); ?>
