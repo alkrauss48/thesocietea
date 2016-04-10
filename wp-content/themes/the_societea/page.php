@@ -22,7 +22,7 @@ get_header(); ?>
       <div class="plain" id="main-content">
         <div class="container-padding">
           <div class="container">
-            <div class="entry-content">
+            <div class="entry-content" style="margin-bottom: 3em;">
               <?php the_content(); ?>
             </div>
           </div>
