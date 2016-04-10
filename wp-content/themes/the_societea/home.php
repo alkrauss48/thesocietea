@@ -88,7 +88,7 @@ get_header(); ?>
             <?php endif; ?>
           </div>
         </div>
-        <a class="orange-learn-more" href="<?php echo get_permalink(13); ?>">Hire Me <i class="icon2-play"></i></a>
+        <a class="orange-learn-more" href="<?php echo get_permalink(13); ?>">See My Skills <i class="icon2-play"></i></a>
       </div>
     </div>
   <script src="/assets/js/lib/three.min.js"type="text/javascript" charset="utf-8"></script>
