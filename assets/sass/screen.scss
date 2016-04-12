@@ -180,6 +180,7 @@ footer.main-footer {
       float: left;
       margin-left: 2em;
       line-height: 1.4;
+      position: relative;
       a {
         @include transition(color $transition-time ease);
         text-decoration: none;
@@ -205,6 +206,30 @@ footer.main-footer {
         background-color: white;
       }
       &.current-menu-item a { color: $teal; }
+
+      .sub-menu {
+        @include accessible_hidden;
+        padding: 1em 0;
+        margin: 0;
+      }
+
+      li {
+        margin: 0;
+        padding: 0 .5em;
+        background-color: $gray;
+        width: 10em;
+        display: block;
+        a {
+          font-weight: normal;
+        }
+      }
+
+      &:hover, &:focus {
+        .sub-menu {
+          left: 0;
+          top: 100%;
+        }
+      }
     }
   }
 }
@@ -585,7 +610,6 @@ hr.header-hr {
   }
   p {
     line-height: 1.5em;
-    font-size: 90%;
     font-weight: 300;
   }
 }
