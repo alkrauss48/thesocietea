@@ -460,7 +460,10 @@ hr.header-hr {
   @media screen and (max-width: $first-breakpoint){
     display: inline-block;
   }
-  li { font-size: 200%; }
+  li {
+    font-size: 200%;
+    padding: 0;
+  }
 }
 
 .line-one {
