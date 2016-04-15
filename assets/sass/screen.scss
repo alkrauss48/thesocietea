@@ -181,7 +181,7 @@ footer.main-footer {
     li {
       @include transition(line-height $transition-time ease);
       float: left;
-      margin-left: 2em;
+      padding: 0 1em;
       line-height: 1.4;
       a {
         display: inline-block;
@@ -200,6 +200,7 @@ footer.main-footer {
         color: white;
         background-color: $orange;
         padding: 0 1em;
+        margin-right: 1em;
         margin-top: .4em;
 
         &:hover, &:focus {
@@ -246,7 +247,7 @@ footer.main-footer {
         background-color: $blue;
         display: block;
         // margin-right: 1.5em;
-        margin-left: 2em;
+        padding: 0 1em;
         a {
           line-height: 2 !important;
           font-weight: normal;
