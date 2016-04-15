@@ -173,7 +173,7 @@ footer.main-footer {
 
 .nav {
   ul {
-    margin-left: 0;
+    margin: 0;
     list-style: none;
     li {
       @include transition(line-height $transition-time ease);
@@ -182,20 +182,24 @@ footer.main-footer {
       line-height: 1.4;
       position: relative;
       a {
-        @include transition(color $transition-time ease);
+        display: inline-block;
+        @include transition(all $transition-time ease);
+        line-height: 3.6;
         text-decoration: none;
         font-weight: bold;
         color: white;
         &:hover, &:focus { color: $teal; }
       }
       &.nav-call-action a {
-        @include transition(background-color $transition-time ease, padding $transition-time ease);
+        @include transition(all $transition-time ease);
         text-transform: uppercase;
         font-size: 80%;
         font-weight: normal;
         color: white;
-        padding: .75em 1em;
         background-color: $orange;
+        padding: 0 1em;
+        margin-top: .4em;
+
         &:hover, &:focus {
           color: $orange;
           background-color: white;
@@ -205,21 +209,43 @@ footer.main-footer {
         color: $orange;
         background-color: white;
       }
-      &.current-menu-item a { color: $teal; }
+      &.current-menu-item > a { color: $teal; }
 
       .sub-menu {
         @include accessible_hidden;
-        padding: 1em 0;
+        width: 400px;
+        padding: 0;
         margin: 0;
+        background-color: $blue;
+        top: 100%;
+        &:before, &:after {
+          content: '';
+          height: 2em;
+          width: 1000px;
+          position: absolute;
+          top: 0;
+          background-color: $blue;
+        }
+
+        &:before {
+          right: 100%;
+        }
+
+        &:after {
+          left: 100%;
+        }
       }
 
       li {
         margin: 0;
-        padding: 0 .5em;
-        background-color: $gray;
-        width: 10em;
+        // padding: 0 .5em;
+        // background-color: $gray;
+        // width: 10em;
+        background-color: $blue;
         display: block;
+        margin-right: 1.5em;
         a {
+          line-height: 2 !important;
           font-weight: normal;
         }
       }
@@ -227,7 +253,6 @@ footer.main-footer {
       &:hover, &:focus {
         .sub-menu {
           left: 0;
-          top: 100%;
         }
       }
     }
@@ -399,9 +424,13 @@ hr.header-hr {
     }
     .nav {
       li {
-        line-height: .4;
+        a {
+          line-height: 2.65;
+          display: inline-block;
+        };
         &.nav-call-action a {
-          padding: .4em 1em;
+          line-height: 2.4;
+          margin-top: .55em;
         }
       }
     }
