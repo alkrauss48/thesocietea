@@ -175,12 +175,14 @@ footer.main-footer {
   ul {
     margin: 0;
     list-style: none;
+    position: relative;
+    padding: 0;
+    @include clearfix;
     li {
       @include transition(line-height $transition-time ease);
       float: left;
       margin-left: 2em;
       line-height: 1.4;
-      position: relative;
       a {
         display: inline-block;
         @include transition(all $transition-time ease);
@@ -243,7 +245,8 @@ footer.main-footer {
         // width: 10em;
         background-color: $blue;
         display: block;
-        margin-right: 1.5em;
+        // margin-right: 1.5em;
+        margin-left: 2em;
         a {
           line-height: 2 !important;
           font-weight: normal;
