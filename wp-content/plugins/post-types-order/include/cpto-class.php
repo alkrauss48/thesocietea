@@ -4,7 +4,7 @@
         {
             var $current_post_type = null;
             
-            function CPTO() 
+            function __construct() 
                 {
                     add_action( 'admin_init', array(&$this, 'registerFiles'), 11 );
                     add_action( 'admin_init', array(&$this, 'checkPost'), 10 );
@@ -128,7 +128,7 @@
             function SortPage() 
                 {
                     ?>
-                    <div class="wrap">
+                    <div id="cpto" class="wrap">
                         <div class="icon32" id="icon-edit"><br></div>
                         <h2><?php echo $this->current_post_type->labels->singular_name . ' -  '. __('Re-Order', 'post-types-order') ?></h2>
 

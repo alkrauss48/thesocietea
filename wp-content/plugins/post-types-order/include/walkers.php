@@ -26,8 +26,13 @@
 
                 extract($args, EXTR_SKIP);
 
+                $item_details   =   apply_filters( 'the_title', $page->post_title, $page->ID );
+                $item_details   =   apply_filters('cpto/interface_itme_data', $item_details, $page);
                                 
-                $output .= $indent . '<li id="item_'.$page->ID.'"><span>'.apply_filters( 'the_title', $page->post_title, $page->ID ).'</span>';
+                $output .= $indent . '<li id="item_'.$page->ID.'"><span>'. $item_details .'</span>';
+                
+                
+                                
             }
 
 

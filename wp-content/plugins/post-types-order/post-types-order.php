@@ -5,7 +5,7 @@ Plugin URI: http://www.nsp-code.com
 Description: Posts Order and Post Types Objects Order using a Drag and Drop Sortable javascript capability
 Author: Nsp Code
 Author URI: http://www.nsp-code.com 
-Version: 1.8.5
+Version: 1.8.6
 Text Domain: post-types-order
 Domain Path: /languages/
 */
@@ -106,7 +106,7 @@ Domain Path: /languages/
                                 
                                 //temporary ignore ACF group and admin ajax calls, should be fixed within ACF plugin sometime later
                                 if (is_object($post) && $post->post_type    ==  "acf-field-group"
-                                        ||  (defined('DOING_AJAX') && isset($_REQUEST['action']) && strpos($_REQUEST['action'], 'acf/') < 1))
+                                        ||  (defined('DOING_AJAX') && isset($_REQUEST['action']) && strpos($_REQUEST['action'], 'acf/') === 0))
                                     return $orderBy;
                                     
                                 $orderBy = "{$wpdb->posts}.menu_order, {$wpdb->posts}.post_date DESC";

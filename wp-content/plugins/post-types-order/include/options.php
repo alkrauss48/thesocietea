@@ -27,7 +27,7 @@ function cpt_plugin_options()
             $queue_data = get_option('ce_queue');
             
                     ?>
-                      <div class="wrap"> 
+                      <div id="cpto" class="wrap"> 
                         <div id="icon-settings" class="icon32"></div>
                             <h2><?php _e('General Settings', 'post-types-order') ?></h2>
                            
