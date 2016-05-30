@@ -1345,6 +1345,10 @@ input#search {
       font-size: 12px;
       font-style: italic;
       color: gray;
+
+      a {
+        display: inline-block;
+      }
     }
   }
 }
