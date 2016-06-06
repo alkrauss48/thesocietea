@@ -32,7 +32,7 @@ get_header(); ?>
 >
           My name is Aaron Krauss. I’m a Full Stack developer based out of Edmond, Oklahoma (near Oklahoma City).
           I was born in Germany in 1990, grew up in a German culture for 6 years, and still speak moderately fluent German.
-          I currently work at Staplegun Inc. as a web developer and the Director of Awesome, and engage in miscellaneous development on my own time.
+          I currently work at Clevyr as a senior web developer, and engage in miscellaneous development on my own time.
         </p>
     </div>
   </div>
@@ -108,7 +108,7 @@ get_header(); ?>
     data-2700="top: -8em; opacity: 1;"
     data-2900="top: -14em; opacity: 0;"
 >
-    <p>Recently at Staplegun I’ve been doing a lot of full-stack development, getting my hands dirty with a bunch of <span class="hi">HTML5</span>, <span class="hi">Sass</span>,
+    <p>Recently I’ve been doing a lot of full-stack development, getting my hands dirty with a bunch of <span class="hi">HTML5</span>, <span class="hi">Sass</span>,
       <span class="hi">Javascript</span>, <span class="hi">Grunt.js</span>, CMSs like <span class="hi">Wordpress</span>,
       <span class="hi">ModX</span>, and <span class="hi">Craft</span>, and some enterprise web app development using <span class="hi">Rails</span> and <span class="hi">Angular</span>. I use <span class="hi">Foundation</span> and
       <span class="hi">Bootstrap</span> when I need to, but I usually opt to build completely custom styles using just a tiny sass plugin to provide a grid.
@@ -118,7 +118,7 @@ get_header(); ?>
 </div>
 
 </div>
-<div id="slide4" class="slide"  style="background-image: url('/assets/images/dist/sg.gif');"
+<div id="slide4" class="slide"  style="background-image: url('/assets/images/dist/stockvault-path-in-nature124348.jpg');"
   data-bottom-top="background-position: 50% 70%;"
   data-top-bottom="background-position: 50% 30%;"
 >
