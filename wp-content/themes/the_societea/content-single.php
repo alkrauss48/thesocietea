@@ -17,6 +17,9 @@
 <hr class="short" />
 
   <div class="entry-content">
+    <div class="pre-post-content">
+      <?php echo $cfs->get('pre_post_content'); ?>
+    </div>
     <?php the_content(); ?>
  <?php
 // 	wp_link_pages( array(
