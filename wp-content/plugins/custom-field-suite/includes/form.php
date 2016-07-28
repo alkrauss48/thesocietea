@@ -31,6 +31,10 @@ class cfs_form
             return;
         }
 
+        if ( isset( $_POST['wp-preview'] ) && 'dopreview' == $_POST['wp-preview'] ) {
+            return;
+        }
+
         $this->session = new cfs_session();
 
         // Save the form
@@ -174,7 +178,7 @@ CFS['loop_buffer'] = [];
 
     /**
      * Render the HTML input form
-     * @param array $params 
+     * @param array $params
      * @return string form HTML code
      * @since 1.8.5
      */
@@ -281,7 +285,7 @@ CFS['loop_buffer'] = [];
                 $tabs[] = $field;
             }
         }
-        
+
         do_action( 'cfs_form_before_fields', $params, array(
             'group_ids'     => $all_group_ids,
             'input_fields'  => $input_fields
@@ -290,7 +294,7 @@ CFS['loop_buffer'] = [];
         // Add any necessary head scripts
         foreach ( $input_fields as $key => $field ) {
 
-            // Exclude fields 
+            // Exclude fields
             if ( in_array( $field->name, (array) $params['excluded_fields'] ) ) {
                 continue;
             }
@@ -354,14 +358,17 @@ CFS['loop_buffer'] = [];
                         echo '</div>';
                     }
                     echo '<div class="cfs-tab-content cfs-tab-content-' . $field->name . '">';
-                    echo '<div class="cfs-tab-notes">' . esc_html( $field->notes ) . '</div>';
+
+					if ( ! empty( $field->notes ) ) {
+						echo '<div class="cfs-tab-notes">' . esc_html( $field->notes ) . '</div>';
+					}
                 }
                 else {
     ?>
 
         <div class="field field-<?php echo $field->name; ?>" data-type="<?php echo $field->type; ?>" data-name="<?php echo $field->name; ?>"">
             <?php if ( 'loop' == $field->type ) : ?>
-            <span class="cfs_loop_toggle" title="<?php esc_html_e( 'Toggle row visibility', 'cfs' ); ?>"></span>
+            <a href="javascript:;" class="cfs_loop_toggle" title="<?php esc_html_e( 'Toggle row visibility', 'cfs' ); ?>"></a>
             <?php endif; ?>
 
             <?php if ( ! empty( $field->label ) ) : ?>
@@ -398,14 +405,19 @@ CFS['loop_buffer'] = [];
         if ( ! empty( $tabs ) ) {
             echo '</div>';
         }
-        
+
         do_action( 'cfs_form_after_fields', $params, array(
             'group_ids'     => $all_group_ids,
             'input_fields'  => $input_fields
         ) );
     ?>
 
-        <script>CFS['field_rules'] = <?php echo json_encode( CFS()->validators ); ?>;</script>
+        <script>
+        (function($) {
+            CFS.field_rules = CFS.field_rules || {};
+            $.extend( CFS.field_rules, <?php echo json_encode( CFS()->validators ); ?> );
+        })(jQuery);
+        </script>
         <input type="hidden" name="cfs[save]" value="<?php echo wp_create_nonce( 'cfs_save_input' ); ?>" />
         <input type="hidden" name="cfs[session_id]" value="<?php echo $this->session->session_id; ?>" />
 

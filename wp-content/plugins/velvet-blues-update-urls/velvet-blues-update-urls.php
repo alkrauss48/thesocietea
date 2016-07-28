@@ -1,16 +1,21 @@
 <?php
 /*
 Plugin Name: Velvet Blues Update URLs
-Plugin URI: http://www.velvetblues.com/web-development-blog/wordpress-plugin-update-urls/
+Plugin URI: https://justin-greer.com
 Description: This plugin <strong>updates all urls in your website</strong> by replacing old urls with new urls. To get started: 1) Click the "Activate" link to the left of this description, and 2) Go to your <a href="tools.php?page=velvet-blues-update-urls.php">Update URLs</a> page to use it.
-Author: VelvetBlues.com
-Author URI: http://www.velvetblues.com/
-Author Email: info@velvetblues.com
-Version: 3.2.4
+Author: justingreerbbi
+Author URI: https://justin-greer.com
+Author Email: info@justin-greer.com
+Version: 3.2.5
 License: GPLv2 or later
 Text Domain: velvet-blues-update-urls
 */
-/*  Copyright 2015  Velvet Blues Web Design  (email : info@velvetblues.com)
+
+/*
+Copyright 2016  Justin Greer Interactive, LLC
+
+Original Author Copyright! Kudos.
+Copyright 2015  Velvet Blues Web Design
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -26,13 +31,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-if ( !function_exists( 'add_action' ) ) {
-?>
-<h3>Oops! This page cannot be accessed directly.</h3>
-<p>For support using the Velvet Blues Update URLs plugin, <a href="http://www.velvetblues.com/web-development-blog/wordpress-plugin-update-urls/" title="Velvet Blues Update URLs WordPress plugin">click here</a>.</p>
-<p>If you are looking for general WordPress assistance, <a href="http://www.velvetblues.com/" title="WordPress Web Development and Services">Velvet Blues can help with that too</a>.</p>
-<?php
-	exit;
+if ( !function_exists( 'add_action' ) ) { exit; 
 }
 function VelvetBluesUU_add_management_page(){
 	add_management_page("Velvet Blues Update URLs", "Update URLs", "manage_options", basename(__FILE__), "VelvetBluesUU_management_page");
@@ -93,7 +92,8 @@ function VelvetBluesUU_management_page(){
 	if ( !function_exists( 'VB_unserialize_replace' ) ) {
 		function VB_unserialize_replace( $from = '', $to = '', $data = '', $serialised = false ) {
 			try {
-				if ( is_string( $data ) && ( $unserialized = @unserialize( $data ) ) !== false ) {
+				if ( false !== is_serialized( $data ) ) {
+					$unserialized = unserialize( $data );
 					$data = VB_unserialize_replace( $from, $to, $unserialized, true );
 				}
 				elseif ( is_array( $data ) ) {
@@ -188,12 +188,7 @@ function VelvetBluesUU_management_page(){
 							</u><?php echo $resultstring; ?></p>
 						<?php echo ($empty)? '<p>'.$emptystring.'</p>' : ''; ?></td>
 					<td width="60"></td>
-					<td align="center"><?php if( !$empty ): ?>
-						<p>
-							<?php //You can now uninstall this plugin.<br/> ?>
-							<?php printf(__('If you found our plugin useful, %s please consider donating','velvet-blues-update-urls'),'<br/>'); ?>.</p>
-						<p><a style="outline:none;" href="http://www.velvetblues.com/go/updateurlsdonate/" target="_blank"><img src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" alt="PayPal -<?php _e('The safer, easier way to pay online!','velvet-blues-update-urls'); ?>"></a></p>
-						<?php endif; ?></td>
+					<td align="center"></td>
 				</tr>
 			</table>
 		</div>
@@ -255,34 +250,34 @@ function VelvetBluesUU_management_page(){
 								<?php _e('posts, pages, custom post types, revisions','velvet-blues-update-urls'); ?>
 								)</label>
 							<br/>
-							<input name="VBUU_update_links[]" type="checkbox" id="VBUU_update_true" value="excerpts" />
-							<label for="VBUU_update_true"><strong>
+							<input name="VBUU_update_links[]" type="checkbox" id="VBUU_update_true1" value="excerpts" />
+							<label for="VBUU_update_true1"><strong>
 								<?php _e('URLs in excerpts','velvet-blues-update-urls'); ?>
 								</strong></label>
 							<br/>
-							<input name="VBUU_update_links[]" type="checkbox" id="VBUU_update_true" value="links" />
-							<label for="VBUU_update_true"><strong>
+							<input name="VBUU_update_links[]" type="checkbox" id="VBUU_update_true2" value="links" />
+							<label for="VBUU_update_true2"><strong>
 								<?php _e('URLs in links','velvet-blues-update-urls'); ?>
 								</strong></label>
 							<br/>
-							<input name="VBUU_update_links[]" type="checkbox" id="VBUU_update_true" value="attachments" />
-							<label for="VBUU_update_true"><strong>
+							<input name="VBUU_update_links[]" type="checkbox" id="VBUU_update_true3" value="attachments" />
+							<label for="VBUU_update_true3"><strong>
 								<?php _e('URLs for attachments','velvet-blues-update-urls'); ?>
 								</strong> (
 								<?php _e('images, documents, general media','velvet-blues-update-urls'); ?>
 								)</label>
 							<br/>
-							<input name="VBUU_update_links[]" type="checkbox" id="VBUU_update_true" value="custom" />
-							<label for="VBUU_update_true"><strong>
+							<input name="VBUU_update_links[]" type="checkbox" id="VBUU_update_true4" value="custom" />
+							<label for="VBUU_update_true4"><strong>
 								<?php _e('URLs in custom fields and meta boxes','velvet-blues-update-urls'); ?>
 								</strong></label>
 							<br/>
-							<input name="VBUU_update_links[]" type="checkbox" id="VBUU_update_true" value="guids" />
-							<label for="VBUU_update_true"><strong>
+							<input name="VBUU_update_links[]" type="checkbox" id="VBUU_update_true5" value="guids" />
+							<label for="VBUU_update_true5"><strong>
 								<?php _e('Update ALL GUIDs','velvet-blues-update-urls'); ?>
 								</strong> <span class="description" style="color:#f00;">
 								<?php _e('GUIDs for posts should only be changed on development sites.','velvet-blues-update-urls'); ?>
-								</span> <a href="http://www.velvetblues.com/go/guids/" target="_blank">
+								</span> <a href="http://codex.wordpress.org/Changing_The_Site_URL#Important_GUID_Note" target="_blank">
 								<?php _e('Learn More.','velvet-blues-update-urls'); ?>
 								</a></label>
 						</p></td>
@@ -292,20 +287,6 @@ function VelvetBluesUU_management_page(){
 				<input class="button-primary" name="VBUU_settings_submit" value="<?php _e('Update URLs NOW','velvet-blues-update-urls'); ?>" type="submit" />
 			</p>
 		</form>
-		<p>&nbsp;<br/>
-			<strong>
-			<?php _e('Need help?','velvet-blues-update-urls'); ?>
-			</strong> <?php printf(__("Get support at the %s plugin page%s.",'velvet-blues-update-urls'),'<a href="http://www.velvetblues.com/web-development-blog/wordpress-plugin-update-urls/" target="_blank">Velvet Blues Update URLs','</a>'); ?>
-			<?php if( !isset( $empty ) ): ?>
-			<br/>
-			<strong>
-			<?php _e('Want us to do it for you?','velvet-blues-update-urls'); ?>
-			</strong>
-			<?php _e('Contact us at','velvet-blues-update-urls'); ?>
-			<a href="mailto:info@velvetblues.com?subject=Move%20My%20WP%20Site">info@velvetblues.com</a>.
-			<?php _e('We will backup your website and move it for $65 OR update your URLs for only $29.','velvet-blues-update-urls'); ?>
-			<?php endif; ?>
-		</p>
 		<?php
 }
 add_action('admin_menu', 'VelvetBluesUU_add_management_page');

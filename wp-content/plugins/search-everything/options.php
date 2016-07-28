@@ -5,8 +5,8 @@ Class se_admin {
 	function se_localization() {
 		load_plugin_textdomain('SearchEverything', false, dirname(plugin_basename( __FILE__ )) . '/lang/');
 	}
-	
-	function se_admin() {
+
+	function __construct() {
 		// Load language file
 		$locale = get_locale();
 		$meta = se_get_meta();
@@ -72,17 +72,17 @@ Class se_admin {
 			<input placeholder="Type search here" data-ajaxurl="<?php echo admin_url('admin-ajax.php'); ?>" type="search" placeholder="Search interesting stuff" name="se-metabox-text" id="se-metabox-text" value="" />
 			<a id="se-metabox-search">Search</a>
 		</div>
-		<?php	
+		<?php
 	}
 
 
 	function se_meta_box_search($post_id) {
 		// Bail if we're doing an auto save
 		if( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
-		
+
 		// if our nonce isn't there, or we can't verify it, bail
 		if( !isset( $_POST['meta_box_nonce'] ) || !wp_verify_nonce( $_POST['meta_box_nonce'], 'se-meta-box-nonce' ) ) return;
-		
+
 		// if our current user can't edit this post, bail
 		if( !current_user_can( 'edit_post' ) ) return;
 
@@ -113,11 +113,11 @@ Class se_admin {
 		}
 		return $errors;
 	}
-		  
+
 	//build admin interface
 	function se_option_page() {
 		global $wpdb, $table_prefix, $wp_version;
-		  
+
 		if($_POST) {
 			check_admin_referer('se-everything-nonce');
 			$errors = $this->se_validation(array(
@@ -137,7 +137,7 @@ Class se_admin {
 				return;
 			}
 		}
-		  
+
 		$new_options = array(
 			'se_exclude_categories'		=> (isset($_POST['exclude_categories']) && !empty($_POST['exclude_categories'])) ? $_POST['exclude_categories'] : '',
 			'se_exclude_categories_list'		=> (isset($_POST['exclude_categories_list']) && !empty($_POST['exclude_categories_list'])) ? $_POST['exclude_categories_list'] : '',
@@ -258,7 +258,7 @@ function se_api($arguments)
 	$meta = se_get_meta();
 
 	$api_key = $meta['api_key'] ? $meta['api_key'] : '';
-		  
+
 	$arguments = array_merge($arguments, array(
 		'api_key'=> $api_key
 	));

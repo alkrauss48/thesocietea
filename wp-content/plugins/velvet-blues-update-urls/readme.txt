@@ -1,10 +1,10 @@
 === Velvet Blues Update URLs ===
-Contributors: VelvetBlues.com
-Donate link: http://www.velvetblues.com/go/updateurlsdonate/
+Contributors: justingreerbbi
+Donate link: https://justin-greer.com/
 Tags: permalinks, urls, links, update links, move wordpress, location, update urls, update permalinks, move, link, url, permalink, excerpt, content links, excerpt links, custom field links, meta, post meta
-Requires at least: 2.5
-Tested up to: 4.3
-Stable tag: 3.2.4
+Requires at least: 3.8
+Tested up to: 4.6
+Stable tag: 3.2.5
 License: GPLv2 or later
 
 Updates all urls and content links in your website.
@@ -17,9 +17,6 @@ If you move your WordPress website to a new domain name, you will find that inte
 *   Users can choose to update links embedded in content, excerpts, or custom fields
 *   Users can choose whether to update links for attachments
 *   View how many items were updated
-
-Get support for this plugin by going to the [Velvet Blues Update URLs plugin page](http://www.velvetblues.com/web-development-blog/wordpress-plugin-update-urls/). Post all questions as comments.
-
 
 == Installation ==
 
@@ -41,32 +38,15 @@ Installation and uninstallation are extremely simple. You can use WordPress' aut
 
 Using this plugin is very simple. Once it has been activated, navigate to Tools -> Update URLs and follow the instructions.
 
-
-Get support for this plugin by going to the [Velvet Blues Update URLs plugin page](http://www.velvetblues.com/web-development-blog/wordpress-plugin-update-urls/). Post all questions as comments.
-
-
 == Frequently Asked Questions ==
-
-= Where can I get support for the plugin? =
-
-   Get support for this plugin by going to the [Velvet Blues Update URLs plugin page](http://www.velvetblues.com/web-development-blog/wordpress-plugin-update-urls/). Post all questions as comments.
 
 = Why are my urls not updated? =
 
-   URLs are only replaced when an exact match is found. Be sure that you have entered the correct url and hit submit. (Note: Matching is case-sensitive.)    
+URLs are only replaced when an exact match is found. Be sure that you have entered the correct url and hit submit. (Note: Matching is case-sensitive.)    
 
 = Why do I see the message "You do not have sufficient permissions to access this page"? =
 
-   Make sure that the plugin is activated and that you are an administrator level user.  
-
-= This plugin saved me a lot of work. Where can I donate? =
-
-   Thanks, donations help us to continue improving our plugins. [Donate Here via PayPal.](http://www.velvetblues.com/go/updateurlsdonate/)     
-
-= I'm afraid to screw this up. Will you do it for me? =
-
-   Of course! Velvet Blues will backup your website and replace your URLs for only $29. If you need your website moved, we charge a flat fee of $65 and will finish your move within 48 hours - week days only. For same-day or weekend jobs, we charge a flat rate of $105. Contact us at info@velvetblues.com for more information.
-
+Make sure that the plugin is activated and that you are an administrator level user.  
 
 == Screenshots ==
 
@@ -74,10 +54,11 @@ Get support for this plugin by going to the [Velvet Blues Update URLs plugin pag
 
 == Change Log ==
 
-= 3.2.4 =
-* Confirmed compatibility with WordPress 4.3.x releases.
-* Updated readme file.
-* Wrapped plugin functions in conditional statement to avoid issues with 3rd Party themes that include our functionality.
+= 3.2.5 =
+* This plugin is not maintained and updated by justingreerbbi (Justin Greer Interactive, LLC)
+* Updated label ID for better UX when selecting url location options.
+* Added use if is_serialized() to remove PHP NOTICES about offsets during url update process.
+* Confirmed compatibility to with WP 4.6 and updated stable tag.
 
 = 3.2.3 =
 * Confirmed compatibility with WordPress 4.0.x releases.

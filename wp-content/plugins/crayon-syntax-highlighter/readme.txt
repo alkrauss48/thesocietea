@@ -91,12 +91,14 @@ See the <a href="http://aramk.com/blog/2011/09/23/crayon-language-file-specifica
 * Delphi Web Script (thanks to <a href="http://www.smartmobilestudio.com" target="_blank">smartmobilestudio</a>)
 * Diff (thanks to <a href="http://omniavin.co/post/262" target="_blank">omniavin</a>)
 * Erlang (thanks to <a href="http://netroid.de/" target="_blank">Daniel</a>)
+* Fabric Engine KL (thanks to <a href="https://github.com/AndrewHazelden" target="_blank">Andrew Hazelden</a>)
 * Go
 * Haskell
 * HTML (XML/XHTML)
 * INI
 * Lisp
 * Lua
+* Maya MEL (thanks to <a href="https://github.com/AndrewHazelden" target="_blank">Andrew Hazelden</a>)
 * Microsoft Registry (thanks to <a href="http://techexplored.com/2012/03/21/crayon-syntax-highlighter-reg-support/" target="_blank">techexplored.com</a>)
 * MIVA Script
 * Monkey (thanks to <a href="https://github.com/devolonter" target="_blank">Devolonter</a>)
@@ -199,6 +201,13 @@ A handful of articles from others written about Crayon, thanks guys!
 
 Thanks to all those who donate to the project:
 
+* Joe Sabate, Spain
+* Kai Chen, Canada
+* Chen Kaiyuan, China
+* Kamarul Musa, Malaysia
+* WallyWare, Inc., (https://pi-plates.com), USA
+* Stéphane Rochat, (http://stephanerochat.ch), Switzerland
+* Brennan Hale-Matthews, Canada
 * Robert Giczewski, (http://www.lazydaemon.de/), Germany
 * Hoke Media, (http://hoke.media/), USA
 * Matthew Hood, Australia
@@ -303,6 +312,28 @@ Contact me at http://twitter.com/crayonsyntax or crayon.syntax@gmail.com.
 5. Theme Editor.
 
 == Changelog ==
+
+= 2.8.4 =
+* ADDED:
+    * CrayonWP::highlight() can return plain text instead of HTML. Used for AJAX requests to prevent
+      XSS vulnerabilities.
+* FIXED:
+    * Support for tags (e.g. formatting) in the HTML for CrayonWP::highlight(). This affects
+      bbPress. Only script tags and event attributes are stripped.
+
+= 2.8.3 =
+* FIXED:
+    * header() use in CrayonWP::highlight()
+
+= 2.8.2 =
+* ADDED:
+    * Plain white theme (thanks to http://vhbelvadi.com).
+
+= 2.8.1 =
+* ADDED:
+    * Coy theme.
+* FIXED:
+    * Strip tags in output content for CrayonWP::highlight()
 
 = 2.8.0 =
 * ADDED:
