@@ -10,7 +10,7 @@ get_header(); ?>
 <div 
   data-bottom-top="background-position: 50% 60%;"
   data-top-bottom="background-position: 50% 40%;"
-  id="slide1" class="slide" style="background-image: url('/assets/images/dist/golden-hill.jpg');">
+  id="slide1" class="slide" style="background-image: url('/assets/images/dist/ak-satisfied.jpg');">
   <div class="container">
     <div class="content">
         <h1
@@ -50,7 +50,7 @@ get_header(); ?>
     </div>
   </div>
 </div>
-<div id="slide3" class="slide"  style="background-image: url('/assets/images/dist/stockvault-morning-pier-semisarahcom134386.jpg');"
+<div id="slide3" class="slide"  style="background-image: url('/assets/images/dist/ak-watches.jpg');"
   data-bottom-top="background-position: 50% 60%;"
   data-top-bottom="background-position: 50% 40%;"
 >
@@ -118,7 +118,7 @@ get_header(); ?>
 </div>
 
 </div>
-<div id="slide4" class="slide"  style="background-image: url('/assets/images/dist/stockvault-path-in-nature124348.jpg');"
+<div id="slide4" class="slide"  style="background-image: url('/assets/images/dist/ak-superman.jpg');"
   data-bottom-top="background-position: 50% 70%;"
   data-top-bottom="background-position: 50% 30%;"
 >
