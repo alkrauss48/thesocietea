@@ -590,8 +590,8 @@ $(document).ready( function()	{
     name: 'sidr-main',
     source: '#navigation',
     side: 'right',
-    onOpen:   function() { $('#responsive-menu-icon').addClass('active-mobile'); },
-    onClose:  function() { $('#responsive-menu-icon').removeClass('active-mobile'); }
+    onOpen:   function() { $('#responsive-menu-icon').addClass('is-active'); },
+    onClose:  function() { $('#responsive-menu-icon').removeClass('is-active'); }
   });
 
   $('body').on('click', function(event){

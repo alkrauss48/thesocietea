@@ -70,11 +70,11 @@
             <nav class="nav">
               <ul>
                 <li>
-                  <a id="responsive-menu-icon">
-                    <span class="line-one"></span>
-                    <span class="line-two"></span>
-                    <span class="line-three"></span>
-                  </a>
+                  <button id="responsive-menu-icon" class="hamburger hamburger--elastic" type="button">
+                    <span class="hamburger-box">
+                      <span class="hamburger-inner"></span>
+                    </span>
+                  </button>
                 </li>
               </ul>
             </nav>
