@@ -99,6 +99,12 @@ $transition-time: .25s;
   }
 }
 
+// States
+.is-accessible-hidden {
+  position: absolute;
+  left: -9999em;
+}
+
 .container {
   @include container;
 }

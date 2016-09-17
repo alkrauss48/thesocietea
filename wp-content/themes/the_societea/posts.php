@@ -32,6 +32,7 @@ get_header(); ?>
                 $slug = get_post( $post )->post_name;
               ?>
               <form id="searchform" action="/<?php echo $slug; ?>" method="get">
+                <label class="is-accessible-hidden" for="search">Search <?php echo $cfs->get('post_type'); ?>s:</label>
                 <input id="search" class="text" type="text" placeholder="Search" name="search" value="<?php  echo $_GET['search']; ?>" />
               </form>
             </div>
