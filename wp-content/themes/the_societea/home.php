@@ -78,9 +78,9 @@ get_header(); ?>
               if($fields):
             ?>
               <?php foreach($fields as $index => $field): ?>
-                <div class="home-project">
+                <div aria-labelledby="home-project-label-<?php echo $index; ?>" class="home-project">
                   <div class="project-image" style="background-image: url('<?php echo $field['thumbnail']; ?>');">
-                    <p class="site-title" href="#"><?php echo $field['label']; ?></p>
+                    <p id="home-project-label-<?php echo $index; ?>" class="site-title" href="#"><?php echo $field['label']; ?></p>
                     <a class="project-hover" href="<?php echo $field['url']; ?>" target="tle"><p>Visit Site <i class="icon2-play"></i></p></a>
                   </div>
                 </div>
