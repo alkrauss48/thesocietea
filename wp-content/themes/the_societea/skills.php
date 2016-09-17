@@ -38,9 +38,13 @@ get_header(); ?>
                     <?php if($skills): ?>
                       <?php foreach($skills as $skill): ?>
                         <li>
-                          <p><?php echo $skill['skill']; ?></p>
+                          <?php $shortSkill = preg_replace("/[^a-zA-Z0-9]+/", "", $skill['skill']); ?>
+                          <p id="skill-title-<?php echo $shortSkill; ?>" ><?php echo $skill['skill']; ?></p>
                           <div class="skill-bar-wrapper">
-                            <div class="skill-bar <?php echo str_replace(' ', '-', strtolower($category['category_title'])); ?>-bar" style="width: <?php echo $skill['percentage']; ?>%;"></div>
+                            <div aria-lablledby="skill-title-<?php echo $shortSkill; ?>"
+                              title="<?php echo $skill['percentage']; ?>% skilled in <?php echo $skill['skill']; ?>"
+                              class="skill-bar <?php echo str_replace(' ', '-', strtolower($category['category_title'])); ?>-bar"
+                              style="width: <?php echo $skill['percentage']; ?>%;"></div>
                           </div>
                         </li>
                       <?php endforeach; ?>
