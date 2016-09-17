@@ -103,6 +103,10 @@ $transition-time: .25s;
   @include container;
 }
 
+#content {
+  outline: none;
+}
+
 .container-padding { @include responsive-padding; }
 
 html {
@@ -266,6 +270,9 @@ footer.main-footer {
   }
 }
 
+.sub-menu.is-active {
+  left: 0 !important;
+}
 
 .header-content-wrapper {
   height: 100%;
@@ -1432,4 +1439,36 @@ input#search {
 
 h2.home-projects-title {
   padding-bottom: 2em;
+}
+
+// Skipmenu
+.skipmenu { position: relative; }
+
+.skipmenu__item {
+  position: absolute;
+  top: -1000px;
+  left: -1000px;
+  height: 1px;
+  width: 1px;
+  text-align: left;
+  overflow: hidden;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
+  &:active,
+  &:focus,
+  &:hover {
+    top: 0;
+    left: 0;
+    font-size: 1em;
+    font-weight: 700;
+    color: #fff;
+    background-color: $blue;
+    height: auto;
+    overflow: auto;
+    width: 100%;
+    padding: 5px;
+    z-index: 300;
+  }
 }

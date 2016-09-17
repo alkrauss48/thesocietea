@@ -87,6 +87,14 @@ function deactivate_home_offering(){
   $(this).closest('div').find('i').css('top', '0px');
 }
 
+function bindFocusToSubmenu(){
+  $(this).closest('.sub-menu').addClass('is-active');
+}
+
+function bindBlurToSubmenu(){
+  $(this).closest('.sub-menu').removeClass('is-active');
+}
+
 $(document).ready( function()	{
   // $('#main').smoothState();
   if(!navigator.userAgent.match(/MSIE 8/)){
@@ -123,6 +131,9 @@ $(document).ready( function()	{
       typeSpeed: 30,
     });
   }
+
+  $('.sub-menu').on('focus', 'a', bindFocusToSubmenu);
+  $('.sub-menu').on('blur', 'a', bindBlurToSubmenu);
 
   if(!isMobile.any() && !navigator.userAgent.match(/MSIE 8/)){
     var s = skrollr.init();

@@ -54,6 +54,9 @@
     <!--[if lt IE 8]>
         <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
+    <div class="skipmenu" aria-hidden="true">
+      <a href="#content" class="skipmenu__item">Skip to Main Content</a>
+    </div>
     <header class="spanner sticky mini affixed">
       <div class="container-padding">
         <div class="container">
@@ -82,3 +85,4 @@
         </div>
       </div>
     </header>
+    <aside id="content" tabindex="-1"></aside>
