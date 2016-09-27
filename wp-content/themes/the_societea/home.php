@@ -66,8 +66,8 @@ get_header(); ?>
           <a href="http://resumehaus.com" class="home-popular-list popular-item-2">
             <span>Resume Haus</span>
           </a>
-          <a href="https://thesocietea.org/2015/02/building-a-json-api-with-rails-part-1-getting-started/" class="home-popular-list popular-item-3">
-            <span>Building a JSON API with Rails Series</span>
+          <a href="https://thesocietea.org/2016/07/my-interviews-with-amazon/" class="home-popular-list popular-item-3">
+            <span>My Interviews with Amazon</span>
           </a>
         </div>
         <h2>But I built these too - and more</h2>
