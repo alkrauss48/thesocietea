@@ -1,21 +1,16 @@
 <?php
 /*
 Plugin Name: Velvet Blues Update URLs
-Plugin URI: https://justin-greer.com
+Plugin URI: http://www.velvetblues.com/web-development-blog/wordpress-plugin-update-urls/
 Description: This plugin <strong>updates all urls in your website</strong> by replacing old urls with new urls. To get started: 1) Click the "Activate" link to the left of this description, and 2) Go to your <a href="tools.php?page=velvet-blues-update-urls.php">Update URLs</a> page to use it.
-Author: justingreerbbi
-Author URI: https://justin-greer.com
-Author Email: info@justin-greer.com
-Version: 3.2.5
+Author: VelvetBlues.com
+Author URI: http://www.velvetblues.com/
+Author Email: info@velvetblues.com
+Version: 3.2.7
 License: GPLv2 or later
 Text Domain: velvet-blues-update-urls
 */
-
-/*
-Copyright 2016  Justin Greer Interactive, LLC
-
-Original Author Copyright! Kudos.
-Copyright 2015  Velvet Blues Web Design
+/*  Copyright 2016  Velvet Blues Web Design  (email : info@velvetblues.com)
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -188,7 +183,12 @@ function VelvetBluesUU_management_page(){
 							</u><?php echo $resultstring; ?></p>
 						<?php echo ($empty)? '<p>'.$emptystring.'</p>' : ''; ?></td>
 					<td width="60"></td>
-					<td align="center"></td>
+					<td align="center"><?php if( !$empty ): ?>
+						<p>
+							<?php //You can now uninstall this plugin.<br/> ?>
+							<?php printf(__('If you found our plugin useful, %s please consider donating','velvet-blues-update-urls'),'<br/>'); ?>.</p>
+						<p><a style="outline:none;" href="http://www.velvetblues.com/go/updateurlsdonate/" target="_blank"><img src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" alt="PayPal -<?php _e('The safer, easier way to pay online!','velvet-blues-update-urls'); ?>"></a></p>
+						<?php endif; ?></td>
 				</tr>
 			</table>
 		</div>
@@ -287,6 +287,20 @@ function VelvetBluesUU_management_page(){
 				<input class="button-primary" name="VBUU_settings_submit" value="<?php _e('Update URLs NOW','velvet-blues-update-urls'); ?>" type="submit" />
 			</p>
 		</form>
+		<p>&nbsp;<br/>
+			<strong>
+			<?php _e('Need help?','velvet-blues-update-urls'); ?>
+			</strong> <?php printf(__("Get support at the %s plugin page%s.",'velvet-blues-update-urls'),'<a href="http://www.velvetblues.com/web-development-blog/wordpress-plugin-update-urls/" target="_blank">Velvet Blues Update URLs','</a>'); ?>
+			<?php if( !isset( $empty ) ): ?>
+			<br/>
+			<strong>
+			<?php _e('Want us to do it for you?','velvet-blues-update-urls'); ?>
+			</strong>
+			<?php _e('Contact us at','velvet-blues-update-urls'); ?>
+			<a href="mailto:info@velvetblues.com?subject=Move%20My%20WP%20Site">info@velvetblues.com</a>.
+			<?php _e('We will backup your website and move it for $65 OR update your URLs for only $29.','velvet-blues-update-urls'); ?>
+			<?php endif; ?>
+		</p>
 		<?php
 }
 add_action('admin_menu', 'VelvetBluesUU_add_management_page');

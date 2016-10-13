@@ -3,14 +3,16 @@ Contributors: nsp-code
 Donate link: http://www.nsp-code.com/donate.php
 Tags: post order, posts order, sort, post sort, posts sort, post type order, custom order, admin posts order
 Requires at least: 2.8
-Tested up to: 4.5.2
-Stable tag: 1.8.9.2
+Tested up to: 4.6.1
+Stable tag: 1.9
+.
+License: GPLv2 or later
 
 Post Order and custom Post Type Objects (custom post types) using a Drag and Drop Sortable JavaScript AJAX interface or default WordPress dashboard. 
 
 == Description ==
 
-<strong>Over 1.700.000 DOWNLOADS and near PERFECT rating out of 150 REVIEWS</strong>. <br />
+<strong>Over 1.900.000 DOWNLOADS and near PERFECT rating out of 150 REVIEWS</strong>. <br />
 A powerful plugin, Order Posts and Post Types Objects using a Drag and Drop Sortable JavaScript capability. 
 
 The order can be customized within **default WordPress post type archive list page** or **a separate Re-Order interface** which display all objects.
@@ -24,7 +26,7 @@ This was built considering for everyone to be able to use no matter the WordPres
 * A new setting page will be created within Settings > Post Types Order, you should check with that, and make a first options save. 
 * Using the AutoSort option as ON you don't need to worry about any code changes, the plugin will do the post order update on fly. 
 * Use the Re-Order interface which appear to every custom post type (non-hierarchical) to change the post order to a new one.
-
+* If prefer sort apply through the code, include 'orderby' =>'menu_order' within custom query arguments, more details at http://www.nsp-code.com/sample-code-on-how-to-apply-the-sort-for-post-types-order-plugin/
 
 = Example of Usage =
 [youtube http://www.youtube.com/watch?v=VEbNKFSfhCc] 
@@ -50,6 +52,8 @@ If for some reason the post order does not update on your front side, you either
 == Screenshots ==
 
 1. The ReOrder interface through which the sort can be created.
+
+2. Sort can be managed within default WordPress post type interface.
 
 
 == Frequently Asked Questions  ==
@@ -90,6 +94,13 @@ Consider upgrading to our advanced version of this plugin at a very resonable pr
 
 
 == Change Log ==
+
+= 1.9 =
+  - Remove translations from the package
+  - Remove link for donate
+  - Wp Hide plugin availability notification
+  - New Filter pto/get_options to allow to chaneg default options; Custom capability can be set for 'capability'
+  - New Filter pto/admin/plugin_options/capability to allow custom capability option to be inserted within html
 
 = 1.8.9.2 =
   - WPDB Prepare argument fix

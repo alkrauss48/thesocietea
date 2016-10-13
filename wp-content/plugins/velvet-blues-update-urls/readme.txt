@@ -1,10 +1,10 @@
 === Velvet Blues Update URLs ===
-Contributors: justingreerbbi
-Donate link: https://justin-greer.com/
+Contributors: VelvetBlues.com
+Donate link: http://www.velvetblues.com/go/updateurlsdonate/
 Tags: permalinks, urls, links, update links, move wordpress, location, update urls, update permalinks, move, link, url, permalink, excerpt, content links, excerpt links, custom field links, meta, post meta
-Requires at least: 3.8
-Tested up to: 4.6
-Stable tag: 3.2.5
+Requires at least: 4.5
+Tested up to: 4.7
+Stable tag: 3.2.7
 License: GPLv2 or later
 
 Updates all urls and content links in your website.
@@ -48,14 +48,28 @@ URLs are only replaced when an exact match is found. Be sure that you have enter
 
 Make sure that the plugin is activated and that you are an administrator level user.  
 
+= This plugin saved me a lot of work. Where can I donate? =
+
+   Thanks, donations help us to continue improving our plugins. [Donate Here via PayPal.](http://www.velvetblues.com/go/updateurlsdonate/)     
+
+= I'm afraid to screw this up. Will you do it for me? =
+
+   Of course! Velvet Blues will backup your website and replace your URLs for only $29. If you need your website moved, we charge a flat fee of $65 and will finish your move within 48 hours - week days only. For same-day or weekend jobs, we charge a flat rate of $105. Contact us at info@velvetblues.com for more information.
+
 == Screenshots ==
 
 1. The Admin screen for the plugin. screenshot-1.png
 
 == Change Log ==
 
+= 3.2.7 =
+* Maintenance Update.
+
+= 3.2.6 =
+* Tested with 4.6.
+* Version Update.
+
 = 3.2.5 =
-* This plugin is not maintained and updated by justingreerbbi (Justin Greer Interactive, LLC)
 * Updated label ID for better UX when selecting url location options.
 * Added use if is_serialized() to remove PHP NOTICES about offsets during url update process.
 * Confirmed compatibility to with WP 4.6 and updated stable tag.

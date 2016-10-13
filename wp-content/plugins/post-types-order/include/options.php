@@ -84,6 +84,7 @@ function cpt_plugin_options()
                                             <option value="publish_posts" <?php if (isset($options['capability']) && $options['capability'] == "publish_posts") echo 'selected="selected"'?>><?php _e('Author', 'post-types-order') ?></option>
                                             <option value="publish_pages" <?php if (isset($options['capability']) && $options['capability'] == "publish_pages") echo 'selected="selected"'?>><?php _e('Editor', 'post-types-order') ?></option>
                                             <option value="switch_themes" <?php if (!isset($options['capability']) || empty($options['capability']) || (isset($options['capability']) && $options['capability'] == "switch_themes")) echo 'selected="selected"'?>><?php _e('Administrator', 'post-types-order') ?></option>
+                                            <?php do_action('pto/admin/plugin_options/capability') ?>
                                         </select>
                                     </td>
                                 </tr>
