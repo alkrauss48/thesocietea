@@ -46,7 +46,7 @@ get_header(); ?>
         <div class="container-padding">
           <div class="container">
             <div class="home-picture">
-              <img src="/assets/images/dist/aaron-krauss.jpg" alt="Aaron Krauss" />
+              <img src="/assets/images/dist/ak-smile-optimized.jpg" alt="Aaron Krauss" />
             </div>
             <div class="home-about-desc">
               <h2>Get to know me</h2>
