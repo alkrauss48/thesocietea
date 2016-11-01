@@ -24,6 +24,8 @@
     <?php $og_image = $cfs->get('og_image') ? $cfs->get('og_image') : "https://thesocietea.org/assets/images/dist/ak-smile-optimized.jpg"; ?>
     <meta property="og:image" content="<?php echo $og_image; ?>">
     <meta property="og:title" content="<?php wp_title( '|', true, 'right' ); ?>">
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="<?php the_permalink(); ?> " />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@thecodeboss" />
     <meta name="twitter:creator" content="@thecodeboss" />
