@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Name: Posts
+ * Template Name: Projects
  */
 
 get_header(); ?>
@@ -38,18 +38,16 @@ get_header(); ?>
             </div>
           </div>
         </div>
-        <div class="blog-list">
         <?php
           $post_type = $cfs->get('post_type');
           $paged = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
-          $args=array('post_type' => $post_type, 's' => $_GET['search'], 'posts_per_page' => 24, 'post_status' => 'publish', 'paged' => $paged, 'has_password' => false);
+          $args=array('post_type' => $post_type, 's' => $_GET['search'], 'post_status' => 'publish', 'paged' => $paged, 'has_password' => false);
           $my_query = new WP_Query($args);
           if ( $my_query->have_posts() ) :
             while ( $my_query->have_posts() ) : $my_query->the_post();
               get_template_part( $post_type, 'page' );
             endwhile;
           ?>
-          </div>
           <div class="post-navigation">
             <?php
               $big = 999999999; // need an unlikely integer
