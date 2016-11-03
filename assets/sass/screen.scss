@@ -1478,3 +1478,74 @@ h2.home-projects-title {
     z-index: 300;
   }
 }
+
+.blog-item {
+  width: 25%;
+  height: 15em;
+  background-color: blue;
+  display: block;
+  float: left;
+  color: white;
+  text-decoration: none;
+  position: relative;
+  box-sizing: border-box;
+  text-align: center;
+  border: 2px solid white;
+  &:hover, &:focus {
+    .blog-item__overlay {
+      background-color: rgba(black, .3);
+    }
+
+    .blog-item__title {
+      top: 30%;
+    }
+
+    .blog-item__excerpt {
+      top: 55%;
+      opacity: 1;
+    }
+  }
+}
+
+.blog-item__title {
+  transition: top .4s ease;
+  position: absolute;
+  top: 50%;
+  left: 1em;
+  font-size: 1.25em;
+  font-weight: normal;
+  width: calc(100% - 2em);
+  transform: translateY(-50%);
+  margin: 0;
+}
+
+.blog-item__posted-on {
+  opacity: 0;
+}
+
+.blog-item__excerpt {
+  transition: top .4s ease, opacity .4s ease;
+  position: absolute;
+  width: calc(100% - 4em);
+  margin: 0;
+  top: 60%;
+  left: 2em;
+  opacity: 0;
+  font-weight: lighter;
+  font-size: .9em;
+}
+
+.blog-item__overlay {
+  transition: background-color .4s ease;
+  background-color: transparent;
+  padding: 1em;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.blog-list {
+  @include clearfix;
+  border-left: 2px solid white;
+  border-right: 2px solid white;
+}

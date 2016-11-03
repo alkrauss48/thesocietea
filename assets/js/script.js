@@ -103,7 +103,7 @@ $(document).ready( function()	{
       // Runs when a link has been activated
       prefetch: true,
       pageCacheSize: 5,
-      blacklist: ".project-screenshot a, a.blog-link, .entry-content a",
+      blacklist: ".project-screenshot a, a.blog-item, .entry-content a",
       onStart: {
         duration: 250, // Duration of our animation
         render: function (url, $container) {
