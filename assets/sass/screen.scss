@@ -22,6 +22,18 @@ $light-orange: #ff9e00;
 
 $opaque-orange: rgba(255, 95, 0, .8);
 
+// blog Item colorscheme
+
+$blog-programming-concepts: #4cd964;
+$blog-front-end: #007aff;
+$blog-ruby: #ff2d55;
+$blog-javascript: #ffcc00;
+$blog-how-things-work: #5856d6;
+$blog-tools: #8e8e93;
+$blog-random: #ff9500;
+
+$blog-darken-ratio: 5%;
+
 $first-breakpoint: 876px;
 $mid-breakpoint: 650px;
 $second-breakpoint: 425px;
@@ -1480,8 +1492,10 @@ h2.home-projects-title {
 }
 
 .blog-item {
-  width: 25%;
+  @include span(4);
+  &:nth-of-type(3n+3) { @include last; }
   height: 15em;
+  margin-bottom: 2em;
   background-color: blue;
   display: block;
   float: left;
@@ -1490,7 +1504,6 @@ h2.home-projects-title {
   position: relative;
   box-sizing: border-box;
   text-align: center;
-  border: 2px solid white;
   &:hover, &:focus {
     .blog-item__overlay {
       background-color: rgba(black, .3);
@@ -1504,6 +1517,50 @@ h2.home-projects-title {
       top: 55%;
       opacity: 1;
     }
+  }
+
+  @media screen and (max-width: $mid-breakpoint){
+    @include span(6);
+    height: 10em;
+    margin-bottom: 1em;
+    &:nth-of-type(3n+3) {
+      margin-right: gutter();
+      float: left;
+    }
+    &:nth-of-type(2n+2) { @include last; }
+    .blog-item__title {
+      font-size: 1em;
+    }
+    &:hover, &:focus {
+      .blog-item__title {
+        top: 50%;
+      }
+      .blog-item__excerpt {
+        opacity: 0;
+      }
+    }
+  }
+
+  &.category-front-end {
+    background-color: darken($blog-front-end, $blog-darken-ratio);
+  }
+  &.category-how-things-work {
+    background-color: darken($blog-how-things-work, $blog-darken-ratio);
+  }
+  &.category-random {
+    background-color: darken($blog-random, $blog-darken-ratio);
+  }
+  &.category-ruby {
+    background-color: darken($blog-ruby, $blog-darken-ratio);
+  }
+  &.category-javascript {
+    background-color: darken($blog-javascript, $blog-darken-ratio);
+  }
+  &.category-programming-concepts {
+    background-color: darken($blog-programming-concepts, $blog-darken-ratio);
+  }
+  &.category-tools {
+    background-color: darken($blog-tools, $blog-darken-ratio);
   }
 }
 
@@ -1545,7 +1602,6 @@ h2.home-projects-title {
 }
 
 .blog-list {
-  @include clearfix;
-  border-left: 2px solid white;
-  border-right: 2px solid white;
+  margin-top: 2em;
+  @include container;
 }
