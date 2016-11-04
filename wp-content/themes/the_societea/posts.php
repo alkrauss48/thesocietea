@@ -31,10 +31,25 @@ get_header(); ?>
                 global $post;
                 $slug = get_post( $post )->post_name;
               ?>
-              <form id="searchform" action="/<?php echo $slug; ?>" method="get">
-                <label class="is-accessible-hidden" for="search">Search <?php echo $cfs->get('post_type'); ?>s:</label>
-                <input id="search" class="text" type="text" placeholder="Search" name="search" value="<?php  echo $_GET['search']; ?>" />
-              </form>
+            </div>
+            <div class="blog__search-wrapper">
+              <!-- <form id="searchform" action="/<?php //echo $slug; ?>" method="get"> -->
+              <!--   <label class="is&#45;accessible&#45;hidden" for="search">Search <?php //echo $cfs&#45;>get('post_type'); ?>s:</label> -->
+              <!--   <input id="search" class="text" type="text" placeholder="Search" name="search" value="<?php  //echo $_GET['search']; ?>" /> -->
+              <!-- </form> -->
+            </div>
+            <div class="blog__filter-wrapper">
+              <h2 class="blog-filter__heading">Filter Posts</h2>
+              <section class="blog-filter__list">
+                <a href="#" data-filter="front-end" class="blog-filter__list-item blog-filter__list-item--front-end">Front End</a>
+                <a href="#" data-filter="programming-concepts" class="blog-filter__list-item blog-filter__list-item--programming-concepts">Programming Concepts</a>
+                <a href="#" data-filter="javascript" class="blog-filter__list-item blog-filter__list-item--javascript">Javascript</a>
+                <a href="#" data-filter="how-things-work" class="blog-filter__list-item blog-filter__list-item--how-things-work">How Things Work</a>
+                <a href="#" data-filter="ruby" class="blog-filter__list-item blog-filter__list-item--ruby">Ruby</a>
+                <a href="#" data-filter="random" class="blog-filter__list-item blog-filter__list-item--random">Random</a>
+                <a href="#" data-filter="tools" class="blog-filter__list-item blog-filter__list-item--tools">Tools</a>
+                <a href="#" data-filter="non-tech" class="blog-filter__list-item blog-filter__list-item--non-tech">Non Tech</a>
+              </section>
             </div>
           </div>
         </div>

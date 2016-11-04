@@ -25,12 +25,13 @@ $opaque-orange: rgba(255, 95, 0, .8);
 // blog Item colorscheme
 
 $blog-programming-concepts: #4cd964;
-$blog-front-end: #007aff;
+$blog-front-end: #ff3b30;
 $blog-ruby: #ff2d55;
 $blog-javascript: #ffcc00;
 $blog-how-things-work: #5ac8fa;
 $blog-tools: #8e8e93;
 $blog-random: #5856d6;
+$blog-non-tech: #ff9500;
 
 $blog-darken-ratio: 5%;
 
@@ -1562,6 +1563,9 @@ h2.home-projects-title {
   &.category-tools {
     background-color: darken($blog-tools, $blog-darken-ratio);
   }
+  &.category-non-tech {
+    background-color: darken($blog-non-tech, $blog-darken-ratio);
+  }
 }
 
 .blog-item__title {
@@ -1604,4 +1608,84 @@ h2.home-projects-title {
 .blog-list {
   margin-top: 2em;
   @include container;
+}
+
+.blog-filter__list-item {
+  padding: .75em;
+  margin-right: .5em;
+  margin-bottom: .75em;
+  color: white;
+  text-decoration: none;
+  background-color: blue;
+  display: inline-block;
+  @media screen and (max-width: $mid-breakpoint) {
+    font-size: .8em;
+  }
+}
+
+.blog__search-wrapper {
+  @include span(last 3);
+  @media screen and (max-width: $mid-breakpoint) {
+    @include full;
+  }
+}
+
+.blog__filter-wrapper {
+  @include span(9);
+  @media screen and (max-width: $mid-breakpoint) {
+    @include full;
+  }
+}
+
+.blog-filter__heading {
+  color: $blue;
+}
+
+.blog-filter__list-item--front-end {
+  background-color: darken($blog-front-end, $blog-darken-ratio);
+  &:hover, &:focus {
+    background-color: darken($blog-front-end, 10%);
+  }
+}
+.blog-filter__list-item--tools {
+  background-color: darken($blog-tools, $blog-darken-ratio);
+  &:hover, &:focus {
+    background-color: darken($blog-tools, 10%);
+  }
+}
+.blog-filter__list-item--how-things-work {
+  background-color: darken($blog-how-things-work, $blog-darken-ratio);
+  &:hover, &:focus {
+    background-color: darken($blog-how-things-work, 10%);
+  }
+}
+.blog-filter__list-item--javascript {
+  background-color: darken($blog-javascript, $blog-darken-ratio);
+  &:hover, &:focus {
+    background-color: darken($blog-javascript, 10%);
+  }
+}
+.blog-filter__list-item--ruby {
+  background-color: darken($blog-ruby, $blog-darken-ratio);
+  &:hover, &:focus {
+    background-color: darken($blog-ruby, 10%);
+  }
+}
+.blog-filter__list-item--programming-concepts {
+  background-color: darken($blog-programming-concepts, $blog-darken-ratio);
+  &:hover, &:focus {
+    background-color: darken($blog-programming-concepts, 10%);
+  }
+}
+.blog-filter__list-item--random {
+  background-color: darken($blog-random, $blog-darken-ratio);
+  &:hover, &:focus {
+    background-color: darken($blog-random, 10%);
+  }
+}
+.blog-filter__list-item--non-tech {
+  background-color: darken($blog-non-tech, $blog-darken-ratio);
+  &:hover, &:focus {
+    background-color: darken($blog-non-tech, 10%);
+  }
 }
