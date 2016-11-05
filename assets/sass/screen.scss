@@ -558,6 +558,10 @@ hr.header-hr {
   @include container;
   margin-top: 4em;
   margin-bottom: 4em;
+  @media screen and (max-width: $mid-breakpoint){
+    margin-top: 2em;
+    margin-bottom: 2em;
+  }
 }
 @mixin offering-link($color){
   background-color: $color;
@@ -572,11 +576,9 @@ hr.header-hr {
 .home-offerings {
   @include span(4 of 12);
   @media screen and (max-width: $mid-breakpoint){
-    &:nth-of-type(n+3) {
-      margin-right: gutter();
-      float: left;
-    }
-    @include span(12);
+    @include full;
+    @include clearfix;
+    margin-bottom: 1em;
   }
   text-align: center;
 
@@ -585,8 +587,12 @@ hr.header-hr {
     top: 0; left: 0;
     width: 100%;
     padding: 3em 0;
+    box-sizing: border-box;
     @media screen and (max-width: $second-breakpoint){
-      padding: 1.5em 0;
+      height: 3em;
+      width: 20%;
+      float: left;
+      padding: 0;
     }
     background-color: rgb(237,237,237);
   }
@@ -597,6 +603,10 @@ hr.header-hr {
     position: relative;
     top: 0;
     color: black;
+    @media screen and (max-width: $mid-breakpoint){
+      padding: .25em 0;
+      font-size: 2em;
+    }
   }
 
   a {
@@ -611,6 +621,11 @@ hr.header-hr {
     margin: 1em 0;
     line-height: 3em;
     border: 2px solid white;
+    @media screen and (max-width: $mid-breakpoint){
+      float: right;
+      width: 75%;
+      margin: 0;
+    }
     &.development {
       @include offering-link($teal);
     }
@@ -804,7 +819,7 @@ p.site-title {
   font-weight: 300;
   left: 10%;
   bottom: 0;
-  @media screen and (max-width: $first-breakpoint){ bottom: -3.5em; }
+  @media screen and (max-width: $first-breakpoint){ bottom: -4em; }
   display: inline-block;
   margin-left: auto;
   margin-right: auto;
@@ -814,7 +829,7 @@ p.site-title {
   width: 80%;
   padding: .5em 0;
   font-size: 80%;
-  @media screen and (max-width: $second-breakpoint){ font-size: 70%; }
+  @media screen and (max-width: $second-breakpoint){ font-size: 60%; }
   z-index: -1;
   background-color: $gray;
   &:before {
