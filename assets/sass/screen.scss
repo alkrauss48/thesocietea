@@ -1493,10 +1493,12 @@ h2.home-projects-title {
 }
 
 .blog-item {
-  @include span(4);
-  &:nth-of-type(3n+3) { @include last; }
+  // @include span(4);
+  // &:nth-of-type(3n+3) { @include last; }
+  width: 33.3333333333%;
+  border: .5em solid white;
   height: 15em;
-  margin-bottom: 2em;
+  // margin-bottom: 2em;
   background-color: blue;
   display: block;
   float: left;
@@ -1521,14 +1523,8 @@ h2.home-projects-title {
   }
 
   @media screen and (max-width: $mid-breakpoint){
-    @include span(6);
     height: 10em;
-    margin-bottom: 1em;
-    &:nth-of-type(3n+3) {
-      margin-right: gutter();
-      float: left;
-    }
-    &:nth-of-type(2n+2) { @include last; }
+    width: 50%;
     .blog-item__title {
       font-size: 1em;
     }

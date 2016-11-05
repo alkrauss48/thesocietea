@@ -95,6 +95,21 @@ function bindBlurToSubmenu(){
   $(this).closest('.sub-menu').removeClass('is-active');
 }
 
+function isotopeLogic(){
+  $('.blog-list').isotope({
+    itemSelector: '.blog-item',
+    layoutMode: 'fitRows'
+  });
+}
+
+function filterBlogs(event) {
+  event.preventDefault();
+
+  if($(this).hasClass('blog-filter__list-item--front-end')) {
+    $('.blog-list').isotope({ filter: '.category-front-end' })
+  }
+}
+
 $(document).ready( function()	{
   // $('#main').smoothState();
   if(!navigator.userAgent.match(/MSIE 8/)){
@@ -178,4 +193,7 @@ $(document).ready( function()	{
   }
 
   bindLightbox();
+  isotopeLogic();
+
+  $('.blog-filter__list-item').click(filterBlogs);
 });
