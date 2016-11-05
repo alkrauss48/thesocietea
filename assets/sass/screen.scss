@@ -1525,6 +1525,7 @@ h2.home-projects-title {
   @media screen and (max-width: $mid-breakpoint){
     height: 10em;
     width: 50%;
+    border: .25em solid white;
     .blog-item__title {
       font-size: 1em;
     }
@@ -1603,8 +1604,12 @@ h2.home-projects-title {
 
 .blog-list {
   transition: height .5s ease;
-  margin-top: 2em;
-  @include container;
+  padding-bottom: 4em;
+  margin: 2em -.5em;
+  @media screen and (max-width: $mid-breakpoint) {
+    margin-left: -.25em;
+    margin-right: -.25em;
+  }
 }
 
 .blog-filter__list-item {
@@ -1694,5 +1699,22 @@ h2.home-projects-title {
   background-color: darken($blog-non-tech, $blog-darken-ratio);
   &:hover, &:focus {
     background-color: darken($blog-non-tech, 10%);
+  }
+}
+
+.blogs-page {
+  .post-navigation {
+    display: none;
+  }
+}
+
+#infscr-loading {
+  position: absolute;
+  display: block !important;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  img {
+    width: 50px;
   }
 }

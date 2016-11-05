@@ -38,6 +38,7 @@ $(function() {
   });
 });
 */
+var skrollrInstance;
 
 var isMobile = {
     Android: function() {
@@ -108,6 +109,30 @@ function filterBlogs(event) {
   $('.blog-list').isotope({ filter: $(this).data('filter') })
   $('.blog-filter__list-item').removeClass('blog-filter__list-item--is-active');
   $(this).addClass('blog-filter__list-item--is-active');
+  if(skrollrInstance) {
+    skrollrInstance.refresh()
+  }
+}
+
+function setUpInfiniteScroll() {
+  $('.blog-list').infinitescroll({
+    navSelector  : ".post-navigation",
+    nextSelector : ".post-navigation .next",
+    itemSelector : ".blog-item",
+    loading: {
+      finishedMsg: "That's it!",
+      img: "/assets/images/dist/loading-squares.gif",
+      msgText: ""
+    }
+  }, function(newElements) {
+    var $newElems = $(newElements);
+    // var $newElems = $(newElements).hide();
+    // $newElems.fadeIn();
+    $('.blog-list').isotope('appended', $newElems);
+    if(skrollrInstance) {
+      skrollrInstance.refresh()
+    }
+  });
 }
 
 $(document).ready( function()	{
@@ -151,7 +176,7 @@ $(document).ready( function()	{
   $('.sub-menu').on('blur', 'a', bindBlurToSubmenu);
 
   if(!isMobile.any() && !navigator.userAgent.match(/MSIE 8/)){
-    var s = skrollr.init();
+    skrollrInstance = skrollr.init();
   }else{
     if($('#about').length != 0){
       $('#about').hide();
@@ -196,4 +221,6 @@ $(document).ready( function()	{
   isotopeLogic();
 
   $('.blog-filter__list-item').click(filterBlogs);
+
+  setUpInfiniteScroll();
 });
