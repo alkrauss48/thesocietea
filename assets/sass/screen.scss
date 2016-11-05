@@ -1602,11 +1602,13 @@ h2.home-projects-title {
 }
 
 .blog-list {
+  transition: height .5s ease;
   margin-top: 2em;
   @include container;
 }
 
 .blog-filter__list-item {
+  @include transition(transform .25s ease);
   padding: .75em;
   margin-right: .5em;
   margin-bottom: .75em;
@@ -1614,9 +1616,14 @@ h2.home-projects-title {
   text-decoration: none;
   background-color: blue;
   display: inline-block;
+  @include scale(1);
   @media screen and (max-width: $mid-breakpoint) {
     font-size: .8em;
   }
+}
+
+.blog-filter__list-item--is-active {
+  @include scale(1.05);
 }
 
 .blog__search-wrapper {
@@ -1635,6 +1642,10 @@ h2.home-projects-title {
 
 .blog-filter__heading {
   color: $blue;
+}
+
+.blog-filter__list-item--view-all {
+  background-color: black;
 }
 
 .blog-filter__list-item--front-end {

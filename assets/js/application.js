@@ -11,4 +11,3 @@
 //= script.js
 //= lib/Detector.js
 //= lib/custom_threejs.js
-//= lib/custom_threejs.js

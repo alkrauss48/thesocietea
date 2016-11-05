@@ -105,9 +105,9 @@ function isotopeLogic(){
 function filterBlogs(event) {
   event.preventDefault();
 
-  if($(this).hasClass('blog-filter__list-item--front-end')) {
-    $('.blog-list').isotope({ filter: '.category-front-end' })
-  }
+  $('.blog-list').isotope({ filter: $(this).data('filter') })
+  $('.blog-filter__list-item').removeClass('blog-filter__list-item--is-active');
+  $(this).addClass('blog-filter__list-item--is-active');
 }
 
 $(document).ready( function()	{
