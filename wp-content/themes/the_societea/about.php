@@ -161,10 +161,11 @@ get_header(); ?>
 </div>
 
 </div>
-<div id="slide6" class="slide"  style="background-image: url('/assets/images/dist/layla.jpg');"
+<div id="slide6" class="slide"  style="background-image: url('/assets/images/dist/princess-layla-and-me.jpg');"
   data-bottom-top="background-position: 50% 70%;"
   data-top-bottom="background-position: 50% 30%;"
 >
+
 <div class='content'>
   <div class="container">
       <div class="interest-text-wrapper"

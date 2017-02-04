@@ -1070,7 +1070,7 @@ p.site-title {
     width: 100%;
     position: relative;
     top: 0; left: 0;
-    @include box-shadow(2px 2px 6px white);
+    @include box-shadow(1px 1px 2px black);
     &.right {
       @include span(3 last);
     }
