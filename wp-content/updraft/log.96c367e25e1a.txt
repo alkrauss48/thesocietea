@@ -1,0 +1,405 @@
+0000.000 (0) Opened log file at time: Sun, 19 Mar 2017 04:17:07 +0000 on https://thesocietea.org
+0000.004 (0) UpdraftPlus WordPress backup plugin (https://updraftplus.com): 1.12.35 WP: 4.7.3 PHP: 5.5.9-1ubuntu4.21 (fpm-fcgi, Linux localhost 3.19.0-39-generic #44~14.04.1-Ubuntu SMP Wed Dec 2 10:01:00 UTC 2015 i686) MySQL: 5.5.54 WPLANG: en_US Server: nginx/1.4.6 safe_mode: 0 max_execution_time: 900 memory_limit: 256M (used: 4.4M | 4.5M) multisite: N openssl: OpenSSL 1.0.1f 6 Jan 2014 mcrypt: Y LANG:  ZipArchive::addFile: Y
+0000.005 (0) Free space on disk containing Updraft's temporary directory: 9787.4 MB
+0000.008 (0) Tasks: Backup files: 1 (schedule: daily) Backup DB:  (schedule: daily)
+0000.010 (0) Processed schedules. Combining jobs from identical schedules. Tasks now: Backup files: 1 Backup DB: 1
+0000.016 (0) Requesting semaphore lock (fd) (apparently via scheduler: last_scheduled_action_called_at=1489810635, seconds_ago=86392)
+0000.020 (0) Set semaphore last lock (fd) time to 2017-03-19 04:17:07
+0000.021 (0) Semaphore lock (fd) complete
+0000.030 (0) Backup run: resumption=0, nonce=96c367e25e1a, begun at=1489897027 (0s ago), job type=backup
+0000.034 (0) Scheduling a resumption (1) after 300 seconds (1489897327) in case this run gets aborted
+0000.062 (0) Checking if we have a zip executable available
+0000.069 (0) Creation of backups of directories: beginning
+0000.073 (0) Beginning creation of dump of plugins (split every: 400 MB)
+0000.299 (0) Total entities for the zip file: 588 directories, 3543 files (0 skipped as non-modified), 46.4 MB
+0000.325 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 100 files added (on-disk size: 0 KB)
+0000.337 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 200 files added (on-disk size: 0 KB)
+0000.348 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 300 files added (on-disk size: 0 KB)
+0000.362 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 400 files added (on-disk size: 0 KB)
+0000.376 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 500 files added (on-disk size: 0 KB)
+0000.378 (0) Adding batch to zip file (UpdraftPlus_ZipArchive): over 500 files added on this batch (3.6 MB, 3543 files batched, 501 (501) added so far); re-opening (prior size: 0 KB)
+0000.908 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 600 files added (on-disk size: 1843.2 KB)
+0000.938 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 700 files added (on-disk size: 1843.2 KB)
+0000.965 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 800 files added (on-disk size: 1843.2 KB)
+0000.996 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 900 files added (on-disk size: 1843.2 KB)
+0001.027 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 1000 files added (on-disk size: 1843.2 KB)
+0001.029 (0) Adding batch to zip file (UpdraftPlus_ZipArchive): over 500 files added on this batch (4.2 MB, 3543 files batched, 501 (1002) added so far); re-opening (prior size: 1843.2 KB)
+0001.828 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 1100 files added (on-disk size: 4034.9 KB)
+0001.847 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 1200 files added (on-disk size: 4034.9 KB)
+0001.866 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 1300 files added (on-disk size: 4034.9 KB)
+0001.885 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 1400 files added (on-disk size: 4034.9 KB)
+0001.909 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 1500 files added (on-disk size: 4034.9 KB)
+0001.912 (0) Adding batch to zip file (UpdraftPlus_ZipArchive): over 500 files added on this batch (4.6 MB, 3543 files batched, 501 (1503) added so far); re-opening (prior size: 4034.9 KB)
+0004.001 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 1600 files added (on-disk size: 5767.4 KB)
+0004.023 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 1700 files added (on-disk size: 5767.4 KB)
+0004.049 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 1800 files added (on-disk size: 5767.4 KB)
+0004.070 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 1900 files added (on-disk size: 5767.4 KB)
+0004.091 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 2000 files added (on-disk size: 5767.4 KB)
+0004.094 (0) Adding batch to zip file (UpdraftPlus_ZipArchive): over 500 files added on this batch (4.6 MB, 3543 files batched, 501 (2004) added so far); re-opening (prior size: 5767.4 KB)
+0004.811 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 2100 files added (on-disk size: 7194.3 KB)
+0004.832 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 2200 files added (on-disk size: 7194.3 KB)
+0004.858 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 2300 files added (on-disk size: 7194.3 KB)
+0004.883 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 2400 files added (on-disk size: 7194.3 KB)
+0004.907 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 2500 files added (on-disk size: 7194.3 KB)
+0004.910 (0) Adding batch to zip file (UpdraftPlus_ZipArchive): over 500 files added on this batch (17.4 MB, 3543 files batched, 501 (2505) added so far); re-opening (prior size: 7194.3 KB)
+0006.998 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 2600 files added (on-disk size: 12997.5 KB)
+0007.024 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 2700 files added (on-disk size: 12997.5 KB)
+0007.049 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 2800 files added (on-disk size: 12997.5 KB)
+0007.075 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 2900 files added (on-disk size: 12997.5 KB)
+0007.104 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 3000 files added (on-disk size: 12997.5 KB)
+0007.107 (0) Adding batch to zip file (UpdraftPlus_ZipArchive): over 500 files added on this batch (4.7 MB, 3543 files batched, 501 (3006) added so far); re-opening (prior size: 12997.5 KB)
+0007.832 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 3100 files added (on-disk size: 14651 KB)
+0007.859 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 3200 files added (on-disk size: 14651 KB)
+0007.886 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 3300 files added (on-disk size: 14651 KB)
+0007.913 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 3400 files added (on-disk size: 14651 KB)
+0007.941 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip.tmp: 3500 files added (on-disk size: 14651 KB)
+0007.944 (0) Adding batch to zip file (UpdraftPlus_ZipArchive): over 500 files added on this batch (7 MB, 3543 files batched, 501 (3507) added so far); re-opening (prior size: 14651 KB)
+0008.982 (0) Created plugins zip (0) - 17935.1 KB in 8.9 s (2013.7 KB/s) (SHA1 checksum: 77bf73716105740bae5b6f1b7d6e47fb40f2d913)
+0008.987 (0) Beginning creation of dump of themes (split every: 400 MB)
+0008.993 (0) Total entities for the zip file: 6 directories, 39 files (0 skipped as non-modified), 0.1 MB
+0009.021 (0) Created themes zip (0) - 38.6 KB in 0 s (1191.4 KB/s) (SHA1 checksum: 19c621a8fd8eb5f5cd1bc71dfd5f7fa2d6cccb1b)
+0009.024 (0) Exclusion option setting (uploads): backup*,*backups,backwpup*,wp-clone,snapshots
+0009.025 (0) Looking for candidates to back up in: /usr/share/nginx/thesocietea_2/wp-content/uploads
+0009.027 (0) finding files: crayon-syntax-highlighter: adding to list (1)
+0009.028 (0) finding files: 2017: adding to list (2)
+0009.029 (0) finding files: 2015: adding to list (3)
+0009.030 (0) finding files: 2014: adding to list (4)
+0009.031 (0) finding files: 2016: adding to list (5)
+0009.032 (0) finding files: ithemes-security: adding to list (6)
+0009.033 (0) Beginning creation of dump of uploads (split every: 400 MB)
+0009.114 (0) Total entities for the zip file: 45 directories, 1025 files (0 skipped as non-modified), 39 MB
+0009.121 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-uploads.zip.tmp: 100 files added (on-disk size: 0 KB)
+0009.128 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-uploads.zip.tmp: 200 files added (on-disk size: 0 KB)
+0009.135 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-uploads.zip.tmp: 300 files added (on-disk size: 0 KB)
+0009.143 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-uploads.zip.tmp: 400 files added (on-disk size: 0 KB)
+0009.153 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-uploads.zip.tmp: 500 files added (on-disk size: 0 KB)
+0009.155 (0) Adding batch to zip file (UpdraftPlus_ZipArchive): over 500 files added on this batch (19.8 MB, 1025 files batched, 501 (501) added so far); re-opening (prior size: 0 KB)
+0010.744 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-uploads.zip.tmp: 600 files added (on-disk size: 18976.2 KB)
+0010.755 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-uploads.zip.tmp: 700 files added (on-disk size: 18976.2 KB)
+0010.769 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-uploads.zip.tmp: 800 files added (on-disk size: 18976.2 KB)
+0010.780 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-uploads.zip.tmp: 900 files added (on-disk size: 18976.2 KB)
+0010.792 (0) Zip: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-uploads.zip.tmp: 1000 files added (on-disk size: 18976.2 KB)
+0010.798 (0) Adding batch to zip file (UpdraftPlus_ZipArchive): over 500 files added on this batch (18.5 MB, 1025 files batched, 501 (1002) added so far); re-opening (prior size: 18976.2 KB)
+0012.567 (0) Created uploads zip (0) - 37276.3 KB in 3.5 s (10554.9 KB/s) (SHA1 checksum: bb15f9aecb3304468ed2ec51d1f493bb273344f4)
+0012.572 (0) Beginning backup of other directories found in the content directory (index: 0)
+0012.573 (0) Exclusion option setting (others): upgrade,cache,updraft,backup*,*backups,mysql.sql,debug.log
+0012.575 (0) Looking for candidates to back up in: /usr/share/nginx/thesocietea_2/wp-content
+0012.576 (0) finding files: updraft: skipping: this is the updraft directory
+0012.577 (0) finding files: plugins: skipping: this is the plugins directory
+0012.578 (0) finding files: upgrade: skipping: excluded by options
+0012.579 (0) finding files: wflogs: adding to list (1)
+0012.581 (0) finding files: index.php: adding to list (2)
+0012.582 (0) finding files: uploads: skipping: this is the uploads directory
+0012.583 (0) finding files: gallery: adding to list (3)
+0012.584 (0) finding files: themes: skipping: this is the themes directory
+0012.593 (0) Total entities for the zip file: 6 directories, 10 files (0 skipped as non-modified), 1.3 MB
+0012.678 (0) Created others zip (0) - 1045.4 KB in 0.1 s (11387.9 KB/s) (SHA1 checksum: c9cfbe6a261fc295bf09d9ba0d3bfc495d7c8233)
+0012.687 (0) Saving backup status to database (elements: 8)
+0012.691 (0) Beginning creation of database dump (WordPress DB)
+0012.695 (0) Testing: /usr/bin/mysqldump
+0012.717 (0) Binary mysqldump: error (code: 2)
+0012.739 (0) Table wp_options: Total expected rows (approximate): 1786
+0012.798 (0) Table wp_options: Total rows added: 504 in 0.06 seconds
+0012.801 (0) Table wp_options: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_options.table.gz - 148.2 KB)
+0012.806 (0) Table wp_users: Total expected rows (approximate): 1
+0012.809 (0) Table wp_users: Total rows added: 1 in 0.00 seconds
+0012.811 (0) Table wp_users: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_users.table.gz - 0.6 KB)
+0012.816 (0) Table wp_usermeta: Total expected rows (approximate): 26
+0012.819 (0) Table wp_usermeta: Total rows added: 26 in 0.00 seconds
+0012.821 (0) Table wp_usermeta: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_usermeta.table.gz - 1.3 KB)
+0012.827 (0) Table wp_commentmeta: Total expected rows (approximate): 433
+0012.843 (0) Table wp_commentmeta: Total rows added: 641 in 0.01 seconds
+0012.846 (0) Table wp_commentmeta: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_commentmeta.table.gz - 7.7 KB)
+0012.852 (0) Table wp_comments: Total expected rows (approximate): 284
+0012.893 (0) Table wp_comments: Total rows added: 289 in 0.04 seconds
+0012.896 (0) Table wp_comments: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_comments.table.gz - 46 KB)
+0012.902 (0) Table wp_links: Total expected rows (approximate): 0
+0012.906 (0) Table wp_links: Total rows added: 0 in 0.00 seconds
+0012.908 (0) Table wp_links: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_links.table.gz - 0.4 KB)
+0012.915 (0) Table wp_postmeta: Total expected rows (approximate): 1719
+0012.964 (0) Table wp_postmeta: Total rows added: 1806 in 0.05 seconds
+0012.967 (0) Table wp_postmeta: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_postmeta.table.gz - 34.6 KB)
+0012.986 (0) Table wp_posts: Total expected rows (approximate): 1970
+0013.637 (0) Table wp_posts: Total rows added: 1485 in 0.65 seconds
+0013.641 (0) Table wp_posts: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_posts.table.gz - 815 KB)
+0013.646 (0) Table wp_term_relationships: Total expected rows (approximate): 66
+0013.650 (0) Table wp_term_relationships: Total rows added: 66 in 0.00 seconds
+0013.651 (0) Table wp_term_relationships: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_term_relationships.table.gz - 0.6 KB)
+0013.657 (0) Table wp_term_taxonomy: Total expected rows (approximate): 11
+0013.661 (0) Table wp_term_taxonomy: Total rows added: 11 in 0.00 seconds
+0013.662 (0) Table wp_term_taxonomy: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_term_taxonomy.table.gz - 0.5 KB)
+0013.668 (0) Table wp_termmeta: Total expected rows (approximate): 0
+0013.670 (0) Table wp_termmeta: Total rows added: 0 in 0.00 seconds
+0013.672 (0) Table wp_termmeta: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_termmeta.table.gz - 0.4 KB)
+0013.679 (0) Table wp_terms: Total expected rows (approximate): 11
+0013.683 (0) Table wp_terms: Total rows added: 11 in 0.00 seconds
+0013.685 (0) Table wp_terms: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_terms.table.gz - 0.6 KB)
+0013.693 (0) Table wp_cfs_sessions: Total expected rows (approximate): 5
+0013.703 (0) Table wp_cfs_sessions: Total rows added: 5 in 0.00 seconds
+0013.705 (0) Table wp_cfs_sessions: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_cfs_sessions.table.gz - 0.6 KB)
+0013.712 (0) Table wp_cfs_values: Total expected rows (approximate): 797
+0013.734 (0) Table wp_cfs_values: Total rows added: 594 in 0.02 seconds
+0013.736 (0) Table wp_cfs_values: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_cfs_values.table.gz - 5.4 KB)
+0013.741 (0) Table wp_ngg_album: Total expected rows (approximate): 0
+0013.744 (0) Table wp_ngg_album: Total rows added: 0 in 0.00 seconds
+0013.745 (0) Table wp_ngg_album: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_ngg_album.table.gz - 0.4 KB)
+0013.749 (0) Table wp_ngg_gallery: Total expected rows (approximate): 2
+0013.752 (0) Table wp_ngg_gallery: Total rows added: 2 in 0.00 seconds
+0013.754 (0) Table wp_ngg_gallery: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_ngg_gallery.table.gz - 0.4 KB)
+0013.760 (0) Table wp_ngg_pictures: Total expected rows (approximate): 1
+0013.764 (0) Table wp_ngg_pictures: Total rows added: 1 in 0.00 seconds
+0013.766 (0) Table wp_ngg_pictures: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_ngg_pictures.table.gz - 0.9 KB)
+0013.771 (0) Table wp_wfBadLeechers: Total expected rows (approximate): 0
+0013.773 (0) Table wp_wfBadLeechers: Total rows added: 0 in 0.00 seconds
+0013.775 (0) Table wp_wfBadLeechers: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfBadLeechers.table.gz - 0.3 KB)
+0013.782 (0) Table wp_wfBlockedIPLog: Total expected rows (approximate): 24
+0013.787 (0) Table wp_wfBlockedIPLog: Total rows added: 24 in 0.00 seconds
+0013.789 (0) Table wp_wfBlockedIPLog: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfBlockedIPLog.table.gz - 0.6 KB)
+0013.794 (0) Table wp_wfBlocks: Total expected rows (approximate): 0
+0013.796 (0) Table wp_wfBlocks: Total rows added: 0 in 0.00 seconds
+0013.798 (0) Table wp_wfBlocks: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfBlocks.table.gz - 0.4 KB)
+0013.806 (0) Table wp_wfBlocksAdv: Total expected rows (approximate): 0
+0013.809 (0) Table wp_wfBlocksAdv: Total rows added: 0 in 0.00 seconds
+0013.811 (0) Table wp_wfBlocksAdv: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfBlocksAdv.table.gz - 0.3 KB)
+0013.815 (0) Table wp_wfConfig: Total expected rows (approximate): 167
+0013.821 (0) Table wp_wfConfig: Total rows added: 167 in 0.00 seconds
+0013.823 (0) Table wp_wfConfig: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfConfig.table.gz - 3.9 KB)
+0013.828 (0) Table wp_wfCrawlers: Total expected rows (approximate): 24
+0013.831 (0) Table wp_wfCrawlers: Total rows added: 24 in 0.00 seconds
+0013.833 (0) Table wp_wfCrawlers: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfCrawlers.table.gz - 0.8 KB)
+0013.840 (0) Table wp_wfFileMods: Total expected rows (approximate): 4370
+0014.054 (0) Table wp_wfFileMods: Total rows added: 4897 in 0.21 seconds
+0014.057 (0) Table wp_wfFileMods: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfFileMods.table.gz - 239.1 KB)
+0014.067 (0) Table wp_wfHits: Total expected rows (approximate): 2233
+0014.220 (0) Table wp_wfHits: Total rows added: 2166 in 0.15 seconds
+0014.222 (0) Table wp_wfHits: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfHits.table.gz - 52.9 KB)
+0014.228 (0) Table wp_wfHoover: Total expected rows (approximate): 0
+0014.230 (0) Table wp_wfHoover: Total rows added: 0 in 0.00 seconds
+0014.231 (0) Table wp_wfHoover: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfHoover.table.gz - 0.3 KB)
+0014.236 (0) Table wp_wfIssues: Total expected rows (approximate): 0
+0014.238 (0) Table wp_wfIssues: Total rows added: 0 in 0.00 seconds
+0014.239 (0) Table wp_wfIssues: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfIssues.table.gz - 0.3 KB)
+0014.246 (0) Table wp_wfKnownFileList: Total expected rows (approximate): 4757
+0014.337 (0) Table wp_wfKnownFileList: Total rows added: 4897 in 0.09 seconds
+0014.340 (0) Table wp_wfKnownFileList: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfKnownFileList.table.gz - 46 KB)
+0014.346 (0) Table wp_wfLeechers: Total expected rows (approximate): 3217
+0014.403 (0) Table wp_wfLeechers: Total rows added: 3327 in 0.06 seconds
+0014.406 (0) Table wp_wfLeechers: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfLeechers.table.gz - 19.6 KB)
+0014.410 (0) Table wp_wfLockedOut: Total expected rows (approximate): 0
+0014.413 (0) Table wp_wfLockedOut: Total rows added: 0 in 0.00 seconds
+0014.415 (0) Table wp_wfLockedOut: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfLockedOut.table.gz - 0.3 KB)
+0014.420 (0) Table wp_wfLocs: Total expected rows (approximate): 0
+0014.422 (0) Table wp_wfLocs: Total rows added: 0 in 0.00 seconds
+0014.424 (0) Table wp_wfLocs: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfLocs.table.gz - 0.4 KB)
+0014.429 (0) Table wp_wfLogins: Total expected rows (approximate): 226
+0014.444 (0) Table wp_wfLogins: Total rows added: 254 in 0.01 seconds
+0014.445 (0) Table wp_wfLogins: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfLogins.table.gz - 5.2 KB)
+0014.450 (0) Table wp_wfNet404s: Total expected rows (approximate): 0
+0014.452 (0) Table wp_wfNet404s: Total rows added: 0 in 0.00 seconds
+0014.453 (0) Table wp_wfNet404s: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfNet404s.table.gz - 0.3 KB)
+0014.458 (0) Table wp_wfNotifications: Total expected rows (approximate): 4
+0014.460 (0) Table wp_wfNotifications: Total rows added: 4 in 0.00 seconds
+0014.462 (0) Table wp_wfNotifications: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfNotifications.table.gz - 2 KB)
+0014.466 (0) Table wp_wfReverseCache: Total expected rows (approximate): 3
+0014.469 (0) Table wp_wfReverseCache: Total rows added: 3 in 0.00 seconds
+0014.470 (0) Table wp_wfReverseCache: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfReverseCache.table.gz - 0.4 KB)
+0014.475 (0) Table wp_wfSNIPCache: Total expected rows (approximate): 0
+0014.477 (0) Table wp_wfSNIPCache: Total rows added: 0 in 0.00 seconds
+0014.478 (0) Table wp_wfSNIPCache: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfSNIPCache.table.gz - 0.4 KB)
+0014.486 (0) Table wp_wfScanners: Total expected rows (approximate): 35
+0014.491 (0) Table wp_wfScanners: Total rows added: 35 in 0.00 seconds
+0014.492 (0) Table wp_wfScanners: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfScanners.table.gz - 0.7 KB)
+0014.499 (0) Table wp_wfStatus: Total expected rows (approximate): 913
+0014.524 (0) Table wp_wfStatus: Total rows added: 771 in 0.02 seconds
+0014.526 (0) Table wp_wfStatus: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfStatus.table.gz - 12.1 KB)
+0014.532 (0) Table wp_wfThrottleLog: Total expected rows (approximate): 0
+0014.534 (0) Table wp_wfThrottleLog: Total rows added: 0 in 0.00 seconds
+0014.536 (0) Table wp_wfThrottleLog: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfThrottleLog.table.gz - 0.3 KB)
+0014.540 (0) Table wp_wfVulnScanners: Total expected rows (approximate): 0
+0014.542 (0) Table wp_wfVulnScanners: Total rows added: 0 in 0.00 seconds
+0014.544 (0) Table wp_wfVulnScanners: finishing file (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfVulnScanners.table.gz - 0.3 KB)
+0014.549 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_options.table.gz (1/40): adding to final database dump
+0014.588 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_users.table.gz (2/40): adding to final database dump
+0014.590 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_usermeta.table.gz (3/40): adding to final database dump
+0014.593 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_commentmeta.table.gz (4/40): adding to final database dump
+0014.599 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_comments.table.gz (5/40): adding to final database dump
+0014.612 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_links.table.gz (6/40): adding to final database dump
+0014.615 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_postmeta.table.gz (7/40): adding to final database dump
+0014.636 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_posts.table.gz (8/40): adding to final database dump
+0014.951 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_term_relationships.table.gz (9/40): adding to final database dump
+0014.954 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_term_taxonomy.table.gz (10/40): adding to final database dump
+0014.956 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_termmeta.table.gz (11/40): adding to final database dump
+0014.957 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_terms.table.gz (12/40): adding to final database dump
+0014.959 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_cfs_sessions.table.gz (13/40): adding to final database dump
+0014.960 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_cfs_values.table.gz (14/40): adding to final database dump
+0014.965 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_ngg_album.table.gz (15/40): adding to final database dump
+0014.967 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_ngg_gallery.table.gz (16/40): adding to final database dump
+0014.969 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_ngg_pictures.table.gz (17/40): adding to final database dump
+0014.971 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfBadLeechers.table.gz (18/40): adding to final database dump
+0014.972 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfBlockedIPLog.table.gz (19/40): adding to final database dump
+0014.973 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfBlocks.table.gz (20/40): adding to final database dump
+0014.975 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfBlocksAdv.table.gz (21/40): adding to final database dump
+0014.976 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfConfig.table.gz (22/40): adding to final database dump
+0014.979 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfCrawlers.table.gz (23/40): adding to final database dump
+0014.980 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfFileMods.table.gz (24/40): adding to final database dump
+0015.038 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfHits.table.gz (25/40): adding to final database dump
+0015.066 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfHoover.table.gz (26/40): adding to final database dump
+0015.080 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfIssues.table.gz (27/40): adding to final database dump
+0015.086 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfKnownFileList.table.gz (28/40): adding to final database dump
+0015.124 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfLeechers.table.gz (29/40): adding to final database dump
+0015.155 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfLockedOut.table.gz (30/40): adding to final database dump
+0015.157 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfLocs.table.gz (31/40): adding to final database dump
+0015.159 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfLogins.table.gz (32/40): adding to final database dump
+0015.164 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfNet404s.table.gz (33/40): adding to final database dump
+0015.166 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfNotifications.table.gz (34/40): adding to final database dump
+0015.168 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfReverseCache.table.gz (35/40): adding to final database dump
+0015.169 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfSNIPCache.table.gz (36/40): adding to final database dump
+0015.171 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfScanners.table.gz (37/40): adding to final database dump
+0015.173 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfStatus.table.gz (38/40): adding to final database dump
+0015.182 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfThrottleLog.table.gz (39/40): adding to final database dump
+0015.184 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db-table-wp_wfVulnScanners.table.gz (40/40): adding to final database dump
+0015.186 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db.gz: finished writing out complete database file (1424 KB)
+0015.205 (0) Total database tables backed up: 40 (backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db.gz, size: 1481480, checksum (SHA1): e1816e2f22058d4e5dde8e4b83feaae3d590fa32)
+0015.214 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip: plugins: This file has not yet been successfully uploaded: will queue
+0015.216 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-themes.zip: themes: This file has not yet been successfully uploaded: will queue
+0015.217 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-uploads.zip: uploads: This file has not yet been successfully uploaded: will queue
+0015.218 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-others.zip: others: This file has not yet been successfully uploaded: will queue
+0015.219 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db.gz: db: This file has not yet been successfully uploaded: will queue
+0015.220 (0) Saving backup history. Total backup size: 56.4 MB
+0015.225 (0) Requesting upload of the files that have not yet been successfully uploaded (5)
+0015.229 (0) Cloud backup selection (1/1): googledrive (last)
+0015.231 (0) Beginning dispatch of backup to remote (googledrive)
+0015.239 (0) Google Drive: requesting access token: client_id=198082912002-nhif5l0g2t6nrud1dtah7rgul9g9vn1r.apps.googleusercontent.com
+0015.365 (0) Google Drive: successfully obtained access token
+0016.553 (0) Google Drive quota usage: used=361 MB, total=15360 MB, available=14999 MB
+0016.556 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip: Attempting to upload to Google Drive (into folder id: 0B4fubrJ0TG2NcU0tQWpXYTJDUU0)
+0016.988 (0) Googledrive chunked upload: 5.7 % uploaded (1048576)
+0017.271 (0) Googledrive chunked upload: 11.4 % uploaded (2097152)
+0017.478 (0) Googledrive chunked upload: 17.1 % uploaded (3145728)
+0017.701 (0) Googledrive chunked upload: 22.8 % uploaded (4194304)
+0017.933 (0) Googledrive chunked upload: 28.5 % uploaded (5242880)
+0018.153 (0) Googledrive chunked upload: 34.3 % uploaded (6291456)
+0018.420 (0) Googledrive chunked upload: 40 % uploaded (7340032)
+0018.616 (0) Googledrive chunked upload: 45.7 % uploaded (8388608)
+0018.837 (0) Googledrive chunked upload: 51.4 % uploaded (9437184)
+0019.041 (0) Googledrive chunked upload: 57.1 % uploaded (10485760)
+0019.263 (0) Googledrive chunked upload: 62.8 % uploaded (11534336)
+0019.505 (0) Googledrive chunked upload: 68.5 % uploaded (12582912)
+0019.773 (0) Googledrive chunked upload: 74.2 % uploaded (13631488)
+0020.011 (0) Googledrive chunked upload: 79.9 % uploaded (14680064)
+0020.248 (0) Googledrive chunked upload: 85.6 % uploaded (15728640)
+0020.494 (0) Googledrive chunked upload: 91.4 % uploaded (16777216)
+0020.698 (0) Googledrive chunked upload: 97.1 % uploaded (17825792)
+0022.252 (0) Googledrive chunked upload: 100 % uploaded (17825792)
+0022.257 (0) OK: Archive backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip uploaded to Google Drive in 5.7 seconds
+0022.260 (0) Recording as successfully uploaded: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip (93a3b08789a16ec971b9e3e0cd8dc670)
+0022.269 (0) Deleting local file: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-plugins.zip: OK
+0022.477 (0) Google Drive quota usage: used=378.5 MB, total=15360 MB, available=14981.5 MB
+0022.481 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-themes.zip: Attempting to upload to Google Drive (into folder id: 0B4fubrJ0TG2NcU0tQWpXYTJDUU0)
+0023.189 (0) Googledrive chunked upload: 100 % uploaded
+0023.193 (0) OK: Archive backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-themes.zip uploaded to Google Drive in 0.71 seconds
+0023.197 (0) Recording as successfully uploaded: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-themes.zip (9edba4bfaf14fddf85b504eb111fc2f1)
+0023.202 (0) Deleting local file: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-themes.zip: OK
+0023.438 (0) Google Drive quota usage: used=378.5 MB, total=15360 MB, available=14981.5 MB
+0023.441 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-uploads.zip: Attempting to upload to Google Drive (into folder id: 0B4fubrJ0TG2NcU0tQWpXYTJDUU0)
+0023.830 (0) Googledrive chunked upload: 2.7 % uploaded (1048576)
+0024.055 (0) Googledrive chunked upload: 5.5 % uploaded (2097152)
+0024.271 (0) Googledrive chunked upload: 8.2 % uploaded (3145728)
+0024.501 (0) Googledrive chunked upload: 11 % uploaded (4194304)
+0024.747 (0) Googledrive chunked upload: 13.7 % uploaded (5242880)
+0024.955 (0) Googledrive chunked upload: 16.5 % uploaded (6291456)
+0025.173 (0) Googledrive chunked upload: 19.2 % uploaded (7340032)
+0025.431 (0) Googledrive chunked upload: 22 % uploaded (8388608)
+0025.669 (0) Googledrive chunked upload: 24.7 % uploaded (9437184)
+0025.892 (0) Googledrive chunked upload: 27.5 % uploaded (10485760)
+0026.107 (0) Googledrive chunked upload: 30.2 % uploaded (11534336)
+0026.353 (0) Googledrive chunked upload: 33 % uploaded (12582912)
+0026.581 (0) Googledrive chunked upload: 35.7 % uploaded (13631488)
+0026.823 (0) Googledrive chunked upload: 38.5 % uploaded (14680064)
+0027.032 (0) Googledrive chunked upload: 41.2 % uploaded (15728640)
+0027.257 (0) Googledrive chunked upload: 44 % uploaded (16777216)
+0027.539 (0) Googledrive chunked upload: 46.7 % uploaded (17825792)
+0027.759 (0) Googledrive chunked upload: 49.4 % uploaded (18874368)
+0028.014 (0) Googledrive chunked upload: 52.2 % uploaded (19922944)
+0028.214 (0) Googledrive chunked upload: 54.9 % uploaded (20971520)
+0028.464 (0) Googledrive chunked upload: 57.7 % uploaded (22020096)
+0028.743 (0) Googledrive chunked upload: 60.4 % uploaded (23068672)
+0028.994 (0) Googledrive chunked upload: 63.2 % uploaded (24117248)
+0029.241 (0) Googledrive chunked upload: 65.9 % uploaded (25165824)
+0029.480 (0) Googledrive chunked upload: 68.7 % uploaded (26214400)
+0029.694 (0) Googledrive chunked upload: 71.4 % uploaded (27262976)
+0029.904 (0) Googledrive chunked upload: 74.2 % uploaded (28311552)
+0030.128 (0) Googledrive chunked upload: 76.9 % uploaded (29360128)
+0030.363 (0) Googledrive chunked upload: 79.7 % uploaded (30408704)
+0030.629 (0) Googledrive chunked upload: 82.4 % uploaded (31457280)
+0030.896 (0) Googledrive chunked upload: 85.2 % uploaded (32505856)
+0031.104 (0) Googledrive chunked upload: 87.9 % uploaded (33554432)
+0031.359 (0) Googledrive chunked upload: 90.7 % uploaded (34603008)
+0031.565 (0) Googledrive chunked upload: 93.4 % uploaded (35651584)
+0031.795 (0) Googledrive chunked upload: 96.1 % uploaded (36700160)
+0032.048 (0) Googledrive chunked upload: 98.9 % uploaded (37748736)
+0032.775 (0) Googledrive chunked upload: 100 % uploaded (37748736)
+0032.781 (0) OK: Archive backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-uploads.zip uploaded to Google Drive in 9.34 seconds
+0032.784 (0) Recording as successfully uploaded: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-uploads.zip (0a678ada605828a6a9f64c4a40f6b5ce)
+0032.796 (0) Deleting local file: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-uploads.zip: OK
+0033.033 (0) Google Drive quota usage: used=414.9 MB, total=15360 MB, available=14945.1 MB
+0033.036 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-others.zip: Attempting to upload to Google Drive (into folder id: 0B4fubrJ0TG2NcU0tQWpXYTJDUU0)
+0033.509 (0) Googledrive chunked upload: 98 % uploaded (1048576)
+0034.110 (0) Googledrive chunked upload: 100 % uploaded (1048576)
+0034.117 (0) OK: Archive backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-others.zip uploaded to Google Drive in 1.08 seconds
+0034.120 (0) Recording as successfully uploaded: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-others.zip (2be957184ea801511b6acc2f3c42a012)
+0034.125 (0) Deleting local file: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-others.zip: OK
+0034.353 (0) Google Drive quota usage: used=415.9 MB, total=15360 MB, available=14944.1 MB
+0034.356 (0) backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db.gz: Attempting to upload to Google Drive (into folder id: 0B4fubrJ0TG2NcU0tQWpXYTJDUU0)
+0034.788 (0) Googledrive chunked upload: 70.8 % uploaded (1048576)
+0035.534 (0) Googledrive chunked upload: 100 % uploaded (1048576)
+0035.540 (0) OK: Archive backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db.gz uploaded to Google Drive in 1.18 seconds
+0035.543 (0) Recording as successfully uploaded: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db.gz (ea30c755d8f5f0e3f3e41fbf09608d65)
+0035.547 (0) Deleting local file: backup_2017-03-19-0417_Aaron_Krauss_96c367e25e1a-db.gz: OK
+0035.551 (0) Retain: beginning examination of existing backup sets; user setting: retain_files=3, retain_db=3
+0035.553 (0) Number of backup sets in history: 4; groups (db): 1
+0035.554 (0) Examining (for databases) backup set with group_id=0, nonce=96c367e25e1a, datestamp=1489897027 (Mar 19 2017 04:17:07)
+0035.555 (0) This backup set is the backup set just made, so will not be deleted.
+0035.556 (0) Examining (for databases) backup set with group_id=0, nonce=1d7c27a04a7e, datestamp=1489810635 (Mar 18 2017 04:17:15)
+0035.557 (0) This backup set remains non-empty (f=1/d=1); will retain in history
+0035.559 (0) Examining (for databases) backup set with group_id=0, nonce=f3cea96ed5e8, datestamp=1489724235 (Mar 17 2017 04:17:15)
+0035.560 (0) This backup set remains non-empty (f=1/d=1); will retain in history
+0035.561 (0) Examining (for databases) backup set with group_id=0, nonce=20d7b983e4fe, datestamp=1489637844 (Mar 16 2017 04:17:24)
+0035.562 (0) 1489637844: db: this set includes a database (backup_2017-03-16-0417_Aaron_Krauss_20d7b983e4fe-db.gz); db count is now 3
+0035.563 (0) 1489637844: db: over retain limit (3); will delete this database
+0035.564 (0) Delete file: backup_2017-03-16-0417_Aaron_Krauss_20d7b983e4fe-db.gz, service=googledrive
+0036.334 (0) backup_2017-03-16-0417_Aaron_Krauss_20d7b983e4fe-db.gz: Deletion successful
+0036.339 (0) This backup set remains non-empty (f=1/d=0); will retain in history
+0036.341 (0) Number of backup sets in history: 4; groups (files): 1
+0036.342 (0) Examining (for files) backup set with nonce=96c367e25e1a, datestamp=1489897027 (Mar 19 2017 04:17:07)
+0036.343 (0) This backup set is the backup set just made, so will not be deleted.
+0036.344 (0) This backup set is the backup set just made, so will not be deleted.
+0036.344 (0) This backup set is the backup set just made, so will not be deleted.
+0036.344 (0) This backup set is the backup set just made, so will not be deleted.
+0036.345 (0) This backup set remains non-empty (f=1/d=1); will retain in history
+0036.346 (0) Examining (for files) backup set with nonce=1d7c27a04a7e, datestamp=1489810635 (Mar 18 2017 04:17:15)
+0036.347 (0) This backup set remains non-empty (f=1/d=1); will retain in history
+0036.348 (0) Examining (for files) backup set with nonce=f3cea96ed5e8, datestamp=1489724235 (Mar 17 2017 04:17:15)
+0036.349 (0) This backup set remains non-empty (f=1/d=1); will retain in history
+0036.351 (0) Examining (for files) backup set with nonce=20d7b983e4fe, datestamp=1489637844 (Mar 16 2017 04:17:24)
+0036.352 (0) plugins: over retain limit (3); will delete this file entity
+0036.352 (0) themes: over retain limit (3); will delete this file entity
+0036.353 (0) uploads: over retain limit (3); will delete this file entity
+0036.355 (0) others: over retain limit (3); will delete this file entity
+0036.356 (0) Delete file: backup_2017-03-16-0417_Aaron_Krauss_20d7b983e4fe-plugins.zip, service=googledrive
+0036.357 (0) Delete file: backup_2017-03-16-0417_Aaron_Krauss_20d7b983e4fe-themes.zip, service=googledrive
+0036.358 (0) Delete file: backup_2017-03-16-0417_Aaron_Krauss_20d7b983e4fe-uploads.zip, service=googledrive
+0036.359 (0) Delete file: backup_2017-03-16-0417_Aaron_Krauss_20d7b983e4fe-others.zip, service=googledrive
+0037.034 (0) backup_2017-03-16-0417_Aaron_Krauss_20d7b983e4fe-others.zip: Deletion successful
+0037.435 (0) backup_2017-03-16-0417_Aaron_Krauss_20d7b983e4fe-uploads.zip: Deletion successful
+0037.818 (0) backup_2017-03-16-0417_Aaron_Krauss_20d7b983e4fe-themes.zip: Deletion successful
+0038.158 (0) backup_2017-03-16-0417_Aaron_Krauss_20d7b983e4fe-plugins.zip: Deletion successful
+0038.164 (0) This backup set is now empty; will remove from history
+0038.165 (0) Deleting log file (log.20d7b983e4fe.txt)
+0038.167 (0) Retain: saving new backup history (sets now: 3) and finishing retain operation
+0038.177 (0) Resume backup (96c367e25e1a, 0): finish run
+0038.180 (0) Decremented the semaphore (fd) by 1
+0038.182 (0) Semaphore (fd) unlocked
+0038.183 (0) There were no errors in the uploads, so the 'resume' event (1) is being unscheduled
+0038.190 (0) No email will/can be sent - the user has not configured an email address.
+0038.197 (0) The backup apparently succeeded and is now complete

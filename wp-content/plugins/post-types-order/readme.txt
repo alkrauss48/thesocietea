@@ -1,10 +1,10 @@
 === Post Types Order  ===
-Contributors: nsp-code
+Contributors: nsp-code, tdgu
 Donate link: http://www.nsp-code.com/donate.php
 Tags: post order, posts order, sort, post sort, posts sort, post type order, custom order, admin posts order
 Requires at least: 2.8
-Tested up to: 4.6.1
-Stable tag: 1.9
+Tested up to: 4.7.2
+Stable tag: 1.9.3
 .
 License: GPLv2 or later
 
@@ -12,7 +12,7 @@ Post Order and custom Post Type Objects (custom post types) using a Drag and Dro
 
 == Description ==
 
-<strong>Over 1.900.000 DOWNLOADS and near PERFECT rating out of 150 REVIEWS</strong>. <br />
+<strong>Over 2 MILLIONS DOWNLOADS and near PERFECT rating out of 150 REVIEWS</strong>. <br />
 A powerful plugin, Order Posts and Post Types Objects using a Drag and Drop Sortable JavaScript capability. 
 
 The order can be customized within **default WordPress post type archive list page** or **a separate Re-Order interface** which display all objects.
@@ -36,7 +36,7 @@ If for some reason the post order does not update on your front side, you either
 
 <br />Something is wrong with this plugin on your site? Just use the forum or get in touch with us at <a target="_blank" href="http://www.nsp-code.com">Contact</a> and we'll check it out.
 
-<br />Check out the advanced version of this plugin at <a target="_blank" href="http://www.nsp-code.com/premium-plugins/wordpress-plugins/advanced-post-types-order/">Advanced Post Types Order</a>
+<br />Need More? Check out the advanced version of this plugin at <a target="_blank" href="http://www.nsp-code.com/premium-plugins/wordpress-plugins/advanced-post-types-order/">Advanced Post Types Order</a> which include Hierarchically post types order, Manual / Automatic Sorting, Individual Categories Order, Conditionals to apply, Paginations for large list, Mobile ready, Enhanced Interface, Plugins compatibility (MultiSite Network Support, WPML, Polylang, WooCommerce, WP E-Commerce, Platform Pro, Genesis etc), font side re-order interface,  ... and many more !!
 
 <br />
 <br />This plugin is developed by <a target="_blank" href="http://www.nsp-code.com">Nsp-Code</a>
@@ -94,6 +94,12 @@ Consider upgrading to our advanced version of this plugin at a very resonable pr
 
 
 == Change Log ==
+
+= 1.9.3 =
+  - Fix for custom post type objects per page when using default archive interface drag & drop sort
+  - Plugin code redo and re-structure
+  - Improved compatibility with other plugins
+  - Security improvments for AJAX order updates
 
 = 1.9 =
   - Remove translations from the package
