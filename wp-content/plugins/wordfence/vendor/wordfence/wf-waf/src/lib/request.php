@@ -464,8 +464,11 @@ class wfWAFRequest implements wfWAFRequestInterface {
 				$nestedCookies = $this->getCookieString($cookieValue, $resolvedName);
 				$cookieString .= $nestedCookies;
 			}
-			else
-			{
+			else {
+				if (strpos($resolvedName, 'wordpress_') === 0) {
+					$cookieValue = '<redacted>';
+				}
+				
 				$cookieString .= $resolvedName . '=' . urlencode($cookieValue) . '; ';
 			}
 		}

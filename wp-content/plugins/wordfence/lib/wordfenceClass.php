@@ -216,6 +216,7 @@ class wordfence {
 				}
 			}
 			if (isset($keyData['dashboard'])) {
+				wfConfig::set('lastDashboardCheck', time());
 				wfDashboard::processDashboardResponse($keyData['dashboard']);
 			}
 		}
@@ -808,6 +809,7 @@ SQL
 		if (wfConfig::get('loginSec_disableAuthorScan')) {
 			add_filter('oembed_response_data', 'wordfence::oembedAuthorFilter', 99, 4);
 			add_filter('rest_request_before_callbacks', 'wordfence::jsonAPIAuthorFilter', 99, 3);
+			add_filter('rest_post_dispatch', 'wordfence::jsonAPIAdjustHeaders', 99, 3);
 		}
 
 		// Change GoDaddy's limit login mu-plugin since it can interfere with the two factor auth message.
@@ -1236,12 +1238,13 @@ SQL
 		// Sync the WAF data with the database.
 		if (!WFWAF_SUBDIRECTORY_INSTALL && $waf = wfWAF::getInstance()) {
 			$homeurl = wfUtils::wpHomeURL();
+			$siteurl = wfUtils::wpSiteURL();
 			
 			try {
 				$configDefaults = array(
 					'apiKey'         => wfConfig::get('apiKey'),
 					'isPaid'         => wfConfig::get('isPaid'),
-					'siteURL'        => site_url(),
+					'siteURL'        => $siteurl,
 					'homeURL'        => $homeurl,
 					'whitelistedIPs' => (string) wfConfig::get('whitelisted'),
 					'howGetIPs'      => (string) wfConfig::get('howGetIPs'),
@@ -1426,15 +1429,24 @@ SQL
 			if (preg_match('~' . preg_quote($urlBase, '~') . '/*$~i', $route)) {
 				$error = new WP_Error('rest_user_cannot_view', __('Sorry, you are not allowed to list users.'), array('status' => rest_authorization_required_code()));
 				$response = rest_ensure_response($error);
+				define('WORDFENCE_REST_API_SUPPRESSED', true);
 			}
 			else if (preg_match('~' . preg_quote($urlBase, '~') . '/+(\d+)/*$~i', $route, $matches)) {
 				$id = (int) $matches[1];
 				if (get_current_user_id() !== $id) {
 					$error = new WP_Error('rest_user_invalid_id', __('Invalid user ID.'), array('status' => 404));
 					$response = rest_ensure_response($error);
+					define('WORDFENCE_REST_API_SUPPRESSED', true);
 				}
 			}
 		}
+		return $response;
+	}
+	public static function jsonAPIAdjustHeaders($response, $server, $request) {
+		if (defined('WORDFENCE_REST_API_SUPPRESSED')) {
+			$response->header('Allow', 'GET');
+		}
+		
 		return $response;
 	}
 	public static function showTwoFactorField() {
@@ -2622,6 +2634,9 @@ SQL
 				//When downgrading we must disable all two factor authentication because it can lock an admin out if we don't.
 				wfConfig::set_ser('twoFactorUsers', array());
 				self::licenseStatusChanged();
+				if (method_exists(wfWAF::getInstance()->getStorageEngine(), 'purgeIPBlocks')) {
+					wfWAF::getInstance()->getStorageEngine()->purgeIPBlocks(wfWAFStorageInterface::IP_BLOCKS_BLACKLIST);
+				}
 			} else {
 				throw new Exception("Could not understand the response we received from the Wordfence servers when applying for a free API key.");
 			}
@@ -2935,6 +2950,7 @@ SQL
 			try {
 				$keyData = $api->call('ping_api_key', array(), array());
 				if (isset($keyData['dashboard'])) {
+					wfConfig::set('lastDashboardCheck', time());
 					wfDashboard::processDashboardResponse($keyData['dashboard']);
 				}
 			}
@@ -4584,6 +4600,7 @@ HTML;
 			wp_enqueue_style('wp-pointer');
 			wp_enqueue_script('wp-pointer');
 			wp_enqueue_style('wordfence-main-style', wfUtils::getBaseURL() . 'css/main.css', '', WORDFENCE_VERSION);
+			wp_enqueue_style('wordfence-ionicons-style', wfUtils::getBaseURL() . 'css/wf-ionicons.css', '', WORDFENCE_VERSION);
 			wp_enqueue_style('wordfence-colorbox-style', wfUtils::getBaseURL() . 'css/colorbox.css', '', WORDFENCE_VERSION);
 			wp_enqueue_style('wordfence-dttable-style', wfUtils::getBaseURL() . 'css/dt_table.css', '', WORDFENCE_VERSION);
 
@@ -4595,6 +4612,7 @@ HTML;
 			//wp_enqueue_script('jquery.tools', wfUtils::getBaseURL() . 'js/jquery.tools.min.js', array('jquery'));
 			wp_enqueue_script('wordfenceAdminjs', wfUtils::getBaseURL() . 'js/admin.js', array('jquery'), WORDFENCE_VERSION);
 			wp_enqueue_script('wordfenceAdminExtjs', wfUtils::getBaseURL() . 'js/tourTip.js', array('jquery'), WORDFENCE_VERSION);
+			wp_enqueue_script('wordfenceDropdownjs', wfUtils::getBaseURL() . 'js/wfdropdown.js', array('jquery'), WORDFENCE_VERSION);
 			self::setupAdminVars();
 		} else {
 			wp_enqueue_style('wp-pointer');
@@ -6305,6 +6323,15 @@ to your httpd.conf if using Apache, or find documentation on how to disable dire
 						wfWAF::getInstance()->getStorageEngine()->setConfig('disabledRules', $disabledRules);
 					}
 					break;
+				case 'disableWAFBlacklistBlocking':
+					if (isset($_POST['disableWAFBlacklistBlocking'])) {
+						$disableWAFBlacklistBlocking = (int) $_POST['disableWAFBlacklistBlocking'];
+						wfWAF::getInstance()->getStorageEngine()->setConfig('disableWAFBlacklistBlocking', $disableWAFBlacklistBlocking);
+						if (method_exists(wfWAF::getInstance()->getStorageEngine(), 'purgeIPBlocks')) {
+							wfWAF::getInstance()->getStorageEngine()->purgeIPBlocks(wfWAFStorageInterface::IP_BLOCKS_BLACKLIST);
+						}
+					}
+					break;
 			}
 		}
 
@@ -6928,6 +6955,11 @@ LIMIT %d", $lastSendTime, $limit));
 						else if ($ruleIDs[0] == 'logged') {
 							if ($hit->action == 'logged:waf' || $hit->action == 'blocked:waf') { $hit->actionDescription = 'Watched IP Traffic: ' . $ip; } 
 							$actionData['category'] = 'logged';
+							$actionData['ssl'] = $ssl;
+							$actionData['fullRequest'] = base64_encode($requestString);
+						}
+						else if ($ruleIDs[0] == 'blocked') {
+							$actionData['category'] = 'blocked';
 							$actionData['ssl'] = $ssl;
 							$actionData['fullRequest'] = base64_encode($requestString);
 						}

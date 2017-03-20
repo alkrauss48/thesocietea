@@ -16,8 +16,8 @@ if (!function_exists('fsockopen')) {
 } else {
 ?>
 	</p>
-	<p>
-		<input type="text" name="whois" id="wfwhois" value="" size="60" maxlength="255" onkeydown="if(event.keyCode == 13){ WFAD.whois(jQuery('#wfwhois').val()); }" />&nbsp;<input type="button" name="whoisbutton" id="whoisbutton" class="wf-btn wf-btn-primary" value="Look up IP or Domain" onclick="WFAD.whois(jQuery('#wfwhois').val());">
+	<p class="wf-form">
+		<input type="text" class="wf-form-control" name="whois" id="wfwhois" value="" maxlength="255" onkeydown="if(event.keyCode == 13){ WFAD.whois(jQuery('#wfwhois').val()); }" />&nbsp;<input type="button" name="whoisbutton" id="whoisbutton" class="wf-btn wf-btn-primary" value="Look up IP or Domain" onclick="WFAD.whois(jQuery('#wfwhois').val());">
 	</p>
 	<?php if(isset($_GET['wfnetworkblock']) && $_GET['wfnetworkblock']) { ?>
 	<h2>How to block a network</h2>

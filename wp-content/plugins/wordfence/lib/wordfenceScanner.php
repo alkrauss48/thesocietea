@@ -322,7 +322,7 @@ class wordfenceScanner {
 											'ignoreP' => $this->path . $file,
 											'ignoreC' => $fileSum,
 											'shortMsg' => "File appears to be malicious: " . esc_html($file),
-											'longMsg' => "This file appears to be installed by a hacker to perform malicious activity. If you know about this file you can choose to ignore it to exclude it from future scans. The text we found in this file that matches a known malicious file is: <strong style=\"color: #F00;\">\"" . wfUtils::potentialBinaryStringToHTML((strlen($matchString) > 200 ? substr($matchString, 0, 200) . '...' : $matchString)) . "\"</strong>. The infection type is: <strong>" . esc_html($rule[3]) . '</strong>.' . $extraMsg,
+											'longMsg' => "This file appears to be installed by a hacker to perform malicious activity. If you know about this file you can choose to ignore it to exclude it from future scans. The text we found in this file that matches a known malicious file is: <strong style=\"color: #F00;\" class=\"wf-split-word\">\"" . wfUtils::potentialBinaryStringToHTML((strlen($matchString) > 200 ? substr($matchString, 0, 200) . '...' : $matchString)) . "\"</strong>. The infection type is: <strong>" . esc_html($rule[3]) . '</strong>.' . $extraMsg,
 											'data' => array_merge(array(
 												'file' => $file,
 											), $dataForFile),
@@ -354,7 +354,7 @@ class wordfenceScanner {
 										'ignoreP' => $this->path . $file,
 										'ignoreC' => $fileSum,
 										'shortMsg' => "This file may contain malicious executable code: " . esc_html($this->path . $file),
-										'longMsg' => "This file is a PHP executable file and contains the word 'eval' (without quotes) and the word '" . esc_html($badStringFound) . "' (without quotes). The eval() function along with an encoding function like the one mentioned are commonly used by hackers to hide their code. If you know about this file you can choose to ignore it to exclude it from future scans. This file was detected because you have enabled HIGH SENSITIVITY scanning. This option is more aggressive than the usual scans, and may cause false positives.",
+										'longMsg' => "This file is a PHP executable file and contains the word 'eval' (without quotes) and the word '<span class=\"wf-split-word\">" . esc_html($badStringFound) . "</span>' (without quotes). The eval() function along with an encoding function like the one mentioned are commonly used by hackers to hide their code. If you know about this file you can choose to ignore it to exclude it from future scans. This file was detected because you have enabled HIGH SENSITIVITY scanning. This option is more aggressive than the usual scans, and may cause false positives.",
 										'data' => array_merge(array(
 											'file' => $file,
 										), $dataForFile),

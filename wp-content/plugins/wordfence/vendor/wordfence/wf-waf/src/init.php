@@ -1,6 +1,6 @@
 <?php
 
-define('WFWAF_VERSION', '1.0.2');
+define('WFWAF_VERSION', '1.0.3');
 define('WFWAF_PATH', dirname(__FILE__) . '/');
 define('WFWAF_LIB_PATH', WFWAF_PATH . 'lib/');
 define('WFWAF_VIEW_PATH', WFWAF_PATH . 'views/');

@@ -93,7 +93,7 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&wafAction=removeA
 						<div class="wf-col-sm-7 wf-col-md-5">
 						<?php if (!WFWAF_AUTO_PREPEND): ?>
 							<p class="wf-form-control-static wf-notice-text">Basic WordPress Protection</p>
-							<p class="wf-form-control-static"><a class="wf-btn wf-btn-primary wf-btn-callout" href="<?php echo $wafConfigURL ?>">Optimize the Wordfence Firewall</a></p>
+							<p class="wf-form-control-static"><a class="wf-btn wf-btn-primary" href="<?php echo $wafConfigURL ?>">Optimize the Wordfence Firewall</a></p>
 						<?php else: ?>
 							<p class="wf-form-control-static wf-success-text">Extended Protection</p>
 						<?php endif ?>
@@ -224,8 +224,7 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&wafAction=removeA
 					</div>
 					<br>
 					
-				</div> 
-				<br>
+				</div>
 				
 				<h2>Advanced Configuration</h2>
 				<div id="waf-advanced-options" class="wf-form-horizontal">
@@ -235,6 +234,9 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&wafAction=removeA
 						</div>
 						<div class="wf-col-xs-12">
 							<label class="wf-checkbox-inline"><input type="checkbox" id="waf-disable-ip-blocking" name="waf-disable-ip-blocking" value="1"<?php echo $config->getConfig('disableWAFIPBlocking') ? ' checked' : ''; ?>>Delay IP and Country blocking until after WordPress and plugins have loaded (only process firewall rules early) <a href="https://docs.wordfence.com/en/WAF#Advanced_Configuration" target="_blank" class="wfhelp"></a></label>
+						</div>
+						<div class="wf-col-xs-12">
+							<label class="wf-checkbox-inline"><input type="checkbox" id="waf-disable-blacklist-blocking" name="waf-disable-blacklist-blocking" value="1"<?php echo !$config->getConfig('disableWAFBlacklistBlocking') ? ' checked' : ''; ?>>Preemptively block malicious IP addresses <span style="color: #F00;">Premium Feature</span> <a href="https://docs.wordfence.com/en/WAF#Advanced_Configuration" target="_blank" class="wfhelp"></a></label> 
 						</div>
 					</div>
 				</div>
@@ -306,117 +308,119 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&wafAction=removeA
 	$bulkActionForm = ob_get_clean();
 	echo $bulkActionForm;
 	?>
-	<table class="wf-striped-table whitelist-table">
-		<thead>
-		<tr>
-			<th style="width: 2%;text-align: center"><input type="checkbox" class="wf-whitelist-table-bulk-action"></th>
-			<th style="width: 5%;">Enabled</th>
-			<th>URL</th>
-			<th>Param</th>
-			<th>Created</th>
-			<th>Source</th>
-			<th>User</th>
-			<th>IP</th>
-			<th>Action</th>
-		</tr>
-		</thead>
-		{{if whitelistedURLParams.length > 5}}
-		<tfoot>
-		<tr>
-			<th><input type="checkbox" class="wf-whitelist-table-bulk-action"></th>
-			<th style="width: 5%;">Enabled</th>
-			<th>URL</th>
-			<th>Param</th>
-			<th>Created</th>
-			<th>Source</th>
-			<th>User</th>
-			<th>IP</th>
-			<th>Action</th>
-		</tr>
-		{{/if}}
-		</tfoot>
-		<tbody>
-		<tr class="wf-table-filters">
-			<td colspan="2"></td>
-			<td><input data-column-index="2" placeholder="Filter URL" type="text"></td>
-			<td><input data-column-index="3" placeholder="Filter Param" type="text"></td>
-			<td><input data-column-index="4" placeholder="Filter Created" type="text"></td>
-			<td><input data-column-index="5" placeholder="Filter Source" type="text"></td>
-			<td><input style="max-width:100px;" data-column-index="6" placeholder="Filter User" type="text"></td>
-			<td><input style="max-width:100px;" data-column-index="7" placeholder="Filter IP" type="text"></td>
-			<td></td>
-		</tr>
-		{{each(idx, whitelistedURLParam) whitelistedURLParams}}
-		<tr data-index="${idx}">
-			<td style="text-align: center;"><input type="checkbox" class="wf-whitelist-table-bulk-checkbox"></td>
-			<td style="text-align: center;">
-				<input name="replaceWhitelistedEnabled" type="hidden" value="${whitelistedURLParam.data.disabled}">
-				<input name="whitelistedEnabled" type="checkbox" value="1"
-				       {{if (!whitelistedURLParam.data.disabled)}} checked{{/if}}>
-			</td>
-			<td>
-				<input name="replaceWhitelistedPath" type="hidden" value="${whitelistedURLParam.path}">
-				<span class="whitelist-display">${WFAD.htmlEscape(WFAD.base64_decode(whitelistedURLParam.path))}</span>
-				<input name="whitelistedPath" class="whitelist-edit whitelist-path" type="text"
-				       value="${WFAD.htmlEscape(WFAD.base64_decode(whitelistedURLParam.path))}">
-			</td>
-			<td>
-				<input name="replaceWhitelistedParam" type="hidden" value="${whitelistedURLParam.paramKey}">
-				<span class="whitelist-display">${WFAD.htmlEscape(WFAD.base64_decode(whitelistedURLParam.paramKey))}</span>
-				<input name="whitelistedParam" class="whitelist-edit whitelist-param-key"
-				       type="text" value="${WFAD.htmlEscape(WFAD.base64_decode(whitelistedURLParam.paramKey))}">
-			</td>
-			<td>
-				{{if (whitelistedURLParam.data.timestamp)}}
-				${WFAD.dateFormat((new Date(whitelistedURLParam.data.timestamp * 1000)))}
-				{{else}}
-				-
-				{{/if}}
-			</td>
-			<td>
-				{{if (whitelistedURLParam.data.description)}}
-				${whitelistedURLParam.data.description}
-				{{else}}
-				-
-				{{/if}}
-			</td>
-			<td>
-				{{if (whitelistedURLParam.data.userID)}}
-				{{if (whitelistedURLParam.data.username)}}
-				${whitelistedURLParam.data.username}
-				{{else}}
-				${whitelistedURLParam.data.userID}
-				{{/if}}
-				{{else}}
-				-
-				{{/if}}
-			</td>
-			<td>
-				{{if (whitelistedURLParam.data.ip)}}
-				${whitelistedURLParam.data.ip}
-				{{else}}
-				-
-				{{/if}}
-			</td>
-			<td>
-				<span class="whitelist-display" style="white-space: nowrap">
-					<button type="button" class="wf-btn wf-btn-default wf-btn-sm whitelist-url-edit">Edit</button>
-					<button type="button" class="wf-btn wf-btn-default wf-btn-sm whitelist-url-delete">Delete</button>
-				</span>
-				<span class="whitelist-edit" style="white-space: nowrap">
-					<button type="button" class="wf-btn wf-btn-default wf-btn-sm whitelist-url-save">Save</button>
-					<button type="button" class="wf-btn wf-btn-default wf-btn-sm whitelist-url-cancel">Cancel</button>
-				</span>
-			</td>
-		</tr>
-		{{/each}}
-		{{if (whitelistedURLParams.length == 0)}}
-		<tr>
-			<td colspan="9">No whitelisted URLs currently set.</td>
-		</tr>
-		{{/if}}
-		</tbody>
-	</table>
+	<div class="whitelist-table-container">
+		<table class="wf-striped-table whitelist-table">
+			<thead>
+			<tr>
+				<th style="width: 2%;text-align: center"><input type="checkbox" class="wf-whitelist-table-bulk-action"></th>
+				<th style="width: 5%;">Enabled</th>
+				<th>URL</th>
+				<th>Param</th>
+				<th>Created</th>
+				<th>Source</th>
+				<th>User</th>
+				<th>IP</th>
+				<th>Action</th>
+			</tr>
+			</thead>
+			{{if whitelistedURLParams.length > 5}}
+			<tfoot>
+			<tr>
+				<th><input type="checkbox" class="wf-whitelist-table-bulk-action"></th>
+				<th style="width: 5%;">Enabled</th>
+				<th>URL</th>
+				<th>Param</th>
+				<th>Created</th>
+				<th>Source</th>
+				<th>User</th>
+				<th>IP</th>
+				<th>Action</th>
+			</tr>
+			{{/if}}
+			</tfoot>
+			<tbody>
+			<tr class="wf-table-filters">
+				<td colspan="2"></td>
+				<td><input data-column-index="2" placeholder="Filter URL" type="text"></td>
+				<td><input data-column-index="3" placeholder="Filter Param" type="text"></td>
+				<td><input data-column-index="4" placeholder="Filter Created" type="text"></td>
+				<td><input data-column-index="5" placeholder="Filter Source" type="text"></td>
+				<td><input style="max-width:100px;" data-column-index="6" placeholder="Filter User" type="text"></td>
+				<td><input style="max-width:100px;" data-column-index="7" placeholder="Filter IP" type="text"></td>
+				<td></td>
+			</tr>
+			{{each(idx, whitelistedURLParam) whitelistedURLParams}}
+			<tr data-index="${idx}">
+				<td style="text-align: center;"><input type="checkbox" class="wf-whitelist-table-bulk-checkbox"></td>
+				<td style="text-align: center;">
+					<input name="replaceWhitelistedEnabled" type="hidden" value="${whitelistedURLParam.data.disabled}">
+					<input name="whitelistedEnabled" type="checkbox" value="1"
+						   {{if (!whitelistedURLParam.data.disabled)}} checked{{/if}}>
+				</td>
+				<td>
+					<input name="replaceWhitelistedPath" type="hidden" value="${whitelistedURLParam.path}">
+					<span class="whitelist-display">${WFAD.htmlEscape(WFAD.base64_decode(whitelistedURLParam.path))}</span>
+					<input name="whitelistedPath" class="whitelist-edit whitelist-path" type="text"
+						   value="${WFAD.htmlEscape(WFAD.base64_decode(whitelistedURLParam.path))}">
+				</td>
+				<td>
+					<input name="replaceWhitelistedParam" type="hidden" value="${whitelistedURLParam.paramKey}">
+					<span class="whitelist-display">${WFAD.htmlEscape(WFAD.base64_decode(whitelistedURLParam.paramKey))}</span>
+					<input name="whitelistedParam" class="whitelist-edit whitelist-param-key"
+						   type="text" value="${WFAD.htmlEscape(WFAD.base64_decode(whitelistedURLParam.paramKey))}">
+				</td>
+				<td>
+					{{if (whitelistedURLParam.data.timestamp)}}
+					${WFAD.dateFormat((new Date(whitelistedURLParam.data.timestamp * 1000)))}
+					{{else}}
+					-
+					{{/if}}
+				</td>
+				<td>
+					{{if (whitelistedURLParam.data.description)}}
+					${whitelistedURLParam.data.description}
+					{{else}}
+					-
+					{{/if}}
+				</td>
+				<td>
+					{{if (whitelistedURLParam.data.userID)}}
+					{{if (whitelistedURLParam.data.username)}}
+					${whitelistedURLParam.data.username}
+					{{else}}
+					${whitelistedURLParam.data.userID}
+					{{/if}}
+					{{else}}
+					-
+					{{/if}}
+				</td>
+				<td>
+					{{if (whitelistedURLParam.data.ip)}}
+					${whitelistedURLParam.data.ip}
+					{{else}}
+					-
+					{{/if}}
+				</td>
+				<td>
+					<span class="whitelist-display" style="white-space: nowrap">
+						<button type="button" class="wf-btn wf-btn-default wf-btn-sm whitelist-url-edit">Edit</button>
+						<button type="button" class="wf-btn wf-btn-default wf-btn-sm whitelist-url-delete">Delete</button>
+					</span>
+					<span class="whitelist-edit" style="white-space: nowrap">
+						<button type="button" class="wf-btn wf-btn-default wf-btn-sm whitelist-url-save">Save</button>
+						<button type="button" class="wf-btn wf-btn-default wf-btn-sm whitelist-url-cancel">Cancel</button>
+					</span>
+				</td>
+			</tr>
+			{{/each}}
+			{{if (whitelistedURLParams.length == 0)}}
+			<tr>
+				<td colspan="9">No whitelisted URLs currently set.</td>
+			</tr>
+			{{/if}}
+			</tbody>
+		</table>
+	</div>
 	<?php echo $bulkActionForm ?>
 
 </script>
@@ -440,7 +444,7 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&wafAction=removeA
 					whitelistedPath: url,
 					whitelistedParam: param + '[' + paramName + ']'
 				}, function() {
-					WFAD.colorbox('400px', 'Firewall Configuration', 'The Wordfence Web Application Firewall ' +
+					WFAD.colorbox('300px', 'Firewall Configuration', 'The Wordfence Web Application Firewall ' +
 						'whitelist was saved successfully.');
 				}, false);
 			}
@@ -541,12 +545,12 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&wafAction=removeA
 					var select = $(this).find('select[name=wf-bulk-action]');
 					var bulkActionCallback = function(res) {
 						if (typeof res === 'object' && res.success) {
-							WFAD.colorbox('400px', 'Firewall Configuration', 'The Wordfence Web Application Firewall ' +
+							WFAD.colorbox('300px', 'Firewall Configuration', 'The Wordfence Web Application Firewall ' +
 								'whitelist was saved successfully.');
 							WFAD.wafData = res.data;
 							WFAD.wafConfigPageRender();
 						} else {
-							WFAD.colorbox('400px', 'Error saving Firewall configuration', 'There was an error saving the ' +
+							WFAD.colorbox('300px', 'Error saving Firewall configuration', 'There was an error saving the ' +
 								'Web Application Firewall whitelist.');
 						}
 					};
@@ -653,7 +657,7 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&wafAction=removeA
 						deletedWhitelistedPath: path,
 						deletedWhitelistedParam: param
 					}, function() {
-						WFAD.colorbox('400px', 'Firewall Configuration', 'The Wordfence Web Application Firewall ' +
+						WFAD.colorbox('300px', 'Firewall Configuration', 'The Wordfence Web Application Firewall ' +
 							'whitelist was saved successfully.');
 					}, false);
 				}
@@ -678,7 +682,7 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&wafAction=removeA
 				newWhitelistedParam: newWhitelistedParam.val(),
 				newWhitelistedEnabled: newWhitelistedEnabled.val()
 			}, function() {
-				WFAD.colorbox('400px', 'Firewall Configuration', 'The Wordfence Web Application Firewall ' +
+				WFAD.colorbox('300px', 'Firewall Configuration', 'The Wordfence Web Application Firewall ' +
 					'whitelist was saved successfully.');
 			}, false);
 		});
@@ -698,7 +702,7 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&wafAction=removeA
 				whitelistedParam: oldWhitelistedParam.val(),
 				whitelistedEnabled: enabled
 			}, function() {
-				WFAD.colorbox('400px', 'Firewall Configuration', 'The Wordfence Web Application Firewall ' +
+				WFAD.colorbox('300px', 'Firewall Configuration', 'The Wordfence Web Application Firewall ' +
 					'whitelist was saved successfully.');
 			}, false);
 		});
@@ -725,6 +729,11 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&wafAction=removeA
 		$('#waf-disable-ip-blocking').on('click', function() {
 			var disabled = this.checked ? 1 : 0;
 			WFAD.updateConfig('disableWAFIPBlocking', disabled);
+		})
+		
+		$('#waf-disable-blacklist-blocking').on('click', function() {
+			var disabled = this.checked ? 0 : 1;
+			WFAD.wafConfigSave('disableWAFBlacklistBlocking', {disableWAFBlacklistBlocking: disabled});
 		})
 	})(jQuery);
 </script>

@@ -76,27 +76,35 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 		{{html longMsg}}
 	</p>
 	<div class="wfIssueOptions">
-		<strong>Tools:</strong>
-		{{if data.fileExists}}
-		<a target="_blank" href="${WFAD.makeViewFileLink(data.file)}">View the file</a>
-		{{/if}}
-		<a href="#" onclick="WFAD.hideFile('${id}', 'delete'); return false;">Hide this file in <em>.htaccess</em></a>
+		<ul>
+			<li><h3>Tools:</h3></li>
+			{{if data.fileExists}}
+			<li><a target="_blank" href="${WFAD.makeViewFileLink(data.file)}">View the file</a></li>
+			{{/if}}
+			<li><a href="#" onclick="WFAD.hideFile('${id}', 'delete'); return false;">Hide this file in <em>.htaccess</em></a></li>
+			{{if data.canDelete}}
+			<li><a href="#" onclick="WFAD.deleteFile('${id}'); return false;">Delete this file (can't be undone)</a></li>
+			{{/if}}
+		</ul>
 		{{if data.canDelete}}
-		<a href="#" onclick="WFAD.deleteFile('${id}'); return false;">Delete this file (can't be undone).</a>
 		<p>
 			<label><input type="checkbox" class="wfdelCheckbox" value="${id}" />&nbsp;Select for bulk delete</label>
 		</p>
 		{{/if}}
 	</div>
 	<div class="wfIssueOptions">
-	{{if status == 'new'}}
-		<strong>Resolve:</strong>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this issue</a>
-	{{/if}}
-	{{if status == 'ignoreC' || status == 'ignoreP'}}
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a>
-	{{/if}}
+		{{if status == 'new'}}
+		<ul>
+			<li><h3>Resolve:</h3></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this issue</a></li>
+		</ul>
+		{{/if}}
+		{{if status == 'ignoreC' || status == 'ignoreP'}}
+		<ul>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
+		</ul>
+		{{/if}}
 	</div>
 </div>
 </div>
@@ -125,13 +133,17 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 				{{html longMsg}}
 			</p>
 			<div class="wfIssueOptions">
-				<strong>Tools:</strong>
-				{{if data.fileExists}}
-				<a target="_blank" href="${WFAD.makeViewFileLink(data.file)}">View the file</a>
-				{{/if}}
-				<a href="#" onclick="WFAD.hideFile('${id}', 'delete'); return false;">Hide this file in <em>.htaccess</em></a>
+				<ul>
+					<li><h3>Tools:</h3></li>
+					{{if data.fileExists}}
+					<li><a target="_blank" href="${WFAD.makeViewFileLink(data.file)}">View the file</a></li>
+					{{/if}}
+					<li><a href="#" onclick="WFAD.hideFile('${id}', 'delete'); return false;">Hide this file in <em>.htaccess</em></a></li>
+					{{if data.canDelete}}
+					<li><a href="#" onclick="WFAD.deleteFile('${id}'); return false;">Delete this file (can't be undone)</a></li>
+					{{/if}}
+				</ul>
 				{{if data.canDelete}}
-				<a href="#" onclick="WFAD.deleteFile('${id}'); return false;">Delete this file (can't be undone).</a>
 				<p>
 					<label><input type="checkbox" class="wfdelCheckbox" value="${id}" />&nbsp;Select for bulk delete</label>
 				</p>
@@ -139,12 +151,16 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 			</div>
 			<div class="wfIssueOptions">
 				{{if status == 'new'}}
-				<strong>Resolve:</strong>
-				<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a>
-				<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this issue</a>
+				<ul>
+					<li><h3>Resolve:</h3></li>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this issue</a></li>
+				</ul>
 				{{/if}}
 				{{if status == 'ignoreC' || status == 'ignoreP'}}
-				<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a>
+				<ul>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
+				</ul>
 				{{/if}}
 			</div>
 		</div>
@@ -169,25 +185,27 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 	</p>
 	<div class="wfIssueOptions">
 		{{if (status == 'new')}}
-			<strong>Resolve:</strong>
+		<ul>
+			<li><h3>Resolve:</h3></li>
 			<?php if (!wfUtils::isNginx()): ?>
-				<a href="#" onclick="WFAD.fixFPD('${id}'); return false;">Fix this issue</a>
+				<li><a href="#" onclick="WFAD.fixFPD('${id}'); return false;">Fix this issue</a></li>
 			<?php endif ?>
-			<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a>
-			<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this issue</a>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this issue</a></li>
 		{{/if}}
 		{{if status == 'ignoreC' || status == 'ignoreP'}}
-			<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
 		{{/if}}
+		</ul>
 	</div>
 	{{if (status == 'new')}}
 	<div class="wfIssueOptions">
-		<strong style="width: auto;">Manual Fix:</strong>
-		&nbsp;
-		Set <code>display_errors</code> to <code>Off</code> in your php.ini file.
+		<ul>
+			<li><h3>Manual Fix:</h3></li>
+			<li>Set <code>display_errors</code> to <code>Off</code> in your php.ini file.</li>
+		</ul>
 	</div>
 	{{/if}}
-
 </div>
 </div>
 </script>
@@ -211,23 +229,28 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 
 	<div class="wfIssueOptions">
 		{{if (status == 'new')}}
-		<strong>Resolve:</strong>
+		<ul>
+			<li><h3>Resolve:</h3></li>
 		<?php if (!wfUtils::isNginx()): ?>
-			<a href="#" onclick="WFAD.disableDirectoryListing('${id}'); return false;">Fix this issue</a>
+			<li><a href="#" onclick="WFAD.disableDirectoryListing('${id}'); return false;">Fix this issue</a></li>
 		<?php endif ?>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this issue</a>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this issue</a></li>
+		</ul>
 		{{/if}}
 		{{if status == 'ignoreC' || status == 'ignoreP'}}
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a>
+		<ul>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
+		</ul>
 		{{/if}}
 	</div>
 	<?php if (!wfUtils::isNginx()): ?>
 	{{if (status == 'new')}}
 	<div class="wfIssueOptions">
-		<strong style="width: auto;">Manual Fix:</strong>
-		&nbsp;
-		Add <code>Options -Indexes</code> to your .htaccess file.
+		<ul>
+			<li><h3>Manual Fix:</h3></li>
+			<li>Add <code>Options -Indexes</code> to your .htaccess file.</li>
+		</ul>
 	</div>
 	{{/if}}
 	<?php endif ?>
@@ -241,10 +264,10 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 	<h2>${shortMsg}</h2>
 	<p>
 		<table border="0" class="wfIssue" cellspacing="0" cellpadding="0">
-		<tr><th>Theme Name:</th><td>${data.name}</td></tr>
-		<tr><th>Current Theme Version:</th><td>${data.version}</td></tr>
-		<tr><th>New Theme Version:</th><td>${data.newVersion}</td></tr>
-		<tr><th>Theme URL:</th><td><a href="${data.URL}" target="_blank">${data.URL}</a></td></tr>
+		<tr><th><span class="wf-hidden-xs">Theme </span>Name:</th><td>${data.name}</td></tr>
+		<tr><th>Current <span class="wf-hidden-xs">Theme </span>Version:</th><td>${data.version}</td></tr>
+		<tr><th>New <span class="wf-hidden-xs">Theme </span>Version:</th><td>${data.newVersion}</td></tr>
+		<tr><th><span class="wf-hidden-xs">Theme </span>URL:</th><td><a href="${data.URL}" target="_blank"><span class="wf-hidden-xs wf-split-word">${data.URL}</span><span class="wf-visible-xs">View</span></a></td></tr>
 		<tr><th>Severity:</th><td>{{if severity == '1'}}Critical{{else}}Warning{{/if}}</td></tr>
 		<tr><th>Status</th><td>
 			{{if status == 'new' }}New{{/if}}
@@ -258,13 +281,17 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 		<a href="<?php echo get_admin_url() . 'update-core.php'; ?>">Click here to update now</a>.
 	</p>
 	<div class="wfIssueOptions">
-		{{if (status == 'new')}}
-			<strong>Resolve:</strong>
-			<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a>
-			<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this issue</a>
+		{{if status == 'new'}}
+		<ul>
+			<li><h3>Resolve:</h3></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this issue</a></li>
+		</ul>
 		{{/if}}
 		{{if status == 'ignoreC' || status == 'ignoreP'}}
-			<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a>
+		<ul>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
+		</ul>
 		{{/if}}
 	</div>
 </div>
@@ -277,11 +304,11 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 	<h2>${shortMsg}</h2>
 	<p>
 		<table border="0" class="wfIssue" cellspacing="0" cellpadding="0">
-		<tr><th>Plugin Name:</th><td>${data.Name}</td></tr>
-		{{if data.PluginURI}}<tr><th>Plugin Website:</th><td><a href="${data.PluginURI}" target="_blank">${data.PluginURI}</a></td></tr>{{/if}}
-		<tr><th>Changelog:</th><td><a href="${data.wpURL}/changelog" target="_blank">${data.wpURL}/changelog</a></td></tr>
-		<tr><th>Current Plugin Version:</th><td>${data.Version}</td></tr>
-		<tr><th>New Plugin Version:</th><td>${data.newVersion}</td></tr>
+		<tr><th><span class="wf-hidden-xs">Plugin </span>Name:</th><td>${data.Name}</td></tr>
+		{{if data.PluginURI}}<tr><th><span class="wf-hidden-xs">Plugin </span>Website:</th><td><a href="${data.PluginURI}" target="_blank"><span class="wf-hidden-xs wf-split-word">${data.PluginURI}</span><span class="wf-visible-xs">View</span></a></td></tr>{{/if}}
+		<tr><th>Changelog:</th><td><a href="${data.wpURL}/changelog" target="_blank"><span class="wf-hidden-xs wf-split-word">${data.wpURL}/changelog</span><span class="wf-visible-xs">View</span></a></td></tr>
+		<tr><th>Current <span class="wf-hidden-xs">Plugin </span>Version:</th><td>${data.Version}</td></tr>
+		<tr><th>New <span class="wf-hidden-xs">Plugin </span>Version:</th><td>${data.newVersion}</td></tr>
 		<tr><th>Severity:</th><td>{{if severity == '1'}}Critical{{else}}Warning{{/if}}</td></tr>
 		<tr><th>Status</th><td>
 			{{if status == 'new' }}New{{/if}}
@@ -296,12 +323,16 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 	</p>
 	<div class="wfIssueOptions">
 	{{if status == 'new'}}
-		<strong>Resolve:</strong>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this issue</a>
+		<ul>
+			<li><h3>Resolve:</h3></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this issue</a></li>
+		</ul>
 	{{/if}}
 	{{if status == 'ignoreC' || status == 'ignoreP'}}
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a>
+		<ul>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
+		</ul>
 	{{/if}}
 	</div>
 </div>
@@ -314,8 +345,8 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 	<h2>${shortMsg}</h2>
 	<p>
 		<table border="0" class="wfIssue" cellspacing="0" cellpadding="0">
-		<tr><th>Current WordPress Version:</th><td>${data.currentVersion}</td></tr>
-		<tr><th>New WordPress Version:</th><td>${data.newVersion}</td></tr>
+		<tr><th>Current <span class="wf-hidden-xs">WordPress </span>Version:</th><td>${data.currentVersion}</td></tr>
+		<tr><th>New <span class="wf-hidden-xs">WordPress </span>Version:</th><td>${data.newVersion}</td></tr>
 		<tr><th>Severity:</th><td>{{if severity == '1'}}Critical{{else}}Warning{{/if}}</td></tr>
 		<tr><th>Status</th><td>
 			{{if status == 'new' }}New{{/if}}
@@ -328,15 +359,19 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 		<a href="<?php echo get_admin_url() . 'update-core.php'; ?>">Click here to update now</a>.
 	</p>
 	<div class="wfIssueOptions">
-	{{if (status == 'new')}}
-		<strong>Resolve:</strong>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this issue</a>
-	{{/if}}
-	{{if status == 'ignoreC' || status == 'ignoreP'}}
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a>
-	{{/if}}
-</div>
+		{{if status == 'new'}}
+		<ul>
+			<li><h3>Resolve:</h3></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this issue</a></li>
+		</ul>
+		{{/if}}
+		{{if status == 'ignoreC' || status == 'ignoreP'}}
+		<ul>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
+		</ul>
+		{{/if}}
+	</div>
 </div>
 </script>
 
@@ -346,8 +381,8 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 	<h2>${shortMsg}</h2>
 	<p>
 		<table border="0" class="wfIssue" cellspacing="0" cellpadding="0">
-		<tr><th>Old DNS records:</th><td>${data.oldDNS}</td></tr>
-		<tr><th>New DNS records:</th><td>${data.newDNS}</td></tr>
+		<tr><th>Old<span class="wf-hidden-xs"> DNS records</span>:</th><td>${data.oldDNS}</td></tr>
+		<tr><th>New<span class="wf-hidden-xs"> DNS records</span>:</th><td>${data.newDNS}</td></tr>
 		<tr><th>Severity:</th><td>{{if severity == '1'}}Critical{{else}}Warning{{/if}}</td></tr>
 		<tr><th>Status</th><td>
 			{{if status == 'new' }}New{{/if}}
@@ -367,40 +402,6 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 </div>
 </div>
 </script>
-<script type="text/x-jquery-template" id="issueTmpl_badOption">
-<div>
-<div class="wfIssue">
-	<h2>${shortMsg}</h2>
-	<p>
-		<table border="0" class="wfIssue" cellspacing="0" cellpadding="0">
-		<tr><th>Severity:</th><td>{{if severity == '1'}}Critical{{else}}Warning{{/if}}</td></tr>
-		{{if data.isMultisite}}
-		<tr><th>Multisite Blog ID:</th><td>${data.blog_id}</td></tr>
-		<tr><th>Multisite Blog Domain:</th><td>${data.domain}</td></tr>
-		<tr><th>Multisite Blog Path:</th><td>${data.path}</td></tr>
-		{{/if}}
-		<tr><th>Status</th><td>
-			{{if status == 'new' }}New{{/if}}
-			{{if status == 'ignoreP' || status == 'ignoreC' }}Ignoring all alerts related to this option{{/if}}
-		</td></tr>
-		</table>
-	</p>
-	<p>
-		{{html longMsg}}
-	</p>
-	<div class="wfIssueOptions">
-	{{if (status == 'new')}}
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore issues related to this option</a>
-	{{/if}}
-	{{if status == 'ignoreP' || status == 'ignoreC'}}
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring issues related to this option</a>
-	{{/if}}
-	</div>
-</div>
-</div>
-</script>
-
 
 <script type="text/x-jquery-template" id="issueTmpl_diskSpace">
 <div>
@@ -420,13 +421,18 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 		{{html longMsg}}
 	</p>
 	<div class="wfIssueOptions">
-	{{if (status == 'new')}}
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore disk space alerts</a>
-	{{/if}}
-	{{if status == 'ignoreP' || status == 'ignoreC'}}
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring disk space alerts</a>
-	{{/if}}
+		{{if status == 'new'}}
+		<ul>
+			<li><h3>Resolve:</h3></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore disk space alerts</a></li>
+		</ul>
+		{{/if}}
+		{{if status == 'ignoreC' || status == 'ignoreP'}}
+		<ul>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring disk space alerts</a></li>
+		</ul>
+		{{/if}}
 	</div>
 </div>
 </div>
@@ -438,15 +444,15 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 	<h2>${shortMsg}</h2>
 	<p>
 		<table border="0" class="wfIssue" cellspacing="0" cellpadding="0">
-		<tr><th>Issue first detected:</th><td>${timeAgo} ago.</td></tr>
-		<tr><th>Login name:</th><td>${data.user_login}</td></tr>
-		<tr><th>User email:</th><td>${data.user_email}</td></tr>
-		<tr><th>Full name:</th><td>${data.first_name} ${data.last_name}</td></tr>
+		<tr><th><span class="wf-hidden-xs">Issue First </span>Detected:</th><td>${timeAgo} ago.</td></tr>
+		<tr><th>Login<span class="wf-hidden-xs"> Name</span>:</th><td>${data.user_login}</td></tr>
+		<tr><th><span class="wf-hidden-xs">User </span>Email:</th><td>${data.user_email}</td></tr>
+		<tr><th><span class="wf-hidden-xs">Full </span>Name:</th><td>${data.first_name} ${data.last_name}</td></tr>
 		<tr><th>Severity:</th><td>{{if severity == '1'}}Critical{{else}}Warning{{/if}}</td></tr>
 		<tr><th>Status</th><td>
 			{{if status == 'new' }}New{{/if}}
 			{{if status == 'ignoreC' }}Ignored until user changes password{{/if}}
-			{{if status == 'ignoreP' }}Ignoring this user's weak passwords{{/if}}
+			{{if status == 'ignoreP' }}Ignoring all for this user{{/if}}
 		</td></tr>
 		</table>
 	</p>
@@ -454,19 +460,25 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 		{{html longMsg}}
 	</p>
 	<div class="wfIssueOptions">
-		<strong>Tools:</strong>
-		<a target="_blank" href="${data.editUserLink}">Edit this user</a>
+		<ul>
+			<li><h3>Tools:</h3></li>
+			<li><a target="_blank" href="${data.editUserLink}">Edit this user</a></li>
+		</ul>
 	</div>
 	<div class="wfIssueOptions">
-	{{if status == 'new'}}
-		<strong>Resolve:</strong> 
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this weak password</a>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore all this user's weak passwords</a>
-	{{/if}}
-	{{if status == 'ignoreC' || status == 'ignoreP'}}
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a>
-	{{/if}}
+		{{if status == 'new'}}
+		<ul>
+			<li><h3>Resolve:</h3></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this weak password</a></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore all for this user</a></li>
+		</ul>
+		{{/if}}
+		{{if status == 'ignoreC' || status == 'ignoreP'}}
+		<ul>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
+		</ul>
+		{{/if}}
 	</div>
 </div>
 </div>
@@ -479,7 +491,7 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 	<p>
 		<table border="0" class="wfIssue" cellspacing="0" cellpadding="0">
 		<tr><th>Author</th><td>${data.author}</td></tr>
-		<tr><th>Bad URL:</th><td><strong class="wfWarn">${data.badURL}</strong></td></tr>
+		<tr><th>Bad URL:</th><td><strong class="wfWarn wf-split-word">${data.badURL}</strong></td></tr>
 		<tr><th>Posted on:</th><td>${data.commentDate}</td></tr>
 		{{if data.isMultisite}}
 		<tr><th>Multisite Blog ID:</th><td>${data.blog_id}</td></tr>
@@ -497,19 +509,25 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 		{{html longMsg}}
 	</p>
 	<div class="WfIssueOptions">
-		<strong>Tools:</strong>
-		<a target="_blank" href="${data.editCommentLink}">Edit this ${data.type}</a>
+		<ul>
+			<li><h3>Tools:</h3></li>
+			<li><a target="_blank" href="${data.editCommentLink}">Edit this ${data.type}</a></li>
+		</ul>
 	</div>
 	<div class="wfIssueOptions">
-	{{if status == 'new'}}
-		<strong>Resolve:</strong> 
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this ${data.type}</a>
-	{{/if}}
-	{{if status == 'ignoreC' || status == 'ignoreP'}}
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this ${data.type}</a>
-	{{/if}}
-</div>
+		{{if status == 'new'}}
+		<ul>
+			<li><h3>Resolve:</h3></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this ${data.type}</a></li>
+		</ul>
+		{{/if}}
+		{{if status == 'ignoreC' || status == 'ignoreP'}}
+		<ul>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this ${data.type}</a></li>
+		</ul>
+		{{/if}}
+	</div>
 </div>
 </script>
 <script type="text/x-jquery-template" id="issueTmpl_postBadTitle">
@@ -537,19 +555,25 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 		{{html longMsg}}
 	</p>
 	<div class="wfIssueOptions">
-		<strong>Tools:</strong> 
-		<a target="_blank" href="${data.editPostLink}">Edit this ${data.type}</a>
+		<ul>
+			<li><h3>Tools:</h3></li> 
+			<li><a target="_blank" href="${data.editPostLink}">Edit this ${data.type}</a></li>
+		</ul>
 	</div>
 	<div class="wfIssueOptions">
-	{{if status == 'new'}}
-		<strong>Resolve:</strong> 
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this title in this ${data.type}</a>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore all dangerous titles in this ${data.type}</a>
-	{{/if}}
-	{{if status == 'ignoreP' || status == 'ignoreC'}}
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a>
-	{{/if}}
+		{{if status == 'new'}}
+		<ul>
+			<li><h3>Resolve:</h3></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this title in this ${data.type}</a></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore all dangerous titles in this ${data.type}</a></li>
+		</ul>
+		{{/if}}
+		{{if status == 'ignoreC' || status == 'ignoreP'}}
+		<ul>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
+		</ul>
+		{{/if}}
 	</div>
 </div>
 </div>
@@ -566,7 +590,7 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 		{{else}}
 		<tr><th>Title:</th><td><a href="${data.permalink}" target="_blank">${data.postTitle}</a></td></tr>
 		{{/if}}
-		<tr><th>Bad URL:</th><td><strong class="wfWarn">${data.badURL}</strong></td></tr>
+		<tr><th>Bad URL:</th><td><strong class="wfWarn wf-split-word">${data.badURL}</strong></td></tr>
 		<tr><th>Posted on:</th><td>${data.postDate}</td></tr>
 		{{if data.isMultisite}}
 		<tr><th>Multisite Blog ID:</th><td>${data.blog_id}</td></tr>
@@ -585,19 +609,25 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 		{{html longMsg}}
 	</p>
 	<div class="wfIssueOptions">
-		<strong>Tools:</strong> 
-		<a target="_blank" href="${data.editPostLink}">Edit this ${data.type}</a>
+		<ul>
+			<li><h3>Tools:</h3></li> 
+			<li><a target="_blank" href="${data.editPostLink}">Edit this ${data.type}</a></li>
+		</ul>
 	</div>
 	<div class="wfIssueOptions">
-	{{if status == 'new'}}
-		<strong>Resolve:</strong> 
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this bad URL in this ${data.type}</a>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore all bad URL's in this ${data.type}</a>
-	{{/if}}
-	{{if status == 'ignoreP' || status == 'ignoreC'}}
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a>
-	{{/if}}
+		{{if status == 'new'}}
+		<ul>
+			<li><h3>Resolve:</h3></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this bad URL in this ${data.type}</a></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore all bad URLs in this ${data.type}</a></li>
+		</ul>
+		{{/if}}
+		{{if status == 'ignoreC' || status == 'ignoreP'}}
+		<ul>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
+		</ul>
+		{{/if}}
 	</div>
 </div>
 </div>
@@ -613,10 +643,10 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 		<table border="0" class="wfIssue" cellspacing="0" cellpadding="0">
 		<tr><th>Filename:</th><td>${data.file}</td></tr>
 		{{if ((typeof data.badURL !== 'undefined') && data.badURL)}}
-		<tr><th>Bad URL:</th><td><strong class="wfWarn">${data.badURL}</strong></td></tr>
+		<tr><th>Bad URL:</th><td><strong class="wfWarn wf-split-word">${data.badURL}</strong></td></tr>
 		{{/if}}
-		<tr><th>File type:</th><td>{{if data.cType}}${WFAD.ucfirst(data.cType)}{{else}}Not a core, theme or plugin file.{{/if}}</td></tr>
-		<tr><th>Issue first detected:</th><td>${timeAgo} ago.</td></tr>
+		<tr><th><span class="wf-hidden-xs">File </span>Type:</th><td>{{if data.cType}}${WFAD.ucfirst(data.cType)}{{else}}Not a core, theme or plugin file.{{/if}}</td></tr>
+		<tr><th><span class="wf-hidden-xs">Issue First </span>Detected:</th><td>${timeAgo} ago.</td></tr>
 		<tr><th>Severity:</th><td>{{if severity == '1'}}Critical{{else}}Warning{{/if}}</td></tr>
 		<tr><th>Status</th><td>
 			{{if status == 'new' }}New{{/if}}
@@ -629,40 +659,47 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 		{{html longMsg}}
 	</p>
 	<div class="wfIssueOptions">
-		<strong>Tools:</strong> 
-		{{if data.fileExists}}
-		<a target="_blank" href="${WFAD.makeViewFileLink(data.file)}">View the file.</a>
-		{{/if}}
-		{{if data.canFix}}
-		<a href="#" onclick="WFAD.restoreFile('${id}'); return false;">Restore the original version of this file.</a>
-		{{/if}}
-		{{if data.canDelete}}
-		<a href="#" onclick="WFAD.deleteFile('${id}'); return false;">Delete this file (can't be undone).</a>
-		{{/if}}
-		{{if data.canDiff}}
-		<a href="${WFAD.makeDiffLink(data)}" target="_blank">See how the file has changed.</a>
-		{{/if}}
+		{{if status == 'new'}}
+		<ul>
+			<li><h3>Tools:</h3></li>
+			{{if data.fileExists}}
+			<li><a target="_blank" href="${WFAD.makeViewFileLink(data.file)}">View the file.</a></li>
+			{{/if}}
+			{{if data.canFix}}
+			<li><a href="#" onclick="WFAD.restoreFile('${id}'); return false;">Restore the original version of this file.</a></li>
+			{{/if}}
+			{{if data.canDelete}}
+			<li><a href="#" onclick="WFAD.deleteFile('${id}'); return false;">Delete this file (can't be undone)</a></li>
+			{{/if}}
+			{{if data.canDiff}}
+			<li><a href="${WFAD.makeDiffLink(data)}" target="_blank">See how the file has changed.</a></li>
+			{{/if}}
+		</ul>
 		{{if data.canFix}}
 		<br />&nbsp;<input type="checkbox" class="wfrepairCheckbox" value="${id}" />&nbsp;Select for bulk repair
 		{{/if}}
 		{{if data.canDelete}}
 		<br />&nbsp;<input type="checkbox" class="wfdelCheckbox" value="${id}" />&nbsp;Select for bulk delete
 		{{/if}}
+		{{/if}}
 	</div>
 	<div class="wfIssueOptions">
 		{{if status == 'new'}}
-			<strong>Resolve:</strong>
-			<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a>
+		<ul>
+			<li><h3>Resolve:</h3></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
 			{{if data.fileExists}}
-				<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore until the file changes.</a>
-				<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Always ignore this file.</a>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore until the file changes.</a></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Always ignore this file.</a></li>
 			{{else}}
-				<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore missing file</a>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore missing file</a></li>
 			{{/if}}
-				
+		</ul>
 		{{/if}}
 		{{if status == 'ignoreC' || status == 'ignoreP'}}
-			<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue.</a>
+		<ul>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
+		</ul>
 		{{/if}}
 	</div>
 </div>
@@ -675,7 +712,7 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 			<h2>${shortMsg}</h2>
 			<p>
 			<table border="0" class="wfIssue" cellspacing="0" cellpadding="0">
-				<tr><th>Issue first detected:</th><td>${timeAgo} ago.</td></tr>
+				<tr><th><span class="wf-hidden-xs">Issue First </span>Detected:</th><td>${timeAgo} ago.</td></tr>
 				<tr><th>Severity:</th><td>{{if severity == '1'}}Critical{{else}}Warning{{/if}}</td></tr>
 				<tr><th>Status</th><td>
 						{{if status == 'new' }}New{{/if}}
@@ -689,12 +726,16 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 			</p>
 			<div class="wfIssueOptions">
 				{{if status == 'new'}}
-				<strong>Resolve:</strong>
-				<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore until the version changes.</a>
-				<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Always ignore this version.</a>
+				<ul>
+					<li><h3>Resolve:</h3></li>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore until the version changes</a></li>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Always ignore this version</a></li>
+				</ul>
 				{{/if}}
 				{{if status == 'ignoreC' || status == 'ignoreP'}}
-				<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue.</a>
+				<ul>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
+				</ul>
 				{{/if}}
 			</div>
 		</div>
@@ -707,11 +748,11 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 	<h2>${shortMsg}</h2>
 	<p>
 		<table border="0" class="wfIssue" cellspacing="0" cellpadding="0">
-		<tr><th>Option Name:</th><td>${data.option_name}</td></tr>
+		<tr><th>Option<span class="wf-hidden-xs"> Name</span>:</th><td>${data.option_name}</td></tr>
 		{{if ((typeof data.badURL !== 'undefined') && data.badURL)}}
-		<tr><th>Bad URL:</th><td><strong class="wfWarn">${data.badURL}</strong></td></tr>
+		<tr><th>Bad URL:</th><td><strong class="wfWarn wf-split-word">${data.badURL}</strong></td></tr>
 		{{/if}}
-		<tr><th>Issue first detected:</th><td>${timeAgo} ago.</td></tr>
+		<tr><th><span class="wf-hidden-xs">Issue First </span>Detected:</th><td>${timeAgo} ago.</td></tr>
 		<tr><th>Severity:</th><td>{{if severity == '1'}}Critical{{else}}Warning{{/if}}</td></tr>
 		<tr><th>Status</th><td>
 			{{if status == 'new' }}New{{/if}}
@@ -724,29 +765,35 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 		{{html longMsg}}
 	</p>
 	<div class="wfIssueOptions">
-		<strong>Tools:</strong>
-		{{if data.optionExists}}
-		<a target="_blank" href="${WFAD.makeViewOptionLink(data.option_name, data.site_id)}">View this option.</a>
-		{{/if}}
+		<ul>
+			<li><h3>Tools:</h3></li>
+			{{if data.optionExists}}
+			<li><a target="_blank" href="${WFAD.makeViewOptionLink(data.option_name, data.site_id)}">View this option.</a></li>
+			{{/if}}
+			{{if data.canDelete}}
+			<li><a href="#" onclick="WFAD.deleteDatabaseOption('${id}'); return false;">Delete this option from the database (can't be undone)</a></li>
+			{{/if}}
+		</ul>
 		{{if data.canDelete}}
-		<a href="#" onclick="WFAD.deleteDatabaseOption('${id}'); return false;">Delete this option from the database (can't be undone).</a>
 		<br />&nbsp;<input type="checkbox" class="wfdelCheckbox" value="${id}" />&nbsp;Select for bulk delete
 		{{/if}}
 	</div>
 	<div class="wfIssueOptions">
 		{{if status == 'new'}}
-			<strong>Resolve:</strong>
-			<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a>
+		<ul>
+			<li><h3>Resolve:</h3></li>
 			{{if data.optionExists}}
-				<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore until the option changes.</a>
-				<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Always ignore this option.</a>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore until the option changes.</a></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Always ignore this option.</a></li>
 			{{else}}
-				<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore missing option.</a>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore missing option.</a></li>
 			{{/if}}
-
+		</ul>
 		{{/if}}
 		{{if status == 'ignoreC' || status == 'ignoreP'}}
-			<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue.</a>
+		<ul>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
+		</ul>
 		{{/if}}
 	</div>
 </div>
@@ -770,15 +817,19 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 		{{html longMsg}}
 	</p>
 	<div class="wfIssueOptions">
-	{{if status == 'new'}}
-		<strong>Resolve:</strong> 
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore these URLs until they change.</a>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore these URLs permanently</a>
-	{{/if}}
-	{{if status == 'ignoreP' || status == 'ignoreC'}}
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a>
-	{{/if}}
+		{{if status == 'new'}}
+		<ul>
+			<li><h3>Resolve:</h3></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore these URLs until they change.</a></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore these URLs permanently</a></li>
+		</ul>
+		{{/if}}
+		{{if status == 'ignoreC' || status == 'ignoreP'}}
+		<ul>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
+		</ul>
+		{{/if}}
 	</div>
 </div>
 </div>
@@ -803,15 +854,19 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 		{{html longMsg}}
 	</p>
 	<div class="wfIssueOptions">
-	{{if status == 'new'}}
-		<strong>Resolve:</strong> 
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this redirect until it changes</a>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore any redirect like this permanently</a>
-	{{/if}}
-	{{if status == 'ignoreP' || status == 'ignoreC'}}
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a>
-	{{/if}}
+		{{if status == 'new'}}
+		<ul>
+			<li><h3>Resolve:</h3></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this redirect until it changes.</a></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore any redirect like this permanently</a></li>
+		</ul>
+		{{/if}}
+		{{if status == 'ignoreC' || status == 'ignoreP'}}
+		<ul>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
+		</ul>
+		{{/if}}
 	</div>
 </div>
 </div>
@@ -835,14 +890,18 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 		{{html longMsg}}
 	</p>
 	<div class="wfIssueOptions">
-	{{if status == 'new'}}
-		<strong>Resolve:</strong> 
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore this problem</a>
-	{{/if}}
-	{{if status == 'ignoreP' || status == 'ignoreC'}}
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a>
-	{{/if}}
+		{{if status == 'new'}}
+		<ul>
+			<li><h3>Resolve:</h3></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore this problem</a></li>
+		</ul>
+		{{/if}}
+		{{if status == 'ignoreC' || status == 'ignoreP'}}
+		<ul>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
+		</ul>
+		{{/if}}
 	</div>
 </div>
 </div>
@@ -865,14 +924,18 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 		{{html longMsg}}
 	</p>
 	<div class="wfIssueOptions">
-	{{if status == 'new'}}
-		<strong>Resolve:</strong> 
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore this problem</a>
-	{{/if}}
-	{{if status == 'ignoreP' || status == 'ignoreC'}}
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a>
-	{{/if}}
+		{{if status == 'new'}}
+		<ul>
+			<li><h3>Resolve:</h3></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore this problem</a></li>
+		</ul>
+		{{/if}}
+		{{if status == 'ignoreC' || status == 'ignoreP'}}
+		<ul>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
+		</ul>
+		{{/if}}
 	</div>
 </div>
 </div>
@@ -884,9 +947,9 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 			<p>
 			<table border="0" class="wfIssue" cellspacing="0" cellpadding="0">
 				{{if ((typeof data.badURL !== 'undefined') && data.badURL)}}
-				<tr><th>Bad URL:</th><td><strong class="wfWarn">${data.badURL}</strong></td></tr>
+				<tr><th>Bad URL:</th><td><strong class="wfWarn wf-split-word">${data.badURL}</strong></td></tr>
 				{{/if}}
-				<tr><th>Issue first detected:</th><td>${timeAgo} ago.</td></tr>
+				<tr><th><span class="wf-hidden-xs">Issue First </span>Detected:</th><td>${timeAgo} ago.</td></tr>
 				<tr><th>Severity:</th><td>{{if severity == '1'}}Critical{{else}}Warning{{/if}}</td></tr>
 				<tr><th>Status</th><td>
 						{{if status == 'new' }}New{{/if}}
@@ -900,12 +963,16 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 			</p>
 			<div class="wfIssueOptions">
 				{{if status == 'new'}}
-				<strong>Resolve:</strong>
-				<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a>
-				<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore this problem</a>
+				<ul>
+					<li><h3>Resolve:</h3></li>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore this problem</a></li>
+				</ul>
 				{{/if}}
-				{{if status == 'ignoreP' || status == 'ignoreC'}}
-				<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a>
+				{{if status == 'ignoreC' || status == 'ignoreP'}}
+				<ul>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
+				</ul>
 				{{/if}}
 			</div>
 		</div>
@@ -917,7 +984,7 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 			<h2>${shortMsg}</h2>
 			<p>
 			<table border="0" class="wfIssue" cellspacing="0" cellpadding="0">
-				<tr><th>Issue first detected:</th><td>${timeAgo} ago.</td></tr>
+				<tr><th><span class="wf-hidden-xs">Issue First </span>Detected:</th><td>${timeAgo} ago.</td></tr>
 				<tr><th>Severity:</th><td>{{if severity == '1'}}Critical{{else}}Warning{{/if}}</td></tr>
 				<tr><th>Status</th><td>
 						{{if status == 'new' }}New{{/if}}
@@ -931,15 +998,19 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 			</p>
 			<div class="wfIssueOptions">
 				{{if status == 'new'}}
-				<strong>Resolve:</strong>
-				{{if ((typeof data.recommendation !== 'undefined') && data.recommendation)}}
-				<a href="#" onclick="WFAD.useRecommendedHowGetIPs('${id}'); return false;">Use recommended value</a>
+				<ul>
+					<li><h3>Resolve:</h3></li>
+					{{if ((typeof data.recommendation !== 'undefined') && data.recommendation)}}
+					<li><a href="#" onclick="WFAD.useRecommendedHowGetIPs('${id}'); return false;">Use recommended value</a></li>
+					{{/if}}
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore this problem</a></li>
+				</ul>
 				{{/if}}
-				<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a>
-				<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore this problem</a>
-				{{/if}}
-				{{if status == 'ignoreP' || status == 'ignoreC'}}
-				<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a>
+				{{if status == 'ignoreC' || status == 'ignoreP'}}
+				<ul>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
+				</ul>
 				{{/if}}
 			</div>
 		</div>
@@ -964,14 +1035,18 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 		{{html longMsg}}
 	</p>
 	<div class="wfIssueOptions">
-	{{if status == 'new'}}
-		<strong>Resolve:</strong> 
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore this problem</a>
-	{{/if}}
-	{{if status == 'ignoreP' || status == 'ignoreC'}}
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a>
-	{{/if}}
+		{{if status == 'new'}}
+		<ul>
+			<li><h3>Resolve:</h3></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore this problem</a></li>
+		</ul>
+		{{/if}}
+		{{if status == 'ignoreC' || status == 'ignoreP'}}
+		<ul>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
+		</ul>
+		{{/if}}
 	</div>
 </div>
 </div>
@@ -995,16 +1070,20 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 		{{html longMsg}}
 	</p>
 	<div class="wfIssueOptions">
-	{{if status == 'new'}}
-		<strong>Resolve:</strong>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a>
-		<a href="#" onclick="WFAD.deleteAdminUser('${id}'); return false;">Delete this user</a>
-		<a href="#" onclick="WFAD.revokeAdminUser('${id}'); return false;">Revoke all capabilities from this user</a>
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore this problem</a>
-	{{/if}}
-	{{if status == 'ignoreP' || status == 'ignoreC'}}
-		<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a>
-	{{/if}}
+		{{if status == 'new'}}
+		<ul>
+			<li><h3>Resolve:</h3></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
+			<li><a href="#" onclick="WFAD.deleteAdminUser('${id}'); return false;">Delete this user</a></li>
+			<li><a href="#" onclick="WFAD.revokeAdminUser('${id}'); return false;">Revoke all capabilities from this user</a></li>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore this problem</a></li>
+		</ul>
+		{{/if}}
+		{{if status == 'ignoreC' || status == 'ignoreP'}}
+		<ul>
+			<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
+		</ul>
+		{{/if}}
 	</div>
 </div>
 </div>
@@ -1029,12 +1108,16 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 			</p>
 			<div class="wfIssueOptions">
 				{{if status == 'new'}}
-				<strong>Resolve:</strong>
-				<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a>
-				<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore this problem</a>
+				<ul>
+					<li><h3>Resolve:</h3></li>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore this problem</a></li>
+				</ul>
 				{{/if}}
-				{{if status == 'ignoreP' || status == 'ignoreC'}}
-				<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a>
+				{{if status == 'ignoreC' || status == 'ignoreP'}}
+				<ul>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
+				</ul>
 				{{/if}}
 			</div>
 		</div>

@@ -23,59 +23,123 @@ WFAD.countryMap = <?php echo json_encode($wfBulkCountries); ?>;
 		<p class="center"><a class="wf-btn wf-btn-primary wf-btn-callout" href="https://www.wordfence.com/gnl1countryBlock1/wordfence-signup/" target="_blank">Get Premium</a></p>
 	</div>
 <?php } ?>
-	<table class="wfConfigForm">
-	<tr><td colspan="2"><h2>Country Blocking Options</h2></td></tr>
-	<?php if(! wfConfig::get('firewallEnabled')){ ?><tr><td colspan="2"><div style="color: #F00; font-weight: bold;">Rate limiting rules and advanced blocking are disabled. You can enable it on the <a href="admin.php?page=WordfenceSecOpt">Wordfence Options page</a> at the top.</div></td></tr><?php } ?>
-	<tr><th>What to do when we block someone:</th><td>
-		<select id="wfBlockAction">
-			<option value="block"<?php if(wfConfig::get('cbl_action') == 'block'){ echo ' selected'; } ?>>Show the standard Wordfence blocked message</option>
-			<option value="redir"<?php if(wfConfig::get('cbl_action') == 'redir'){ echo ' selected'; } ?>>Redirect to the URL below</option>
-		</select>
-		</td></tr>
-	<tr><th>URL to redirect blocked users to:</th><td><input type="text" id="wfRedirURL" size="40" value="<?php if(wfConfig::get('cbl_redirURL')){ echo esc_attr(wfConfig::get('cbl_redirURL')); } ?>" />
-	<br />
-	<span style="color: #999;">Must start with http:// for example http://yoursite.com/blocked/</span></td></tr>
-	<tr><th>Block countries even if they are logged in:</th><td><input type="checkbox" id="wfLoggedInBlocked" value="1" <?php if(wfConfig::get('cbl_loggedInBlocked')){ echo 'checked'; } ?> /></td></tr>
-	<tr><th>Block access to the login form:</th><td><input type="checkbox" id="wfLoginFormBlocked" value="1" <?php if(wfConfig::get('cbl_loginFormBlocked')){ echo 'checked'; } ?> /></td></tr>
-	<tr><th>Block access to the rest of the site (outside the login form):</th><td><input type="checkbox" id="wfRestOfSiteBlocked" value="1" <?php if(wfConfig::get('cbl_restOfSiteBlocked')){ echo 'checked'; } ?> /><br><span style="color: #999;">If you use Google Adwords, this is not recommended. <a href="https://docs.wordfence.com/en/Country_blocking#Google_Adwords_says_I_can.27t_block_countries._How_do_I_work_around_that.3F" target="_blank">Learn More</a></span></td></tr>
-	<tr><td colspan="2"><h2>Advanced Country Blocking Options</h2></td></tr>
-	<tr><th colspan="2">
-		If user hits the URL 
-		<input type="text" id="wfBypassRedirURL" value="<?php echo esc_attr(wfConfig::get('cbl_bypassRedirURL'), array()); ?>" size="20" />
-		then redirect that user to 
-		<input type="text" id="wfBypassRedirDest" value="<?php echo esc_attr(wfConfig::get('cbl_bypassRedirDest'), array()); ?>" size="20" /> and set a cookie that will bypass all country blocking.
-		</th></tr>
-	<tr><th colspan="2">
-		If user who is allowed to access the site views the URL 
-		<input type="text" id="wfBypassViewURL" value="<?php echo esc_attr(wfConfig::get('cbl_bypassViewURL', ""), array()); ?>" size="20" />
-		then set a cookie that will bypass country blocking in future in case that user hits the site from a blocked country. 
-		</th></tr>
-
-	</table>
-	<h2>Select which countries to block</h2>
-	<div id="wfBulkBlockingContainer" style="margin-bottom: 10px;">
-		<a href="#" onclick="jQuery('.wfCountryCheckbox').prop('checked', true); return false;">Select All</a>&nbsp;&nbsp;
-		<a href="#" onclick="jQuery('.wfCountryCheckbox').prop('checked', false); return false;">Deselect All</a>&nbsp;&nbsp;
-		<table border="0" cellpadding="0" cellspacing="0">
-		<tr>
-		<?php 
-			$counter = 0;
-			asort($wfBulkCountries);
-			foreach($wfBulkCountries as $code => $name){
-				echo '<td style=""><input class="wfCountryCheckbox" id="wfCountryCheckbox_' . $code . '" type="checkbox" value="' . $code . '" />&nbsp;' . $name . '&nbsp;&nbsp;&nbsp;</td>';
-				$counter++;
-				if($counter % 5 == 0){
-					echo "</tr><tr>\n";
-				}
-			}
-		?>
-		</tr>
-		</table>
+	<?php if (!wfConfig::get('firewallEnabled')) { ?>
+		<div class="wf-notice"><p><strong>Rate limiting rules and advanced blocking are disabled.</strong> You can enable it on the <a href="admin.php?page=WordfenceSecOpt">Wordfence Options page</a> at the top.</p></div>
+	<?php } ?>
+	
+	<h3>Country Blocking Options</h3>
+	<div class="wf-form wf-form-horizontal wf-add-top wf-add-bottom">
+		<div class="wf-form-group">
+			<label for="wfBlockAction" class="wf-col-sm-2 wf-control-label">What to do when we block someone</label>
+			<div class="wf-col-sm-6">
+				<select id="wfBlockAction" class="wf-form-control">
+					<option value="block"<?php if(wfConfig::get('cbl_action') == 'block'){ echo ' selected'; } ?>>Show the standard Wordfence blocked message</option>
+					<option value="redir"<?php if(wfConfig::get('cbl_action') == 'redir'){ echo ' selected'; } ?>>Redirect to the URL below</option>
+				</select>
+			</div>
+		</div>
+		<div class="wf-form-group">
+			<label for="wfRedirURL" class="wf-col-sm-2 wf-control-label">URL to redirect blocked users to</label>
+			<div class="wf-col-sm-6">
+				<input type="text" id="wfRedirURL" name="wfRedirURL" class="wf-form-control" value="<?php if(wfConfig::get('cbl_redirURL')){ echo esc_attr(wfConfig::get('cbl_redirURL')); } ?>">
+				<span class="wf-help-block">Must start with http:// for example http://example.com/blocked/</span>
+			</div>
+		</div>
+		<div class="wf-form-group">
+			<label for="wfLoggedInBlocked" class="wf-col-sm-2 wf-control-label">Block countries even if they are logged in</label>
+			<div class="wf-col-sm-6">
+				<div class="wf-checkbox"><input type="checkbox" id="wfLoggedInBlocked" name="wfLoggedInBlocked" value="1" <?php if(wfConfig::get('cbl_loggedInBlocked')){ echo 'checked'; } ?>></div>
+			</div>
+		</div>
+		<div class="wf-form-group">
+			<label for="wfLoginFormBlocked" class="wf-col-sm-2 wf-control-label">Block access to the login form</label>
+			<div class="wf-col-sm-6">
+				<div class="wf-checkbox"><input type="checkbox" id="wfLoginFormBlocked" name="wfLoginFormBlocked" value="1" <?php if(wfConfig::get('cbl_loginFormBlocked')){ echo 'checked'; } ?>></div>
+			</div>
+		</div>
+		<div class="wf-form-group">
+			<label for="wfRestOfSiteBlocked" class="wf-col-sm-2 wf-control-label">Block access to the rest of the site (outside the login form)</label>
+			<div class="wf-col-sm-6">
+				<div class="wf-checkbox"><input type="checkbox" id="wfRestOfSiteBlocked" name="wfRestOfSiteBlocked" value="1" <?php if(wfConfig::get('cbl_restOfSiteBlocked')){ echo 'checked'; } ?>></div>
+				<span class="wf-help-block">If you use Google Adwords, this is not recommended. <a href="https://docs.wordfence.com/en/Country_blocking#Google_Adwords_says_I_can.27t_block_countries._How_do_I_work_around_that.3F" target="_blank">Learn More</a></span>
+			</div>
+		</div>
 	</div>
-	<table border="0" cellpadding="0" cellspacing="0"><tr>
-		<td><input type="button" name="but4" class="wf-btn wf-btn-primary" value="Save blocking options and country list" onclick="WFAD.saveCountryBlocking();" /></td>
-		<td style="height: 24px;"><div class="wfAjax24"></div><span class="wfSavedMsg">&nbsp;Your changes have been saved!</span></td></tr>
-	</table>
+
+	<h3>Advanced Country Blocking Options</h3>
+	<div class="wf-form wf-form-horizontal wf-add-top wf-add-bottom">
+		<div class="wf-form-group">
+			<label for="wfBypassRedirURL" class="wf-col-sm-2 wf-control-label">Bypass Redirect</label>
+			<div class="wf-col-sm-6">
+				<span class="wf-help-block">If user hits the URL</span>
+				<input type="text" id="wfBypassRedirURL" name="wfBypassRedirURL" class="wf-form-control" value="<?php echo esc_attr(wfConfig::get('cbl_bypassRedirURL'), array()); ?>">
+				<span class="wf-help-block">then redirect that user to</span>
+				<input type="text" id="wfBypassRedirDest" name="wfBypassRedirDest" class="wf-form-control" value="<?php echo esc_attr(wfConfig::get('cbl_bypassRedirDest'), array()); ?>">
+				<span class="wf-help-block">and set a cookie that will bypass all country blocking.</span>
+			</div>
+		</div>
+		<div class="wf-form-group">
+			<label for="wfBypassViewURL" class="wf-col-sm-2 wf-control-label">Bypass Cookie</label>
+			<div class="wf-col-sm-6">
+				<span class="wf-help-block">If user who is allowed to access the site views the URL</span>
+				<input type="text" id="wfBypassViewURL" name="wfBypassViewURL" class="wf-form-control" value="<?php echo esc_attr(wfConfig::get('cbl_bypassViewURL', ""), array()); ?>">
+				<span class="wf-help-block">then set a cookie that will bypass country blocking in future in case that user hits the site from a blocked country.</span>
+			</div>
+		</div>
+	</div>
+	
+	<h3>Select which countries to block</h3>
+	<div class="wf-add-bottom"><button type="button" class="wf-btn wf-btn-primary wf-countries-shortcut" data-shortcut="select">Block All</button> <button type="button" class="wf-btn wf-btn-default wf-countries-shortcut" data-shortcut="deselect">Unblock All</button></div>
+	<?php
+	asort($wfBulkCountries);
+	$letters = '';
+	foreach ($wfBulkCountries as $name) {
+		$l = strtoupper(substr($name, 0, 1));
+		$test = strtoupper(substr($letters, -1));
+		if ($l != $test) {
+			$letters .= $l; 
+		}
+	}
+	$letters = str_split($letters);
+	?>
+	<?php
+	$current = '';
+	foreach ($wfBulkCountries as $code => $name) {
+		$test = strtoupper(substr($name, 0, 1));
+		if ($test != $current) {
+			if ($current != '') {
+				echo '</ul>';
+			}
+			$current = $test; 
+	?>
+		<div class="wf-blocked-countries-section wf-add-top wf-add-bottom-small">
+			<div class="wf-blocked-countries-section-title" data-letter="<?php echo $current; ?>"><?php echo $current; ?></div>
+			<div class="wf-blocked-countries-section-spacer wf-hidden-xs"></div>
+			<ul class="wf-blocked-countries-section-options wf-hidden-xs">
+				<?php
+				foreach ($letters as $l) {
+					echo "<li><a href='#' data-letter='{$l}'" . ($l == $current ? " class='active-section'" : '') . ">{$l}</a></li>";
+				}
+				?>
+			</ul>
+		</div>
+		<ul class="wf-blocked-countries">
+	<?php
+		}
+		
+		echo '<li id="wfCountryCheckbox_' . esc_attr($code) . '" data-country="' . esc_attr($code) . '"><a href="#">' . esc_html($name) . '</a></li>';
+	}
+	
+	if ($current != '') {
+		echo '</ul>';
+	}
+	?>
+	
+	<p>
+		<input type="button" name="but4" class="wf-btn wf-btn-primary" value="Save blocking options and country list" onclick="WFAD.saveCountryBlocking();"><br>
+		<div class="wfAjax24"></div><span class="wfSavedMsg">&nbsp;Your changes have been saved!</span>
+	</p>
+	
 	<span style="font-size: 10px;">Note that we use an IP to country database that is 99.5% accurate to identify which country a visitor is from.</span>
 </div>
 <script type="text/javascript">
@@ -87,6 +151,88 @@ jQuery(function(){ WFAD.loadBlockedCountries('<?php echo wfConfig::get('cbl_coun
 <?php
 }
 ?>
+
+	(function($) {
+		function WFScanScheduleSave() {
+			var schedMode = $('.wf-card.active').data('mode');
+
+			var schedule = [];
+			$('.schedule-day').each(function() {
+				var hours = [];
+				$(this).find('.time').each(function() {
+					hours[$(this).data('hour')] = $(this).hasClass('active') ? '1' : '0';
+				});
+				schedule[$(this).data('day')] = hours.join(',');
+			});
+			var schedTxt = schedule.join('|');
+
+			$('.wf-card-subtitle').html('');
+			$('.wf-card.active .wf-card-subtitle').html('Updating scan schedule...');
+
+			WFAD.ajax('wordfence_saveScanSchedule', {
+				schedMode: schedMode,
+				schedTxt: schedTxt
+			}, function(res) {
+				if (res.ok) {
+					$('.wf-card.active .wf-card-subtitle').html(res.nextStart);
+				}
+			});
+		}
+
+		$('.wf-blocked-countries a').on('click', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+
+			var selected = $(this).closest('li').hasClass('active');
+			if (selected) {
+				$(this).closest('li').removeClass('active');
+			}
+			else {
+				$(this).closest('li').addClass('active');
+			}
+
+			//WFScanScheduleSave();
+		});
+
+		$('.wf-blocked-countries li').on('click', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+
+			var selected = $(this).hasClass('active');
+			if (selected) {
+				$(this).removeClass('active');
+			}
+			else {
+				$(this).addClass('active');
+			}
+
+			//WFScanScheduleSave();
+		});
+
+		$('.wf-countries-shortcut').on('click', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+
+			var mode = $(this).data('shortcut');
+			if (mode == 'select') {
+				$('.wf-blocked-countries li').addClass('active');
+			} else if (mode == 'deselect') {
+				$('.wf-blocked-countries li').removeClass('active');
+			}
+
+			//WFScanScheduleSave();
+		});
+		
+		$('.wf-blocked-countries-section-options a').on('click', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			
+			var letter = $(this).data('letter');
+			$('html, body').animate({
+				scrollTop: $('.wf-blocked-countries-section-title[data-letter=' + letter + ']').offset().top - 100
+			}, 1000);
+		});
+	})(jQuery);
 </script>
 <script type="text/x-jquery-template" id="wfWelcomeContentCntBlk">
 <div>

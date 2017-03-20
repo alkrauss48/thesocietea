@@ -2,7 +2,7 @@
     ColorBox Core Style:
     The following CSS is consistent between example themes and should not be altered.
 */
-#wordfenceBox, #wfboxOverlay, #wfboxWrapper{position:absolute; top:0; left:0; z-index:9999; overflow:hidden;}
+#wordfenceBox, #wfboxOverlay, #wfboxWrapper{position:absolute; top:0; left:0; z-index:16777271; overflow:hidden;}
 #wfboxOverlay{position:fixed; width:100%; height:100%;}
 #wfboxMiddleLeft, #wfboxBottomLeft{clear:left;}
 #wfboxContent{position:relative;}

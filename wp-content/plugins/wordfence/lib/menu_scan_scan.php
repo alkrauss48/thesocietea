@@ -53,7 +53,7 @@
 	
 	<div class="consoleHead" style="margin-top: 20px;">
 		<h3 class="consoleHeadText">Scan Detailed Activity</h3>
-		<a href="#" class="wfALogMailLink" onclick="WFAD.emailActivityLog(); return false;">Email activity log</a>
+		<a href="#" class="wfALogMailLink" onclick="WFAD.emailActivityLog(); return false;">Email<span class="wf-hidden-xs"> activity log</span></a>
 	</div>
 	<div class="bevelDiv1 consoleOuter"><div class="bevelDiv2"><div class="bevelDiv3 consoleInner" id="consoleActivity">
 				<?php

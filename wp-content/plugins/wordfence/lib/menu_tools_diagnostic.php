@@ -13,7 +13,7 @@ if (!isset($sendingDiagnosticEmail)) { $sendingDiagnosticEmail = false; }
 ?>
 
 <div>
-	<form id="wfConfigForm">
+	<form id="wfConfigForm" style="overflow-x: auto;">
 		<table class="wf-striped-table"<?php echo !empty($inEmail) ? ' border=1' : '' ?>>
 			<?php foreach ($diagnostic->getResults() as $title => $tests): ?>
 				<tbody class="thead">

@@ -7,7 +7,7 @@ class wfStyle {
 	 */
 	public static function contentClasses() {
 		if (wfConfig::get('isPaid')) {
-			return 'wf-col-xs-12 wf-col-sm-9';
+			return 'wf-col-xs-12';
 		}
 		return 'wf-col-xs-12 wf-col-sm-9 wf-col-sm-pull-3';
 	}

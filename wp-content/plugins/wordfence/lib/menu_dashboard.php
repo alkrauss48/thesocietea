@@ -52,24 +52,22 @@ $d = new wfDashboard();
 					</div>
 					<div class="wf-dashboard-item-extra">
 						<ul class="wf-dashboard-item-list">
-						<?php for ($g = 0; $g < ceil(count($d->features) / 5); $g++): ?>
 							<li>
-								<ul class="wf-dashboard-item-list wf-dashboard-item-list-horizontal">
-								<?php for ($f = $g * 5; $f < min(($g + 1) * 5, count($d->features)); $f++): ?>
+								<ul class="wf-dashboard-item-list wf-dashboard-item-list-horizontal wf-dashboard-item-list-equal">
+								<?php foreach ($d->features as $f): ?>
 									<li>
-										<div class="wf-dashboard-item-list-title"><a href="<?php echo esc_html($d->features[$f]['link']); ?>"><?php echo esc_html($d->features[$f]['name']); ?></a></div>
-										<?php if ($d->features[$f]['state'] == wfDashboard::FEATURE_ENABLED): ?>
-										<div class="wf-dashboard-item-list-state wf-dashboard-item-list-state-enabled"><i class="fa fa-circle" aria-hidden="true"></i> Enabled</div>
-										<?php elseif ($d->features[$f]['state'] == wfDashboard::FEATURE_DISABLED): ?>
-											<div class="wf-dashboard-item-list-state wf-dashboard-item-list-state-disabled"><i class="fa fa-circle" aria-hidden="true"></i> Disabled</div>
-										<?php elseif ($d->features[$f]['state'] == wfDashboard::FEATURE_PREMIUM): ?>
-											<div class="wf-dashboard-item-list-state wf-dashboard-item-list-state-premium"><i class="fa fa-circle" aria-hidden="true"></i> Premium</div>
+										<div class="wf-dashboard-item-list-title"><a href="<?php echo esc_html($f['link']); ?>"><?php echo esc_html($f['name']); ?></a></div>
+										<?php if ($f['state'] == wfDashboard::FEATURE_ENABLED): ?>
+										<div class="wf-dashboard-item-list-state wf-dashboard-item-list-state-enabled"><i class="fa fa-circle" aria-hidden="true"></i><span class="wf-hidden-lg"><br></span> Enabled</div>
+										<?php elseif ($f['state'] == wfDashboard::FEATURE_DISABLED): ?>
+											<div class="wf-dashboard-item-list-state wf-dashboard-item-list-state-disabled"><i class="fa fa-circle" aria-hidden="true"></i><span class="wf-hidden-lg"><br></span> Disabled</div>
+										<?php elseif ($f['state'] == wfDashboard::FEATURE_PREMIUM): ?>
+											<div class="wf-dashboard-item-list-state wf-dashboard-item-list-state-premium"><i class="fa fa-circle" aria-hidden="true"></i><span class="wf-hidden-lg"><br></span> Premium</div>
 										<?php endif; ?>
 									</li>
-								<?php endfor; ?>
+								<?php endforeach; ?>
 								</ul>
 							</li>
-						<?php endfor; ?>
 						</ul>
 					</div>
 				</div>

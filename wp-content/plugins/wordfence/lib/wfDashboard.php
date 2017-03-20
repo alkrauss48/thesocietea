@@ -18,6 +18,8 @@ class wfDashboard {
 	
 	public $features = array();
 	
+	public $lastGenerated;
+	
 	public $tdfCommunity;
 	public $tdfPremium;
 	
@@ -108,8 +110,31 @@ class wfDashboard {
 			array('name' => 'Spam Blacklist Check', 'link' => network_admin_url('admin.php?page=WordfenceSecOpt#focus-checkSpamIP'), 'state' => !wfConfig::get('isPaid') ? self::FEATURE_PREMIUM : (wfConfig::get('checkSpamIP') ? self::FEATURE_ENABLED : self::FEATURE_DISABLED)),
 		);
 		
-		// TDF
 		$data = wfConfig::get_ser('dashboardData');
+		$lastChecked = wfConfig::get('lastDashboardCheck', 0);
+		if ((!is_array($data) || (isset($data['generated']) && $data['generated'] + 3600 < time())) && $lastChecked + 3600 < time()) {
+			$wp_version = wfUtils::getWPVersion();
+			$apiKey = wfConfig::get('apiKey');
+			$api = new wfAPI($apiKey, $wp_version);
+			wfConfig::set('lastDashboardCheck', time());
+			try {
+				$json = $api->getStaticURL('/stats.json');
+				$data = @json_decode($json, true);
+				if ($json && is_array($data)) {
+					self::processDashboardResponse($data);
+				}
+			}
+			catch (Exception $e) {
+				//Do nothing
+			}
+		}
+		
+		// Last Generated
+		if (is_array($data) && isset($data['generated'])) {
+			$this->lastGenerated = $data['generated'];
+		}
+		
+		// TDF
 		if (is_array($data) && isset($data['tdf']) && isset($data['tdf']['community'])) {
 			$this->tdfCommunity = (int) $data['tdf']['community'];
 			$this->tdfPremium = (int) $data['tdf']['premium'];

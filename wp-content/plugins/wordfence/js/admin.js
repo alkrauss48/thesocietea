@@ -1,6 +1,7 @@
 (function($) {
 	if (!window['wordfenceAdmin']) { //To compile for checking: java -jar /usr/local/bin/closure.jar --js=admin.js --js_output_file=test.js
 		window['wordfenceAdmin'] = {
+			isSmallScreen: false,
 			loading16: '<div class="wfLoading16"></div>',
 			loadingCount: 0,
 			dbCheckTables: [],
@@ -46,6 +47,8 @@
 			basePageName: '',
 
 			init: function() {
+				this.isSmallScreen = window.matchMedia("only screen and (max-width: 500px)").matches;
+				
 				this.nonce = WordfenceAdminVars.firstNonce;
 				this.debugOn = WordfenceAdminVars.debugOn == '1' ? true : false;
 				this.tourClosed = WordfenceAdminVars.tourClosed == '1' ? true : false;
@@ -74,14 +77,14 @@
 				$('#doSendEmail').click(function() {
 					var ticket = $('#_ticketnumber').val();
 					if (ticket === null || typeof ticket === "undefined" || ticket.length == 0) {
-						self.colorbox('400px', "Error", "Please include your support ticket number or forum username.");
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), "Error", "Please include your support ticket number or forum username.");
 						return;
 					}
 					WFAD.ajax('wordfence_sendDiagnostic', {email: $('#_email').val(), ticket: ticket}, function(res) {
 						if (res.result) {
-							self.colorbox('400px', "Email Diagnostic Report", "Diagnostic report has been sent successfully.");
+							self.colorbox((self.isSmallScreen ? '300px' : '400px'), "Email Diagnostic Report", "Diagnostic report has been sent successfully.");
 						} else {
-							self.colorbox('400px', "Error", "There was an error while sending the email.");
+							self.colorbox((self.isSmallScreen ? '300px' : '400px'), "Error", "There was an error while sending the email.");
 						}
 					});
 				});
@@ -101,6 +104,7 @@
 						var tab = jQuery('#' + jQuery(this).attr('id').replace('-tab', ''));
 						tab.addClass('active');
 						jQuery('#wfHeading').html(tab.data('title'));
+						jQuery('#wordfenceTopTabsMobileTitle').text(jQuery(this).text());
 						document.title = tab.data('title') + " \u2039 " + self.basePageName;
 						self.sectionInit();
 					});
@@ -369,7 +373,7 @@
 				var self = this;
 				this.ajax('wordfence_sendTestEmail', {email: email}, function(res) {
 					if (res.result) {
-						self.colorbox('400px', "Test Email Sent", "Your test email was sent to the requested email address. The result we received from the WordPress wp_mail() function was: " +
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), "Test Email Sent", "Your test email was sent to the requested email address. The result we received from the WordPress wp_mail() function was: " +
 							res.result + "<br /><br />A 'True' result means WordPress thinks the mail was sent without errors. A 'False' result means that WordPress encountered an error sending your mail. Note that it's possible to get a 'True' response with an error elsewhere in your mail system that may cause emails to not be delivered.");
 					}
 				});
@@ -427,7 +431,7 @@
 				});
 			},
 			downgradeLicense: function() {
-				this.colorbox('400px', "Confirm Downgrade", "Are you sure you want to downgrade your Wordfence Premium License? This will disable all Premium features and return you to the free version of Wordfence. <a href=\"https://www.wordfence.com/manage-wordfence-api-keys/\" target=\"_blank\">Click here to renew your paid membership</a> or click the button below to confirm you want to downgrade.<br /><br /><input class=\"wf-btn wf-btn-default\" type=\"button\" value=\"Downgrade and disable Premium features\" onclick=\"WFAD.downgradeLicenseConfirm();\" /><br />");
+				this.colorbox((this.isSmallScreen ? '300px' : '400px'), "Confirm Downgrade", "Are you sure you want to downgrade your Wordfence Premium License? This will disable all Premium features and return you to the free version of Wordfence. <a href=\"https://www.wordfence.com/manage-wordfence-api-keys/\" target=\"_blank\">Click here to renew your paid membership</a> or click the button below to confirm you want to downgrade.<br /><br /><input class=\"wf-btn wf-btn-default\" type=\"button\" value=\"Downgrade and disable Premium features\" onclick=\"WFAD.downgradeLicenseConfirm();\" /><br />");
 			},
 			downgradeLicenseConfirm: function() {
 				jQuery.colorbox.close();
@@ -860,9 +864,9 @@
 				var self = this;
 				this.ajax('wordfence_killScan', {}, function(res) {
 					if (res.ok) {
-						self.colorbox('400px', "Kill requested", "A termination request has been sent to any running scans.");
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), "Kill requested", "A termination request has been sent to any running scans.");
 					} else {
-						self.colorbox('400px', "Kill failed", "We failed to send a termination request.");
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), "Kill failed", "We failed to send a termination request.");
 					}
 				});
 			},
@@ -954,7 +958,7 @@
 						}
 						continue;
 					}
-					jQuery('#' + containerID).html('<table cellpadding="0" cellspacing="0" border="0" class="display" id="' + tableID + '"></table>');
+					jQuery('#' + containerID).html('<table cellpadding="0" cellspacing="0" border="0" class="display wf-issues-table" id="' + tableID + '"></table>');
 
 					jQuery.fn.dataTableExt.oSort['severity-asc'] = function(y, x) {
 						x = WFAD.sev2num(x);
@@ -988,19 +992,19 @@
 						//"aaData": res.issuesLists[issueStatus],
 						"aoColumns": [
 							{
-								"sTitle": '<div class="th_wrapp">Severity</div>',
-								"sWidth": '128px',
-								"sClass": "center",
+								"sTitle": '<div class="th_wrapp wf-hidden-xs">Severity</div>',
+								//"sWidth": '128px',
+								"sClass": "center wf-scan-severity",
 								"sType": 'severity',
 								"fnRender": function(obj) {
 									var cls = 'wfProbSev' + obj.aData.severity;
-									return '<span class="' + cls + '"></span>';
+									return '<span class="wf-hidden-xs ' + cls + '"></span><div class="wf-visible-xs wf-scan-severity-' + obj.aData.severity + '"></div>';
 								}
 							},
 							{
 								"sTitle": '<div class="th_wrapp">Issue</div>',
 								"bSortable": false,
-								"sWidth": '400px',
+								//"sWidth": '400px',
 								"sType": 'html',
 								fnRender: function(obj) {
 									var issueType = (obj.aData.type == 'knownfile' ? 'file' : obj.aData.type);
@@ -1076,7 +1080,7 @@
 							self.nonce = json.nonce;
 						}
 						if (json && json.errorMsg) {
-							self.colorbox('400px', 'An error occurred', json.errorMsg);
+							self.colorbox((self.isSmallScreen ? '300px' : '400px'), 'An error occurred', json.errorMsg);
 						}
 						cb(json);
 					},
@@ -1122,10 +1126,10 @@
 				jQuery.colorbox.close();
 			},
 			scanRunningMsg: function() {
-				this.colorbox('400px', "A scan is running", "A scan is currently in progress. Please wait until it finishes before starting another scan.");
+				this.colorbox((this.isSmallScreen ? '300px' : '400px'), "A scan is running", "A scan is currently in progress. Please wait until it finishes before starting another scan.");
 			},
 			errorMsg: function(msg) {
-				this.colorbox('400px', "An error occurred:", msg);
+				this.colorbox((this.isSmallScreen ? '300px' : '400px'), "An error occurred:", msg);
 			},
 			bulkOperation: function(op) {
 				var self = this;
@@ -1134,13 +1138,13 @@
 						return jQuery(this).val();
 					}).get();
 					if (ids.length < 1) {
-						this.colorbox('400px', "No files were selected", "You need to select files to perform a bulk operation. There is a checkbox in each issue that lets you select that file. You can then select a bulk operation and hit the button to perform that bulk operation.");
+						this.colorbox((self.isSmallScreen ? '300px' : '400px'), "No files were selected", "You need to select files to perform a bulk operation. There is a checkbox in each issue that lets you select that file. You can then select a bulk operation and hit the button to perform that bulk operation.");
 						return;
 					}
 					if (op == 'del') {
-						this.colorbox('400px', "Are you sure you want to delete?", "Are you sure you want to delete a total of " + ids.length + " files? Do not delete files on your system unless you're ABSOLUTELY sure you know what you're doing. If you delete the wrong file it could cause your WordPress website to stop functioning and you will probably have to restore from backups. If you're unsure, Cancel and work with your hosting provider to clean your system of infected files.<br /><br /><input class=\"wf-btn wf-btn-default\" type=\"button\" value=\"Delete Files\" onclick=\"WFAD.bulkOperationConfirmed('" + op + "');\" />&nbsp;&nbsp;<input class=\"wf-btn wf-btn-default\" type=\"button\" value=\"Cancel\" onclick=\"jQuery.colorbox.close();\" /><br />");
+						this.colorbox((self.isSmallScreen ? '300px' : '400px'), "Are you sure you want to delete?", "Are you sure you want to delete a total of " + ids.length + " files? Do not delete files on your system unless you're ABSOLUTELY sure you know what you're doing. If you delete the wrong file it could cause your WordPress website to stop functioning and you will probably have to restore from backups. If you're unsure, Cancel and work with your hosting provider to clean your system of infected files.<br /><br /><input class=\"wf-btn wf-btn-default\" type=\"button\" value=\"Delete Files\" onclick=\"WFAD.bulkOperationConfirmed('" + op + "');\" />&nbsp;&nbsp;<input class=\"wf-btn wf-btn-default\" type=\"button\" value=\"Cancel\" onclick=\"jQuery.colorbox.close();\" /><br />");
 					} else if (op == 'repair') {
-						this.colorbox('400px', "Are you sure you want to repair?", "Are you sure you want to repair a total of " + ids.length + " files? Do not repair files on your system unless you're sure you have reviewed the differences between the original file and your version of the file in the files you are repairing. If you repair a file that has been customized for your system by a developer or your hosting provider it may leave your system unusable. If you're unsure, Cancel and work with your hosting provider to clean your system of infected files.<br /><br /><input class=\"wf-btn wf-btn-default\" type=\"button\" value=\"Repair Files\" onclick=\"WFAD.bulkOperationConfirmed('" + op + "');\" />&nbsp;&nbsp;<input class=\"wf-btn wf-btn-default\" type=\"button\" value=\"Cancel\" onclick=\"jQuery.colorbox.close();\" /><br />");
+						this.colorbox((self.isSmallScreen ? '300px' : '400px'), "Are you sure you want to repair?", "Are you sure you want to repair a total of " + ids.length + " files? Do not repair files on your system unless you're sure you have reviewed the differences between the original file and your version of the file in the files you are repairing. If you repair a file that has been customized for your system by a developer or your hosting provider it may leave your system unusable. If you're unsure, Cancel and work with your hosting provider to clean your system of infected files.<br /><br /><input class=\"wf-btn wf-btn-default\" type=\"button\" value=\"Repair Files\" onclick=\"WFAD.bulkOperationConfirmed('" + op + "');\" />&nbsp;&nbsp;<input class=\"wf-btn wf-btn-default\" type=\"button\" value=\"Cancel\" onclick=\"jQuery.colorbox.close();\" /><br />");
 					}
 				} else {
 					return;
@@ -1162,7 +1166,7 @@
 				var self = this;
 				if (res.ok) {
 					this.loadIssues(function() {
-						self.colorbox('400px', res.bulkHeading, res.bulkBody);
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), res.bulkHeading, res.bulkBody);
 					});
 				} else {
 					this.loadIssues(function() {
@@ -1187,11 +1191,11 @@
 				var self = this;
 				if (res.ok) {
 					this.loadIssues(function() {
-						self.colorbox('400px', "Success deleting file", "The file " + res.file + " was successfully deleted.");
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), "Success deleting file", "The file " + res.file + " was successfully deleted.");
 					});
 				} else if (res.cerrorMsg) {
 					this.loadIssues(function() {
-						self.colorbox('400px', 'An error occurred', res.cerrorMsg);
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), 'An error occurred', res.cerrorMsg);
 					});
 				}
 			},
@@ -1208,11 +1212,11 @@
 				var self = this;
 				if (res.ok) {
 					this.loadIssues(function() {
-						self.colorbox('400px', "Success removing option", "The option " + res.option_name + " was successfully removed.");
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), "Success removing option", "The option " + res.option_name + " was successfully removed.");
 					});
 				} else if (res.cerrorMsg) {
 					this.loadIssues(function() {
-						self.colorbox('400px', 'An error occurred', res.cerrorMsg);
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), 'An error occurred', res.cerrorMsg);
 					});
 				}
 			},
@@ -1226,11 +1230,11 @@
 						jQuery('#wordfenceMisconfiguredHowGetIPsNotice').fadeOut();
 						
 						self.loadIssues(function() {
-							self.colorbox('400px', "Success updating option", "The 'How does Wordfence get IPs' option was successfully updated to the recommended value.");
+							self.colorbox((self.isSmallScreen ? '300px' : '400px'), "Success updating option", "The 'How does Wordfence get IPs' option was successfully updated to the recommended value.");
 						});
 					} else if (res.cerrorMsg) {
 						self.loadIssues(function() {
-							self.colorbox('400px', 'An error occurred', res.cerrorMsg);
+							self.colorbox((self.isSmallScreen ? '300px' : '400px'), 'An error occurred', res.cerrorMsg);
 						}); 
 					}
 				});	
@@ -1242,13 +1246,13 @@
 
 				this.ajax('wordfence_checkHtaccess', {}, function(res) {
 					if (res.ok) {
-						self.colorbox("400px", title, 'We are about to change your <em>.htaccess</em> file. Please make a backup of this file proceeding'
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), title, 'We are about to change your <em>.htaccess</em> file. Please make a backup of this file proceeding'
 							+ '<br/>'
 							+ '<a href="' + WordfenceAdminVars.ajaxURL + '?action=wordfence_downloadHtaccess&nonce=' + self.nonce + '" onclick="jQuery(\'#wfFPDNextBut\').prop(\'disabled\', false); return true;">Click here to download a backup copy of your .htaccess file now</a><br /><br /><input type="button" class="wf-btn wf-btn-default" name="but1" id="wfFPDNextBut" value="Click to fix .htaccess" disabled="disabled" onclick="WFAD.fixFPD_WriteHtAccess(' + issueID + ');" />');
 					} else if (res.nginx) {
-						self.colorbox("400px", title, 'You are using an Nginx web server and using a FastCGI processor like PHP5-FPM. You will need to manually modify your php.ini to disable <em>display_error</em>');
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), title, 'You are using an Nginx web server and using a FastCGI processor like PHP5-FPM. You will need to manually modify your php.ini to disable <em>display_error</em>');
 					} else if (res.err) {
-						self.colorbox('400px', "We encountered a problem", "We can't modify your .htaccess file for you because: " + res.err);
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), "We encountered a problem", "We can't modify your .htaccess file for you because: " + res.err);
 					}
 				});
 			},
@@ -1260,11 +1264,11 @@
 				}, function(res) {
 					if (res.ok) {
 						self.loadIssues(function() {
-							self.colorbox("400px", "File restored OK", "The Full Path disclosure issue has been fixed");
+							self.colorbox((self.isSmallScreen ? '300px' : '400px'), "File restored OK", "The Full Path disclosure issue has been fixed");
 						});
 					} else {
 						self.loadIssues(function() {
-							self.colorbox('400px', 'An error occurred', res.cerrorMsg);
+							self.colorbox((self.isSmallScreen ? '300px' : '400px'), 'An error occurred', res.cerrorMsg);
 						});
 					}
 				});
@@ -1274,7 +1278,7 @@
 				var self = this;
 				return function(res) {
 					if (res.ok) {
-						self.colorbox("400px", title, 'We are about to change your <em>.htaccess</em> file. Please make a backup of this file proceeding'
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), title, 'We are about to change your <em>.htaccess</em> file. Please make a backup of this file proceeding'
 							+ '<br/>'
 							+ '<a id="dlButton" href="' + WordfenceAdminVars.ajaxURL + '?action=wordfence_downloadHtaccess&nonce=' + self.nonce + '">Click here to download a backup copy of your .htaccess file now</a>'
 							+ '<br /><br /><input type="button" class="wf-btn wf-btn-default" name="but1" id="wfFPDNextBut" value="Click to fix .htaccess" disabled="disabled" />'
@@ -1286,9 +1290,9 @@
 							self[callback](issueID);
 						});
 					} else if (res.nginx) {
-						self.colorbox("400px", title, 'You are using an Nginx web server and using a FastCGI processor like PHP5-FPM. ' + nginx);
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), title, 'You are using an Nginx web server and using a FastCGI processor like PHP5-FPM. ' + nginx);
 					} else if (res.err) {
-						self.colorbox('400px', "We encountered a problem", "We can't modify your .htaccess file for you because: " + res.err);
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), "We encountered a problem", "We can't modify your .htaccess file for you because: " + res.err);
 					}
 				};
 			},
@@ -1301,9 +1305,9 @@
 					jQuery.colorbox.close();
 					self.loadIssues(function() {
 						if (res.ok) {
-							self.colorbox("400px", title, 'Your .htaccess file has been updated successfully.');
+							self.colorbox((self.isSmallScreen ? '300px' : '400px'), title, 'Your .htaccess file has been updated successfully.');
 						} else {
-							self.colorbox("400px", title, 'We encountered a problem while trying to update your .htaccess file.');
+							self.colorbox((self.isSmallScreen ? '300px' : '400px'), title, 'We encountered a problem while trying to update your .htaccess file.');
 						}
 					});
 				});
@@ -1333,11 +1337,11 @@
 				var self = this;
 				if (res.ok) {
 					this.loadIssues(function() {
-						self.colorbox("400px", "File restored OK", "The file " + res.file + " was restored successfully.");
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), "File restored OK", "The file " + res.file + " was restored successfully.");
 					});
 				} else if (res.cerrorMsg) {
 					this.loadIssues(function() {
-						self.colorbox('400px', 'An error occurred', res.cerrorMsg);
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), 'An error occurred', res.cerrorMsg);
 					});
 				}
 			},
@@ -1349,17 +1353,17 @@
 
 				this.ajax('wordfence_checkHtaccess', {}, function(res) {
 					if (res.ok) {
-						self.colorbox("400px", title, 'We are about to change your <em>.htaccess</em> file. Please make a backup of this file proceeding'
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), title, 'We are about to change your <em>.htaccess</em> file. Please make a backup of this file proceeding'
 							+ '<br/>'
 							+ '<a href="' + WordfenceAdminVars.ajaxURL + '?action=wordfence_downloadHtaccess&nonce=' + self.nonce + '" onclick="jQuery(\'#wf-htaccess-confirm\').prop(\'disabled\', false); return true;">Click here to download a backup copy of your .htaccess file now</a>' +
 							'<br /><br />' +
 							'<button class="wf-btn wf-btn-default" type="button" id="wf-htaccess-confirm" disabled="disabled" onclick="WFAD.confirmDisableDirectoryListing(' + issueID + ');">Add code to .htaccess</button>');
 					} else if (res.nginx) {
-						self.colorbox('400px', "You are using Nginx as your web server. " +
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), "You are using Nginx as your web server. " +
 							"You'll need to disable autoindexing in your nginx.conf. " +
 							"See the <a target='_blank' href='http://nginx.org/en/docs/http/ngx_http_autoindex_module.html'>Nginx docs for more info</a> on how to do this.");
 					} else if (res.err) {
-						self.colorbox('400px', "We encountered a problem", "We can't modify your .htaccess file for you because: " + res.err);
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), "We encountered a problem", "We can't modify your .htaccess file for you because: " + res.err);
 					}
 				});
 			},
@@ -1371,7 +1375,7 @@
 				}, function(res) {
 					if (res.ok) {
 						self.loadIssues(function() {
-							self.colorbox("400px", "Directory Listing Disabled", "Directory listing has been disabled on your server.");
+							self.colorbox((self.isSmallScreen ? '300px' : '400px'), "Directory Listing Disabled", "Directory listing has been disabled on your server.");
 						});
 					} else {
 						//self.loadIssues(function() {
@@ -1407,7 +1411,7 @@
 				} else {
 					return;
 				}
-				this.colorbox('450px', head, body + '<br /><br /><center><input class="wf-btn wf-btn-default" type="button" name="but1" value="Cancel" onclick="jQuery.colorbox.close();" />&nbsp;&nbsp;&nbsp;<input class="wf-btn wf-btn-default" type="button" name="but2" value="Yes I\'m sure" onclick="jQuery.colorbox.close(); WFAD.confirmUpdateAllIssues(\'' + op + '\');" /><br />');
+				this.colorbox((this.isSmallScreen ? '300px' : '450px'), head, body + '<br /><br /><center><input class="wf-btn wf-btn-default" type="button" name="but1" value="Cancel" onclick="jQuery.colorbox.close();" />&nbsp;&nbsp;&nbsp;<input class="wf-btn wf-btn-default" type="button" name="but2" value="Yes I\'m sure" onclick="jQuery.colorbox.close(); WFAD.confirmUpdateAllIssues(\'' + op + '\');" /><br />');
 			},
 			confirmUpdateAllIssues: function(op) {
 				var self = this;
@@ -1460,7 +1464,7 @@
 				});
 			},
 			emailActivityLog: function() {
-				this.colorbox('400px', 'Email Wordfence Activity Log', "Enter the email address you would like to send the Wordfence activity log to. Note that the activity log may contain thousands of lines of data. This log is usually only sent to a member of the Wordfence support team. It also contains your PHP configuration from the phpinfo() function for diagnostic data.<br /><br /><input type='text' value='wftest@wordfence.com' size='20' id='wfALogRecip' /><input class='wf-btn wf-btn-default' type='button' value='Send' onclick=\"WFAD.completeEmailActivityLog();\" /><input class='wf-btn wf-btn-default' type='button' value='Cancel' onclick='jQuery.colorbox.close();' /><br /><br />");
+				this.colorbox((this.isSmallScreen ? '300px' : '400px'), 'Email Wordfence Activity Log', "Enter the email address you would like to send the Wordfence activity log to. Note that the activity log may contain thousands of lines of data. This log is usually only sent to a member of the Wordfence support team. It also contains your PHP configuration from the phpinfo() function for diagnostic data.<br /><br /><input type='text' value='wftest@wordfence.com' size='20' id='wfALogRecip' /><input class='wf-btn wf-btn-default' type='button' value='Send' onclick=\"WFAD.completeEmailActivityLog();\" /><input class='wf-btn wf-btn-default' type='button' value='Cancel' onclick='jQuery.colorbox.close();' /><br /><br />");
 			},
 			completeEmailActivityLog: function() {
 				jQuery.colorbox.close();
@@ -1472,7 +1476,7 @@
 				var self = this;
 				this.ajax('wordfence_sendActivityLog', {email: jQuery('#wfALogRecip').val()}, function(res) {
 					if (res.ok) {
-						self.colorbox('400px', 'Activity Log Sent', "Your Wordfence activity log was sent to " + email + "<br /><br /><input class='wf-btn wf-btn-default' type='button' value='Close' onclick='jQuery.colorbox.close();' /><br /><br />");
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), 'Activity Log Sent', "Your Wordfence activity log was sent to " + email + "<br /><br /><input class='wf-btn wf-btn-default' type='button' value='Close' onclick='jQuery.colorbox.close();' /><br /><br />");
 					}
 				});
 			},
@@ -2031,10 +2035,10 @@
 					jQuery('.wfAjax24').hide();
 					if (res.ok) {
 						if (res['paidKeyMsg']) {
-							self.colorbox('400px', "Congratulations! You have been upgraded to Premium Scanning.", "You have upgraded to a Premium API key. Once this page reloads, you can choose which premium scanning options you would like to enable and then click save. Click the button below to reload this page now.<br /><br /><center><input class='wf-btn wf-btn-default' type='button' name='wfReload' value='Reload page and enable Premium options' onclick='window.location.reload(true);' /></center>");
+							self.colorbox((self.isSmallScreen ? '300px' : '400px'), "Congratulations! You have been upgraded to Premium Scanning.", "You have upgraded to a Premium API key. Once this page reloads, you can choose which premium scanning options you would like to enable and then click save. Click the button below to reload this page now.<br /><br /><center><input class='wf-btn wf-btn-default' type='button' name='wfReload' value='Reload page and enable Premium options' onclick='window.location.reload(true);' /></center>");
 							return;
 						} else if (res['reload'] == 'reload' || WFAD.reloadConfigPage) {
-							self.colorbox('400px', "Please reload this page", "You selected a config option that requires a page reload. Click the button below to reload this page to update the menu.<br /><br /><center><input class='wf-btn wf-btn-default' type='button' name='wfReload' value='Reload page' onclick='window.location.reload(true);' /></center>");
+							self.colorbox((self.isSmallScreen ? '300px' : '400px'), "Please reload this page", "You selected a config option that requires a page reload. Click the button below to reload this page to update the menu.<br /><br /><center><input class='wf-btn wf-btn-default' type='button' name='wfReload' value='Reload page' onclick='window.location.reload(true);' /></center>");
 							return;
 						} else {
 							self.pulse('.wfSavedMsg');
@@ -2042,7 +2046,7 @@
 					} else if (res.errorMsg) {
 						return;
 					} else {
-						self.colorbox('400px', 'An error occurred', 'We encountered an error trying to save your changes.');
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), 'An error occurred', 'We encountered an error trying to save your changes.');
 					}
 				});
 			},
@@ -2062,7 +2066,7 @@
 					} else if (res.errorMsg) {
 						return;
 					} else {
-						self.colorbox('400px', 'An error occurred', 'We encountered an error trying to save your changes.');
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), 'An error occurred', 'We encountered an error trying to save your changes.');
 					}
 				});
 			},
@@ -2078,7 +2082,7 @@
 					} else if (res.errorMsg) {
 						return;
 					} else {
-						self.colorbox('400px', 'An error occurred', 'We encountered an error trying to save your changes.');
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), 'An error occurred', 'We encountered an error trying to save your changes.');
 					}
 				});
 			},
@@ -2103,7 +2107,7 @@
 				} else {
 					return;
 				}
-				this.colorbox('450px', "Please confirm", body +
+				this.colorbox((this.isSmallScreen ? '300px' : '450px'), "Please confirm", body +
 					'<br /><br /><center><input class="wf-btn wf-btn-default" type="button" name="but1" value="Cancel" onclick="jQuery.colorbox.close();" />&nbsp;&nbsp;&nbsp;' +
 					'<input class="wf-btn wf-btn-default" type="button" name="but2" value="Yes I\'m sure" onclick="jQuery.colorbox.close(); WFAD.confirmClearAllBlocked(\'' + op + '\');"><br />');
 			},
@@ -2119,7 +2123,7 @@
 			loadBlockedCountries: function(str) {
 				var codes = str.split(',');
 				for (var i = 0; i < codes.length; i++) {
-					jQuery('#wfCountryCheckbox_' + codes[i]).prop('checked', true);
+					jQuery('#wfCountryCheckbox_' + codes[i]).addClass('active');
 				}
 			},
 			saveCountryBlocking: function() {
@@ -2130,16 +2134,16 @@
 				var bypassViewURL = jQuery('#wfBypassViewURL').val();
 
 				if (action == 'redir' && (!/^https?:\/\/[^\/]+/i.test(redirURL))) {
-					this.colorbox('400px', "Please enter a URL for redirection", "You have chosen to redirect blocked countries to a specific page. You need to enter a URL in the text box provided that starts with http:// or https://");
+					this.colorbox((this.isSmallScreen ? '300px' : '400px'), "Please enter a URL for redirection", "You have chosen to redirect blocked countries to a specific page. You need to enter a URL in the text box provided that starts with http:// or https://");
 					return;
 				}
 				if (bypassRedirURL || bypassRedirDest) {
 					if (!(bypassRedirURL && bypassRedirDest)) {
-						this.colorbox('400px', "Missing data from form", "If you want to set up a URL that will bypass country blocking, you must enter a URL that a visitor can hit and the destination they will be redirected to. You have only entered one of these components. Please enter both.");
+						this.colorbox((this.isSmallScreen ? '300px' : '400px'), "Missing data from form", "If you want to set up a URL that will bypass country blocking, you must enter a URL that a visitor can hit and the destination they will be redirected to. You have only entered one of these components. Please enter both.");
 						return;
 					}
 					if (bypassRedirURL == bypassRedirDest) {
-						this.colorbox('400px', "URLs are the same", "The URL that a user hits to bypass country blocking and the URL they are redirected to are the same. This would cause a circular redirect. Please fix this.");
+						this.colorbox((this.isSmallScreen ? '300px' : '400px'), "URLs are the same", "The URL that a user hits to bypass country blocking and the URL they are redirected to are the same. This would cause a circular redirect. Please fix this.");
 						return;
 					}
 				}
@@ -2159,9 +2163,9 @@
 				var codesArr = [];
 				var ownCountryBlocked = false;
 				var self = this;
-				jQuery('.wfCountryCheckbox').each(function(idx, elem) {
-					if (jQuery(elem).is(':checked')) {
-						var code = jQuery(elem).val();
+				jQuery('.wf-blocked-countries li').each(function(idx, elem) {
+					if (jQuery(elem).hasClass('active')) {
+						var code = jQuery(elem).data('country');
 						codesArr.push(code);
 						if (code == self.ownCountry) {
 							ownCountryBlocked = true;
@@ -2170,14 +2174,14 @@
 				});
 				this.countryCodesToSave = codesArr.join(',');
 				if (ownCountryBlocked) {
-					this.colorbox('400px', "Please confirm blocking yourself", "You are about to block your own country. This could lead to you being locked out. Please make sure that your user profile on this machine has a current and valid email address and make sure you know what it is. That way if you are locked out, you can send yourself an unlock email. If you're sure you want to block your own country, click 'Confirm' below, otherwise click 'Cancel'.<br />" +
+					this.colorbox((this.isSmallScreen ? '300px' : '400px'), "Please confirm blocking yourself", "You are about to block your own country. This could lead to you being locked out. Please make sure that your user profile on this machine has a current and valid email address and make sure you know what it is. That way if you are locked out, you can send yourself an unlock email. If you're sure you want to block your own country, click 'Confirm' below, otherwise click 'Cancel'.<br />" +
 						'<input class="wf-btn wf-btn-default" type="button" name="but1" value="Confirm" onclick="jQuery.colorbox.close(); WFAD.confirmSaveCountryBlocking();" />&nbsp;<input class="wf-btn wf-btn-default" type="button" name="but1" value="Cancel" onclick="jQuery.colorbox.close();" />');
 				} else {
 					this.confirmSaveCountryBlocking();
 				}
 			},
 			invalidCountryURLMsg: function(URL) {
-				this.colorbox('400px', "Invalid URL", "URL's that you provide for bypassing country blocking must start with '/' or 'http://' without quotes. The URL that is invalid is: " + this.htmlEscape(URL));
+				this.colorbox((this.isSmallScreen ? '300px' : '400px'), "Invalid URL", "URL's that you provide for bypassing country blocking must start with '/' or 'http://' without quotes. The URL that is invalid is: " + this.htmlEscape(URL));
 				return;
 			},
 			confirmSaveCountryBlocking: function() {
@@ -2223,7 +2227,7 @@
 			},
 			sched_shortcut: function(mode) {
 				if (jQuery('#schedMode').val() == 'auto') {
-					this.colorbox('400px', 'Change the scan mode', "You need to change the scan mode to manually scheduled scans if you want to select scan times.");
+					this.colorbox((this.isSmallScreen ? '300px' : '400px'), 'Change the scan mode', "You need to change the scan mode to manually scheduled scans if you want to select scan times.");
 					return;
 				}
 				jQuery('.wfSchedCheckbox').prop('checked', false);
@@ -2314,7 +2318,7 @@
 							var totpURL = "otpauth://totp/" + encodeURI(res.homeurl) + encodeURI(" (" + res.username + ")") + "?" + res.uriQueryString + "&issuer=Wordfence"; 
 							self.twoFacStatus('User added! Scan the QR code with your authenticator app to add it.');
 							
-							var message = "Scan the code below with your authenticator app to add this account. Some authenticator apps also allow you to type in the text version instead.<br><div id=\"wfTwoFactorQRCodeTable\"></div><br><strong>Key:</strong> <input type=\"text\" size=\"45\" value=\"" + res.base32Secret + "\" onclick=\"this.select();\" readonly>";
+							var message = "Scan the code below with your authenticator app to add this account. Some authenticator apps also allow you to type in the text version instead.<br><div id=\"wfTwoFactorQRCodeTable\"></div><br><strong>Key:</strong> <input type=\"text\"" + (self.isSmallScreen ? "" : " size=\"45\"") + " value=\"" + res.base32Secret + "\" onclick=\"this.select();\" readonly>";
 							if (res.recoveryCodes.length > 0) {
 								message = message + "<br><br><strong>Recovery Codes</strong><br><p>Use one of these " + res.recoveryCodes.length + " codes to log in if you lose access to your authenticator device. Codes are 16 characters long, plus optional spaces. Each one may be used only once.</p><ul id=\"wfTwoFactorRecoveryCodes\">";
 
@@ -2335,8 +2339,8 @@
 
 							message = message + "<p><em>This will be shown only once. Keep these codes somewhere safe.</em></p>";
 							
-							self.colorbox('440px', "Authentication Code", message, {onComplete: function() { 
-								jQuery('#wfTwoFactorQRCodeTable').qrcode({text: totpURL});
+							self.colorbox((self.isSmallScreen ? '300px' : '440px'), "Authentication Code", message, {onComplete: function() { 
+								jQuery('#wfTwoFactorQRCodeTable').qrcode({text: totpURL, width: (self.isSmallScreen ? 175 : 256), height: (self.isSmallScreen ? 175 : 256)});
 								jQuery('#wfTwoFactorDownload').on('click', function(e) {
 									e.preventDefault();
 									e.stopPropagation();
@@ -2364,8 +2368,7 @@
 
 								message = message + "</ul><p><em>This will be shown only once. Keep these codes somewhere safe.</em></p>";
 
-								self.colorbox('400px', "Recovery Codes", message, {onComplete: function() {
-									jQuery('#wfTwoFactorQRCodeTable').qrcode({text: totpURL});
+								self.colorbox((self.isSmallScreen ? '300px' : '400px'), "Recovery Codes", message, {onComplete: function() {
 									jQuery('#wfTwoFactorDownload').on('click', function(e) {
 										e.preventDefault();
 										e.stopPropagation();
@@ -2530,11 +2533,11 @@
 				var self = this;
 				this.ajax('wordfence_exportSettings', {}, function(res) {
 					if (res.ok && res.token) {
-						self.colorbox('400px', "Export Successful", "We successfully exported your site settings. To import your site settings on another site, copy and paste the token below into the import text box on the destination site. Keep this token secret. It is like a password. If anyone else discovers the token it will allow them to import your settings excluding your API key.<br /><br />Token:<input type=\"text\" size=\"20\" value=\"" + res.token + "\" onclick=\"this.select();\" /><br />");
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), "Export Successful", "We successfully exported your site settings. To import your site settings on another site, copy and paste the token below into the import text box on the destination site. Keep this token secret. It is like a password. If anyone else discovers the token it will allow them to import your settings excluding your API key.<br /><br />Token:<input type=\"text\" size=\"20\" value=\"" + res.token + "\" onclick=\"this.select();\" /><br />");
 					} else if (res.err) {
-						self.colorbox('400px', "Error during Export", res.err);
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), "Error during Export", res.err);
 					} else {
-						self.colorbox('400px', "An unknown error occurred", "An unknown error occurred during the export. We received an undefined error from your web server.");
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), "An unknown error occurred", "An unknown error occurred during the export. We received an undefined error from your web server.");
 					}
 				});
 			},
@@ -2542,11 +2545,11 @@
 				var self = this;
 				this.ajax('wordfence_importSettings', {token: token}, function(res) {
 					if (res.ok) {
-						self.colorbox('400px', "Import Successful", "You successfully imported " + res.totalSet + " options. Your import is complete. Please reload this page or click the button below to reload it:<br /><br /><input class=\"wf-btn wf-btn-default\" type=\"button\" value=\"Reload Page\" onclick=\"window.location.reload(true);\" />");
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), "Import Successful", "You successfully imported " + res.totalSet + " options. Your import is complete. Please reload this page or click the button below to reload it:<br /><br /><input class=\"wf-btn wf-btn-default\" type=\"button\" value=\"Reload Page\" onclick=\"window.location.reload(true);\" />");
 					} else if (res.err) {
-						self.colorbox('400px', "Error during Import", res.err);
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), "Error during Import", res.err);
 					} else {
-						self.colorbox('400px', "Error during Export", "An unknown error occurred during the import");
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), "Error during Export", "An unknown error occurred during the import");
 					}
 				});
 			},
@@ -2555,9 +2558,9 @@
 				this.ajax('wordfence_startPasswdAudit', {auditType: auditType, emailAddr: emailAddr}, function(res) {
 					self.loadPasswdAuditJobs();
 					if (res.ok) {
-						self.colorbox('400px', "Password Audit Started", "Your password audit started successfully. The results will appear here once it is complete. You will also receive an email letting you know the results are ready at: " + emailAddr);
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), "Password Audit Started", "Your password audit started successfully. The results will appear here once it is complete. You will also receive an email letting you know the results are ready at: " + emailAddr);
 					} else if (!res.errorMsg) { //error displayed
-						self.colorbox('400px', "Error Starting Audit", "An unknown error occurred when trying to start your password audit.");
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), "Error Starting Audit", "An unknown error occurred when trying to start your password audit.");
 					}
 				});
 			},
@@ -2569,12 +2572,12 @@
 				}, function(res) {
 					if (res.ok) {
 						self.loadIssues(function() {
-							self.colorbox('400px', "Successfully deleted admin", "The admin user " +
+							self.colorbox((self.isSmallScreen ? '300px' : '400px'), "Successfully deleted admin", "The admin user " +
 								self.htmlEscape(res.user_login) + " was successfully deleted.");
 						});
 					} else if (res.errorMsg) {
 						self.loadIssues(function() {
-							self.colorbox('400px', 'An error occurred', res.errorMsg);
+							self.colorbox((self.isSmallScreen ? '300px' : '400px'), 'An error occurred', res.errorMsg);
 						});
 					}
 				});
@@ -2587,12 +2590,12 @@
 				}, function(res) {
 					if (res.ok) {
 						self.loadIssues(function() {
-							self.colorbox('400px', "Successfully revoked admin", "All capabilties of admin user " +
+							self.colorbox((self.isSmallScreen ? '300px' : '400px'), "Successfully revoked admin", "All capabilties of admin user " +
 								self.htmlEscape(res.user_login) + " were successfully revoked.");
 						});
 					} else if (res.errorMsg) {
 						self.loadIssues(function() {
-							self.colorbox('400px', 'An error occurred', res.errorMsg);
+							self.colorbox((self.isSmallScreen ? '300px' : '400px'), 'An error occurred', res.errorMsg);
 						});
 					}
 				});
@@ -2687,7 +2690,7 @@
 				this.ajax('wordfence_saveWAFConfig', data, function(res) {
 					if (typeof res === 'object' && res.success) {
 						if (showColorBox) {
-							self.colorbox('400px', 'Firewall Configuration', 'The Wordfence Web Application Firewall ' +
+							self.colorbox((self.isSmallScreen ? '300px' : '400px'), 'Firewall Configuration', 'The Wordfence Web Application Firewall ' +
 								'configuration was saved successfully.');
 						}
 						self.wafData = res.data;
@@ -2696,7 +2699,7 @@
 							return onSuccess.apply(this, arguments);
 						}
 					} else {
-						self.colorbox('400px', 'Error saving Firewall configuration', 'There was an error saving the ' +
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), 'Error saving Firewall configuration', 'There was an error saving the ' +
 							'Web Application Firewall configuration settings.');
 					}
 				});
@@ -2772,17 +2775,17 @@
 					self.wafConfigPageRender();
 					if (self.wafData['updated']) {
 						if (!self.wafData['isPaid']) {
-							self.colorbox('400px', 'Rules Updated', 'Your rules have been updated successfully. You are ' +
+							self.colorbox((self.isSmallScreen ? '300px' : '400px'), 'Rules Updated', 'Your rules have been updated successfully. You are ' +
 								'currently using the the free version of Wordfence. ' +
 								'Upgrade to Wordfence premium to have your rules updated automatically as new threats emerge. ' +
 								'<a href="https://www.wordfence.com/wafUpdateRules1/wordfence-signup/">Click here to purchase a premium API key</a>. ' +
 								'<em>Note: Your rules will still update every 30 days as a free user.</em>');
 						} else {
-							self.colorbox('400px', 'Rules Updated', 'Your rules have been updated successfully.');
+							self.colorbox((self.isSmallScreen ? '300px' : '400px'), 'Rules Updated', 'Your rules have been updated successfully.');
 						}
 					}
 					else {
-						self.colorbox('400px', 'Rule Update Failed', 'No rules were updated. Please verify you have permissions to write to the /wp-content/wflogs directory.');
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), 'Rule Update Failed', 'No rules were updated. Please verify you have permissions to write to the /wp-content/wflogs directory.');
 					}
 					if (typeof onSuccess === 'function') {
 						return onSuccess.apply(this, arguments);
@@ -2803,13 +2806,13 @@
 			wafAddBootstrap: function() {
 				var self = this;
 				this.ajax('wordfence_wafAddBootstrap', {}, function(res) {
-					self.colorbox('400px', 'File Created', "");
+					self.colorbox((self.isSmallScreen ? '300px' : '400px'), 'File Created', "");
 				});
 			},
 
 			wafConfigureAutoPrepend: function() {
 				var self = this;
-				self.colorbox("400px", 'Backup .htaccess before continuing', 'We are about to change your <em>.htaccess</em> file. Please make a backup of this file before proceeding.'
+				self.colorbox((self.isSmallScreen ? '300px' : '400px'), 'Backup .htaccess before continuing', 'We are about to change your <em>.htaccess</em> file. Please make a backup of this file before proceeding.'
 					+ '<br/>'
 					+ '<a href="' + WordfenceAdminVars.ajaxURL + '?action=wordfence_downloadHtaccess&nonce=' + self.nonce + '" onclick="jQuery(\'#wf-htaccess-confirm\').prop(\'disabled\', false); return true;">Click here to download a backup copy of your .htaccess file now</a>' +
 					'<br /><br />' +
@@ -2819,7 +2822,7 @@
 			confirmWAFConfigureAutoPrepend: function() {
 				var self = this;
 				this.ajax('wordfence_wafConfigureAutoPrepend', {}, function(res) {
-					self.colorbox('400px', '.htaccess Updated', "Your .htaccess has been updated successfully. Please " +
+					self.colorbox((self.isSmallScreen ? '300px' : '400px'), '.htaccess Updated', "Your .htaccess has been updated successfully. Please " +
 						"verify your site is functioning normally.");
 				});
 			},

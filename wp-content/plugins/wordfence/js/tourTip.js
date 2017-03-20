@@ -151,7 +151,7 @@ if(WordfenceAdminVars.tourClosed != '1' && WordfenceAdminVars.welcomeClosed != '
 			formHTML +
 			"<p>Then click \"Start Tour\" to get a quick introduction to how Wordfence protects your site, keeps you off Google's SEO black-list and can even help clean a hacked site.</p>",
 		pointerWidth: 300,
-		position: { edge: 'bottom', align: 'left' },
+		position: { edge: (jQuery('body.multisite').length == 0 ? 'bottom' : 'left'), align: 'left' },
 		buttons: function(event, t){
 			var buttonElem = jQuery('<a id="pointer-close" style="margin-left:5px" class="button-secondary">Close</a>');
 			buttonElem.bind('click.pointer', function(){ t.element.pointer('close'); 

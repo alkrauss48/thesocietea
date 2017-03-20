@@ -1,6 +1,10 @@
 <?php
 
 interface wfWAFStorageInterface {
+	const IP_BLOCKS_ALL = PHP_INT_MAX;
+	const IP_BLOCKS_SINGLE = 1; //1 << 0
+	const IP_BLOCKS_BLACKLIST = 2; //1 << 1
+	
 	public function hasPreviousAttackData($olderThan);
 
 	public function hasNewerAttackData($newerThan);
@@ -42,6 +46,8 @@ interface wfWAFStorageInterface {
 	public function blockIP($timestamp, $ip);
 
 	public function isIPBlocked($ip);
+	
+	public function purgeIPBlocks($types = wfWAFStorageInterface::IP_BLOCKS_ALL);
 
 	public function getConfig($key, $default = null);
 

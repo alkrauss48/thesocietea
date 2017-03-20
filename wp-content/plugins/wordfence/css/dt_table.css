@@ -21,7 +21,7 @@ table.display thead th div.DataTables_sort_wrapper span{position:absolute;top:50
 .paginate_enabled_previous{background-image:url(../images/back_enabled.jpg)}
 .paginate_disabled_next{background-image:url(../images/forward_disabled.jpg)}
 .paginate_enabled_next{background-image:url(../images/forward_enabled.jpg)}
-table.display{width:800px;clear:both;border-collapse:collapse;margin:0 0 24px;background:#fff;position:relative;top:12px}
+table.display{max-width:800px;clear:both;border-collapse:collapse;margin:0 0 24px;background:#fff;position:relative;top:12px}
 table.display tfoot th{font-weight:400;padding:3px 8px 3px 8px}
 table.display tr.heading2 td{border-bottom:1px solid #aaa}
 table.display td{padding:5px 8px;border:1px solid #ccc}
@@ -46,7 +46,6 @@ td.details{background-color:#d1cfd0;border:2px solid #A19B9E}
 .paging_full_numbers span.paginate_button_disabled:hover {background:#fff}
 table.display tr.even.row_selected td{background-color:#B0BED9}
 table.display tr.odd.row_selected td{background-color:#9FAFD1}
-.sorting_1 {background:#f5f5f5}
 table.display td.center,.dataTables_empty{text-align:center}
 .dataTables_empty{background:#fff}
 .paging_full_numbers span.paginate_button{background-color:#fff}

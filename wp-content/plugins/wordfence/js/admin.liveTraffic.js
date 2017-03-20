@@ -658,7 +658,8 @@
 		var loadingListings = false;
 		$(window).on('scroll', function() {
 			var win = $(this);
-			if (legendWrapper.offset().top < win.scrollTop() + adminBar.outerHeight() + 10) {
+			var needsSticky = (WFAD.isSmallScreen ? (legendWrapper.offset().top < win.scrollTop() + 10) : (legendWrapper.offset().top < win.scrollTop() + adminBar.outerHeight() + 10));
+			if (needsSticky) {
 				var legendWidth = legend.width();
 				var legendHeight = legend.height();
 				

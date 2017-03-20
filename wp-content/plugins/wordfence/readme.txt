@@ -2,8 +2,8 @@
 Contributors: mmaunder 
 Tags: security, secure, security plugin, wordpress security, login security, firewall, malware, antivirus, web application firewall, block hackers, country blocking
 Requires at least: 3.9
-Tested up to: 4.7.2
-Stable tag: 6.3.2
+Tested up to: 4.7.3
+Stable tag: 6.3.4
 
 Secure your website with the most comprehensive WordPress security plugin. Firewall, malware scan, blocking, live traffic, login security & more.
 
@@ -160,6 +160,19 @@ Secure your website with Wordfence.
 7. If you're technically minded, this is the under-the-hood view of Wordfence Security options where you can fine-tune your security settings.
 
 == Changelog ==
+
+= 6.3.4 =
+* Improvement: Added a path for people blocked by the IP blacklist (Premium Feature) to report false positives.
+
+= 6.3.3 =
+* New: Malicious IPs are now preemptively blocked by a regularly-updated blacklist. [Premium Feature]
+* Improvement: Better layout and display for mobile screen sizes.
+* Improvement: Dashboard chart data is now updated more frequently.
+* Fix: Fixed database errors on notifications page on multisite installations.
+* Fix: Fixed site URL detection for multisite installations.
+* Fix: Fixed tour popup positioning on multisite.
+* Fix: Increased the z-index of the AJAX error watcher alert.
+* Fix: Addressed an additional way to enumerate authors with the REST JSON API.
 
 = 6.3.2 =
 * Improvement: Improved the WAF's ability to inspect POST bodies.

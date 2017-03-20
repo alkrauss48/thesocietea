@@ -1,32 +1,60 @@
 <div class="wordfenceHelpLink"><a href="<?php echo $helpLink; ?>" target="_blank" class="wfhelp"></a><a href="<?php echo $helpLink; ?>" target="_blank"><?php echo $helpLabel; ?></a></div>
 <div>
 	<div class="wordfenceModeElem" id="wordfenceMode_rangeBlocking"></div>
-	<p>
-		<?php if(! wfConfig::get('firewallEnabled')){ ?><div style="color: #F00; font-weight: bold;">Rate limiting rules and advanced blocking are disabled. You can enable it on the <a href="admin.php?page=WordfenceSecOpt">Wordfence Options page</a> at the top.</div><br /><?php } ?>
-		<table class="wfConfigForm">
-			<tr><th>IP address range:</th><td><input id="ipRange" type="text" size="30" maxlength="255" value="<?php 
+	<?php if (!wfConfig::get('firewallEnabled')) { ?>
+	<div class="wf-notice"><p><strong>Rate limiting rules and advanced blocking are disabled.</strong> You can enable it on the <a href="admin.php?page=WordfenceSecOpt">Wordfence Options page</a> at the top.</p></div>
+	<?php } ?>
+	<div class="wf-form wf-form-horizontal wf-add-top">
+		<div class="wf-form-group">
+			<label for="ipRange" class="wf-col-sm-2 wf-control-label">IP address range</label>
+			<div class="wf-col-sm-6">
+				<input type="text" id="ipRange" name="ipRange" class="wf-form-control" value="<?php
 				if( isset( $_GET['wfBlockRange'] ) && preg_match('/^[\da-f\.\s\t\-:]+$/i', $_GET['wfBlockRange']) ){ echo wp_kses($_GET['wfBlockRange'], array()); }
-				?>" onkeyup="WFAD.calcRangeTotal();">&nbsp;<span id="wfShowRangeTotal"></span></td></tr>
-			<tr><td></td><td style="padding-bottom: 15px;"><strong>Examples:</strong> 192.168.200.200 - 192.168.200.220</td></tr>
-			<tr><th>Hostname:</th><td><input id="hostname" type="text" size="30" maxlength="255" value="<?php
+				?>" onkeyup="WFAD.calcRangeTotal();">
+				<span class="wf-help-block" id="wfShowRangeTotal"></span>
+				<span class="wf-help-block">Examples: 192.168.200.200 - 192.168.200.220</span>
+			</div>
+		</div>
+		<div class="wf-form-group">
+			<label for="hostname" class="wf-col-sm-2 wf-control-label">Hostname</label>
+			<div class="wf-col-sm-6">
+				<input type="text" id="hostname" name="hostname" class="wf-form-control" value="<?php
 				if( isset( $_GET['wfBlockHostname'] ) ){ echo esc_attr($_GET['wfBlockHostname']); }
-				?>" onkeyup="WFAD.calcRangeTotal();">&nbsp;<span id="wfShowRangeTotal"></span></td></tr>
-			<tr><td><em class="small">
-						Using this setting will make a DNS query<br>
-						per unique IP address (per visitor),<br>
-						and can add additional load. High traffic<br> sites may not want to use this feature.</em>
-				</td><td style="padding-bottom: 15px;vertical-align: top;"><strong>Examples:</strong> *.amazonaws.com, *.linode.com</td></tr>
-			<tr><th>User-Agent (browser) that matches:</th><td><input id="uaRange" type="text" size="30" maxlength="255" >&nbsp;(Case insensitive)</td></tr>
-			<tr><td></td><td style="padding-bottom: 15px;"><strong>Examples:</strong> *badRobot*, AnotherBadRobot*, *someBrowserSuffix</td></tr>
-			<tr><th>Referer (website visitor arrived from) that matches:</th><td><input id="wfreferer" type="text" size="30" maxlength="255" >&nbsp;(Case insensitive)</td></tr>
-			<tr><td></td><td style="padding-bottom: 15px;"><strong>Examples:</strong> *badWebsite*, AnotherBadWebsite*, *someWebsiteSuffix</td></tr>
-			<tr><th>Enter a reason you're blocking this visitor pattern:</th><td><input id="wfReason" type="text" size="30" maxlength="255"></td></tr>
-			<tr><td></td><td style="padding-bottom: 15px;"><strong>Why a reason:</strong> The reason you specify above is for your own record keeping.</td></tr>
-			<tr><td colspan="2" style="padding-top: 15px;">
-				<input type="button" name="but3" class="wf-btn wf-btn-primary" value="Block Visitors Matching this Pattern" onclick="WFAD.blockIPUARange(jQuery('#ipRange').val(), jQuery('#hostname').val(), jQuery('#uaRange').val(), jQuery('#wfreferer').val(), jQuery('#wfReason').val()); return false;" />
-			</td></tr>
-		</table>
-	</p>
+				?>">
+				<span class="wf-help-block">Examples: *.amazonaws.com, *.linode.com</span>
+				<span class="wf-help-block">Using this setting will make a DNS query per unique IP address (per visitor), and can add additional load. High traffic<br> sites may not want to use this feature.</span>
+			</div>
+		</div>
+		<div class="wf-form-group">
+			<label for="uaRange" class="wf-col-sm-2 wf-control-label">User-Agent (browser) that matches</label>
+			<div class="wf-col-sm-6">
+				<input type="text" id="uaRange" name="uaRange" class="wf-form-control">
+				<span class="wf-help-block">(Case insensitive)</span>
+				<span class="wf-help-block">Examples: *badRobot*, AnotherBadRobot*, *someBrowserSuffix</span>
+			</div>
+		</div>
+		<div class="wf-form-group">
+			<label for="wfreferer" class="wf-col-sm-2 wf-control-label">Referer (website visitor arrived from) that matches</label>
+			<div class="wf-col-sm-6">
+				<input type="text" id="wfreferer" name="wfreferer" class="wf-form-control">
+				<span class="wf-help-block">(Case insensitive)</span>
+				<span class="wf-help-block">Examples: *badWebsite*, AnotherBadWebsite*, *someWebsiteSuffix</span>
+			</div>
+		</div>
+		<div class="wf-form-group">
+			<label for="wfReason" class="wf-col-sm-2 wf-control-label">Enter a reason you're blocking this visitor pattern</label>
+			<div class="wf-col-sm-6">
+				<input type="text" id="wfReason" name="wfReason" class="wf-form-control">
+				<span class="wf-help-block">(Case insensitive)</span>
+				<span class="wf-help-block">Why a reason: The reason you specify above is for your own record keeping.</span>
+			</div>
+		</div>
+		<div class="wf-form-group">
+			<div class="wf-col-sm-6 wf-col-sm-offset-2">
+				<a class="wf-btn wf-btn-primary" href="#" onclick="WFAD.blockIPUARange(jQuery('#ipRange').val(), jQuery('#hostname').val(), jQuery('#uaRange').val(), jQuery('#wfreferer').val(), jQuery('#wfReason').val()); return false;">Block Visitors Matching this Pattern</a>
+			</div>
+		</div>
+	</div>
 	<p>
 		<h2>Current list of ranges and patterns you've blocked</h2>
 		<div id="currentBlocks"></div>
@@ -45,16 +73,16 @@
 	<div style="color: #AAA;">
 	{{/if}}
 	<div>
-		<strong>IP Range:</strong>&nbsp;${ipPattern}
+		<strong>IP Range:</strong>&nbsp;<span class="wf-split-word-xs">${ipPattern}</span>
 	</div>
 	<div>
-		<strong>Hostname:</strong>&nbsp;${hostnamePattern}
+		<strong>Hostname:</strong>&nbsp;<span class="wf-split-word-xs">${hostnamePattern}</span>
 	</div>
 	<div>
-		<strong>Browser Pattern:</strong>&nbsp;${browserPattern}
+		<strong>Browser Pattern:</strong>&nbsp;<span class="wf-split-word-xs">${browserPattern}</span>
 	</div>
 	<div>
-		<strong>Source website:</strong>&nbsp;${refererPattern}
+		<strong>Source website:</strong>&nbsp;<span class="wf-split-word-xs">${refererPattern}</span>
 	</div>
 	<div>
 		<strong>Reason:</strong>&nbsp;${reason}

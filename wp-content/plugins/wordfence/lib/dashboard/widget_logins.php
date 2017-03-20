@@ -73,7 +73,7 @@
 												$(self).closest('.wf-recent-logins').find('table').replaceWith(table);
 											}
 											else {
-												WFAD.colorbox('400px', 'An error occurred', 'We encountered an error trying load more data.');
+												WFAD.colorbox('300px', 'An error occurred', 'We encountered an error trying load more data.');
 												$(this).closest('.wf-dashboard-item-list-text').fadeIn();
 											}
 										});

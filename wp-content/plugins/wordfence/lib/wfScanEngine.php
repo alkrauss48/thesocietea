@@ -206,7 +206,7 @@ class wfScanEngine {
 			$this->status(1, 'info', '-------------------');
 			$this->status(1, 'info', "Scan interrupted. Scanned " . $summary['totalFiles'] . " files, " . $summary['totalPlugins'] . " plugins, " . $summary['totalThemes'] . " themes, " . ($summary['totalPages'] + $summary['totalPosts']) . " pages, " . $summary['totalComments'] . " comments and " . $summary['totalRows'] . " records in " . wfUtils::makeDuration(time() - $this->startTime, true) . ".");
 			if($this->i->totalIssues  > 0){
-				$this->status(10, 'info', "SUM_FINAL:Scan interrupted. You have " . $this->i->totalIssues . " new issues to fix. See below.");
+				$this->status(10, 'info', "SUM_FINAL:Scan interrupted. You have " . $this->i->totalIssues . " new issue" . ($this->i->totalIssues == 1 ? "" : "s") . " to fix. See below.");
 			} else {
 				$this->status(10, 'info', "SUM_FINAL:Scan interrupted. No problems found prior to stopping.");
 			}
@@ -266,7 +266,7 @@ class wfScanEngine {
 		$this->status(1, 'info', '-------------------');
 		$this->status(1, 'info', "Scan Complete. Scanned " . $summary['totalFiles'] . " files, " . $summary['totalPlugins'] . " plugins, " . $summary['totalThemes'] . " themes, " . ($summary['totalPages'] + $summary['totalPosts']) . " pages, " . $summary['totalComments'] . " comments and " . $summary['totalRows'] . " records in " . wfUtils::makeDuration(time() - $this->startTime, true) . ".");
 		if($this->i->totalIssues  > 0){
-			$this->status(10, 'info', "SUM_FINAL:Scan complete. You have " . $this->i->totalIssues . " new issues to fix. See below.");
+			$this->status(10, 'info', "SUM_FINAL:Scan complete. You have " . $this->i->totalIssues . " new issue" . ($this->i->totalIssues == 1 ? "" : "s") . " to fix. See below.");
 		} else {
 			$this->status(10, 'info', "SUM_FINAL:Scan complete. Congratulations, no problems found.");
 		}

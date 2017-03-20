@@ -3,6 +3,7 @@
 class wfWAFStorageFile implements wfWAFStorageInterface {
 
 	const LOG_FILE_HEADER = "<?php exit('Access denied'); __halt_compiler(); ?>\n";
+	const IP_BLOCK_RECORD_SIZE = 24;
 
 	public static function atomicFilePutContents($file, $content, $prefix = 'config') {
 		$tmpFile = @tempnam(dirname($file), $prefix . '.tmp.');
@@ -291,12 +292,12 @@ class wfWAFStorageFile implements wfWAFStorageInterface {
 	 * @return mixed|void
 	 * @throws wfWAFStorageFileException
 	 */
-	public function blockIP($timestamp, $ip) {
+	public function blockIP($timestamp, $ip, $type = wfWAFStorageInterface::IP_BLOCKS_SINGLE) {
 		$this->open();
 		if (!$this->isIPBlocked($ip)) {
 			self::lock($this->ipCacheFileHandle, LOCK_EX);
 			fseek($this->ipCacheFileHandle, 0, SEEK_END);
-			fwrite($this->ipCacheFileHandle, wfWAFUtils::inet_pton($ip) . pack('V', $timestamp));
+			fwrite($this->ipCacheFileHandle, wfWAFUtils::inet_pton($ip) . pack('V', $timestamp) . pack('V', $type));
 			fflush($this->ipCacheFileHandle);
 			self::lock($this->ipCacheFileHandle, LOCK_UN);
 		}
@@ -312,11 +313,15 @@ class wfWAFStorageFile implements wfWAFStorageInterface {
 		fseek($this->ipCacheFileHandle, wfWAFUtils::strlen(self::LOG_FILE_HEADER), SEEK_SET);
 		self::lock($this->ipCacheFileHandle, LOCK_SH);
 		while (!feof($this->ipCacheFileHandle)) {
-			$ipStr = fread($this->ipCacheFileHandle, 20);
+			$ipStr = fread($this->ipCacheFileHandle, self::IP_BLOCK_RECORD_SIZE);
 			$ip2 = wfWAFUtils::substr($ipStr, 0, 16);
-			if ($ipBin === $ip2 && unpack('V', wfWAFUtils::substr($ipStr, 16, 4)) >= time()) {
-				self::lock($this->ipCacheFileHandle, LOCK_UN);
-				return true;
+			$unpacked = @unpack('V', wfWAFUtils::substr($ipStr, 16, 4));
+			if (is_array($unpacked)) {
+				$t = array_shift($unpacked);
+				if ($ipBin === $ip2 && $t >= time()) {
+					self::lock($this->ipCacheFileHandle, LOCK_UN);
+					return true;
+				}
 			}
 		}
 		self::lock($this->ipCacheFileHandle, LOCK_UN);
@@ -384,19 +389,54 @@ class wfWAFStorageFile implements wfWAFStorageInterface {
 		$writePointer = wfWAFUtils::strlen(self::LOG_FILE_HEADER);
 		fseek($this->ipCacheFileHandle, $readPointer, SEEK_SET);
 		self::lock($this->ipCacheFileHandle, LOCK_EX);
+		$ipCacheRow = fread($this->ipCacheFileHandle, self::IP_BLOCK_RECORD_SIZE);
 		while (!feof($this->ipCacheFileHandle)) {
-			$ipCacheRow = fread($this->ipCacheFileHandle, 20);
-			$expires = unpack('V', wfWAFUtils::substr($ipCacheRow, 16, 4));
-			if ($expires >= time()) {
-				fseek($this->ipCacheFileHandle, $writePointer, SEEK_SET);
-				fwrite($this->ipCacheFileHandle, $ipCacheRow);
-				$writePointer += 20;
-				fseek($this->ipCacheFileHandle, $readPointer, SEEK_SET);
+			$unpacked = @unpack('V', wfWAFUtils::substr($ipCacheRow, 16, 4));
+			if (is_array($unpacked)) {
+				$expires = array_shift($unpacked);
+				if ($expires >= time()) {
+					fseek($this->ipCacheFileHandle, $writePointer, SEEK_SET);
+					fwrite($this->ipCacheFileHandle, $ipCacheRow);
+					$writePointer += self::IP_BLOCK_RECORD_SIZE;
+				}
 			}
-			$readPointer += 20;
+			$readPointer += self::IP_BLOCK_RECORD_SIZE;
 			fseek($this->ipCacheFileHandle, $readPointer, SEEK_SET);
+			$ipCacheRow = fread($this->ipCacheFileHandle, self::IP_BLOCK_RECORD_SIZE);
 		}
 		ftruncate($this->ipCacheFileHandle, $writePointer);
+		fflush($this->ipCacheFileHandle);
+		self::lock($this->ipCacheFileHandle, LOCK_UN);
+	}
+	
+	/**
+	 * Remove all existing IP blocks.
+	 */
+	public function purgeIPBlocks($types = wfWAFStorageInterface::IP_BLOCKS_ALL) {
+		$this->open();
+		$readPointer = wfWAFUtils::strlen(self::LOG_FILE_HEADER);
+		$writePointer = wfWAFUtils::strlen(self::LOG_FILE_HEADER);
+		fseek($this->ipCacheFileHandle, $readPointer, SEEK_SET);
+		self::lock($this->ipCacheFileHandle, LOCK_EX);
+		if ($types !== wfWAFStorageInterface::IP_BLOCKS_ALL) {
+			$ipCacheRow = fread($this->ipCacheFileHandle, self::IP_BLOCK_RECORD_SIZE);
+			while (!feof($this->ipCacheFileHandle)) {
+				$unpacked = @unpack('Vexpires/Vtype', wfWAFUtils::substr($ipCacheRow, 16, 8));
+				if (is_array($unpacked)) {
+					$type = $unpacked['type'];
+					if (($type & $types) == 0) {
+						fseek($this->ipCacheFileHandle, $writePointer, SEEK_SET);
+						fwrite($this->ipCacheFileHandle, $ipCacheRow);
+						$writePointer += self::IP_BLOCK_RECORD_SIZE;
+					}
+				}
+				$readPointer += self::IP_BLOCK_RECORD_SIZE;
+				fseek($this->ipCacheFileHandle, $readPointer, SEEK_SET);
+				$ipCacheRow = fread($this->ipCacheFileHandle, self::IP_BLOCK_RECORD_SIZE);
+			}
+		}
+		ftruncate($this->ipCacheFileHandle, $writePointer);
+		fflush($this->ipCacheFileHandle);
 		self::lock($this->ipCacheFileHandle, LOCK_UN);
 	}
 

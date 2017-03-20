@@ -34,16 +34,31 @@
 	
 	<h2>Enable Cellphone Sign-in</h2>
 	<p><em>Our Cellphone Sign-in uses a technique called "Two Factor Authentication" which is used by banks, government agencies and military world-wide as one of the most secure forms of remote system authentication. We recommend you enable Cellphone Sign-in for all Administrator level accounts.</em></p>
-	<table class="wfConfigForm">
-		<tr><td>Username to enable Cellphone Sign-in for:</td><td><input type="text" id="wfUsername" value="" size="20" /></td></tr>
-		<tr><td class="align-top">Code generation mode:</td><td>
-				<table class="wfConfigForm">
-					<tr><td><input type="radio" name="wf2faMode" value="authenticator" checked></td><td>Use authenticator app</td></tr>
-					<tr><td><input type="radio" name="wf2faMode" value="phone"></td><td>Send code to a phone number: <input type="text" id="wfPhone" value="" size="20" disabled><br><em>Format: +1-123-555-5034</em></td></tr>
-				</table>
-		</td></tr>
-		<tr><td colspan="2"><input type="button" class="wf-btn wf-btn-primary" value="Enable Cellphone Sign-in" onclick="WFAD.addTwoFactor(jQuery('#wfUsername').val(), jQuery('#wfPhone').val(), jQuery('input[name=wf2faMode]:checked').val());" /></td></tr>
-	</table>
+	<div class="wf-form wf-form-twofactor">
+		<div class="wf-form-group">
+			<label for="wfUsername">Username<span class="wf-hidden-xs"> to enable Cellphone Sign-in for</span></label>
+			<input type="text" id="wfUsername" class="wf-form-control" value="" size="20">
+		</div>
+		<div class="wf-form-group">
+			<label for="wf2faMode"><span class="wf-visible-xs">Mode</span><span class="wf-hidden-xs">Code generation mode</span></label>
+		</div>
+		<div class="wf-radio">
+			<label>
+				<input type="radio" name="wf2faMode" id="wf2faMode-authenticator" value="authenticator" checked>
+				Use authenticator app
+			</label>
+		</div>
+		<div class="wf-radio">
+			<label>
+				<input type="radio" name="wf2faMode" id="wf2faMode-phone" value="phone">
+				Send code to a phone number:
+			</label>
+			<div class="wf-radio-offset"><input type="text" id="wfPhone" value="" size="20" disabled><br><em>Format: +1-123-555-5034</em></div>
+		</div>
+		<div class="wf-form-group">
+			<input type="button" class="wf-btn wf-btn-primary" value="Enable Cellphone Sign-in" onclick="WFAD.addTwoFactor(jQuery('#wfUsername').val(), jQuery('#wfPhone').val(), jQuery('input[name=wf2faMode]:checked').val());">
+		</div>
+	</div>
 	<div style="height: 20px;">
 		<div id="wfTwoFacMsg" style="color: #F00;">
 		&nbsp;
@@ -86,19 +101,19 @@
 </div>
 
 <script type="text/x-jquery-template" id="wfTwoFacUserTmpl">
-	<table class="wf-striped-table">
+	<table class="wf-table wf-table-striped wf-table-bordered wf-table-twofactor"> 
 		<thead>
 			<tr>
-				<th style="width: 80px;"></th>
-				<th style="width: 100px;">User</th>
-				<th style="width: 180px;">Mode</th>
+				<th></th>
+				<th>User</th>
+				<th>Mode</th>
 				<th>Status</th>
 			</tr>
 		</thead>
 		<tbody>
 		{{each(idx, user) users}}
 			<tr id="twoFactorUser-${user.userID}">
-				<td style="white-space: nowrap; text-align: center;"><a href="#" class="wf-btn wf-btn-default" onclick="WFAD.delTwoFac('${user.userID}'); return false;">Delete</a></td>
+				<td style="white-space: nowrap; text-align: center;" class="wf-twofactor-delete"><a href="#" onclick="WFAD.delTwoFac('${user.userID}'); return false;"><i class="wf-ion-trash-a"></i></a></td>
 				<td style="white-space: nowrap;">${user.username}</td>
 				{{if user.mode == 'phone'}}
 				<td style="white-space: nowrap;">Phone (${user.phone})</td>
@@ -111,7 +126,7 @@
 					{{else}}
 					<div class="wf-form-inline">
 						<div class="wf-form-group">
-							<label class="wf-plain" style="margin: 0;" for="wfActivate-${user.userID}">Enter activation code:</label> <input class="wf-form-control" type="text" id="wfActivate-${user.userID}" size="6">
+							<label class="wf-plain wf-hidden-xs" style="margin: 0;" for="wfActivate-${user.userID}">Enter activation code:</label> <input class="wf-form-control" type="text" id="wfActivate-${user.userID}" size="6" placeholder="Code">
 						</div>
 						<input class="wf-btn wf-btn-default" type="button" value="Activate" onclick="WFAD.twoFacActivate('${user.userID}', jQuery('#wfActivate-${user.userID}').val());">
 					</div>

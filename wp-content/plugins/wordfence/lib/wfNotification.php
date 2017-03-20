@@ -13,7 +13,8 @@ class wfNotification {
 	
 	public static function notifications($since = 0) {
 		global $wpdb;
-		$rawNotifications = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->prefix}wfNotifications WHERE `new` = 1 AND `ctime` > %d ORDER BY `priority` ASC, `ctime` DESC", $since), ARRAY_A); 
+		$prefix = wfDB::networkPrefix();
+		$rawNotifications = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$prefix}wfNotifications WHERE `new` = 1 AND `ctime` > %d ORDER BY `priority` ASC, `ctime` DESC", $since), ARRAY_A); 
 		$notifications = array();
 		foreach ($rawNotifications as $raw) {
 			$notifications[] = new wfNotification($raw['id'], $raw['priority'], $raw['html'], $raw['category'], $raw['ctime'], json_decode($raw['links'], true), true);
@@ -23,7 +24,8 @@ class wfNotification {
 	
 	public static function getNotificationForID($id) {
 		global $wpdb;
-		$rawNotifications = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->prefix}wfNotifications WHERE `id` = %s ORDER BY `priority` ASC, `ctime` DESC", $id), ARRAY_A);
+		$prefix = wfDB::networkPrefix();
+		$rawNotifications = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$prefix}wfNotifications WHERE `id` = %s ORDER BY `priority` ASC, `ctime` DESC", $id), ARRAY_A);
 		if (count($rawNotifications) == 1) {
 			$raw = $rawNotifications[0];
 			return new wfNotification($raw['id'], $raw['priority'], $raw['html'], $raw['category'], $raw['ctime'], json_decode($raw['links'], true), true);
@@ -33,7 +35,8 @@ class wfNotification {
 	
 	public static function getNotificationForCategory($category, $requireNew = true) {
 		global $wpdb;
-		$rawNotifications = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->prefix}wfNotifications WHERE " . ($requireNew ? '`new` = 1 AND ' : '') . "`category` = %s ORDER BY `priority` ASC, `ctime` DESC LIMIT 1", $category), ARRAY_A);
+		$prefix = wfDB::networkPrefix();
+		$rawNotifications = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$prefix}wfNotifications WHERE " . ($requireNew ? '`new` = 1 AND ' : '') . "`category` = %s ORDER BY `priority` ASC, `ctime` DESC LIMIT 1", $category), ARRAY_A);
 		if (count($rawNotifications) == 1) {
 			$raw = $rawNotifications[0];
 			return new wfNotification($raw['id'], $raw['priority'], $raw['html'], $raw['category'], $raw['ctime'], json_decode($raw['links'], true), true);

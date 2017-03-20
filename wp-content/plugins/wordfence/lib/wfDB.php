@@ -1,6 +1,10 @@
 <?php
 class wfDB {
 	public $errorMsg = false;
+	public static function networkPrefix() {
+		global $wpdb;
+		return $wpdb->get_blog_prefix(0);
+	}
 	public function __construct(){
 	}
 	public function querySingle(){
