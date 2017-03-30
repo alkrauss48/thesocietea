@@ -56,7 +56,7 @@ if (!isset($sendingDiagnosticEmail)) { $sendingDiagnosticEmail = false; }
 			<tbody>
 			<?php
 			$howGet = wfConfig::get('howGetIPs', false);
-			list($currentIP, $currentServerVarForIP) = wfUtils::getIPAndServerVarible();
+			list($currentIP, $currentServerVarForIP) = wfUtils::getIPAndServerVariable();
 			foreach (array(
 				         'REMOTE_ADDR'           => 'REMOTE_ADDR',
 				         'HTTP_CF_CONNECTING_IP' => 'CF-Connecting-IP',
@@ -65,7 +65,43 @@ if (!isset($sendingDiagnosticEmail)) { $sendingDiagnosticEmail = false; }
 			         ) as $variable => $label): ?>
 				<tr>
 					<td><?php echo $label ?></td>
-					<td><?php echo esc_html(array_key_exists($variable, $_SERVER) ? $_SERVER[$variable] : '(not set)') ?></td>
+					<td><?php 
+						if (!array_key_exists($variable, $_SERVER)) {
+							echo '(not set)';
+						}
+						else {
+							if (strpos($_SERVER[$variable], ',') !== false) {
+								$trustedProxies = explode("\n", wfConfig::get('howGetIPs_trusted_proxies', ''));
+								$items = preg_replace('/[\s,]/', '', explode(',', $_SERVER[$variable]));
+								$items = array_reverse($items);
+								$output = '';
+								$markedSelectedAddress = false;
+								foreach ($items as $index => $i) {
+									foreach ($trustedProxies as $proxy) {
+										if (!empty($proxy)) {
+											if (wfUtils::subnetContainsIP($proxy, $i) && $index < count($items) - 1) {
+												$output = esc_html($i) . ', ' . $output;
+												continue 2;
+											}
+										}
+									}
+									
+									if (!$markedSelectedAddress) {
+										$output = '<strong>' . esc_html($i) . '</strong>, ' . $output;
+										$markedSelectedAddress = true;
+									}
+									else {
+										$output = esc_html($i) . ', ' . $output;
+									}
+								}
+								
+								echo substr($output, 0, -2);
+							}
+							else {
+								echo esc_html($_SERVER[$variable]);
+							}
+						}
+						?></td>
 					<?php if ($currentServerVarForIP && $currentServerVarForIP === $variable): ?>
 						<td class="success">In use</td>
 					<?php elseif ($howGet === $variable): ?>

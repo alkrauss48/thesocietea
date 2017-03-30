@@ -816,10 +816,24 @@ And, of course, there is always the alternative of you having your own business,
 </div>
         </div>
 
+    <ul class="children">
+    <li class="comment even depth-3" id="dsq-comment-312">
+        <div id="dsq-comment-header-312" class="dsq-comment-header">
+            <cite id="dsq-cite-312">
+                <span id="dsq-author-user-312">aud_the_fraud</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-312" class="dsq-comment-body">
+            <div id="dsq-comment-message-312" class="dsq-comment-message"><p>yes i am in the process right now and find it very odd they haven&#8217;t told me the range for the position and didn&#8217;t ask for my requirements until after the recruiter, who reached out to me, screened me via phone and i had the hiring manager screen me via phone, I don&#8217;t want to ask at this point what the range is, but I also don&#8217;t want to fly from NoVa to the west coast for no reason!</p>
+</div>
+        </div>
+
     </li><!-- #comment-## -->
 </ul><!-- .children -->
 </li><!-- #comment-## -->
-    <li class="comment even thread-odd thread-alt depth-1" id="dsq-comment-229">
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+    <li class="comment odd alt thread-odd thread-alt depth-1" id="dsq-comment-229">
         <div id="dsq-comment-header-229" class="dsq-comment-header">
             <cite id="dsq-cite-229">
                 <span id="dsq-author-user-229">Engineer</span>
@@ -838,7 +852,7 @@ And, of course, there is always the alternative of you having your own business,
         <p>Pingback: <a href='https://wallethacks.com/ultimate-interview-guide/' rel='external nofollow' class='url'>The Ultimate Interview Guide: 110 Interview Tips to Get Your Dream Job - Wallet Hacks</a>()</p>
     </li>
     </li><!-- #comment-## -->
-    <li class="comment odd alt thread-even depth-1" id="dsq-comment-232">
+    <li class="comment even thread-even depth-1" id="dsq-comment-232">
         <div id="dsq-comment-header-232" class="dsq-comment-header">
             <cite id="dsq-cite-232">
                 <a id="dsq-author-user-232" href="http://meepfacedecker.com" target="_blank" rel="nofollow">Nick Decker</a>
@@ -850,7 +864,7 @@ And, of course, there is always the alternative of you having your own business,
         </div>
 
     </li><!-- #comment-## -->
-    <li class="comment even thread-odd thread-alt depth-1" id="dsq-comment-233">
+    <li class="comment odd alt thread-odd thread-alt depth-1" id="dsq-comment-233">
         <div id="dsq-comment-header-233" class="dsq-comment-header">
             <cite id="dsq-cite-233">
                 <a id="dsq-author-user-233" href="http://meepfacedecker.com" target="_blank" rel="nofollow">Nick Decker</a>
@@ -865,7 +879,7 @@ And, of course, there is always the alternative of you having your own business,
         </div>
 
     </li><!-- #comment-## -->
-    <li class="comment odd alt thread-even depth-1" id="dsq-comment-245">
+    <li class="comment even thread-even depth-1" id="dsq-comment-245">
         <div id="dsq-comment-header-245" class="dsq-comment-header">
             <cite id="dsq-cite-245">
                 <span id="dsq-author-user-245">KBrent Alexander KThomas</span>
@@ -877,7 +891,7 @@ And, of course, there is always the alternative of you having your own business,
         </div>
 
     </li><!-- #comment-## -->
-    <li class="comment even thread-odd thread-alt depth-1" id="dsq-comment-259">
+    <li class="comment odd alt thread-odd thread-alt depth-1" id="dsq-comment-259">
         <div id="dsq-comment-header-259" class="dsq-comment-header">
             <cite id="dsq-cite-259">
                 <span id="dsq-author-user-259">Tony</span>
@@ -889,7 +903,7 @@ And, of course, there is always the alternative of you having your own business,
         </div>
 
     </li><!-- #comment-## -->
-    <li class="comment odd alt thread-even depth-1" id="dsq-comment-272">
+    <li class="comment even thread-even depth-1" id="dsq-comment-272">
         <div id="dsq-comment-header-272" class="dsq-comment-header">
             <cite id="dsq-cite-272">
                 <span id="dsq-author-user-272">Brian Sullivan</span>
@@ -901,7 +915,7 @@ And, of course, there is always the alternative of you having your own business,
         </div>
 
     </li><!-- #comment-## -->
-    <li class="comment even thread-odd thread-alt depth-1" id="dsq-comment-275">
+    <li class="comment odd alt thread-odd thread-alt depth-1" id="dsq-comment-275">
         <div id="dsq-comment-header-275" class="dsq-comment-header">
             <cite id="dsq-cite-275">
                 <span id="dsq-author-user-275">_UnknownMale_</span>
@@ -913,7 +927,7 @@ And, of course, there is always the alternative of you having your own business,
         </div>
 
     <ul class="children">
-    <li class="comment odd alt depth-2" id="dsq-comment-285">
+    <li class="comment even depth-2" id="dsq-comment-285">
         <div id="dsq-comment-header-285" class="dsq-comment-header">
             <cite id="dsq-cite-285">
                 <span id="dsq-author-user-285">Dennis Graham</span>
@@ -925,7 +939,7 @@ And, of course, there is always the alternative of you having your own business,
         </div>
 
     <ul class="children">
-    <li class="comment even depth-3" id="dsq-comment-286">
+    <li class="comment odd alt depth-3" id="dsq-comment-286">
         <div id="dsq-comment-header-286" class="dsq-comment-header">
             <cite id="dsq-cite-286">
                 <span id="dsq-author-user-286">_UnknownMale_</span>
@@ -941,7 +955,7 @@ And, of course, there is always the alternative of you having your own business,
 </li><!-- #comment-## -->
 </ul><!-- .children -->
 </li><!-- #comment-## -->
-    <li class="comment odd alt thread-even depth-1" id="dsq-comment-283">
+    <li class="comment even thread-even depth-1" id="dsq-comment-283">
         <div id="dsq-comment-header-283" class="dsq-comment-header">
             <cite id="dsq-cite-283">
                 <span id="dsq-author-user-283">Tyron Giuliani</span>
@@ -953,7 +967,7 @@ And, of course, there is always the alternative of you having your own business,
         </div>
 
     <ul class="children">
-    <li class="comment even depth-2" id="dsq-comment-307">
+    <li class="comment odd alt depth-2" id="dsq-comment-307">
         <div id="dsq-comment-header-307" class="dsq-comment-header">
             <cite id="dsq-cite-307">
                 <span id="dsq-author-user-307">Dave Davidson</span>
@@ -967,7 +981,7 @@ And, of course, there is always the alternative of you having your own business,
     </li><!-- #comment-## -->
 </ul><!-- .children -->
 </li><!-- #comment-## -->
-    <li class="comment odd alt thread-odd thread-alt depth-1" id="dsq-comment-290">
+    <li class="comment even thread-odd thread-alt depth-1" id="dsq-comment-290">
         <div id="dsq-comment-header-290" class="dsq-comment-header">
             <cite id="dsq-cite-290">
                 <span id="dsq-author-user-290">Farzam Ghanbarnezhad</span>
@@ -981,7 +995,7 @@ I really want to work in Amazon and can accept the lowest possible salary but Am
         </div>
 
     </li><!-- #comment-## -->
-    <li class="comment even thread-even depth-1" id="dsq-comment-306">
+    <li class="comment odd alt thread-even depth-1" id="dsq-comment-306">
         <div id="dsq-comment-header-306" class="dsq-comment-header">
             <cite id="dsq-cite-306">
                 <span id="dsq-author-user-306">Dave Davidson</span>
@@ -993,7 +1007,7 @@ I really want to work in Amazon and can accept the lowest possible salary but Am
         </div>
 
     </li><!-- #comment-## -->
-    <li class="comment odd alt thread-odd thread-alt depth-1" id="dsq-comment-310">
+    <li class="comment even thread-odd thread-alt depth-1" id="dsq-comment-310">
         <div id="dsq-comment-header-310" class="dsq-comment-header">
             <cite id="dsq-cite-310">
                 <span id="dsq-author-user-310">Yuvaraj Prakash</span>
@@ -1001,6 +1015,18 @@ I really want to work in Amazon and can accept the lowest possible salary but Am
         </div>
         <div id="dsq-comment-body-310" class="dsq-comment-body">
             <div id="dsq-comment-message-310" class="dsq-comment-message"><p>Very informative, thanks for writing this.</p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+    <li class="comment odd alt thread-even depth-1" id="dsq-comment-313">
+        <div id="dsq-comment-header-313" class="dsq-comment-header">
+            <cite id="dsq-cite-313">
+                <span id="dsq-author-user-313">Balaji Rajagopalan</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-313" class="dsq-comment-body">
+            <div id="dsq-comment-message-313" class="dsq-comment-message"><p>wow you gave up a  nice job to be with your family , you could have tried to see how it worked ?</p>
 </div>
         </div>
 
@@ -1139,5 +1165,5 @@ var CrayonSyntaxStrings = {"copy":"Press %s to Copy, %s to Paste","minimize":"Cl
   </body>
 </html>
 
-<!-- Dynamic page generated in 0.239 seconds. -->
-<!-- Cached page generated by WP-Super-Cache on 2017-03-20 16:47:58 -->
+<!-- Dynamic page generated in 0.765 seconds. -->
+<!-- Cached page generated by WP-Super-Cache on 2017-03-30 04:05:08 -->

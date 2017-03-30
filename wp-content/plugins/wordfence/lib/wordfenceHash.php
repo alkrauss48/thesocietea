@@ -443,7 +443,12 @@ class wordfenceHash {
 					{
 						if ($this->pluginsEnabled)
 						{
-							if (!$this->isSafeFile($shac))
+							$shouldGenerateIssue = true;
+							if (!wfConfig::get('scansEnabled_highSense') && preg_match('~/readme\.(?:txt|md)$~i', $file)) { //Don't generate issues for changed readme files unless high sensitivity is on
+								$shouldGenerateIssue = false;
+							}
+							
+							if (!$this->isSafeFile($shac) && $shouldGenerateIssue)
 							{
 								$itemName = $this->knownFiles['plugins'][$file][0];
 								$itemVersion = $this->knownFiles['plugins'][$file][1];
@@ -480,7 +485,12 @@ class wordfenceHash {
 					{
 						if ($this->themesEnabled)
 						{
-							if (!$this->isSafeFile($shac))
+							$shouldGenerateIssue = true;
+							if (!wfConfig::get('scansEnabled_highSense') && preg_match('~/readme\.(?:txt|md)$~i', $file)) { //Don't generate issues for changed readme files unless high sensitivity is on
+								$shouldGenerateIssue = false;
+							}
+							
+							if (!$this->isSafeFile($shac) && $shouldGenerateIssue)
 							{
 								$itemName = $this->knownFiles['themes'][$file][0];
 								$itemVersion = $this->knownFiles['themes'][$file][1];

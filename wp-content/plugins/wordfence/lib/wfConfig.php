@@ -66,6 +66,12 @@ class wfConfig {
 			"loginSec_blockAdminReg" => array('value' => true, 'autoload' => self::AUTOLOAD),
 			"loginSec_disableAuthorScan" => array('value' => true, 'autoload' => self::AUTOLOAD),
 			"loginSec_disableOEmbedAuthor" => array('value' => false, 'autoload' => self::AUTOLOAD),
+			"notification_updatesNeeded" => array('value' => true, 'autoload' => self::AUTOLOAD),
+			"notification_securityAlerts" => array('value' => true, 'autoload' => self::AUTOLOAD),
+			"notification_promotions" => array('value' => true, 'autoload' => self::AUTOLOAD),
+			"notification_blogHighlights" => array('value' => true, 'autoload' => self::AUTOLOAD),
+			"notification_productUpdates" => array('value' => true, 'autoload' => self::AUTOLOAD),
+			"notification_scanStatus" => array('value' => true, 'autoload' => self::AUTOLOAD),
 			"other_hideWPVersion" => array('value' => false, 'autoload' => self::AUTOLOAD),
 			"other_noAnonMemberComments" => array('value' => true, 'autoload' => self::AUTOLOAD),
 			"other_blockBadPOST" => array('value' => false, 'autoload' => self::AUTOLOAD),
@@ -121,6 +127,7 @@ class wfConfig {
 			'wafAlertWhitelist' => '',
 			'wafAlertInterval' => 600,
 			'wafAlertThreshold' => 100,
+			'howGetIPs_trusted_proxies' => '',
 		)
 	);
 	public static $serializedOptions = array('lastAdminLogin', 'scanSched', 'emailedIssuesList', 'wf_summaryItems', 'adminUserList', 'twoFactorUsers', 'alertFreqTrack', 'wfStatusStartMsgs', 'vulnerabilities_plugin', 'vulnerabilities_theme', 'dashboardData');
@@ -601,6 +608,9 @@ class wfConfig {
 	}
 	public static function f($key){
 		echo esc_attr(self::get($key));
+	}
+	public static function p() {
+		return self::get('isPaid');
 	}
 	public static function cbp($key){
 		if(self::get('isPaid') && self::get($key)){

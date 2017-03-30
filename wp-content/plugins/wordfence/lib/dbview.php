@@ -25,7 +25,7 @@ foreach($q as $val){
 
 ?>
 
-<div class="diffFooter">&copy;&nbsp;2011 to 2015 Wordfence &mdash; Visit <a
+<div class="diffFooter">&copy;&nbsp;2011 to <?php echo date('Y'); ?> Wordfence &mdash; Visit <a
 		href="http://wordfence.com/">Wordfence.com</a> for help, security updates and more.</div>
 </body>
 </html>

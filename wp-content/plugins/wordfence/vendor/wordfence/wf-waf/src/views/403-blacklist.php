@@ -38,7 +38,37 @@ if (is_array($request->getHeaders())) {
 }
 
 $payload = array('ip' => $request->getIP(), 'timestamp' => $request->getTimestamp(), 'headers' => $headerString, 'url' => $request->getProtocol() . '://' . $request->getHost() . $request->getPath(), 'home_url' => $waf->getStorageEngine()->getConfig('homeURL', ''));
-$payload = "-----BEGIN REPORT-----\n" . implode("\n", str_split(base64_encode(wfWAFUtils::json_encode($payload)), 60)) . "\n-----END REPORT-----";
+$payloadJSON = wfWAFUtils::json_encode($payload);
+$shouldEncrypt = false;
+if (function_exists('openssl_get_publickey') && function_exists('openssl_get_cipher_methods')) {
+	$ciphers = openssl_get_cipher_methods();
+	$shouldEncrypt = array_search('aes-256-cbc', $ciphers) !== false;
+}
+
+if ($shouldEncrypt) {
+	$keyData = file_get_contents(dirname(__FILE__) . '/../falsepositive.key');
+	$key = @openssl_get_publickey($keyData);
+	if ($key !== false) {
+		$symmetricKey = wfWAFUtils::random_bytes(32);
+		$iv = wfWAFUtils::random_bytes(16);
+		$encrypted = @openssl_encrypt($payloadJSON, 'aes-256-cbc', $symmetricKey, OPENSSL_RAW_DATA, $iv);
+		if ($encrypted !== false) {
+			$success = openssl_public_encrypt($symmetricKey, $symmetricKeyEncrypted, $key, OPENSSL_PKCS1_OAEP_PADDING);
+			if ($success) {
+				$message = $iv . $symmetricKeyEncrypted . $encrypted;
+				$signatureRaw = hash('sha256', $message, true);
+				$success = openssl_public_encrypt($signatureRaw, $signature, $key, OPENSSL_PKCS1_OAEP_PADDING);
+				if ($success) {
+					$payload = array('message' => bin2hex($message), 'signature' => bin2hex($signature));
+					$payloadJSON = wfWAFUtils::json_encode($payload);
+				}
+			}
+		}
+	}
+}
+
+$message = base64_encode($payloadJSON);
+$payload = "-----BEGIN REPORT-----\n" . implode("\n", str_split($message, 60)) . "\n-----END REPORT-----";
 
 ?>
 <!DOCTYPE html>

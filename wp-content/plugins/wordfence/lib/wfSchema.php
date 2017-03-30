@@ -151,7 +151,9 @@ class wfSchema {
 	filename varchar(1000) NOT NULL,
 	knownFile tinyint UNSIGNED NOT NULL,
 	oldMD5 binary(16) NOT NULL,
-	newMD5 binary(16) NOT NULL
+	newMD5 binary(16) NOT NULL,
+	stoppedOnSignature varchar(255) NOT NULL DEFAULT '',
+	stoppedOnPosition int(10) unsigned NOT NULL DEFAULT '0'
 ) default charset=utf8",
 'wfBlocksAdv' => "(
 	id int UNSIGNED NOT NULL auto_increment PRIMARY KEY,
@@ -163,12 +165,13 @@ class wfSchema {
 	lastBlocked int UNSIGNED default 0
 ) default charset=utf8",
 'wfBlockedIPLog' => "(
-	IP int UNSIGNED NOT NULL,
-	countryCode VARCHAR(2) NOT NULL,
-	blockCount int UNSIGNED NOT NULL DEFAULT 0,
-	unixday int UNSIGNED NOT NULL,
-	PRIMARY KEY(IP, unixday)
-) default charset=utf8",
+  `IP` binary(16) NOT NULL DEFAULT '\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0',
+  `countryCode` varchar(2) NOT NULL,
+  `blockCount` int(10) unsigned NOT NULL DEFAULT '0',
+  `unixday` int(10) unsigned NOT NULL,
+  `blockType` varchar(50) NOT NULL DEFAULT 'generic',
+  PRIMARY KEY (`IP`,`unixday`,`blockType`)
+) DEFAULT CHARSET=utf8",
 'wfSNIPCache' => "(
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `IP` varchar(45) NOT NULL DEFAULT '',

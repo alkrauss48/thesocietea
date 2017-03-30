@@ -157,6 +157,41 @@ $w = new wfConfig();
 								<option value="HTTP_X_REAL_IP"<?php $w->sel( 'howGetIPs', 'HTTP_X_REAL_IP' ); ?>>Use the X-Real-IP HTTP header. Only use if you have a front-end proxy or spoofing may result.</option>
 								<option value="HTTP_CF_CONNECTING_IP"<?php $w->sel( 'howGetIPs', 'HTTP_CF_CONNECTING_IP' ); ?>>Use the Cloudflare "CF-Connecting-IP" HTTP header to get a visitor IP. Only use if you're using Cloudflare.</option>
 							</select>
+							<span class="wf-help-block">Detected IP(s): <span id="howGetIPs-preview-all"><?php echo wfUtils::getIPPreview(); ?></span></span>
+							<span class="wf-help-block">Your IP with this setting: <span id="howGetIPs-preview-single"><?php echo wfUtils::getIP(); ?></span></span>
+							<span class="wf-help-block"><a href="#" class="do-show" data-selector="#howGetIPs_trusted_proxies">+ Edit trusted proxies</a></span>
+						</div>
+					</div>
+					<div class="wf-form-group wf-sub-group hidden" id="howGetIPs_trusted_proxies">
+						<label for="howGetIPs_trusted_proxies_field" class="wf-col-sm-4 wf-col-sm-offset-1 wf-control-label">Trusted proxies</label>
+						<div class="wf-col-sm-7">
+							<textarea class="wf-form-control" rows="4" name="howGetIPs_trusted_proxies" id="howGetIPs_trusted_proxies_field"><?php echo $w->getHTML('howGetIPs_trusted_proxies'); ?></textarea>
+							<span class="wf-help-block">These IPs (or CIDR ranges) will be ignored when determining the requesting IP via the X-Forwarded-For HTTP header. Enter one IP or CIDR range per line.</span>
+							<script type="application/javascript">
+								(function($) {
+									var updateIPPreview = function() {
+										WFAD.updateIPPreview({howGetIPs: $('#howGetIPs').val(), 'howGetIPs_trusted_proxies': $('#howGetIPs_trusted_proxies_field').val()}, function(ret) {
+											if (ret && ret.ok) {
+												$('#howGetIPs-preview-all').html(ret.ipAll);
+												$('#howGetIPs-preview-single').html(ret.ip);
+											}
+											else {
+												//TODO: implementing testing whether or not this setting will lock them out and show the error saying that they'd lock themselves out
+											}
+										});
+									};
+									
+									$('#howGetIPs').on('change', function() {
+										updateIPPreview();
+									});
+									
+									var coalescingUpdateTimer;
+									$('#howGetIPs_trusted_proxies_field').on('keyup', function() {
+										clearTimeout(coalescingUpdateTimer);
+										coalescingUpdateTimer = setTimeout(updateIPPreview, 1000);
+									});
+								})(jQuery);
+							</script>
 						</div>
 					</div>
 					<div class="wf-form-group">
@@ -735,6 +770,61 @@ $w = new wfConfig();
 							<div class="wf-col-sm-7">
 								<textarea id="loginSec_userBlacklist" class="wf-form-control" rows="4" name="loginSec_userBlacklist"><?php echo wfUtils::cleanupOneEntryPerLine($w->getHTML( 'loginSec_userBlacklist' )); ?></textarea>
 								<span class="wf-help-block">(One per line. Existing users won't be blocked.)</span>
+							</div>
+						</div>
+
+						<div class="wfMarker" id="wfMarkerNotification"></div>
+						<h3>Dashboard Notification Options <a href="http://docs.wordfence.com/en/Wordfence_options#Dashboard_Notification_Options" target="_blank" class="wfhelp"></a></h3>
+						<div class="wf-form-group">
+							<label for="notification_updatesNeeded" class="wf-col-sm-5 wf-control-label">Updates Needed (Plugin, Theme, or Core)</label>
+							<div class="wf-col-sm-7">
+								<div class="wf-checkbox"><input type="checkbox" id="notification_updatesNeeded" name="notification_updatesNeeded" value="1" <?php $w->cb('notification_updatesNeeded'); ?>></div>
+							</div>
+						</div>
+						<div class="wf-form-group">
+							<label for="notification_securityAlerts" class="wf-col-sm-5 wf-control-label">Security Alerts</label>
+							<div class="wf-col-sm-7">
+								<div class="wf-checkbox"><input type="checkbox" id="notification_securityAlerts"<?php if ($w->p()) { echo ' name="notification_securityAlerts"'; } ?> value="1" <?php if ($w->p()) { $w->cb('notification_securityAlerts'); } else { echo ' checked disabled'; } ?>></div>
+								<?php if (!$w->p()): ?>
+									<span class="wf-help-block"><span style="color: #F00;">Premium Option</span> This option requires a <a href="https://www.wordfence.com/gnl1optPdOnly1/wordfence-signup/" target="_blank">Wordfence Premium Key</a>.</span>
+									<?php if ($w->get('notification_securityAlerts')): ?><input type="hidden" name="notification_securityAlerts" value="<?php $w->f('notification_securityAlerts'); ?>"><?php endif; ?>
+								<?php endif; ?>
+							</div>
+						</div>
+						<div class="wf-form-group">
+							<label for="notification_promotions" class="wf-col-sm-5 wf-control-label">Promotions</label>
+							<div class="wf-col-sm-7">
+								<div class="wf-checkbox"><input type="checkbox" id="notification_promotions"<?php if ($w->p()) { echo ' name="notification_promotions"'; } ?> value="1" <?php if ($w->p()) { $w->cb('notification_promotions'); } else { echo ' checked disabled'; } ?>></div>
+								<?php if (!$w->p()): ?>
+									<span class="wf-help-block"><span style="color: #F00;">Premium Option</span> This option requires a <a href="https://www.wordfence.com/gnl1optPdOnly1/wordfence-signup/" target="_blank">Wordfence Premium Key</a>.</span>
+									<?php if ($w->get('notification_promotions')): ?><input type="hidden" name="notification_promotions" value="<?php $w->f('notification_promotions'); ?>"><?php endif; ?>
+								<?php endif; ?>
+							</div>
+						</div>
+						<div class="wf-form-group">
+							<label for="notification_blogHighlights" class="wf-col-sm-5 wf-control-label">Blog Highlights</label>
+							<div class="wf-col-sm-7">
+								<div class="wf-checkbox"><input type="checkbox" id="notification_blogHighlights"<?php if ($w->p()) { echo ' name="notification_blogHighlights"'; } ?> value="1" <?php if ($w->p()) { $w->cb('notification_blogHighlights'); } else { echo ' checked disabled'; } ?>></div>
+								<?php if (!$w->p()): ?>
+									<span class="wf-help-block"><span style="color: #F00;">Premium Option</span> This option requires a <a href="https://www.wordfence.com/gnl1optPdOnly1/wordfence-signup/" target="_blank">Wordfence Premium Key</a>.</span>
+									<?php if ($w->get('notification_blogHighlights')): ?><input type="hidden" name="notification_blogHighlights" value="<?php $w->f('notification_blogHighlights'); ?>"><?php endif; ?>
+								<?php endif; ?>
+							</div>
+						</div>
+						<div class="wf-form-group">
+							<label for="notification_productUpdates" class="wf-col-sm-5 wf-control-label">Product Updates</label>
+							<div class="wf-col-sm-7">
+								<div class="wf-checkbox"><input type="checkbox" id="notification_productUpdates"<?php if ($w->p()) { echo ' name="notification_productUpdates"'; } ?> value="1" <?php if ($w->p()) { $w->cb('notification_productUpdates'); } else { echo ' checked disabled'; } ?>></div>
+								<?php if (!$w->p()): ?>
+									<span class="wf-help-block"><span style="color: #F00;">Premium Option</span> This option requires a <a href="https://www.wordfence.com/gnl1optPdOnly1/wordfence-signup/" target="_blank">Wordfence Premium Key</a>.</span>
+									<?php if ($w->get('notification_productUpdates')): ?><input type="hidden" name="notification_productUpdates" value="<?php $w->f('notification_productUpdates'); ?>"><?php endif; ?>
+								<?php endif; ?>
+							</div>
+						</div>
+						<div class="wf-form-group">
+							<label for="notification_scanStatus" class="wf-col-sm-5 wf-control-label">Scan Status</label>
+							<div class="wf-col-sm-7">
+								<div class="wf-checkbox"><input type="checkbox" id="notification_scanStatus" name="notification_scanStatus" value="1" <?php $w->cb('notification_scanStatus'); ?>></div>
 							</div>
 						</div>
 

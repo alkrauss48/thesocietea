@@ -7,16 +7,16 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-    <title>Blog | Aaron Krauss | Page 2</title>
+    <title>Aaron Krauss | Developer</title>
     <link rel="profile" href="http://gmpg.org/xfn/11">
     <link rel="pingback" href="https://thesocietea.org/xmlrpc.php">
 
-    <meta name="description" content="Below you&#8217;ll find my blog posts. You can check out the RSS feed too.">
-    <meta property="og:description" content="Below you&#8217;ll find my blog posts. You can check out the RSS feed too.">
+    <meta name="description" content="Hi, I&#8217;m from Oklahoma City, OK, and I&#8217;m a senior software engineer at Clevyr. My favorite projects are those that are data-heavy involving Ruby, Javascript, APIs, Databases, and more. Then, I always enjoy building a solid, responsive front-end using all the new cool-kid tools. Other than coding, I like brewing a hot cup of tea, enjoying a...">
+    <meta property="og:description" content="Hi, I&#8217;m from Oklahoma City, OK, and I&#8217;m a senior software engineer at Clevyr. My favorite projects are those that are data-heavy involving Ruby, Javascript, APIs, Databases, and more. Then, I always enjoy building a solid, responsive front-end using all the new cool-kid tools. Other than coding, I like brewing a hot cup of tea, enjoying a...">
         <meta property="og:image" content="https://thesocietea.org/assets/images/dist/ak-smile-optimized.jpg">
-    <meta property="og:title" content="Blog | Aaron Krauss | Page 2">
+    <meta property="og:title" content="Aaron Krauss | Developer">
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://thesocietea.org/blog/ " />
+    <meta property="og:url" content="https://thesocietea.org/ " />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@thecodeboss" />
     <meta name="twitter:creator" content="@thecodeboss" />
@@ -47,7 +47,7 @@
       <script src="/assets/js/ie/selectivizr-min.js"></script>
     <![endif]-->
   </head>
-  <body class="paged page-template page-template-posts page-template-posts-php page page-id-16 logged-in admin-bar no-customize-support paged-2 page-paged-2 m-scene">
+  <body class="home page-template page-template-home page-template-home-php page page-id-4 logged-in admin-bar no-customize-support m-scene">
     <!--[if lt IE 8]>
         <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -67,7 +67,7 @@
 	<li id="menu-item-1340" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1340"><a href="http://thesocietea.org/resume">Resume</a></li>
 </ul>
 </li>
-<li id="menu-item-26" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-16 current_page_item menu-item-26"><a href="https://thesocietea.org/blog/">Blog</a></li>
+<li id="menu-item-26" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-26"><a href="https://thesocietea.org/blog/">Blog</a></li>
 <li id="menu-item-32" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-32"><a href="https://thesocietea.org/projects/">Projects</a>
 <ul class="sub-menu">
 	<li id="menu-item-1339" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1339"><a href="https://thesocietea.org/projects/">Big Projects</a></li>
@@ -94,190 +94,129 @@
       </div>
     </header>
     <aside id="content" tabindex="-1"></aside>
-
-	<div id="primary" class="content-area">
-    <main id="main" class="blogs-page site-main scene_element scene_element--fadein" role="main">
-      <div class="subpage-header-image" style="background-image: url('https://thesocietea.org/wp-content/uploads/2014/06/IMG_0451.jpg');"></div>
-      <div class="subpage-header-overlay"></div>
-      <div class="subpage-title">
-        <div class="container">
-          <div class="inner-title-wrapper">
-            <div class="container-padding">
-              <h1>Blog</h1>
+    <div class="header-content-wrapper spanner">
+      <main id="main" class="site-main scene_element scene_element--fadein" role="main">
+      <div id="header-wrapper" class="header-content-image"></div>
+      <div class="header-text">
+        <h2>Hi, I'm</h2>
+        <h1>Aaron Krauss</h1>
+        <hr class="header-hr" />
+        <span class="typed"><h3>I'm a <span class="orange">Developer<span></h3></span>
+        <ul class="header-icons">
+          <li><a class="icon-github" title="GitHub" target="github" href="https://github.com/alkrauss48"></a></li>
+          <li><a class="icon-twitter" title="Twitter" target="twitter" href="https://twitter.com/thecodeboss"></a></li>
+          <li><a class="icon3-untappd" title="Untappd" target="untappd"  href="https://untappd.com/user/thecodeboss"></a></li>
+          <li><a class="icon-uniE603" title="Email" href="mailto:alkrauss48@gmail.com"></a></li>
+        </ul>
+      </div>
+      </main><!-- #main -->
+    </div>
+    <div class="home-content">
+      <div class="container-padding">
+        <h2>Probably the coolest developer you'll ever meet</h2>
+        <h3>I build amazing things all day - every day</h3>
+        <div class="home-offerings-wrapper">
+          <div class="home-offerings">
+            <div class="icon-wrapper"><i class="icon2-keyboard"></i></div>
+            <a class="development" href="https://thesocietea.org/projects/">Projects</a>
+          </div>
+          <div class="home-offerings">
+            <div class="icon-wrapper"><i class="icon2-pencil"></i></div>
+            <a class="design" href="https://thesocietea.org/blog/">Blog</a>
+          </div>
+          <div class="home-offerings">
+            <div class="icon-wrapper"><i class="icon3-lab"></i></div>
+            <a class="training" href="http://labs.thesocietea.org">Labs</a>
+          </div>
+        </div>
+      </div>
+      <div class="home-about">
+        <div class="down-triangle"></div>
+        <div class="container-padding">
+          <div class="container">
+            <div class="home-picture">
+              <img src="/assets/images/dist/ak-smile-optimized.jpg" alt="Aaron Krauss" />
+            </div>
+            <div class="home-about-desc">
+              <h2>Get to know me</h2>
+              <p>Hi, I&#8217;m from Oklahoma City, OK, and I&#8217;m a senior software engineer at Clevyr. My favorite projects are those that are data-heavy involving Ruby, Javascript, APIs, Databases, and more. Then, I always enjoy building a solid, responsive front-end using all the new cool-kid tools.</p>
+<p>Other than coding, I like brewing a hot cup of tea, enjoying a craft beer, walking my dog, and hanging out with my girl Layla.</p>
+              <a class="orange-learn-more" href="https://thesocietea.org/about/">About Me <i class="icon2-play"></i></a>
             </div>
           </div>
         </div>
       </div>
-
-      <div class="plain" id="main-content">
-        <div class="container-padding">
-          <div class="container">
-            <div class="entry-content">
-              <p>Below you&#8217;ll find my blog posts. You can check out the <a title="RSS Feed" href="http://thesocietea.org/feed/">RSS feed</a> too.</p>
-                          </div>
-            <div class="blog__search-wrapper">
-              <!-- <form id="searchform" action="/" method="get"> -->
-              <!--   <label class="is&#45;accessible&#45;hidden" for="search">Search s:</label> -->
-              <!--   <input id="search" class="text" type="text" placeholder="Search" name="search" value="" /> -->
-              <!-- </form> -->
-            </div>
-            <div class="blog__filter-wrapper">
-              <h2 class="blog-filter__heading">Filter Posts</h2>
-              <section class="blog-filter__list">
-                <a href="#" data-filter="*" class="blog-filter__list-item blog-filter__list-item--view-all">View All</a>
-                <a href="#" data-filter=".category-front-end" class="blog-filter__list-item blog-filter__list-item--front-end">Front End</a>
-                <a href="#" data-filter=".category-programming-concepts" class="blog-filter__list-item blog-filter__list-item--programming-concepts">Programming Concepts</a>
-                <a href="#" data-filter=".category-javascript" class="blog-filter__list-item blog-filter__list-item--javascript">Javascript</a>
-                <a href="#" data-filter=".category-how-things-work" class="blog-filter__list-item blog-filter__list-item--how-things-work">How Things Work</a>
-                <a href="#" data-filter=".category-ruby" class="blog-filter__list-item blog-filter__list-item--ruby">Ruby</a>
-                <a href="#" data-filter=".category-random" class="blog-filter__list-item blog-filter__list-item--random">Random</a>
-                <a href="#" data-filter=".category-tools" class="blog-filter__list-item blog-filter__list-item--tools">Tools</a>
-                <a href="#" data-filter=".category-non-tech" class="blog-filter__list-item blog-filter__list-item--non-tech">Non Tech</a>
-              </section>
-            </div>
-          </div>
-        </div>
+      <div class="home-projects">
+        <div class="down-triangle"></div>
+        <h2 class="home-projects-title">This is where you may know me from</h2>
         <div class="container">
-          <div class="blog-list">
-          
-<a aria-labelledby="post-title-836'" id="post-836" class="blog-item post-836 post type-post status-publish format-standard hentry category-non-tech" href="https://thesocietea.org/2015/12/my-history-with-beer/">
-  <div class="blog-item__overlay">
-    <h2 class="blog-item__title" id="post-title-836">My History with Beer</h2>    <div class="blog-item__excerpt">
-      Seeing as how we&#8217;re approaching the New Year, I felt this topic...    </div>
-  </div>
-</a>
-
-<a aria-labelledby="post-title-988'" id="post-988" class="blog-item post-988 post type-post status-publish format-standard hentry category-ruby" href="https://thesocietea.org/2015/12/building-a-json-api-with-rails-part-5-afterthoughts/">
-  <div class="blog-item__overlay">
-    <h2 class="blog-item__title" id="post-title-988">Building a JSON API with Rails &#8211; Part 5: Afterthoughts</h2>    <div class="blog-item__excerpt">
-      This post has been a long time coming, but I wanted to...    </div>
-  </div>
-</a>
-
-<a aria-labelledby="post-title-732'" id="post-732" class="blog-item post-732 post type-post status-publish format-standard hentry category-programming-concepts" href="https://thesocietea.org/2015/11/programming-concepts-static-vs-dynamic-type-checking/">
-  <div class="blog-item__overlay">
-    <h2 class="blog-item__title" id="post-title-732">Programming Concepts: Static vs. Dynamic Type Checking</h2>    <div class="blog-item__excerpt">
-      When learning about programming languages, you&#8217;ve probably heard phrases like statically-typed or dynamically-typed when referring...    </div>
-  </div>
-</a>
-
-<a aria-labelledby="post-title-952'" id="post-952" class="blog-item post-952 post type-post status-publish format-standard hentry category-front-end" href="https://thesocietea.org/2015/10/what-does-it-really-mean-to-support-ie8/">
-  <div class="blog-item__overlay">
-    <h2 class="blog-item__title" id="post-title-952">What Does It Really Mean to Support IE8?</h2>    <div class="blog-item__excerpt">
-      Note: This post is geared towards developers who have heard about IE8...    </div>
-  </div>
-</a>
-
-<a aria-labelledby="post-title-718'" id="post-718" class="blog-item post-718 post type-post status-publish format-standard hentry category-programming-concepts" href="https://thesocietea.org/2015/10/programming-concepts-concurrency/">
-  <div class="blog-item__overlay">
-    <h2 class="blog-item__title" id="post-title-718">Programming Concepts: Concurrency</h2>    <div class="blog-item__excerpt">
-      For the third post in this Programming Concepts series, we&#8217;ll be discussing...    </div>
-  </div>
-</a>
-
-<a aria-labelledby="post-title-698'" id="post-698" class="blog-item post-698 post type-post status-publish format-standard hentry category-ruby" href="https://thesocietea.org/2015/09/metaprogramming-in-ruby-part-2/">
-  <div class="blog-item__overlay">
-    <h2 class="blog-item__title" id="post-title-698">Metaprogramming in Ruby: Part 2</h2>    <div class="blog-item__excerpt">
-      Welcome back to the Metaprogramming in Ruby series! If you haven&#8217;t done...    </div>
-  </div>
-</a>
-
-<a aria-labelledby="post-title-849'" id="post-849" class="blog-item post-849 post type-post status-publish format-standard hentry category-javascript" href="https://thesocietea.org/2015/08/prototypal-programming-in-javascript/">
-  <div class="blog-item__overlay">
-    <h2 class="blog-item__title" id="post-title-849">Prototypal Programming in Javascript</h2>    <div class="blog-item__excerpt">
-      Javascript is an object-oriented programming language, but not like not like the...    </div>
-  </div>
-</a>
-
-<a aria-labelledby="post-title-655'" id="post-655" class="blog-item post-655 post type-post status-publish format-standard hentry category-ruby" href="https://thesocietea.org/2015/08/metaprogramming-in-ruby-part-1/">
-  <div class="blog-item__overlay">
-    <h2 class="blog-item__title" id="post-title-655">Metaprogramming in Ruby: Part 1</h2>    <div class="blog-item__excerpt">
-      What is Metaprogramming? Metaprogramming is code that writes code for you. But isn&#8217;t...    </div>
-  </div>
-</a>
-
-<a aria-labelledby="post-title-607'" id="post-607" class="blog-item post-607 post type-post status-publish format-standard hentry category-programming-concepts" href="https://thesocietea.org/2015/07/programming-concepts-compiled-and-interpreted-languages/">
-  <div class="blog-item__overlay">
-    <h2 class="blog-item__title" id="post-title-607">Programming Concepts: Compiled and Interpreted Languages</h2>    <div class="blog-item__excerpt">
-      As with my previous Programming Concepts post over the Stack vs. the...    </div>
-  </div>
-</a>
-
-<a aria-labelledby="post-title-642'" id="post-642" class="blog-item post-642 post type-post status-publish format-standard hentry category-non-tech" href="https://thesocietea.org/2015/07/my-pokemon-dream-team/">
-  <div class="blog-item__overlay">
-    <h2 class="blog-item__title" id="post-title-642">My Pokémon Dream Team</h2>    <div class="blog-item__excerpt">
-      Attention all Pokémon masters, today I’m going to share the six Pokémon...    </div>
-  </div>
-</a>
-
-<a aria-labelledby="post-title-564'" id="post-564" class="blog-item post-564 post type-post status-publish format-standard hentry category-ruby" href="https://thesocietea.org/2015/06/debugging-a-simple-web-server/">
-  <div class="blog-item__overlay">
-    <h2 class="blog-item__title" id="post-title-564">Debugging a Simple Web Server</h2>    <div class="blog-item__excerpt">
-      This is the second part of a short series on how to build...    </div>
-  </div>
-</a>
-
-<a aria-labelledby="post-title-524'" id="post-524" class="blog-item post-524 post type-post status-publish format-standard hentry category-ruby" href="https://thesocietea.org/2015/05/building-a-simple-web-server-with-sinatra/">
-  <div class="blog-item__overlay">
-    <h2 class="blog-item__title" id="post-title-524">Building a Simple Web Server with Sinatra</h2>    <div class="blog-item__excerpt">
-      You might have run into a few different scenarios in which you...    </div>
-  </div>
-</a>
-
-<a aria-labelledby="post-title-504'" id="post-504" class="blog-item post-504 post type-post status-publish format-standard hentry category-ruby" href="https://thesocietea.org/2015/04/building-a-json-api-with-rails-part-4-implementing-authentication/">
-  <div class="blog-item__overlay">
-    <h2 class="blog-item__title" id="post-title-504">Building a JSON API with Rails – Part 4: Implementing Authentication</h2>    <div class="blog-item__excerpt">
-      After reading the last post discussing authentication strategies, we now have a firm understanding...    </div>
-  </div>
-</a>
-
-<a aria-labelledby="post-title-487'" id="post-487" class="blog-item post-487 post type-post status-publish format-standard hentry category-ruby" href="https://thesocietea.org/2015/04/building-a-json-api-with-rails-part-3-authentication-strategies/">
-  <div class="blog-item__overlay">
-    <h2 class="blog-item__title" id="post-title-487">Building a JSON API with Rails – Part 3: Authentication Strategies</h2>    <div class="blog-item__excerpt">
-      We just wrapped up our discussion on serialization in the last post,...    </div>
-  </div>
-</a>
-
-<a aria-labelledby="post-title-443'" id="post-443" class="blog-item post-443 post type-post status-publish format-standard hentry category-ruby" href="https://thesocietea.org/2015/03/building-a-json-api-with-rails-part-2-serialization/">
-  <div class="blog-item__overlay">
-    <h2 class="blog-item__title" id="post-title-443">Building a JSON API with Rails – Part 2: Serialization</h2>    <div class="blog-item__excerpt">
-      Welcome to part 2 of our API building adventure. If you haven&#8217;t...    </div>
-  </div>
-</a>
-
-<a aria-labelledby="post-title-469'" id="post-469" class="blog-item post-469 post type-post status-publish format-standard hentry category-random" href="https://thesocietea.org/2015/03/launched-labs-and-my-beer-adventure/">
-  <div class="blog-item__overlay">
-    <h2 class="blog-item__title" id="post-title-469">Launched: Labs and My Beer Adventure</h2>    <div class="blog-item__excerpt">
-      Two smaller personal projects that I&#8217;ve been working on have officially launched,...    </div>
-  </div>
-</a>
-
-<a aria-labelledby="post-title-381'" id="post-381" class="blog-item post-381 post type-post status-publish format-standard hentry category-ruby" href="https://thesocietea.org/2015/02/building-a-json-api-with-rails-part-1-getting-started/">
-  <div class="blog-item__overlay">
-    <h2 class="blog-item__title" id="post-title-381">Building a JSON API with Rails &#8211; Part 1: Getting Started</h2>    <div class="blog-item__excerpt">
-      How can you go about supporting your Angular/Ember/Backbone app, iOS app, Android...    </div>
-  </div>
-</a>
-
-<a aria-labelledby="post-title-383'" id="post-383" class="blog-item post-383 post type-post status-publish format-standard hentry category-non-tech" href="https://thesocietea.org/2015/01/brief-blogging-hiatus/">
-  <div class="blog-item__overlay">
-    <h2 class="blog-item__title" id="post-title-383">Brief Blogging Hiatus</h2>    <div class="blog-item__excerpt">
-      Hello world. It&#8217;s been about 2 months since my last blog post,...    </div>
-  </div>
-</a>
-            </div>
-          </div>
-          <div class="post-navigation">
-            <a class="prev page-numbers" href="https://thesocietea.org/blog/page/1/">&laquo; Previous</a>
-<a class='page-numbers' href='https://thesocietea.org/blog/page/1/'>1</a>
-<span class='page-numbers current'>2</span>
-<a class='page-numbers' href='https://thesocietea.org/blog/page/3/'>3</a>
-<a class="next page-numbers" href="https://thesocietea.org/blog/page/3/">Next &raquo;</a>          </div>
-                        </div>
-
-		</main><!-- #main -->
-	</div><!-- #primary -->
-
+          <a href="https://labs.thesocietea.org/carnegie-chart" class="home-popular-list popular-item-1">
+            <span>Dale Carnegie 30-Day Practice Chart</span>
+          </a>
+          <a href="http://resumehaus.com" class="home-popular-list popular-item-2">
+            <span>Resume Haus</span>
+          </a>
+          <a href="https://thesocietea.org/2016/07/my-interviews-with-amazon/" class="home-popular-list popular-item-3">
+            <span>My Interviews with Amazon</span>
+          </a>
+        </div>
+        <h2>But I built these too - and more</h2>
+        <div class="container-padding">
+          <div class="home-projects-list">
+                                          <div aria-labelledby="home-project-label-0" class="home-project">
+                  <div class="project-image" style="background-image: url('https://thesocietea.org/wp-content/uploads/2015/08/eps-1-th.jpg');">
+                    <p id="home-project-label-0" class="site-title" href="#">Edmond Public Schools</p>
+                    <a class="project-hover" href="http://edmondschools.net/" target="tle"><p>Visit Site <i class="icon2-play"></i></p></a>
+                  </div>
+                </div>
+                              <div aria-labelledby="home-project-label-1" class="home-project">
+                  <div class="project-image" style="background-image: url('https://thesocietea.org/wp-content/uploads/2014/08/th-odoc-1.jpg');">
+                    <p id="home-project-label-1" class="site-title" href="#">OK Dept of Commerce</p>
+                    <a class="project-hover" href="http://new.okcommerce.gov" target="tle"><p>Visit Site <i class="icon2-play"></i></p></a>
+                  </div>
+                </div>
+                              <div aria-labelledby="home-project-label-2" class="home-project">
+                  <div class="project-image" style="background-image: url('https://thesocietea.org/wp-content/uploads/2014/06/gsy-home-1.jpg');">
+                    <p id="home-project-label-2" class="site-title" href="#">Guernsey</p>
+                    <a class="project-hover" href="http://guernsey.us" target="tle"><p>Visit Site <i class="icon2-play"></i></p></a>
+                  </div>
+                </div>
+                              <div aria-labelledby="home-project-label-3" class="home-project">
+                  <div class="project-image" style="background-image: url('https://thesocietea.org/wp-content/uploads/2014/06/th-es-1.jpg');">
+                    <p id="home-project-label-3" class="site-title" href="#">Enviro Systems</p>
+                    <a class="project-hover" href="http://www.enviro-ok.com/" target="tle"><p>Visit Site <i class="icon2-play"></i></p></a>
+                  </div>
+                </div>
+                              <div aria-labelledby="home-project-label-4" class="home-project">
+                  <div class="project-image" style="background-image: url('https://thesocietea.org/wp-content/uploads/2014/06/th-tle-1.jpg');">
+                    <p id="home-project-label-4" class="site-title" href="#">Total Environment</p>
+                    <a class="project-hover" href="http://totalenvironmentinc.com/" target="tle"><p>Visit Site <i class="icon2-play"></i></p></a>
+                  </div>
+                </div>
+                              <div aria-labelledby="home-project-label-5" class="home-project">
+                  <div class="project-image" style="background-image: url('https://thesocietea.org/wp-content/uploads/2014/07/th-77-1.jpg');">
+                    <p id="home-project-label-5" class="site-title" href="#">77 Energy</p>
+                    <a class="project-hover" href="http://77nrg.com" target="tle"><p>Visit Site <i class="icon2-play"></i></p></a>
+                  </div>
+                </div>
+                              <div aria-labelledby="home-project-label-6" class="home-project">
+                  <div class="project-image" style="background-image: url('https://thesocietea.org/wp-content/uploads/2016/02/th-tulsaf35-1.jpg');">
+                    <p id="home-project-label-6" class="site-title" href="#">Tulsa F35</p>
+                    <a class="project-hover" href="http://tulsaf35.com" target="tle"><p>Visit Site <i class="icon2-play"></i></p></a>
+                  </div>
+                </div>
+                              <div aria-labelledby="home-project-label-7" class="home-project">
+                  <div class="project-image" style="background-image: url('https://thesocietea.org/wp-content/uploads/2014/06/oea_th_4.jpg');">
+                    <p id="home-project-label-7" class="site-title" href="#">OEA</p>
+                    <a class="project-hover" href="http://notohighstakes.com/" target="tle"><p>Visit Site <i class="icon2-play"></i></p></a>
+                  </div>
+                </div>
+                                    </div>
+        </div>
+        <a class="orange-learn-more" href="https://thesocietea.org/skills/">See My Skills <i class="icon2-play"></i></a>
+      </div>
+    </div>
+  <script src="/assets/js/lib/three.min.js"type="text/javascript" charset="utf-8"></script>
         <script type="text/javascript">
         // <![CDATA[
         var disqus_shortname = 'thesocietea';
@@ -350,7 +289,7 @@ var CrayonSyntaxStrings = {"copy":"Press %s to Copy, %s to Paste","minimize":"Cl
 		<li id="wp-admin-bar-widgets"><a class="ab-item" href="https://thesocietea.org/wp-admin/widgets.php">Widgets</a>		</li>
 		<li id="wp-admin-bar-menus"><a class="ab-item" href="https://thesocietea.org/wp-admin/nav-menus.php">Menus</a>		</li>
 		<li id="wp-admin-bar-background" class="hide-if-customize"><a class="ab-item" href="https://thesocietea.org/wp-admin/themes.php?page=custom-background">Background</a>		</li></ul></div>		</li>
-		<li id="wp-admin-bar-customize" class="hide-if-no-customize"><a class="ab-item" href="https://thesocietea.org/wp-admin/customize.php?url=https%3A%2F%2Fthesocietea.org%2Fblog%2Fpage%2F2%2F">Customize</a>		</li>
+		<li id="wp-admin-bar-customize" class="hide-if-no-customize"><a class="ab-item" href="https://thesocietea.org/wp-admin/customize.php?url=https%3A%2F%2Fthesocietea.org%2F">Customize</a>		</li>
 		<li id="wp-admin-bar-comments"><a class="ab-item" href="https://thesocietea.org/wp-admin/edit-comments.php"><span class="ab-icon"></span><span class="ab-label awaiting-mod pending-count count-0" aria-hidden="true">0</span><span class="screen-reader-text">0 comments awaiting moderation</span></a>		</li>
 		<li id="wp-admin-bar-new-content" class="menupop"><a class="ab-item" aria-haspopup="true" href="https://thesocietea.org/wp-admin/post-new.php"><span class="ab-icon"></span><span class="ab-label">New</span></a><div class="ab-sub-wrapper"><ul id="wp-admin-bar-new-content-default" class="ab-submenu">
 		<li id="wp-admin-bar-new-post"><a class="ab-item" href="https://thesocietea.org/wp-admin/post-new.php">Post</a>		</li>
@@ -359,16 +298,16 @@ var CrayonSyntaxStrings = {"copy":"Press %s to Copy, %s to Paste","minimize":"Cl
 		<li id="wp-admin-bar-new-cfs"><a class="ab-item" href="https://thesocietea.org/wp-admin/post-new.php?post_type=cfs">Field Group</a>		</li>
 		<li id="wp-admin-bar-new-project"><a class="ab-item" href="https://thesocietea.org/wp-admin/post-new.php?post_type=project">Project</a>		</li>
 		<li id="wp-admin-bar-new-user"><a class="ab-item" href="https://thesocietea.org/wp-admin/user-new.php">User</a>		</li></ul></div>		</li>
-		<li id="wp-admin-bar-edit"><a class="ab-item" href="https://thesocietea.org/wp-admin/post.php?post=16&#038;action=edit">Edit Page</a>		</li></ul><ul id="wp-admin-bar-top-secondary" class="ab-top-secondary ab-top-menu">
+		<li id="wp-admin-bar-edit"><a class="ab-item" href="https://thesocietea.org/wp-admin/post.php?post=4&#038;action=edit">Edit Page</a>		</li></ul><ul id="wp-admin-bar-top-secondary" class="ab-top-secondary ab-top-menu">
 		<li id="wp-admin-bar-search" class="admin-bar-search"><div class="ab-item ab-empty-item" tabindex="-1"><form action="https://thesocietea.org/" method="get" id="adminbarsearch"><input class="adminbar-input" name="s" id="adminbar-search" type="text" value="" maxlength="150" /><label for="adminbar-search" class="screen-reader-text">Search</label><input type="submit" class="adminbar-button" value="Search"/></form></div>		</li>
 		<li id="wp-admin-bar-my-account" class="menupop with-avatar"><a class="ab-item" aria-haspopup="true" href="https://thesocietea.org/wp-admin/profile.php">Howdy, thecodeboss<img alt='' src='https://secure.gravatar.com/avatar/60dcb92b89386677028bb23cd0c73f0e?s=26&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/60dcb92b89386677028bb23cd0c73f0e?s=52&amp;d=mm&amp;r=g 2x' class='avatar avatar-26 photo' height='26' width='26' /></a><div class="ab-sub-wrapper"><ul id="wp-admin-bar-user-actions" class="ab-submenu">
 		<li id="wp-admin-bar-user-info"><a class="ab-item" tabindex="-1" href="https://thesocietea.org/wp-admin/profile.php"><img alt='' src='https://secure.gravatar.com/avatar/60dcb92b89386677028bb23cd0c73f0e?s=64&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/60dcb92b89386677028bb23cd0c73f0e?s=128&amp;d=mm&amp;r=g 2x' class='avatar avatar-64 photo' height='64' width='64' /><span class='display-name'>thecodeboss</span></a>		</li>
 		<li id="wp-admin-bar-edit-profile"><a class="ab-item" href="https://thesocietea.org/wp-admin/profile.php">Edit My Profile</a>		</li>
-		<li id="wp-admin-bar-logout"><a class="ab-item" href="https://thesocietea.org/wp-login.php?action=logout&#038;_wpnonce=e77caa3a8b">Log Out</a>		</li></ul></div>		</li>
+		<li id="wp-admin-bar-logout"><a class="ab-item" href="https://thesocietea.org/wp-login.php?action=logout&#038;_wpnonce=2c25c0456b">Log Out</a>		</li></ul></div>		</li>
 		<li id="wp-admin-bar-notes" class="menupop"><div class="ab-item ab-empty-item"><span id="wpnt-notes-unread-count" class="wpnt-loading wpn-read">
 					<span class="noticon noticon-notification"></span>
 					</span></div><div id="wpnt-notes-panel2" style="display:none" lang="en" dir="ltr"><div class="wpnt-notes-panel-header"><span class="wpnt-notes-header">Notifications</span><span class="wpnt-notes-panel-link"></span></div></div>		</li></ul>			</div>
-						<a class="screen-reader-shortcut" href="https://thesocietea.org/wp-login.php?action=logout&#038;_wpnonce=e77caa3a8b">Log Out</a>
+						<a class="screen-reader-shortcut" href="https://thesocietea.org/wp-login.php?action=logout&#038;_wpnonce=2c25c0456b">Log Out</a>
 					</div>
 
 		
@@ -415,5 +354,5 @@ var CrayonSyntaxStrings = {"copy":"Press %s to Copy, %s to Paste","minimize":"Cl
   </body>
 </html>
 
-<!-- Dynamic page generated in 0.482 seconds. -->
-<!-- Cached page generated by WP-Super-Cache on 2017-03-20 16:55:19 -->
+<!-- Dynamic page generated in 0.131 seconds. -->
+<!-- Cached page generated by WP-Super-Cache on 2017-03-30 04:05:20 -->

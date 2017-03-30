@@ -410,7 +410,7 @@ class wfLog {
 		}
 		return $results;
 	}
-	public function blockIP($IP, $reason, $wfsn = false, $permanent = false, $maxTimeBlocked = false){ //wfsn indicates it comes from Wordfence secure network
+	public function blockIP($IP, $reason, $wfsn = false, $permanent = false, $maxTimeBlocked = false, $type = null){ //wfsn indicates it comes from Wordfence secure network
 		if($this->isWhitelisted($IP)){ return false; }
 		$wfsn = $wfsn ? 1 : 0;
 		$timeBlockOccurred = $this->getDB()->querySingle("select unix_timestamp() as ctime");
@@ -445,7 +445,7 @@ class wfLog {
 				);
 		}
 
-		wfActivityReport::logBlockedIP($IP);
+		wfActivityReport::logBlockedIP($IP, null, $type);
 
 		if ($this->currentRequest !== null) {
 			$this->currentRequest->statusCode = 403;
@@ -470,7 +470,7 @@ class wfLog {
 			$reason
 			);
 
-		wfActivityReport::logBlockedIP($IP);
+		wfActivityReport::logBlockedIP($IP, null, 'brute');
 
 		if ($this->currentRequest !== null) {
 			$this->currentRequest->statusCode = 403;
@@ -979,7 +979,7 @@ class wfLog {
 				}
 				if($doBlock){
 					$this->getDB()->queryWrite("update " . $this->ipRangesTable . " set totalBlocked = totalBlocked + 1, lastBlocked = unix_timestamp() where id=%d", $blockRec['id']);
-					wfActivityReport::logBlockedIP($IP);
+					wfActivityReport::logBlockedIP($IP, null, 'advanced');
 					$this->currentRequest->actionDescription = 'UA/Referrer/IP Range not allowed';
 					$this->do503(3600, "Advanced blocking in effect.");
 				}
@@ -1108,14 +1108,14 @@ class wfLog {
 							}
 							$this->logHit();
 							
-							wfActivityReport::logBlockedIP($IP);
+							wfActivityReport::logBlockedIP($IP, null, 'country');
 							
 							$this->redirect(wfConfig::get('cbl_redirURL'));
 						}
 					} else {
 						$this->currentRequest->actionDescription = 'blocked access via country blocking';
 						wfConfig::inc('totalCountryBlocked');
-						wfActivityReport::logBlockedIP($IP);
+						wfActivityReport::logBlockedIP($IP, null, 'country');
 						$this->do503(3600, "Access from your area has been temporarily limited for security reasons");
 					}
 				}
@@ -1133,7 +1133,7 @@ class wfLog {
 			$secsToGo = 0;
 			if($action == 'block'){
 				$IP = wfUtils::getIP();
-				$this->blockIP($IP, $reason);
+				$this->blockIP($IP, $reason, false, false, false, 'throttle');
 				$secsToGo = wfConfig::get('blockedTime');
 				//Moved the following code AFTER the block to prevent multiple emails.
 				if(wfConfig::get('alertOn_block')){
@@ -1145,6 +1145,7 @@ class wfLog {
 				$this->getDB()->queryWrite("insert into " . $this->throttleTable . " (IP, startTime, endTime, timesThrottled, lastReason) values (%s, unix_timestamp(), unix_timestamp(), 1, '%s') ON DUPLICATE KEY UPDATE endTime=unix_timestamp(), timesThrottled = timesThrottled + 1, lastReason='%s'", wfUtils::inet_pton($IP), $reason, $reason);
 				wordfence::status(2, 'info', "Throttling IP $IP. $reason");
 				wfConfig::inc('totalIPsThrottled');
+				wfActivityReport::logBlockedIP($IP, null, 'throttle');
 				$secsToGo = 60;
 			}
 			$this->do503($secsToGo, $reason);

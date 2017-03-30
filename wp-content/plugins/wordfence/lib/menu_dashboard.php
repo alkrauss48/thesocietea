@@ -66,6 +66,9 @@ $d = new wfDashboard();
 										<?php endif; ?>
 									</li>
 								<?php endforeach; ?>
+								<?php if (count($d->features) % 2 == 1): ?>
+									<li></li>
+								<?php endif; ?>
 								</ul>
 							</li>
 						</ul>

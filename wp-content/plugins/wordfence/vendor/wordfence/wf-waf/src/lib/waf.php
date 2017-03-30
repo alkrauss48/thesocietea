@@ -810,11 +810,12 @@ HTML
 		$this->getStorageEngine()->logAttack($e->getFailedRules(), $e->getParamKey(), $e->getParamValue(), $e->getRequest(), $e->getRequest()->getMetadata());
 		
 		if ($redirect) {
-			wfWAFUtils::redirect($redirect); // exits
+			wfWAFUtils::redirect($redirect); // exits and emits no cache headers
 		}
 		
 		if ($httpCode == 503) {
 			wfWAFUtils::statusHeader(503);
+			wfWAFUtils::doNotCache();
 			if ($secsToGo = $e->getRequest()->getMetadata('503Time')) {
 				header('Retry-After: ' . $secsToGo);
 			}
@@ -822,6 +823,7 @@ HTML
 		}
 		
 		header('HTTP/1.0 403 Forbidden');
+		wfWAFUtils::doNotCache();
 		exit($this->getBlockedMessage($template));
 	}
 
@@ -834,11 +836,12 @@ HTML
 		$this->getStorageEngine()->logAttack($e->getFailedRules(), $e->getParamKey(), $e->getParamValue(), $e->getRequest(), $e->getRequest()->getMetadata());
 		
 		if ($redirect) {
-			wfWAFUtils::redirect($redirect); // exits
+			wfWAFUtils::redirect($redirect); // exits and emits no cache headers
 		}
 		
 		if ($httpCode == 503) {
 			wfWAFUtils::statusHeader(503);
+			wfWAFUtils::doNotCache();
 			if ($secsToGo = $e->getRequest()->getMetadata('503Time')) {
 				header('Retry-After: ' . $secsToGo);
 			}
@@ -846,6 +849,7 @@ HTML
 		}
 		
 		header('HTTP/1.0 403 Forbidden');
+		wfWAFUtils::doNotCache();
 		exit($this->getBlockedMessage());
 	}
 	

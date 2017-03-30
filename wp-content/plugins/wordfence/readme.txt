@@ -3,7 +3,7 @@ Contributors: mmaunder
 Tags: security, secure, security plugin, wordpress security, login security, firewall, malware, antivirus, web application firewall, block hackers, country blocking
 Requires at least: 3.9
 Tested up to: 4.7.3
-Stable tag: 6.3.4
+Stable tag: 6.3.5
 
 Secure your website with the most comprehensive WordPress security plugin. Firewall, malware scan, blocking, live traffic, login security & more.
 
@@ -160,6 +160,21 @@ Secure your website with Wordfence.
 7. If you're technically minded, this is the under-the-hood view of Wordfence Security options where you can fine-tune your security settings.
 
 == Changelog ==
+
+= 6.3.5 =
+* Improvement: Sites can now specify a list of trusted proxies when using X-Forwarded-For for IP resolution.
+* Improvement: Added options to customize which dashboard notifications are shown.
+* Improvement: Improvements to the scanner's malware stage to avoid timing out on larger files.
+* Improvement: Provided additional no-caching indicators for caches that erroneously save pages with HTTP error status codes.
+* Improvement: Updated the bundled GeoIP database.
+* Improvement: Optimized the country update process in the upgrade handler so it only updates changed records.
+* Improvement: Added our own prefixed version of jQuery.DataTables to avoid conflicts with other plugins.
+* Improvement: Changes to readme.txt and readme.md are now ignored by the scanner unless high sensitivity is on.
+* Fix: Addressed an issue with multisite installations where they would execute the upgrade handler for each subsite.
+* Fix: Added additional error handling to the blocked IP list to avoid outputting notices when another plugin resets the error handler.
+* Fix: Made the description in the summary email for blocks resulting from the blacklist more descriptive.
+* Fix: Updated the copyright date on several pages.
+* Fix: Fixed incorrect wrapping of the Group by field on the live traffic page.
 
 = 6.3.4 =
 * Improvement: Added a path for people blocked by the IP blacklist (Premium Feature) to report false positives.

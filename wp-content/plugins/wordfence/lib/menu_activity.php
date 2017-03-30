@@ -147,45 +147,45 @@
 							<div data-bind="if: groupBy()" border="0" style="width: 100%">
 								<div class="wf-filtered-traffic" data-bind="foreach: listings">
 									<div>
-										<div data-bind="if: loc()">
-											<img data-bind="attr: { src: '<?php echo wfUtils::getBaseURL() . 'images/flags/'; ?>' + loc().countryCode.toLowerCase() + '.png',
-														alt: loc().countryName, title: loc().countryName }" width="16" height="11"
-												 class="wfFlag"/>
-											<a data-bind="text: (loc().city ? loc().city + ', ' : '') + loc().countryName,
-														attr: { href: 'http://maps.google.com/maps?q=' + loc().lat + ',' + loc().lon + '&z=6' }"
-											   target="_blank"></a>
-										</div>
-										<div data-bind="if: !loc()">
-											An unknown location at IP <a
-												data-bind="text: IP, attr: { href: WFAD.makeIPTrafLink(IP()) }" target="_blank"></a>
-										</div>
-			
 										<div>
-											<strong>IP:</strong>&nbsp;<a
-												data-bind="text: IP, attr: { href: WFAD.makeIPTrafLink(IP()) }" target="_blank"></a>
-											<span data-bind="if: blocked()">
-												[<a data-bind="click: $root.unblockIP">unblock</a>]
-											</span>
-											<span data-bind="if: rangeBlocked()">
-												[<a data-bind="click: $root.unblockNetwork">unblock this range</a>]
-											</span>
-											<span data-bind="if: !blocked() && !rangeBlocked()">
-												[<a data-bind="click: $root.blockIP">block</a>]
-											</span>
+											<div data-bind="if: loc()">
+												<img data-bind="attr: { src: '<?php echo wfUtils::getBaseURL() . 'images/flags/'; ?>' + loc().countryCode.toLowerCase() + '.png',
+															alt: loc().countryName, title: loc().countryName }" width="16" height="11"
+													 class="wfFlag"/>
+												<a data-bind="text: (loc().city ? loc().city + ', ' : '') + loc().countryName,
+															attr: { href: 'http://maps.google.com/maps?q=' + loc().lat + ',' + loc().lon + '&z=6' }"
+												   target="_blank"></a>
+											</div>
+											<div data-bind="if: !loc()">
+												An unknown location at IP <a
+													data-bind="text: IP, attr: { href: WFAD.makeIPTrafLink(IP()) }" target="_blank"></a>
+											</div>
+				
+											<div>
+												<strong>IP:</strong>&nbsp;<a
+													data-bind="text: IP, attr: { href: WFAD.makeIPTrafLink(IP()) }" target="_blank"></a>
+												<span data-bind="if: blocked()">
+													[<a data-bind="click: $root.unblockIP">unblock</a>]
+												</span>
+												<span data-bind="if: rangeBlocked()">
+													[<a data-bind="click: $root.unblockNetwork">unblock this range</a>]
+												</span>
+												<span data-bind="if: !blocked() && !rangeBlocked()">
+													[<a data-bind="click: $root.blockIP">block</a>]
+												</span>
+											</div>
+											<div>
+												&nbsp;<span class="wfReverseLookup"><span data-bind="text: IP" style="display:none;"></span></span>
+											</div>
+											<div>
+												<span
+													data-bind="attr: { 'data-timestamp': ctime, text: 'Last hit was ' + ctime() + ' ago.' }"
+													class="wfTimeAgo wfTimeAgo-timestamp"></span>
+											</div>
 										</div>
 										<div>
-											&nbsp;<span class="wfReverseLookup"><span data-bind="text: IP"
-																					  style="display:none;"></span></span>
+											<span class="wf-filtered-traffic-hits" data-bind="text: hitCount"></span> hits
 										</div>
-										<div>
-											<span
-												data-bind="attr: { 'data-timestamp': ctime, text: 'Last hit was ' + ctime() + ' ago.' }"
-												class="wfTimeAgo wfTimeAgo-timestamp"></span>
-										</div>
-									</div>
-									<div>
-									<!--<td style="font-size: 28px; color: #999;"> -->
-										<span class="wf-filtered-traffic-hits" data-bind="text: hitCount"></span> hits
 									</div>
 								</div>
 							</div>

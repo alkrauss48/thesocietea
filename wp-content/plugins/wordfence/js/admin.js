@@ -420,9 +420,16 @@
 				window.location.href = 'admin.php?page=' + menuItem;
 			},
 			updateConfig: function(key, val, cb) {
-				this.ajax('wordfence_updateConfig', {key: key, val: val}, function() {
+				this.ajax('wordfence_updateConfig', {key: key, val: val}, function(ret) {
 					if (cb) {
-						cb();
+						cb(ret);
+					}
+				});
+			},
+			updateIPPreview: function(val, cb) {
+				this.ajax('wordfence_updateIPPreview', val, function(ret) {
+					if (cb) {
+						cb(ret);
 					}
 				});
 			},
@@ -960,7 +967,7 @@
 					}
 					jQuery('#' + containerID).html('<table cellpadding="0" cellspacing="0" border="0" class="display wf-issues-table" id="' + tableID + '"></table>');
 
-					jQuery.fn.dataTableExt.oSort['severity-asc'] = function(y, x) {
+					jQuery.fn.wfDataTableExt.oSort['severity-asc'] = function(y, x) {
 						x = WFAD.sev2num(x);
 						y = WFAD.sev2num(y);
 						if (x < y) {
@@ -971,7 +978,7 @@
 						}
 						return 0;
 					};
-					jQuery.fn.dataTableExt.oSort['severity-desc'] = function(y, x) {
+					jQuery.fn.wfDataTableExt.oSort['severity-desc'] = function(y, x) {
 						x = WFAD.sev2num(x);
 						y = WFAD.sev2num(y);
 						if (x > y) {
@@ -983,33 +990,32 @@
 						return 0;
 					};
 
-					jQuery('#' + tableID).dataTable({
-						"bFilter": false,
-						"bInfo": false,
-						"bPaginate": false,
-						"bLengthChange": false,
-						"bAutoWidth": false,
-						//"aaData": res.issuesLists[issueStatus],
-						"aoColumns": [
+					jQuery('#' + tableID).WFDataTable({ 
+						"searching": false,
+						"info": false,
+						"paging": false,
+						"lengthChange": false,
+						"autoWidth": false,
+						"columnDefs": [
 							{
-								"sTitle": '<div class="th_wrapp wf-hidden-xs">Severity</div>',
-								//"sWidth": '128px',
-								"sClass": "center wf-scan-severity",
-								"sType": 'severity',
-								"fnRender": function(obj) {
-									var cls = 'wfProbSev' + obj.aData.severity;
-									return '<span class="wf-hidden-xs ' + cls + '"></span><div class="wf-visible-xs wf-scan-severity-' + obj.aData.severity + '"></div>';
+								"targets": 0,
+								"title": '<div class="th_wrapp wf-hidden-xs">Severity</div>',
+								"className": "center wf-scan-severity",
+								"type": 'severity',
+								"render": function(data, type, row) {
+									var cls = 'wfProbSev' + row.severity;
+									return '<span class="wf-hidden-xs ' + cls + '"></span><div class="wf-visible-xs wf-scan-severity-' + row.severity + '"></div>';
 								}
 							},
 							{
-								"sTitle": '<div class="th_wrapp">Issue</div>',
-								"bSortable": false,
-								//"sWidth": '400px',
-								"sType": 'html',
-								fnRender: function(obj) {
-									var issueType = (obj.aData.type == 'knownfile' ? 'file' : obj.aData.type);
+								"targets": 1,
+								"title": '<div class="th_wrapp">Issue</div>',
+								"orderable": false,
+								"type": 'html',
+								"render": function(data, type, row) {
+									var issueType = (row.type == 'knownfile' ? 'file' : row.type);
 									var tmplName = 'issueTmpl_' + issueType;
-									return jQuery('#' + tmplName).tmpl(obj.aData).html();
+									return jQuery('#' + tmplName).tmpl(row).html();
 								}
 							}
 						]
@@ -1028,7 +1034,8 @@
 						continue;
 					}
 
-					jQuery('#' + tableID).dataTable().fnAddData(issuesLists[issueStatus]);
+					var table = jQuery('#' + tableID).WFDataTable();
+					table.rows.add(issuesLists[issueStatus]).draw();
 				}
 
 				if (callback) {
@@ -2043,6 +2050,9 @@
 						} else {
 							self.pulse('.wfSavedMsg');
 						}
+
+						$('#howGetIPs-preview-all').html(res.ipAll);
+						$('#howGetIPs-preview-single').html(res.ip);
 					} else if (res.errorMsg) {
 						return;
 					} else {

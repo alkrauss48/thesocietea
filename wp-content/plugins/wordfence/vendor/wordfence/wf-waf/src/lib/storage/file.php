@@ -314,6 +314,7 @@ class wfWAFStorageFile implements wfWAFStorageInterface {
 		self::lock($this->ipCacheFileHandle, LOCK_SH);
 		while (!feof($this->ipCacheFileHandle)) {
 			$ipStr = fread($this->ipCacheFileHandle, self::IP_BLOCK_RECORD_SIZE);
+			if (wfWAFUtils::strlen($ipStr) < self::IP_BLOCK_RECORD_SIZE) { break; }
 			$ip2 = wfWAFUtils::substr($ipStr, 0, 16);
 			$unpacked = @unpack('V', wfWAFUtils::substr($ipStr, 16, 4));
 			if (is_array($unpacked)) {

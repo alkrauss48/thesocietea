@@ -606,9 +606,7 @@ class wfWAFUtils {
 		$is_apache = (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') !== false || strpos($_SERVER['SERVER_SOFTWARE'], 'LiteSpeed') !== false);
 		$is_IIS = !$is_apache && (strpos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false || strpos($_SERVER['SERVER_SOFTWARE'], 'ExpressionDevServer') !== false);
 		
-		header("Pragma: no-cache");
-		header("Cache-Control: no-cache, must-revalidate, private");
-		header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); //In the past
+		self::doNotCache();
 		
 		if (!$is_IIS && PHP_SAPI != 'cgi-fcgi') {
 			self::statusHeader($status); // This causes problems on IIS and some FastCGI setups
@@ -696,6 +694,16 @@ class wfWAFUtils {
 		
 		$header = "{$protocol} {$code} {$description}";
 		@header($header, true, $code);
+	}
+	
+	public static function doNotCache() {
+		header("Pragma: no-cache");
+		header("Cache-Control: no-cache, must-revalidate, private");
+		header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); //In the past
+		if (!defined('DONOTCACHEPAGE')) { define('DONOTCACHEPAGE', true); }
+		if (!defined('DONOTCACHEDB')) { define('DONOTCACHEDB', true); }
+		if (!defined('DONOTCDN')) { define('DONOTCDN', true); }
+		if (!defined('DONOTCACHEOBJECT')) { define('DONOTCACHEOBJECT', true); }
 	}
 	
 	/**

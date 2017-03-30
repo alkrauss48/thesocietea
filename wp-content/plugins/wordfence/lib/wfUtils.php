@@ -543,7 +543,7 @@ class wfUtils {
 	 * @param array $arr
 	 * @return bool|mixed
 	 */
-	private static function getCleanIPAndServerVar($arr){
+	private static function getCleanIPAndServerVar($arr, $trustedProxies = null) {
 		$privates = array(); //Store private addrs until end as last resort.
 		for($i = 0; $i < count($arr); $i++){
 			list($item, $var) = $arr[$i];
@@ -568,11 +568,14 @@ class wfUtils {
 				continue; //This was an array so we can skip to the next item
 			}
 			$skipToNext = false;
+			if ($trustedProxies === null) {
+				$trustedProxies = explode("\n", wfConfig::get('howGetIPs_trusted_proxies', ''));
+			}
 			foreach(array(',', ' ', "\t") as $char){
 				if(strpos($item, $char) !== false){
 					$sp = explode($char, $item);
 					$sp = array_reverse($sp);
-					foreach($sp as $j){
+					foreach($sp as $index => $j){
 						$j = trim($j);
 						if (!self::isValidIP($j)) {
 							$j = preg_replace('/:\d+$/', '', $j); //Strip off port
@@ -580,6 +583,14 @@ class wfUtils {
 						if(self::isValidIP($j)){
 							if (self::isIPv6MappedIPv4($j)) {
 								$j = self::inet_ntop(self::inet_pton($j));
+							}
+							
+							foreach ($trustedProxies as $proxy) {
+								if (!empty($proxy)) {
+									if (self::subnetContainsIP($proxy, $j) && $index < count($sp) - 1) {
+										continue 2;
+									}
+								}
 							}
 
 							if(self::isPrivateAddress($j)){
@@ -632,9 +643,9 @@ class wfUtils {
 			return false;
 		}
 	}
-	public static function getIP(){
+	public static function getIP($refreshCache = false) {
 		static $theIP = null;
-		if (isset($theIP)) {
+		if (isset($theIP) && !$refreshCache) {
 			return $theIP;
 		}
 		//For debugging. 
@@ -642,7 +653,7 @@ class wfUtils {
 		//return self::makeRandomIP();
 
 		// if no REMOTE_ADDR, it's probably running from the command line
-		$ip = self::getIPAndServerVarible();
+		$ip = self::getIPAndServerVariable();
 		if (is_array($ip)) {
 			list($IP, $variable) = $ip;
 			$theIP = $IP;
@@ -650,20 +661,32 @@ class wfUtils {
 		}
 		return false;
 	}
+	
+	public static function getIPForField($field, $trustedProxies = null) {
+		$ip = self::getIPAndServerVariable($field, $trustedProxies);
+		if (is_array($ip)) {
+			list($IP, $variable) = $ip;
+			return $IP;
+		}
+		return false;
+	}
 
-	public static function getIPAndServerVarible() {
+	public static function getIPAndServerVariable($howGet = null, $trustedProxies = null) {
 		$connectionIP = array_key_exists('REMOTE_ADDR', $_SERVER) ? array($_SERVER['REMOTE_ADDR'], 'REMOTE_ADDR') : array('127.0.0.1', 'REMOTE_ADDR');
 
-		$howGet = wfConfig::get('howGetIPs', false);
+		if ($howGet === null) {
+			$howGet = wfConfig::get('howGetIPs', false);
+		}
+		
 		if($howGet){
 			if($howGet == 'REMOTE_ADDR'){
-				return self::getCleanIPAndServerVar(array($connectionIP));
+				return self::getCleanIPAndServerVar(array($connectionIP), $trustedProxies);
 			} else {
 				$ipsToCheck = array(
 					array((isset($_SERVER[$howGet]) ? $_SERVER[$howGet] : ''), $howGet),
 					$connectionIP,
 				);
-				return self::getCleanIPAndServerVar($ipsToCheck);
+				return self::getCleanIPAndServerVar($ipsToCheck, $trustedProxies);
 			}
 		} else {
 			$ipsToCheck = array();
@@ -681,12 +704,52 @@ class wfUtils {
 			if (isset($_SERVER['HTTP_X_REAL_IP'])) {
 				$ipsToCheck[] = array($_SERVER['HTTP_X_REAL_IP'], 'HTTP_X_REAL_IP');
 			}
-			return self::getCleanIPAndServerVar($ipsToCheck);
+			return self::getCleanIPAndServerVar($ipsToCheck, $trustedProxies);
 		}
 		return false; //Returns an array with a valid IP and the server variable, or false.
 	}
+	public static function getIPPreview($howGet = null, $trustedProxies = null) {
+		$ip = self::getIPAndServerVariable($howGet, $trustedProxies);
+		if (is_array($ip)) {
+			list($IP, $variable) = $ip;
+			if (isset($_SERVER[$variable]) && strpos($_SERVER[$variable], ',') !== false) {
+				$items = preg_replace('/[\s,]/', '', explode(',', $_SERVER[$variable]));
+				$output = '';
+				foreach ($items as $i) {
+					if ($IP == $i) {
+						$output .= ', <strong>' . esc_html($i) . '</strong>';
+					}
+					else {
+						$output .= ', ' . esc_html($i); 
+					}
+				}
+				
+				return substr($output, 2);
+			}
+			return '<strong>' . esc_html($IP) . '</strong>';
+		}
+		return false;
+	}
 	public static function isValidIP($IP){
 		return filter_var($IP, FILTER_VALIDATE_IP) !== false;
+	}
+	public static function isValidCIDRRange($range) {
+		$components = explode('/', $range);
+		if (count($components) != 2) { return false; }
+		
+		list($ip, $prefix) = $components;
+		if (!self::isValidIP($ip)) { return false; }
+		
+		if (!preg_match('/^\d+$/', $prefix)) { return false; }
+		
+		if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+			if ($prefix < 0 || $prefix > 32) { return false; }
+		}
+		else {
+			if ($prefix < 1 || $prefix > 128) { return false; }
+		}
+		
+		return true;
 	}
 	public static function getRequestedURL() {
 		if (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST']) {
@@ -1098,6 +1161,28 @@ class wfUtils {
 		}
 		geoip_close($gi);
 		return $country ? $country : '';
+	}
+	public static function geoIPVersion() {
+		require_once('wfGeoIP.php');
+		$version = array();
+		
+		$gi = geoip_open(dirname(__FILE__) . "/GeoIP.dat", WF_GEOIP_STANDARD);
+		$v = @geoip_database_info($gi);
+		if ($v !== null) {
+			$version[] = $v;
+		}
+		geoip_close($gi);
+		
+		if (self::hasIPv6Support()) {
+			$gi = geoip_open(dirname(__FILE__) . "/GeoIPv6.dat", WF_GEOIP_STANDARD);
+			$v = @geoip_database_info($gi);
+			if ($v !== null) {
+				$version[] = $v;
+			}
+			geoip_close($gi);
+		}
+		
+		return $version;
 	}
 	public static function siteURLRelative(){
 		if(is_multisite()){
@@ -1688,6 +1773,162 @@ class wfUtils {
 		}
 		
 		return 'unknown';
+	}
+	
+	/**
+	 * Identical to the same functions in wfWAFUtils.
+	 * 
+	 * Set the mbstring internal encoding to a binary safe encoding when func_overload
+	 * is enabled.
+	 *
+	 * When mbstring.func_overload is in use for multi-byte encodings, the results from
+	 * strlen() and similar functions respect the utf8 characters, causing binary data
+	 * to return incorrect lengths.
+	 *
+	 * This function overrides the mbstring encoding to a binary-safe encoding, and
+	 * resets it to the users expected encoding afterwards through the
+	 * `reset_mbstring_encoding` function.
+	 *
+	 * It is safe to recursively call this function, however each
+	 * `mbstring_binary_safe_encoding()` call must be followed up with an equal number
+	 * of `reset_mbstring_encoding()` calls.
+	 *
+	 * @see wfWAFUtils::reset_mbstring_encoding
+	 *
+	 * @staticvar array $encodings
+	 * @staticvar bool  $overloaded
+	 *
+	 * @param bool $reset Optional. Whether to reset the encoding back to a previously-set encoding.
+	 *                    Default false.
+	 */
+	public static function mbstring_binary_safe_encoding($reset = false) {
+		static $encodings = array();
+		static $overloaded = null;
+		
+		if (is_null($overloaded))
+			$overloaded = function_exists('mb_internal_encoding') && (ini_get('mbstring.func_overload') & 2);
+		
+		if (false === $overloaded)
+			return;
+		
+		if (!$reset) {
+			$encoding = mb_internal_encoding();
+			array_push($encodings, $encoding);
+			mb_internal_encoding('ISO-8859-1');
+		}
+		
+		if ($reset && $encodings) {
+			$encoding = array_pop($encodings);
+			mb_internal_encoding($encoding);
+		}
+	}
+	
+	/**
+	 * Reset the mbstring internal encoding to a users previously set encoding.
+	 *
+	 * @see wfWAFUtils::mbstring_binary_safe_encoding
+	 */
+	public static function reset_mbstring_encoding() {
+		self::mbstring_binary_safe_encoding(true);
+	}
+	
+	/**
+	 * @param callable $function
+	 * @param array $args
+	 * @return mixed
+	 */
+	protected static function callMBSafeStrFunction($function, $args) {
+		self::mbstring_binary_safe_encoding();
+		$return = call_user_func_array($function, $args);
+		self::reset_mbstring_encoding();
+		return $return;
+	}
+	
+	/**
+	 * Multibyte safe strlen.
+	 *
+	 * @param $binary
+	 * @return int
+	 */
+	public static function strlen($binary) {
+		$args = func_get_args();
+		return self::callMBSafeStrFunction('strlen', $args);
+	}
+	
+	/**
+	 * @param $haystack
+	 * @param $needle
+	 * @param int $offset
+	 * @return int
+	 */
+	public static function stripos($haystack, $needle, $offset = 0) {
+		$args = func_get_args();
+		return self::callMBSafeStrFunction('stripos', $args);
+	}
+	
+	/**
+	 * @param $string
+	 * @return mixed
+	 */
+	public static function strtolower($string) {
+		$args = func_get_args();
+		return self::callMBSafeStrFunction('strtolower', $args);
+	}
+	
+	/**
+	 * @param $string
+	 * @param $start
+	 * @param $length
+	 * @return mixed
+	 */
+	public static function substr($string, $start, $length = null) {
+		$args = func_get_args();
+		return self::callMBSafeStrFunction('substr', $args);
+	}
+	
+	/**
+	 * @param $haystack
+	 * @param $needle
+	 * @param int $offset
+	 * @return mixed
+	 */
+	public static function strpos($haystack, $needle, $offset = 0) {
+		$args = func_get_args();
+		return self::callMBSafeStrFunction('strpos', $args);
+	}
+	
+	/**
+	 * @param string $haystack
+	 * @param string $needle
+	 * @param int $offset
+	 * @param int $length
+	 * @return mixed
+	 */
+	public static function substr_count($haystack, $needle, $offset = 0, $length = null) {
+		$haystack = self::substr($haystack, $offset, $length);
+		return self::callMBSafeStrFunction('substr_count', array(
+			$haystack, $needle,
+		));
+	}
+	
+	/**
+	 * @param $string
+	 * @return mixed
+	 */
+	public static function strtoupper($string) {
+		$args = func_get_args();
+		return self::callMBSafeStrFunction('strtoupper', $args);
+	}
+	
+	/**
+	 * @param string $haystack
+	 * @param string $needle
+	 * @param int $offset
+	 * @return mixed
+	 */
+	public static function strrpos($haystack, $needle, $offset = 0) {
+		$args = func_get_args();
+		return self::callMBSafeStrFunction('strrpos', $args);
 	}
 }
 

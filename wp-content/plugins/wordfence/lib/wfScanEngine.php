@@ -213,6 +213,9 @@ class wfScanEngine {
 			throw new wfScanEngineDurationLimitException($error);
 		}
 	}
+	public function shouldFork() {
+		return (time() - $this->cycleStartTime > $this->maxExecTime);
+	}
 	public function forkIfNeeded(){
 		self::checkForKill();
 		$this->checkForDurationLimit();

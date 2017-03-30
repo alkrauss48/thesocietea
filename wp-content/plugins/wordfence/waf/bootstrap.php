@@ -81,11 +81,12 @@ class wfWAFWordPressRequest extends wfWAFRequest {
 				continue; //This was an array so we can skip to the next item
 			}
 			$skipToNext = false;
+			$trustedProxies = explode("\n", wfWAF::getInstance()->getStorageEngine()->getConfig('howGetIPs_trusted_proxies', ''));
 			foreach (array(',', ' ', "\t") as $char) {
 				if (strpos($item, $char) !== false) {
 					$sp = explode($char, $item);
 					$sp = array_reverse($sp);
-					foreach ($sp as $j) {
+					foreach ($sp as $index => $j) {
 						$j = trim($j);
 						if (!$this->_isValidIP($j)) {
 							$j = preg_replace('/:\d+$/', '', $j); //Strip off port
@@ -93,6 +94,14 @@ class wfWAFWordPressRequest extends wfWAFRequest {
 						if ($this->_isValidIP($j)) {
 							if ($this->_isIPv6MappedIPv4($j)) {
 								$j = wfWAFUtils::inet_ntop(wfWAFUtils::inet_pton($j));
+							}
+							
+							foreach ($trustedProxies as $proxy) {
+								if (!empty($proxy)) {
+									if (wfWAFUtils::subnetContainsIP($proxy, $j) && $index < count($sp) - 1) {
+										continue 2;
+									}
+								}
 							}
 							
 							if ($this->_isPrivateIP($j)) {

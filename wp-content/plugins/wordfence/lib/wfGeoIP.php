@@ -77,6 +77,7 @@ class wfGeoIP {
 	var $databaseSegments;
 	var $record_length;
 	var $shmid;
+	var $size;
 	var $GEOIP_COUNTRY_CODE_TO_NUMBER = array(
 		"" => 0, "AP" => 1, "EU" => 2, "AD" => 3, "AE" => 4, "AF" => 5,
 		"AG" => 6, "AI" => 7, "AL" => 8, "AM" => 9, "CW" => 10, "AO" => 11,
@@ -383,6 +384,7 @@ class wfGeoIP {
 		function geoip_open($filename, $flags) {
 			$gi = new wfGeoIP;
 			$gi->flags = $flags;
+			$gi->size = (int) @filesize($filename);
 			if ($gi->flags & WF_GEOIP_SHARED_MEMORY) {
 				$gi->shmid = @shmop_open (WF_GEOIP_SHM_KEY, "a", 0, 0);
 			} else {
@@ -758,6 +760,65 @@ class wfGeoIP {
 			$str = is_object($p->answer[0])?$p->answer[0]->string():'';
 			$str = substr( $str, 1, -1 );
 			return $str;
+		}
+	}
+	
+	if (!function_exists('geoip_database_info')) {
+		function geoip_database_info($gi) { //Adapted from the C version
+			$fno = $gi->filehandle;
+			$offset = $gi->size - 3;
+			$hasStructureInfo = false;
+
+			/* first get past the database structure information */
+			for ($i = 0; $i < WF_STRUCTURE_INFO_MAX_SIZE; $i++) {
+				fseek($fno, $offset, SEEK_SET);
+				$data = fread($fno, 3);
+				if (strlen($data) != 3) {
+					return NULL;
+				}
+				if ($data == "\xff\xff\xff") {
+					$hasStructureInfo = true;
+					break;
+				}
+				$offset -= 1;
+				if ($offset < 0) {
+					return NULL;
+				}
+			}
+			if ($hasStructureInfo) {
+				$offset -= 6;
+				if ($offset < 0) {
+					return NULL;
+				}
+			} else {
+				/* no structure info, must be pre Sep 2002 database, go back to end */
+				$offset -= 3;
+				if ($offset < 0) {
+					return NULL;
+				}
+			}
+		
+			for ($i = 0; $i < WF_DATABASE_INFO_MAX_SIZE; $i++) {
+				fseek($fno, $offset, SEEK_SET);
+				$data = fread($fno, 3);
+				if (strlen($data) != 3) {
+					return NULL;
+				}
+				$offset += 3;
+				if ($data == "\0\0\0") {
+					fseek($fno, $offset, SEEK_SET);
+					$data = fread($fno, $i);
+					if (strlen($data) != $i) {
+						return NULL;
+					}
+					return $data;
+				}
+				$offset -= 4;
+				if ($offset < 0) {
+					return NULL;
+				}
+			}
+			return NULL;
 		}
 	}
 }
