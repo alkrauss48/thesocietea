@@ -121,19 +121,7 @@ class wordfence {
 		$wfdb = new wfDB();
 
 		if(wfConfig::get('other_WFNet')){
-			$q1 = $wfdb->querySelect("select URI from $p"."wfNet404s where ctime > unix_timestamp() - 3600 limit 1000");
-			$URIs = array();
-			foreach($q1 as $rec){
-				$URIs[] = $rec['URI'];
-			}
 			$wfdb->truncate($p . "wfNet404s");
-			if(sizeof($URIs) > 0){
-				try {
-					$api->call('send_net_404s', array(), array( 'URIs' => json_encode($URIs) ));
-				} catch(Exception $e){
-					//Ignore
-				}
-			}
 
 			$q2 = $wfdb->querySelect("select IP from $p"."wfVulnScanners where ctime > unix_timestamp() - 3600");
 			$scanCont = "";
@@ -361,6 +349,9 @@ class wordfence {
 			}
 		}
 		
+		$i = new wfIssues();
+		$i->reconcileUpgradeIssues($report, true);
+		
 		wp_schedule_single_event(time(), 'wordfence_completeCoreUpdateNotification');
 	}
 	public static function _completeCoreUpdateNotification() {
@@ -479,11 +470,6 @@ SQL
 		$optScanEnabled = $db->querySingle("select val from $prefix"."wfConfig where name='scansEnabled_options'");
 		if($optScanEnabled != '0' && $optScanEnabled != '1'){
 			$db->queryWrite("update $prefix"."wfConfig set val='1' where name='scansEnabled_options'");
-		}
-
-		$optScanEnabled = $db->querySingle("select val from $prefix"."wfConfig where name='scansEnabled_heartbleed'");
-		if($optScanEnabled != '0' && $optScanEnabled != '1'){ //Enable heartbleed if no value is set.
-			wfConfig::set('scansEnabled_heartbleed', 1);
 		}
 
 		// IPv6 schema changes for 6.0.1
@@ -690,6 +676,28 @@ SQL
 			$wpdb->query("ALTER TABLE {$blockedIPLogTable} ADD blockType VARCHAR(50) NOT NULL DEFAULT 'generic'");
 			$wpdb->query("ALTER TABLE {$blockedIPLogTable} DROP PRIMARY KEY");
 			$wpdb->query("ALTER TABLE {$blockedIPLogTable} ADD PRIMARY KEY (IP, unixday, blockType)");
+		}
+		
+		//6.3.6
+		if (!wfConfig::get('migration636_email_summary_excluded_directories')) {
+			$excluded_directories = explode(',', (string) wfConfig::get('email_summary_excluded_directories'));
+			$key = array_search('wp-content/plugins/wordfence/tmp', $excluded_directories); if ($key !== false) { unset($excluded_directories[$key]); }
+			$key = array_search('wp-content/wflogs', $excluded_directories); if ($key === false) { $excluded_directories[] = 'wp-content/wflogs'; }
+			wfConfig::set('email_summary_excluded_directories', implode(',', $excluded_directories));
+			wfConfig::set('migration636_email_summary_excluded_directories', 1, wfConfig::DONT_AUTOLOAD);
+		}
+    
+		$fileModsTable = wfDB::networkPrefix() . 'wfFileMods';
+		$hasSHAC = $wpdb->get_col($wpdb->prepare(<<<SQL
+SELECT * FROM information_schema.COLUMNS
+WHERE TABLE_SCHEMA=DATABASE()
+AND COLUMN_NAME='SHAC'
+AND TABLE_NAME=%s
+SQL
+			, $fileModsTable));
+		if (!$hasSHAC) {
+			$wpdb->query("ALTER TABLE {$fileModsTable} ADD COLUMN `SHAC` BINARY(32) NOT NULL DEFAULT '' AFTER `newMD5`");
+			$wpdb->query("ALTER TABLE {$fileModsTable} ADD COLUMN `isSafeFile` VARCHAR(1) NOT NULL  DEFAULT '?' AFTER `stoppedOnPosition`");
 		}
 		
 		//Check the How does Wordfence get IPs setting
@@ -1230,7 +1238,7 @@ SQL
 					));
 				wp_mail($email, "Unlock email requested", $content, "Content-Type: text/html");
 			}
-			echo "<html><body><h1>Your request was received</h1><p>We received a request to email \"" . wp_kses($email, array()) . "\" instructions to unlock their access. If that is the email address of a site administrator or someone on the Wordfence alert list, then they have been emailed instructions on how to regain access to this sytem. The instructions we sent will expire 30 minutes from now.</body></html>";
+			echo "<html><body><h1>Your request was received</h1><p>We received a request to email \"" . wp_kses($email, array()) . "\" instructions to unlock their access. If that is the email address of a site administrator or someone on the Wordfence alert list, they have been emailed instructions on how to regain access to this system. The instructions we sent will expire 30 minutes from now.</body></html>";
 			exit();
 		} else if($wfFunc == 'unlockAccess'){
 			if (!preg_match('/^(?:(?:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9](?::|$)){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))$/i', get_transient('wfunlock_' . $_GET['key']))) {
@@ -1298,6 +1306,13 @@ SQL
 				);
 				foreach ($configDefaults as $key => $value) {
 					$waf->getStorageEngine()->setConfig($key, $value);
+				}
+				
+				if (wfConfig::get('timeoffset_wf') !== false) {
+					$waf->getStorageEngine()->setConfig('timeoffset_wf', wfConfig::get('timeoffset_wf'));
+				}
+				else {
+					$waf->getStorageEngine()->unsetConfig('timeoffset_wf');
 				}
 				
 				if (class_exists('wfWAFIPBlocksController')) {
@@ -3547,7 +3562,7 @@ HTACCESS;
 		$jsonData = array(
 			'serverTime' => $serverTime,
 			'serverMicrotime' => microtime(true),
-			'msg' => wp_kses_data( (string) $wfdb->querySingle("select msg from $p"."wfStatus where level < 3 order by ctime desc limit 1"))
+			'msg' => wp_kses_data( (string) $wfdb->querySingle("SELECT msg FROM {$p}wfStatus WHERE level < 3 AND ctime > (UNIX_TIMESTAMP() - 3600) ORDER BY ctime DESC LIMIT 1"))
 			);
 		$events = array();
 		$alsoGet = $_POST['alsoGet'];
@@ -4841,6 +4856,7 @@ HTML;
 			'cacheType' => wfConfig::get('cacheType'),
 			'liveTrafficEnabled' => wfConfig::liveTrafficEnabled(),
 			'scanIssuesPerPage' => WORDFENCE_SCAN_ISSUES_PER_PAGE,
+			'allowsPausing' => wfConfig::get('liveActivityPauseEnabled'),
 			));
 	}
 	public static function activation_warning(){

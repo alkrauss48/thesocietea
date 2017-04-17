@@ -1,10 +1,12 @@
 <?php
 $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 ?>
+<?php if (wfConfig::get('liveActivityPauseEnabled')): ?>
 <div id="wfLiveTrafficOverlayAnchor"></div>
 <div id="wfLiveTrafficDisabledMessage">
 	<h2>Live Updates Paused<br /><small>Click inside window to resume</small></h2>
 </div>
+<?php endif; ?>
 <div class="wrap wordfence">
 	<div class="wf-container-fluid">
 	

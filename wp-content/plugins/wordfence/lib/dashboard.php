@@ -27,7 +27,6 @@
 <?php if(wfConfig::get('scheduledScansEnabled')){ ?>
 <?php if(wfConfig::get('scheduledScansEnabled')){ ?><tr><td style="padding-right: 20px;">Security Scans Enabled:</td><td style="color: #0F0;">&#10004;</td></tr> <?php } ?>
 <?php if(wfConfig::get('scansEnabled_public')){ ?><tr><td style="padding-right: 20px;">Scan public facing site:</td><td style="color: #0F0;">&#10004;</td></tr> <?php } ?>
-<?php if(wfConfig::get('scansEnabled_heartbleed')){ ?><tr><td style="padding-right: 20px;">Scan for HeartBleed Vulnerability:</td><td style="color: #0F0;">&#10004;</td></tr> <?php } ?>
 <?php if(wfConfig::get('scansEnabled_core')){ ?><tr><td style="padding-right: 20px;">Scan Core Files:</td><td style="color: #0F0;">&#10004;</td></tr> <?php } ?>
 <?php if(wfConfig::get('scansEnabled_themes')){ ?><tr><td style="padding-right: 20px;">Scan Themes:</td><td style="color: #0F0;">&#10004;</td></tr> <?php } ?>
 <?php if(wfConfig::get('scansEnabled_plugins')){ ?><tr><td style="padding-right: 20px;">Scan Plugins:</td><td style="color: #0F0;">&#10004;</td></tr> <?php } ?>

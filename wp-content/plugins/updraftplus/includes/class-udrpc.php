@@ -58,7 +58,7 @@ if ($ud_rpc->get_key_local()) {
 if (!class_exists('UpdraftPlus_Remote_Communications')):
 class UpdraftPlus_Remote_Communications {
 	// Version numbers relate to versions of this PHP library only (i.e. it's not a protocol support number, and version numbers of other compatible libraries (e.g. JavaScript) are not comparable)
-	public $version = '1.4.9';
+	public $version = '1.4.12';
 
 	private $key_name_indicator;
 
@@ -150,14 +150,8 @@ class UpdraftPlus_Remote_Communications {
 				if (!class_exists('Crypt_Rijndael')) require_once 'Crypt/Rijndael.php';
 				if (!class_exists('Crypt_RSA')) require_once 'Crypt/RSA.php';
 				if (!class_exists('Crypt_Hash')) require_once 'Crypt/Hash.php';
-			} elseif (file_exists(dirname(__DIR__).'/vendor/phpseclib')) {
-				$pdir = dirname(__DIR__).'/vendor/phpseclib';
-				if (false === strpos(get_include_path(), $pdir)) set_include_path($pdir.PATH_SEPARATOR.get_include_path());
-				if (!class_exists('Crypt_Rijndael')) require_once 'Crypt/Rijndael.php';
-				if (!class_exists('Crypt_RSA')) require_once 'Crypt/RSA.php';
-				if (!class_exists('Crypt_Hash')) require_once 'Crypt/Hash.php';
-			} elseif (file_exists(dirname(__DIR__).'/composer/vendor/phpseclib/phpseclib/phpseclib')) {
-				$pdir = dirname(__DIR__).'/composer/vendor/phpseclib/phpseclib/phpseclib';
+			} elseif (file_exists(dirname(dirname(__FILE__)).'/vendor/phpseclib/phpseclib/phpseclib')) {
+				$pdir = dirname(dirname(__FILE__)).'/vendor/phpseclib/phpseclib/phpseclib';
 				if (false === strpos(get_include_path(), $pdir)) set_include_path($pdir.PATH_SEPARATOR.get_include_path());
 				if (!class_exists('Crypt_Rijndael')) require_once 'Crypt/Rijndael.php';
 				if (!class_exists('Crypt_RSA')) require_once 'Crypt/RSA.php';

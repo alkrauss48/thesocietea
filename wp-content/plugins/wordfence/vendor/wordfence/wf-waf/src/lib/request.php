@@ -443,7 +443,7 @@ class wfWAFRequest implements wfWAFRequestInterface {
 	 * @param string|null $baseKey The base key used when recursing.
 	 * @return string
 	 */
-	public function getCookieString($cookies = null, $baseKey = null) {
+	public function getCookieString($cookies = null, $baseKey = null, $preventRedaction = false) {
 		if ($cookies == null) {
 			$cookies = $this->getCookies();
 		}
@@ -465,7 +465,7 @@ class wfWAFRequest implements wfWAFRequestInterface {
 				$cookieString .= $nestedCookies;
 			}
 			else {
-				if (strpos($resolvedName, 'wordpress_') === 0) {
+				if (strpos($resolvedName, 'wordpress_') === 0 && !$preventRedaction) {
 					$cookieValue = '<redacted>';
 				}
 				
@@ -548,7 +548,7 @@ class wfWAFRequest implements wfWAFRequestInterface {
 	 * @return string
 	 */
 	public function highlightFailedParams($failedParams = array(), $highlightParamFormat = '[param]%s[/param]',
-	                                      $highlightMatchFormat = '[match]%s[/match]') {
+	                                      $highlightMatchFormat = '[match]%s[/match]', $preventRedaction = false) {
 		$highlights = array();
 
 		// Cap at 47.5kb
@@ -622,7 +622,7 @@ class wfWAFRequest implements wfWAFRequestInterface {
 				switch (wfWAFUtils::strtolower($header)) {
 					case 'cookie':
 						// TODO: Hook up highlights to cookies
-						$request .= 'Cookie: ' . trim($this->getCookieString()) . "\n";
+						$request .= 'Cookie: ' . trim($this->getCookieString(null, null, $preventRedaction)) . "\n";
 						break;
 
 					case 'host':
@@ -632,7 +632,7 @@ class wfWAFRequest implements wfWAFRequestInterface {
 					case 'authorization':
 						$hasAuth = true;
 						if ($auth) {
-							$request .= 'Authorization: Basic ' . base64_encode($auth['user'] . ':' . $auth['password']) . "\n";
+							$request .= 'Authorization: Basic ' . ($preventRedaction ? base64_encode($auth['user'] . ':' . $auth['password']) : '<redacted>') . "\n";
 						}
 						break;
 
@@ -644,7 +644,7 @@ class wfWAFRequest implements wfWAFRequestInterface {
 		}
 
 		if (!$hasAuth && $auth) {
-			$request .= 'Authorization: Basic ' . base64_encode($auth['user'] . ':' . $auth['password']) . "\n";
+			$request .= 'Authorization: Basic ' . ($preventRedaction ? base64_encode($auth['user'] . ':' . $auth['password']) : '<redacted>') . "\n";
 		}
 
 		$body = $this->getBody();

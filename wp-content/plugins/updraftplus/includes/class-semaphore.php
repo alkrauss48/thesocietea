@@ -38,7 +38,7 @@ class UpdraftPlus_Semaphore {
 		");
 
 		if ($affected == '0' and !$this->stuck_check()) {
-			$updraftplus->log('Semaphore lock ('.$this->lock_name.') failed (line '.__LINE__.')');
+			$updraftplus->log('Semaphore lock ('.$this->lock_name.', '.$wpdb->options.') failed (line '.__LINE__.')');
 			return false;
 		}
 
@@ -51,7 +51,7 @@ class UpdraftPlus_Semaphore {
 		");
 		if ($affected != '1') {
 			if (!$this->stuck_check()) {
-				$updraftplus->log('Semaphore lock ('.$this->lock_name.') failed (line '.__LINE__.')');
+				$updraftplus->log('Semaphore lock ('.$this->lock_name.', '.$wpdb->options.') failed (line '.__LINE__.')');
 				return false;
 			}
 
@@ -62,7 +62,7 @@ class UpdraftPlus_Semaphore {
 				 WHERE option_name = 'updraftplus_semaphore_".$this->lock_name."'
 			");
 
-			$updraftplus->log('Semaphore ('.$this->lock_name.') reset to 1');
+			$updraftplus->log('Semaphore ('.$this->lock_name.', '.$wpdb->options.') reset to 1');
 		}
 
 		// Set the lock time
@@ -145,7 +145,7 @@ class UpdraftPlus_Semaphore {
 			return true;
 		}
 
-		$updraftplus->log('Semaphore ('.$this->lock_name.') still locked ('.$result.')');
+		$updraftplus->log('Semaphore ('.$this->lock_name.', '.$wpdb->options.') still locked ('.$result.')');
 		return false;
 	}
 
@@ -173,7 +173,7 @@ class UpdraftPlus_Semaphore {
 		", $current_time, $three_minutes_before));
 
 		if ('1' == $affected) {
-			$updraftplus->log('Semaphore ('.$this->lock_name.') was stuck, set lock time to '.$current_time);
+			$updraftplus->log('Semaphore ('.$this->lock_name.', '.$wpdb->options.') was stuck, set lock time to '.$current_time);
 			$this->lock_broke = true;
 			return true;
 		}

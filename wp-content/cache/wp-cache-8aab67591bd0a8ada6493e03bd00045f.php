@@ -12,12 +12,77 @@
 	<atom:link href="https://thesocietea.org/feed/" rel="self" type="application/rss+xml" />
 	<link>https://thesocietea.org</link>
 	<description>Developer</description>
-	<lastBuildDate>Sun, 19 Mar 2017 21:54:35 +0000</lastBuildDate>
+	<lastBuildDate>Fri, 14 Apr 2017 17:08:39 +0000</lastBuildDate>
 	<language>en-US</language>
 	<sy:updatePeriod>hourly</sy:updatePeriod>
 	<sy:updateFrequency>1</sy:updateFrequency>
 	<generator>https://wordpress.org/?v=4.7.3</generator>
 <site xmlns="com-wordpress:feed-additions:1">46707861</site>	<item>
+		<title>Design Patterns: Dependency Injection</title>
+		<link>https://thesocietea.org/2017/03/design-patterns-dependency-injection/</link>
+		<comments>https://thesocietea.org/2017/03/design-patterns-dependency-injection/#respond</comments>
+		<pubDate>Thu, 30 Mar 2017 12:00:46 +0000</pubDate>
+		<dc:creator><![CDATA[thecodeboss]]></dc:creator>
+				<category><![CDATA[How Things Work]]></category>
+
+		<guid isPermaLink="false">https://thesocietea.org/?p=1459</guid>
+		<description><![CDATA[If you&#8217;re a developer, you may have heard of the phrase dependency injection (DI) before as a possible design pattern you can use. It&#8217;s been around for a long time, and many popular frameworks such as Angular.js use it by default. In standard code, it&#8217;s common to declare a dependency in the same lexical scope where you...]]></description>
+				<content:encoded><![CDATA[<p>If you&#8217;re a developer, you may have heard of the phrase <a href="https://en.wikipedia.org/wiki/Dependency_injection" target="_blank">dependency injection</a> (DI) before as a possible design pattern you can use. It&#8217;s been around for a long time, and many popular frameworks such as <a href="https://en.wikipedia.org/wiki/Dependency_injection#AngularJS_example" target="_blank">Angular.js</a> use it by default. In standard code, it&#8217;s common to declare a dependency in the same lexical scope where you actually plan use that dependency. Nothing sounds crazy about that, right? DI flips this on its head &#8211; and for good reason too. The core concept of DI is to <a href="https://en.wikipedia.org/wiki/Inversion_of_control" target="_blank">invert the control</a> of managing dependencies so that instead of the <strong>client</strong> (i.e. the scope where the code actually exists) having to manage its own dependencies, you instead delegate this responsibility to the code which actually <em>calls</em> your client, typically passing in dependencies as arguments to that client. This is where the name &#8220;dependency injection&#8221; comes from &#8211; you <em>inject</em> the dependencies into your client code during the execution of that code.</p>
+<p>If you&#8217;re familiar with DI &#8211; then you haven&#8217;t learned anything new yet, but if this is your first go at understanding this design pattern, then surely you have some red flags popping up right now. This just seems to convolute how I would write my code, why would I do this? What are the benefits of DI? Is it difficult to implement? We&#8217;ll get to all of this. Keep following along.</p>
+<h2>Benefits of DI</h2>
+<p>Applications built with DI boast a fair number of benefits &#8211; and while there&#8217;s more than this, here&#8217;s a list of some of my favorites:</p>
+<p><strong>Loose coupling.</strong></p>
+<p>With DI, your code is by default more loosely coupled which makes it easier to &#8220;plug-and-play&#8221; throughout your application; for example, you don&#8217;t have to worry about using a dependency that was potentially declared in an external scope compared to where you&#8217;re actually using it. All your code needs to worry about is what it actually does &#8211; and not about what exists around it.</p>
+<p>Taking loose coupling even further, DI is very functional in nature too in the sense that it helps your functions maintain a <a href="https://en.wikipedia.org/wiki/Pure_function" target="_blank">pure</a> state. Including dependencies from outside of the immediate scope means that the state of your client code could change at any given time &#8211; and while using DI doesn&#8217;t force you to necessarily write pure functions &#8211; it helps guide you on that path more so than other design patterns.</p>
+<p><strong>Testing is very simple.</strong></p>
+<p>Imagine you want to test a function which makes a request to a third-party JSON API, and you need certain data to return from that service in order for it to execute properly. This is very difficult to test because not only do external HTTP requests take a significant amount of time compared to the rest of your test&#8217;s execution &#8211; it&#8217;s most likely not feasible or reliable for you to be making HTTP requests during testing. What if the third-party service goes down? What if you have a request quota? What if the service takes a few seconds to respond? There&#8217;s a ton of reasons why this might be an issue.</p>
+<p>With DI, you would pass in this particular request library as an argument to your client code &#8211; but since you&#8217;re passing it in from your test code, it&#8217;s very simple for you to build a mock of this request library that simulates real behavior; instead of making an HTTP request, it could just immediately respond with test data that you would expect to get back as a response, and then continue on executing the rest of your client code in your test.</p>
+<p>Here&#8217;s an example of how this library might be used with DI (and Javascript&#8217;s new <a href="https://ponyfoo.com/articles/understanding-javascript-async-await" target="_blank">async/await</a> keywords):</p><pre class="crayon-plain-tag">function foo(httpLib) {
+  var data = await httpLib.get('http://api.com/users/1')
+  return data.id
+}</pre><p>And here&#8217;s a simple unit test we could write for this function:</p><pre class="crayon-plain-tag">function testFoo() {
+  var httpMock = {
+    get: async function getStub(){
+      return { id: 1 };
+    }
+  };
+
+  var response = foo(httpMock);
+  expect(response).to.be(1) // true
+}</pre><p><strong>Single source of declaration</strong>.</p>
+<p>You don&#8217;t need to require the same files multiple times in a project &#8211; with DI, you only have to do this once. Requiring a file multiple times could needlessly increase the total size of your application &#8211; but even though most programming languages handle this so that you still only pull in the same file once, it&#8217;s still cleaner and easier to debug when you code it in just one spot.</p>
+<h2>Implementing DI</h2>
+<p>You can implement DI in a number of different ways, but there are <a href="https://en.wikipedia.org/wiki/Dependency_injection#Three_types_of_dependency_injection" target="_blank">3 simple patterns</a> of doing so if you&#8217;re using a class-based object-oriented language: the constructor, setter, and interface patterns. All of them revolve around the concept of setting each dependency as an instance variable on an object so that you can access them just about anywhere.</p>
+<p>Here&#8217;s a simple example of code <strong>without</strong> DI:</p><pre class="crayon-plain-tag">public SomeClass() {
+  this.myObject = factory.getObject();
+}</pre><p>Here, factory is a dependency defined in the external lexical scope of this file. This is nice and simple &#8211; but what if you want to build a unit test, and factory.getObject is a very hard function to handle during your test? This is where DI really shines, and here&#8217;s a simple way you can transform this example to use it:</p><pre class="crayon-plain-tag">public SomeClass (Factory factory) {
+  this.factory = factory;
+
+  // Now we can call this.factory.getObject() anywhere in the class!
+}</pre><p>Here, we pass in a dependency and set it equal to an instance variable &#8211; and now we can use this dependency anywhere we see fit with this property. We&#8217;ve transformed the SomeClass constructor into a pure function which solely depends on the arguments passed in when it&#8217;s called. That, my friend, is loose coupling.</p>
+<h3>Using an IoC Container</h3>
+<p>DI is a wonderful concept and is rather easy to implement on a small scale, but it can quickly get messy if you start needing to inject dependencies all over the place in various files. This is where using an IoC (inversion of control) container &#8211; also known as a DI container &#8211; comes in to play. The purpose of an IoC container is to handle settting up all the necessary dependencies so that you don&#8217;t have to duplicate convoluted instantiation code across your project; the IoC container is the only place you would write that.</p>
+<p>Imagine code that looks like this:</p><pre class="crayon-plain-tag">FooService foo = new FooService(new BarService(), 
+   new BazService(), new FooBarService(), 
+   new BazBarService(new Config()), 
+   new Logger(new FooLogger(new Config())));</pre><p>There&#8217;s nothing logically wrong here &#8211; we&#8217;re following proper DI principles &#8211; but it&#8217;s still very messy. The real danger here is that if we wanted to ever instantiate an object of class FooService again, then we would need to duplicate all of this code, and that seems like a code smell.</p>
+<p>Now imagine we&#8217;re using an IoC container. Our code could potentially look like this:</p><pre class="crayon-plain-tag">FooService foo = IoC.Resolve&lt;IFooService&gt;();</pre><p>Here, we haven&#8217;t lost any of our logic &#8211; we&#8217;ve just delegated the instantiation of a FooService object to our IoC container, which handles creating this object just like our code before did; our benefit now is just that if we need to duplicate this behavior across our project, we just delegate that responsibility to our IoC container instead of our client code. Our IoC container becomes the single source for handling all of our dependencies &#8211; and that&#8217;s pretty nice.</p>
+<h2>Detriments of DI</h2>
+<p>While we&#8217;ve shown the benefits so far, DI isn&#8217;t without its faults. Here&#8217;s a couple valid reasons that might make DI less appealing depending on your situation.</p>
+<p><strong>More difficult to trace.</strong></p>
+<p>When you&#8217;re debugging code that&#8217;s using DI, if the error stems from a dependency, then you may need to follow your stack trace a little bit further to see where the error actually occurs. Because dependencies no longer exist in the same file and/or class as where your logic is happening, you need to know exactly what called the code in question to understand where the problem may lie.</p>
+<p>On top of this, learning these types of traversal concepts may be more difficult for developers who are just joining a project for the first time.</p>
+<p><strong>More upfront development.</strong></p>
+<p>In almost all cases, building a project with the DI pattern will take more upfront development time than a traditional project. Most of this has to do with understanding how your project&#8217;s architecture should work, what constitutes a dependency, and potentially building an IoC container.</p>
+<p>In the long run, however, DI could save you a lot of development time and headaches as you begin to add on more components to your project and also need to test those components.</p>
+<h2>Final Thoughts</h2>
+<p>DI is a nice design pattern and it&#8217;s helped me tremendously in the applications where I&#8217;ve used it. For the most part, my favorite use case for DI is how simple it is to test every component of your project. If there&#8217;s a third-party dependency that makes it difficult to test the rest of my logic, then I can easily mock that dependency and stub out any functionality it has.</p>
+<p>But &#8211; it&#8217;s more complex than non-DI code, and that may be a turn off for many developers out there. Whether you decide to implement DI into some of your projects is always your decision &#8211; but if you want my opinion, give it a shot sometime. If it works out &#8211; great, you&#8217;ve found a nice design pattern you can really start using; if not, then at least you still hopefully learned something in the process!</p>
+]]></content:encoded>
+			<wfw:commentRss>https://thesocietea.org/2017/03/design-patterns-dependency-injection/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	<post-id xmlns="com-wordpress:feed-additions:1">1459</post-id>	</item>
+		<item>
 		<title>Building a JSON API with Rails &#8211; Part 6: The JSON API Spec, Pagination, and Versioning</title>
 		<link>https://thesocietea.org/2017/02/building-a-json-api-with-rails-part-6-the-json-api-spec-pagination-and-versioning/</link>
 		<comments>https://thesocietea.org/2017/02/building-a-json-api-with-rails-part-6-the-json-api-spec-pagination-and-versioning/#comments</comments>
@@ -753,136 +818,8 @@ puts cipher2.final
 			<wfw:commentRss>https://thesocietea.org/2016/07/my-interviews-with-amazon/feed/</wfw:commentRss>
 		<slash:comments>67</slash:comments>
 	<post-id xmlns="com-wordpress:feed-additions:1">1401</post-id>	</item>
-		<item>
-		<title>Combining BEM and SMACSS</title>
-		<link>https://thesocietea.org/2016/06/combining-bem-and-smacss/</link>
-		<comments>https://thesocietea.org/2016/06/combining-bem-and-smacss/#comments</comments>
-		<pubDate>Fri, 24 Jun 2016 12:00:40 +0000</pubDate>
-		<dc:creator><![CDATA[thecodeboss]]></dc:creator>
-				<category><![CDATA[Front End]]></category>
-
-		<guid isPermaLink="false">https://thesocietea.org/?p=1345</guid>
-		<description><![CDATA[Code architecture is super important when you want to have clean, readable, and organized code. For small, personal projects, you might be able to get away with just a &#8220;hacker&#8221; mentality in the sense of just throwing some code together &#8211; but that will quickly break down to an unmaintainable state for larger projects. A lot...]]></description>
-				<content:encoded><![CDATA[<p>Code architecture is super important when you want to have clean, readable, and organized code. For small, personal projects, you might be able to get away with just a &#8220;hacker&#8221; mentality in the sense of just throwing some code together &#8211; but that will quickly break down to an unmaintainable state for larger projects. A lot of programming languages have overcome this issue via various frameworks that force some sort of <a href="https://en.wikipedia.org/wiki/Domain-specific_language" target="_blank">DSL</a> and/or file structure on you (Ruby&#8217;s Rails framework is a simple example) &#8211; or the language&#8217;s paradigm itself allows for clean code architecture (class-based, prototypal, etc.) &#8211; but there&#8217;s one language devoid of a lot of these niceties that&#8217;s ubiquitous across the web and can easily span thousands of lines of code for even the simplest of projects. I&#8217;m talking, of course, about CSS.</p>
-<p>CSS is about as bare bones of a programming language as you can get; in fact, <a href="https://en.wikipedia.org/wiki/Cascading_Style_Sheets" target="_blank">Wikipedia</a> classifies it as a <em>style sheet</em> language instead of a programming language because it&#8217;s practically logic-less. You just select various elements and apply styles to them &#8211; and by default the styles will <em>cascade</em> in a particular order based on what selectors you&#8217;ve used. That&#8217;s it &#8211; and like I mentioned earlier, CSS can easily surpass a thousand lines of code for any project! Tools like <a href="http://sass-lang.com/" target="_blank">sass</a>, <a href="http://lesscss.org/" target="_blank">less</a>, <a href="http://postcss.org/" target="_blank">postCSS</a>, and more have helped to add in some neat features to CSS such as mixins, variables, auto-prefixing, and more &#8211; but none of those address how you should architect your CSS.</p>
-<p>Luckily &#8211; several talented developers have begun to tackle this issue, and two CSS design patterns have emerged as the most popular among the crowd: <a href="https://smacss.com/" target="_blank">SMACSS</a> and <a href="https://en.bem.info/" target="_blank">BEM</a>. Now, every design pattern is opinionated to some degree, so you personally have to see if they&#8217;re right for you. I started to apply both BEM and SMACSS separately to my CSS-heavy projects and learned what made the most sense for my coding style &#8211; and also what I absolutely hated from each design pattern. In the end, I took the core concepts of both BEM and SMACSS and combined them to create a personalized design pattern &#8211; and I&#8217;m really loving it. It&#8217;s helped my CSS organization in such powerful ways, and I want to share with you what I found valuable from each design pattern. Before I do that though, I want to review the core concepts of both BEM and SMACSS &#8211; so that we&#8217;re all on the same page.</p>
-<h2>Similarities</h2>
-<p>Despite the differences, both SMACSS and BEM share a pretty common core set of rules:</p>
-<ol>
-<li>Never use ID selectors. CSS class selectors should make up the majority of your styles.</li>
-<li>CSS selectors should stay flat &#8211; don&#8217;t nest them (unless you have a good reason).</li>
-<li>Both design patterns focus on a <strong>module</strong>-based system of organizing the majority of your CSS &#8211; which sort of extends how object-oriented CSS (<a href="http://oocss.org/" target="_blank">OOCSS</a>) works. What this means is that you should architect your CSS classes in a manner that takes advantage of building repeatable HTML blocks that have a semantic purpose<em>.</em></li>
-</ol>
-<p>Now, let&#8217;s get to some of the differences.</p>
-<h2>SMACSS</h2>
-<p>SMACSS is a design pattern created by a single developer named Jonathon Snook who works at Yahoo! (which currently implements the SMACSS pattern). It focuses on 5 main types of structures to organize your CSS:</p>
-<ul>
-<li>Base</li>
-<li>Layout</li>
-<li>Module</li>
-<li>State</li>
-<li>Theme</li>
-</ul>
-<p><strong>Base.</strong> Base styles are just that &#8211; base styles that apply to <em>base</em> selectors. These should be very simple and incredibly broad styles, such as font color and family, link styles, etc. Something like this:</p><pre class="crayon-plain-tag">body {
-  font-family: sans-serif;
-}
-
-p {
- font-size: 1em;
-}
-
-a {
-  text-decoration: none;
-}</pre><p>Easy peasy.</p>
-<p><strong>Layout</strong>. Layout styles are meant for logic-less container elements that are solely included in your HTML to provide positioning, padding, or other <em>layout</em>-based purposes. By default, SMACSS recommends you begin your layout styles with the <strong>l-</strong> prefix:</p><pre class="crayon-plain-tag">.l-container {
-  max-width: 58em;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.l-horizontal-padding {
-  padding: 0 1em;
-}</pre><p><strong>Module</strong>. Modules will make up about 95% of the CSS of your page. This topic goes pretty deep &#8211; so I encourage you to look up the SMACSS <a href="https://smacss.com/book/type-module" target="_blank">documentation</a> for how modules are intended to work &#8211; but the tl;dr version is that you should style a block of HTML code with independent, semantic content as a module with children elements. Something like this:</p><pre class="crayon-plain-tag">.menu {
-  list-style: none;
-}
-
-// child element of .menu
-.menu-item {
-  float: left;
-  padding: 1em;
-}</pre><p>SMACSS suggests you keep your module names short, so that your child item class names don&#8217;t get unnecessarily long. This takes some practice to understand how to style your CSS using a module-based system &#8211; but it&#8217;s worth the struggle once you feel comfortable with it.</p>
-<p><strong>State.</strong> States are very simple styles &#8211; and are the only time where it&#8217;s okay to use the dreaded <strong>!important</strong> attribute. States are styles that should be triggered by Javascript (i.e. showing an element, hiding an element, marking an element as active, etc.) &#8211; and should normally begin with the <strong>is-</strong> prefix:</p><pre class="crayon-plain-tag">// This is the accessible way to hide content
-
-.is-hidden {
-  position: absolute;
-  left: -999em;
-}
-
-.is-visible {
-  position: static;
-}</pre><p><strong>Theme.</strong> I don&#8217;t really use theme styles since my projects typically don&#8217;t need them, but their purpose is to provide styles for various <em>themes</em> &#8211; where the core styles of a series of pages stay the same, but small things may change like background colors, fonts, etc.</p>
-<h3>Folder Structure</h3>
-<p>SMACSS doesn&#8217;t place much emphasis on how you should structure your CSS files (which is <em>drastically</em> different from BEM) &#8211; so I created my own simple folder structure for the projects where I solely used SMACSS:</p><pre class="crayon-plain-tag">base/
-layouts/
-modules/
-states/
-app.scss</pre><p>Using this as a folder structure, you would just create files for each style type in each respective directory. I use sass in all of my projects, and I&#8217;m a very big fan of using sass imports to import every sass file into one core file before I process it as CSS &#8211; which is what the <strong>app.scss</strong> file is.</p>
-<p>That covers some of the core concepts of SMACSS &#8211; let&#8217;s move onto BEM now.</p>
-<h2>BEM</h2>
-<p>Compared to SMACSS, BEM is simpler to understand &#8211; but it&#8217;s much more rigid in how you structure your code and files. In BEM, every style is a part of a module &#8211; no base styles, layouts, themes, etc. You just have <strong>blocks</strong>, <strong>elements</strong>, and <strong>modifiers</strong>. In fact, that&#8217;s where BEM gets its name. Here&#8217;s a breakdown of what those concepts entail.</p>
-<p><strong>Blocks</strong>. Blocks are the styles that house related child items. You can think of them as the highest level of a module. Something like a menu:</p><pre class="crayon-plain-tag">.menu {
-  list-style: none;
-}</pre><p><strong>Elements</strong>. Element styles represent the actual child items inside of a block. Elements always begin with the block name, followed by two underscores (__) and a suffixing name:</p><pre class="crayon-plain-tag">.menu__item {
-  float: left;
-  padding: 1em;
-}
-
-.menu__link {
-  font-size: 1.25em;
-}</pre><p>I like to think of element styles as <em>nouns</em>, since they&#8217;re meant as the core styles for actual elements.</p>
-<p><strong>Modifiers</strong>. Modifier styles are applied to both blocks and elements, and are strictly meant to handle the subtle differences that two similar blocks or elements may have. For example, a menu link may be white &#8211; or it may be blue:</p><pre class="crayon-plain-tag">.menu__item--white {
-  color: white;
-}
-
-.menu__item--blue {
-  color: blue;
-}</pre><p>Modifier styles always start with the full block or element name, followed by double hyphens (&#8211;) and then the modifier name. I think of modifiers as <em>adjectives</em>, since they help to better describe an element or block.</p>
-<h3>Folder Structure</h3>
-<p>This is where BEM heavily differs from SMACSS. Where SMACSS didn&#8217;t put much emphasis on folder structure, BEM suggests that every single block, element, <em>and</em> modifier should have its own CSS file. So as you start to build out your project, you&#8217;ll quickly create detailed file structures like this.</p><pre class="crayon-plain-tag">blocks/
-    input/
-        _type/                        # `type` modifier directory
-            input_type_search.css     # Implementation of modifier `type` with value `search` in CSS technology
-        __box/                        # `box` element directory
-            input__box.css
-        input.css
-        input.js
-    button/
-        button.css
-        button.js
-        button.png</pre><p>This is very organized &#8211; there&#8217;s no doubt about that &#8211; but to create a new file for every new class basically is a little extreme for me. This was one reason BEM was difficult for me to fully implement in the recommended manner.</p>
-<p>So &#8211; how do I currently build my CSS? I took the core concepts of BEM and SMACSS and combined them in a way that made sense to me.</p>
-<h2>Combining Them</h2>
-<p>I really like BEM&#8217;s recommendations with regard to how code blocks should be structured. Blocks, elements, modifiers &#8211; building my class names following this design pattern really helped me to think about my code in a reusable block-based manner. I liked it much more than how SMACSS suggested to structure modules &#8211; which is practically no structure. However, I don&#8217;t feel like <em>everythin</em><em>g</em> should be a module &#8211; which is BEM&#8217;s philosophy. I feel like there&#8217;s a valid purpose for base, layout, state, and theme styles &#8211; and I don&#8217;t feel like they need to be modules.</p>
-<p>In the end, I basically went with a SMACSS architecture that leveraged the power of base, layout, and state styles &#8211; and instead of SMACSS&#8217; module styles, I substituted them completely with BEM styles &#8211; blocks, elements, and modifiers. I also came up with my own file structure that made sense to me:</p><pre class="crayon-plain-tag">modules/
-  _menu.scss
-  _content.scss
-  // etc.
-config/
-  _variables.scss
-  _mixins.scss
-_app.scss
-_base.scss
-_layouts.scss
-_states.scss</pre><p>I kept base, layout, and state styles all limited to single stylesheets because even all together they never grew too large. I created a new file for each <strong>block</strong>, and kept all modifiers and elements related to that block in the same file. These files usually never grew to beyond 100 lines, so they were very manageable. Finally &#8211; I added a config folder for all the files that didn&#8217;t translate into direct styles. This config folder would hold things like variables, broad mixins, custom font stylesheets (such as icon fonts), and more.</p>
-<p>You can check out a <a href="https://github.com/alkrauss48/starter-site/tree/bem-smacss/app/src/sass" target="_blank">live example</a> of this folder structure in my starter-site template.</p>
-<h2>Final Thoughts</h2>
-<p>I mentioned earlier that every design pattern is opinionated &#8211; and my personal pattern is no exception. It may appeal to you &#8211; or you may hate it, and that&#8217;s okay. At the very least, I hope I provided you with a little more knowledge about the two most popular CSS design patterns out there right now, and helped transform some of the opinions you may have had about them. In the end, we all have different coding styles, so one single design pattern won&#8217;t fit everyone. The most important obstacle these patterns try to tackle is that of code organization &#8211; and as long as you have a methodology behind your code architecture, then you&#8217;re good to go &#8211; no matter if you use a common design pattern or you just make up your own!</p>
-]]></content:encoded>
-			<wfw:commentRss>https://thesocietea.org/2016/06/combining-bem-and-smacss/feed/</wfw:commentRss>
-		<slash:comments>11</slash:comments>
-	<post-id xmlns="com-wordpress:feed-additions:1">1345</post-id>	</item>
 	</channel>
 </rss>
 
-<!-- Dynamic page generated in 0.687 seconds. -->
-<!-- Cached page generated by WP-Super-Cache on 2017-03-30 03:54:02 -->
+<!-- Dynamic page generated in 0.834 seconds. -->
+<!-- Cached page generated by WP-Super-Cache on 2017-04-17 17:51:01 -->

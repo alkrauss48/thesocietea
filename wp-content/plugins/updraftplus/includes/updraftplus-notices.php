@@ -50,7 +50,7 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 				'prefix' => __('UpdraftPlus Premium:', 'updraftplus'),
 				'title' => __('enhanced remote storage options', 'updraftplus'), 
 				'text' => __('Enhanced storage options for Dropbox, Google Drive and S3. Plus many more options.', 'updraftplus'),
-				'image' => 'notices/multiplestorage_destinations.png',
+				'image' => 'addons-images/morestorage.png',
 				'button_link' => 'https://updraftplus.com/landing/updraftplus-premium',
 				'button_meta' => 'updraftplus',
 				'dismiss_time' => 'dismiss_notice',
@@ -60,7 +60,7 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 				'prefix' => __('UpdraftPlus Premium:', 'updraftplus'),
 				'title' => __('advanced options', 'updraftplus'),
 				'text' => __('Secure multisite installation, advanced reporting and much more.', 'updraftplus'),
-				'image' => 'notices/reporting.png',
+				'image' => 'addons-images/reporting.png',
 				'button_link' => 'https://updraftplus.com/landing/updraftplus-premium',
 				'button_meta' => 'updraftplus',
 				'dismiss_time' => 'dismiss_notice',
@@ -70,7 +70,7 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 				'prefix' => __('UpdraftPlus Premium:', 'updraftplus'),
 				'title' => __('secure your backups', 'updraftplus'), 
 				'text' => __('Add SFTP to send your data securely, lock settings and encrypt your database backups for extra security.', 'updraftplus'),
-				'image' => 'notices/locksettings.png',
+				'image' => 'addons-images/lockadmin.png',
 				'button_link' => 'https://updraftplus.com/landing/updraftplus-premium',
 				'button_meta' => 'updraftplus',
 				'dismiss_time' => 'dismiss_notice',
@@ -80,7 +80,7 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 				'prefix' => __('UpdraftPlus Premium:', 'updraftplus'),
 				'title' => __('easily migrate or clone your site in minutes', 'updraftplus'), 
 				'text' => __('Copy your site to another domain directly. Includes find-and-replace tool for database references.', 'updraftplus'),
-				'image' => 'notices/migrator.png',
+				'image' => 'addons-images/migrator.png',
 				'button_link' => 'https://updraftplus.com/landing/updraftplus-premium',
 				'button_meta' => 'updraftplus',
 				'dismiss_time' => 'dismiss_notice',
@@ -170,7 +170,7 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 				'prefix' => '',
 				'title' => __('Be safe with an automatic backup', 'updraftplus'),
 				'text' => __('UpdraftPlus Premium can automatically backup your plugins/themes/database before you update, without you needing to remember.', 'updraftplus'),
-				'image' => 'automaticbackup.png',
+				'image' => 'addons-images/autobackup.png',
 				'button_link' => 'https://updraftplus.com/landing/updraftplus-premium',
 				'button_meta' => 'updraftplus',
 				'dismiss_time' => 'dismissautobackup',
@@ -254,6 +254,15 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 				'valid_to' => '2017-07-31 23:59:59',
 				'supported_positions' => $this->dashboard_top_or_report,
 			),
+			'2fa' => array(
+				'prefix' => '',
+				'title' => 'Clef Two Factor Authentication is shutting down',
+				'text' => $this->url_start(true,'blog.getclef.com/discontinuing-support-for-clef-6c89febef5f3') . __("Clef confirms that they are closing down their two factor security plugin.",'updraftplus') . $this->url_end(true,'blog.getclef.com/discontinuing-support-for-clef-6c89febef5f3') . ' ' . __("Switch to UpdraftPlus's free alternative:", "updraftplus").' <a href="'.wp_nonce_url(self_admin_url('update.php?action=install-plugin&amp;updraftplus_noautobackup=1&amp;plugin=two-factor-authentication'), 'install-plugin_two-factor-authentication').'">'.__("install","updraftplus") .'</a> '. __("or", "updraftplus") . ' ' .$this->url_start(true,'wordpress.org/plugins/two-factor-authentication/') . __("get more info",'updraftplus') . $this->url_end(true,'wordpress.org/plugins/two-factor-authentication/') . '.',
+				'image' => 'notices/updraft_logo.png',
+				'dismiss_time' => 'dismiss_notice',
+				'supported_positions' => $this->anywhere,
+				'validity_function' => 'clef_2fa_installed',
+			),
 		);
 
 		return array_merge($parent_notice_content, $child_notice_content);
@@ -285,6 +294,25 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 			}
 		}
 		return true;
+	}
+
+	protected function clef_2fa_installed($plugin_base_dir = null, $product_name = null) {
+
+		if (!function_exists('get_plugins')) require_once(ABSPATH.'wp-admin/includes/plugin.php');
+
+		$plugins = get_plugins();
+		$clef_found = false;
+
+		foreach ($plugins as $key => $value) {
+			if ('wpclef' == $value['TextDomain']) {
+				$clef_found = true;
+			} elseif ('two-factor-authentication' == $value['TextDomain'] || 'two-factor-authentication-premium' == $value['TextDomain']) {
+				return false;
+			}
+		}
+
+		return $clef_found;
+		
 	}
 	
 	protected function url_start($html_allowed = false, $url, $https = false, $website_home = 'updraftplus.com') {

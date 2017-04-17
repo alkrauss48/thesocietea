@@ -511,7 +511,7 @@
 				}, parseInt(WordfenceAdminVars.actUpdateInterval));
 			},
 			updateActivityLog: function() {
-				if (this.activityLogUpdatePending || !this.windowHasFocus()) {
+				if (this.activityLogUpdatePending || (!this.windowHasFocus() && WordfenceAdminVars.allowsPausing == '1')) {
 					if (!jQuery('body').hasClass('wordfenceLiveActivityPaused') && !this.activityLogUpdatePending) {
 						jQuery('body').addClass('wordfenceLiveActivityPaused');
 					}
@@ -700,7 +700,7 @@
 				}
 			},
 			updateTicker: function(forceUpdate) {
-				if ((!forceUpdate) && (this.tickerUpdatePending || !this.windowHasFocus())) {
+				if ((!forceUpdate) && (this.tickerUpdatePending || (!this.windowHasFocus() && WordfenceAdminVars.allowsPausing == '1'))) {
 					if (!jQuery('body').hasClass('wordfenceLiveActivityPaused') && !this.tickerUpdatePending) {
 						jQuery('body').addClass('wordfenceLiveActivityPaused');
 					}

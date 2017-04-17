@@ -98,13 +98,27 @@ class wfAPI {
 			$error_message = $response->get_error_message();
 			throw new Exception("There was an " . ($error_message ? '' : 'unknown ') . "error connecting to the the Wordfence scanning servers" . ($error_message ? ": $error_message" : '.'));
 		}
+		
+		$dateHeader = @$response['headers']['date'];
+		if (!empty($dateHeader) && (time() - wfConfig::get('timeoffset_wf_updated', 0) > 3600)) {
+			if (function_exists('date_create_from_format')) {
+				$dt = DateTime::createFromFormat('D, j M Y G:i:s O', $dateHeader);
+				$timestamp = $dt->getTimestamp();
+			}
+			else {
+				$timestamp = strtotime($dateHeader);
+			}
+			$offset = $timestamp - time();
+			wfConfig::set('timeoffset_wf', $offset);
+			wfConfig::set('timeoffset_wf_updated', time());
+		}
 
 		if (!empty($response['response']['code'])) {
 			$this->lastHTTPStatus = (int) $response['response']['code'];
 		}
 
 		if (200 != $this->lastHTTPStatus) {
-			throw new Exception("We received an error response when trying to contact the Wordfence scanning servers. The HTTP status code was [$this->lastHTTPStatus]");
+			throw new Exception("The Wordfence scanning servers are currently unavailable. This may be for maintenance or a temporary outage. If this still occurs in an hour, please contact support. [$this->lastHTTPStatus]");
 		}
 
 		$this->curlContent = wp_remote_retrieve_body($response);

@@ -767,4 +767,25 @@ class wfWAFUtils {
 		}
 		return $data;
 	}
+	
+	/**
+	 * Returns the current timestamp, adjusted as needed to get close to what we consider a true timestamp. We use this
+	 * because a significant number of servers are using a drastically incorrect time.
+	 * 
+	 * @return int
+	 */
+	public static function normalizedTime() {
+		$offset = 0;
+		try {
+			$offset = wfWAF::getInstance()->getStorageEngine()->getConfig('timeoffset_ntp', false);
+			if ($offset === false) {
+				$offset = wfWAF::getInstance()->getStorageEngine()->getConfig('timeoffset_wf', false);
+				if ($offset === false) { $offset = 0; }
+			}
+		}
+		catch (Exception $e) {
+			//Ignore
+		}
+		return time() + $offset;
+	}
 }

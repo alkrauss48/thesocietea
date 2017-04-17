@@ -32,20 +32,21 @@ class UpdraftPlus_BackupModule_updraftvault extends UpdraftPlus_BackupModule_s3 
 		}
 	}
 	
-	public function get_opts() {
-		global $updraftplus;
-		$opts = $updraftplus->get_job_option('updraft_updraftvault');
-		if (!is_array($opts)) $opts = array('token' => '', 'email' => '', 'quota' => -1);
-		return $opts;
+	public function get_default_options() {
+		return array(
+			'token' => '',
+			'email' => '',
+			'quota' => -1
+		);
 	}
-
+	
 	public function get_credentials() {
 		return array('updraft_updraftvault');
 	}
 
 	protected function vault_set_config($config) {
-		$config['whoweare'] = 'Updraft Vault';
-		$config['whoweare_long'] = __('Updraft Vault', 'updraftplus');
+		$config['whoweare'] = 'UpdraftVault';
+		$config['whoweare_long'] = __('UpdraftVault', 'updraftplus');
 		$config['key'] = 'updraftvault';
 		$this->vault_config = $config;
 	}
@@ -59,7 +60,6 @@ class UpdraftPlus_BackupModule_updraftvault extends UpdraftPlus_BackupModule_s3 
 	public function get_config() {
 
 		global $updraftplus;
-
 		// Have we already done this?
 		if (!empty($this->vault_config)) return $this->vault_config;
 
@@ -78,7 +78,7 @@ class UpdraftPlus_BackupModule_updraftvault extends UpdraftPlus_BackupModule_s3 
 		$config['key'] = 'updraftvault';
 
 		// Get the stored options
-		$opts = $this->get_opts();
+		$opts = $this->get_options();
 
 		if (!is_array($opts) || empty($opts['token']) || empty($opts['email'])) {
 			// Not connected
@@ -108,7 +108,7 @@ class UpdraftPlus_BackupModule_updraftvault extends UpdraftPlus_BackupModule_s3 
 		}
 
 		// Use SSL to prevent snooping
-		if (empty($getconfig) || !is_array($getconfig)) {
+		if (empty($getconfig) || !is_array($getconfig) || empty($getconfig['accesskey'])) {
 			$getconfig = wp_remote_post($this->vault_mothership.'/?udm_action=vault_getconfig', array(
 				'timeout' => 25,
 				'body' => $post_body,
@@ -116,7 +116,6 @@ class UpdraftPlus_BackupModule_updraftvault extends UpdraftPlus_BackupModule_s3 
 		}
 		
 		$details_retrieved = false;
-
 		if (!is_wp_error($getconfig) && false != $getconfig && isset($getconfig['body'])) {
 
 			$response_code = wp_remote_retrieve_response_code($getconfig);
@@ -212,7 +211,6 @@ class UpdraftPlus_BackupModule_updraftvault extends UpdraftPlus_BackupModule_s3 
 		}
 
 		$config['server_side_encryption'] = 'AES256';
-
 		$this->vault_config = $config;
 		$updraftplus->jobdata_set('updraftvault_config', $config);
 		set_transient('udvault_last_config', $config, 86400*7);
@@ -465,7 +463,7 @@ class UpdraftPlus_BackupModule_updraftvault extends UpdraftPlus_BackupModule_s3 
 			$results = array('html' => htmlspecialchars($config['error_message']), 'connected' => 0);
 		} else {
 			// Now read the opts
-			$opts = $this->get_opts();
+			$opts = $this->get_options();
 			$results = array('html' => $this->connected_html($opts), 'connected' => 1);
 		}
 		if ($echo_results) {
@@ -473,6 +471,7 @@ class UpdraftPlus_BackupModule_updraftvault extends UpdraftPlus_BackupModule_s3 
 		} else {
 			return $results;
 		}
+		
 	}
 
 	// This method also gets called directly, so don't add code that assumes that it's definitely an AJAX situation

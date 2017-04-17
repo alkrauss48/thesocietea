@@ -367,6 +367,14 @@ class wfWAFRuleParser extends wfWAFBaseParser {
 					} else if ($token->getValue() === 'rules') {
 						$rules = $this->expectLiteral();
 						$urlParam->setRules($rules);
+					} else if ($token->getValue() === 'conditional') {
+						$this->expectTokenTypeEquals($this->expectNextToken(), wfWAFRuleLexer::T_OPEN_PARENTHESIS);
+						$conditional = $this->parseConditional();
+						$this->expectTokenTypeEquals($this->expectNextToken(), wfWAFRuleLexer::T_CLOSE_PARENTHESIS);
+						$urlParam->setConditional($conditional);
+					} else if ($token->getValue() === 'minVersion') {
+						$minVersion = $this->expectLiteral();
+						$urlParam->setMinVersion($minVersion);
 					}
 
 					break;
@@ -601,6 +609,14 @@ class wfWAFRuleParserURLParam {
 	 * @var null
 	 */
 	private $rules;
+	/**
+	 * @var null
+	 */
+	private $conditional;
+	/**
+	 * @var float
+	 */
+	private $minVersion;
 
 	/**
 	 * @param string $param
@@ -617,24 +633,28 @@ class wfWAFRuleParserURLParam {
 	 * @param string $param
 	 * @param null $rules
 	 */
-	public function __construct($url = null, $param = null, $rules = null) {
+	public function __construct($url = null, $param = null, $rules = null, $conditional = null, $minVersion = null) {
 		$this->url = $url;
 		$this->param = $param;
 		$this->rules = $rules;
+		$this->conditional = $conditional;
+		$this->minVersion = $minVersion;
 	}
 
 	/**
 	 * Return format:
-	 * blacklistParam(url='/\/uploadify\.php$/i', param=request.fileNames.Filedata, rules=[3, 14])
+	 * blacklistParam(url='/\/uploadify\.php$/i', param=request.fileNames.Filedata, rules=[3, 14], conditional=(match('1', request.body.field)))
 	 *
 	 * @param string $action
 	 * @return string
 	 */
 	public function renderRule($action) {
-		return sprintf('%s(url=%s, param=%s%s)', $action,
+		return sprintf('%s(url=%s, param=%s%s%s)', $action,
 			wfWAFRule::exportString($this->getUrl()),
 			$this->renderParam($this->getParam()),
-			$this->getRules() ? ', rules=[' . join(', ', array_map('intval', $this->getRules())) . ']' : '');
+			$this->getRules() ? ', rules=[' . join(', ', array_map('intval', $this->getRules())) . ']' : '',
+			$this->getConditional() ? ', conditional=(' . $this->getConditional()->renderRule() . ')' : '');
+			//minVersion not included in re-rendering
 	}
 
 	/**
@@ -699,6 +719,34 @@ class wfWAFRuleParserURLParam {
 	 */
 	public function setRules($rules) {
 		$this->rules = $rules;
+	}
+	
+	/**
+	 * @return null
+	 */
+	public function getConditional() {
+		return $this->conditional;
+	}
+	
+	/**
+	 * @param null $conditional
+	 */
+	public function setConditional($conditional) {
+		$this->conditional = $conditional;
+	}
+	
+	/**
+	 * @return float|null
+	 */
+	public function getMinVersion() {
+		return $this->minVersion;
+	}
+	
+	/**
+	 * @param float $minVersion
+	 */
+	public function setMinVersion($minVersion) {
+		$this->minVersion = $minVersion;
 	}
 }
 

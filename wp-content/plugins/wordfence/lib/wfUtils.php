@@ -1775,6 +1775,12 @@ class wfUtils {
 		return 'unknown';
 	}
 	
+	public static function hex2bin($string) { //Polyfill for PHP < 5.4
+		if (!is_string($string)) { return false; }
+		if (strlen($string) % 2 == 1) { return false; }
+		return pack('H*', $string);
+  }
+
 	/**
 	 * Identical to the same functions in wfWAFUtils.
 	 * 
@@ -1929,6 +1935,21 @@ class wfUtils {
 	public static function strrpos($haystack, $needle, $offset = 0) {
 		$args = func_get_args();
 		return self::callMBSafeStrFunction('strrpos', $args);
+	}
+	
+	/**
+	 * Returns the current timestamp, adjusted as needed to get close to what we consider a true timestamp. We use this
+	 * because a significant number of servers are using a drastically incorrect time.
+	 *
+	 * @return int
+	 */
+	public static function normalizedTime() {
+		$offset = wfConfig::get('timeoffset_ntp', false);
+		if ($offset === false) {
+			$offset = wfConfig::get('timeoffset_wf', false);
+			if ($offset === false) { $offset = 0; }
+		}
+		return time() + $offset;
 	}
 }
 

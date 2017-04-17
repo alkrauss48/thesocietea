@@ -1,4 +1,4 @@
-<?php if (wfConfig::liveTrafficEnabled()): ?>
+<?php if (wfConfig::liveTrafficEnabled() && wfConfig::get('liveActivityPauseEnabled')): ?>
 	<div id="wfLiveTrafficOverlayAnchor"></div>
 	<div id="wfLiveTrafficDisabledMessage">
 		<h2>Live Updates Paused<br /><small>Click inside window to resume</small></h2>
@@ -194,13 +194,13 @@
 								<div id="wf-lt-listings" data-bind="foreach: listings">
 									<div data-bind="attr: { id: ('wfActEvent_' + id()), 'class': cssClasses }">
 										<div>
-													<span data-bind="if: action() != 'loginOK' && user()">
+													<span data-bind="if: action() != 'loginOK' && action() != 'loginFailValidUsername' && action() != 'loginFailInvalidUsername' && user()">
 														<span data-bind="html: user.avatar" class="wfAvatar"></span>
 														<a data-bind="attr: { href: user.editLink }, text: user().display_name"
 														   target="_blank"></a>
 													</span>
 													<span data-bind="if: loc()">
-														<span data-bind="if: action() != 'loginOK' && user()"> in</span>
+														<span data-bind="if: action() != 'loginOK' && action() != 'loginFailValidUsername' && action() != 'loginFailInvalidUsername' && user()"> in</span>
 														<img data-bind="attr: { src: '<?php echo wfUtils::getBaseURL() . 'images/flags/'; ?>' + loc().countryCode.toLowerCase() + '.png',
 															alt: loc().countryName, title: loc().countryName }" width="16"
 															 height="11"
@@ -211,7 +211,7 @@
 													</span>
 													<span data-bind="if: !loc()">
 														<span
-															data-bind="text: action() != 'loginOK' && user() ? 'at an' : 'An'"></span> unknown location at IP <a
+															data-bind="text: action() != 'loginOK' && action() != 'loginFailValidUsername' && action() != 'loginFailInvalidUsername' && user() ? 'at an' : 'An'"></span> unknown location at IP <a
 															data-bind="text: IP, attr: { href: WFAD.makeIPTrafLink(IP()) }"
 															target="_blank"></a>
 													</span>

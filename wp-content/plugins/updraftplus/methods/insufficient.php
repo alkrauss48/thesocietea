@@ -2,7 +2,9 @@
 
 if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed.');
 
-class UpdraftPlus_BackupModule_insufficientphp {
+if (!class_exists('UpdraftPlus_BackupModule')) require_once(UPDRAFTPLUS_DIR.'/methods/backup-module.php');
+
+class UpdraftPlus_BackupModule_insufficientphp extends UpdraftPlus_BackupModule {
 
 	private $required_php;
 	private $error_msg;

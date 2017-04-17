@@ -63,20 +63,21 @@ class UpdraftPlus_BackupModule_cloudfiles_opencloudsdk extends UpdraftPlus_Backu
 		return array('updraft_cloudfiles');
 	}
 
-	public function get_opts() {
-		global $updraftplus;
-		$opts = $updraftplus->get_job_option('updraft_cloudfiles');
-		if (!is_array($opts)) $opts = array('user' => '', 'authurl' => 'https://auth.api.rackspacecloud.com', 'apikey' => '', 'path' => '');
-		if (empty($opts['authurl'])) $opts['authurl'] = 'https://auth.api.rackspacecloud.com';
-		if (empty($opts['region'])) $opts['region'] = null;
-		return $opts;
+	public function get_default_options() {
+		return array(
+			'user' => '',
+			'authurl' => 'https://auth.api.rackspacecloud.com',
+			'apikey' => '',
+			'path' => '',
+			'region' => null
+		);
 	}
-
+	
 	public function config_print_middlesection() {
 	
 		global $updraftplus_admin;
 	
-		$opts = $this->get_opts();
+		$opts = $this->get_options();
 		?>
 		<tr class="updraftplusmethod <?php echo $this->method;?>">
 		<th></th>

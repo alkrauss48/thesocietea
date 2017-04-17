@@ -1,9 +1,9 @@
 === UpdraftPlus WordPress Backup Plugin ===
 Contributors: Backup with UpdraftPlus, DavidAnderson, DNutbourne, aporter, snightingale
-Tags: backup, restore, database backup, wordpress backup, database backup, cloud backup, restore, s3, dropbox, google drive, onedrive, ftp, backups
+Tags: backup, restore, database backup, wordpress backup, cloud backup, s3, dropbox, google drive, onedrive, ftp, backups
 Requires at least: 3.2
 Tested up to: 4.7
-Stable tag: 1.12.35
+Stable tag: 1.12.40
 Author URI: https://updraftplus.com
 Donate link: https://david.dw-perspective.org.uk/donate
 License: GPLv3 or later
@@ -125,11 +125,37 @@ Thanks for asking; yes, we've got a few. Check out this profile page - https://p
 
 The <a href="https://updraftplus.com/news/">UpdraftPlus backup blog</a> is the best place to learn in more detail about any important changes.
 
-N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.12.34 of the free version correspond to changes made in 2.12.34.x of the paid version.
+N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.12.38 of the free version correspond to changes made in 2.12.38.x of the paid version.
+
+= 1.12.40 - 01/Apr/2017 =
+
+* TWEAK: The in-page log file display had stopped continuously updating in 1.12.32
+* FIX: In some circumstances, settings for the storage modules refactored in 1.12.37 could fail to show
+* FIX: The free version of 1.12.37/38 in some circumstances could fail to complete Dropbox authentication
+
+= 1.12.38 - 31/Mar/2017 =
+
+* TWEAK: Dropbox API v2 call to de-authorise a token was failing
+* FIX: Prevent a fatal error when attempting to use a backup method with no options set
+
+= 1.12.37 - 31/Mar/2017 =
+
+* FEATURE: Browse the contents of a backup from within your WordPress dashboard, and (with Premium) download individual files from it
+* FIX: Fix an issue that could occasionally cause corruption of interrupted Dropbox backups. All Dropbox users are recommended to update asap.
+* TWEAK: Remove debugging statement inadvertently left in 1.12.36
+* TWEAK: Re-factored remote storage handlers via add-ons so that there was a cleaner and more consistent class hierarchy (preparation for future improvements). N.B. If you subsequently downgrade to an older version of UpdraftPlus, you will need to re-enter the settings for some remote storage options.
+* TWEAK: List of checksum algorithms run over backups and logged now includes SHA256, and is filterable (SHA1 now considered deprecated)
+* TWEAK: Allow chunked database encryption to try and resume in the event of an error
+* TWEAK: Improve the premium/extension tab content
+* TWEAK: Fix an issue whereby the UpdraftVault settings section could show a bogus problem with checking quota immediately after initial setup
+* TWEAK: When requesting a download, work around buggy browser/server that continued after Connection: close
+* TWEAK: Improve the UI experience when downloading a log file for display fails
+* TWEAK: Prevent PHP notice if another plugin cancels a cron event
+* TWEAK: Tweak semaphore handling and enhance logging
 
 = 1.12.35 - 03/Mar/2017 =
 
-* FIX: Fix an issue that causing corruption of interrupted Dropbox backups. All Dropbox users are recommended to update asap.
+* FIX: Fix an issue causing corruption of interrupted Dropbox backups. All Dropbox users are recommended to update asap.
 * TWEAK: Fix a regression that prevented information about a faulty WP scheduler from being shown in recent releases (incomplete fix in 1.12.34)
 * TWEAK: submit_button() needs to be available (possible UpdraftCentral fatal when requesting filesystem creds)
 * TWEAK: Remove an ES5 JavaScript construct (incompatible with some old browsers)
@@ -148,11 +174,11 @@ N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which i
 * TWEAK: Make it easier for other plugins to get/set UpdraftPlus options with less code
 * TWEAK: Make sure that the get_plugins() function is available before using it when generating notices
 * TWEAK: Add the updraftplus_exclude_directory and updraftplus_exclude_file filters allowing arbitrary backup exclusions from code
-* TWEAK: When requesting a download, work around buggy browser/server that continued after Connection: close
 * TWEAK: Add a work-around for a bug in some server/Firefox combinations in handling of the Content-Length header with non-ASCII characters
 * TWEAK: Cause an informational message to be shown in the Rackspace module if php-json is not enabled
 * TWEAK: Fix a regression that prevented information about a faulty WP scheduler from being shown in recent releases
 * TWEAK: Made alert regarding plupload's 'HTTP -200' error, when upload of file fails, more informative.
+* TWEAK: Internal changes to the remote storage method API (future improvements which build on these are planned)
 
 = 1.12.32 - 26/Jan/2017 =
 
@@ -421,4 +447,4 @@ We recognise and thank the following for code and/or libraries used and/or modif
 
 
 == Upgrade Notice ==
-* 1.12.35: Fix an issue causing corruption of interrupted Dropbox backups.
+* 1.12.40: The free version of 1.12.37/38 in some circumstances could fail to complete Dropbox authentication; and for new users, the Google Drive settings might fail to show.

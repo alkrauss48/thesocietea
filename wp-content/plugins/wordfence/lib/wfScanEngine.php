@@ -122,7 +122,6 @@ class wfScanEngine {
 		$this->jobList[] = 'checkSpamvertized';
 		$this->jobList[] = 'checkSpamIP';
 		$this->jobList[] = 'checkGSB';
-		$this->jobList[] = 'heartbleed';
 		$this->jobList[] = 'checkHowGetIPs_init';
 		$this->jobList[] = 'checkHowGetIPs_main';
 		$this->jobList[] = 'knownFiles_init';
@@ -277,24 +276,6 @@ class wfScanEngine {
 	}
 	public function getCurrentJob(){
 		return $this->jobList[0];
-	}
-	private function scan_heartbleed(){
-		if(wfConfig::get('scansEnabled_heartbleed')){
-			$this->statusIDX['heartbleed'] = wordfence::statusStart("Scanning your site for the HeartBleed vulnerability");
-			$result = $this->api->call('scan_heartbleed', array(), array(
-				'siteURL' => site_url()
-				));
-			$haveIssues = false;
-			if($result['haveIssues'] && is_array($result['issues']) ){
-				foreach($result['issues'] as $issue){
-					$this->addIssue($issue['type'], $issue['level'], $issue['ignoreP'], $issue['ignoreC'], $issue['shortMsg'], $issue['longMsg'], $issue['data']);
-					$haveIssues = true;
-				}
-			}
-			wordfence::statusEnd($this->statusIDX['heartbleed'], $haveIssues);
-		} else {
-			wordfence::statusDisabled("Skipping HeartBleed scan");
-		}
 	}
 	private function scan_publicSite(){
 		if(wfConfig::get('isPaid')){
@@ -594,7 +575,7 @@ class wfScanEngine {
 	}
 	private function scan_knownFiles_init(){
 		$this->status(1, 'info', "Contacting Wordfence to initiate scan");
-		$this->api->call('log_scan', array(), array());
+		$response = $this->api->call('log_scan', array(), array());
 		$baseWPStuff = array( '.htaccess', 'index.php', 'license.txt', 'readme.html', 'wp-activate.php', 'wp-admin', 'wp-app.php', 'wp-blog-header.php', 'wp-comments-post.php', 'wp-config-sample.php', 'wp-content', 'wp-cron.php', 'wp-includes', 'wp-links-opml.php', 'wp-load.php', 'wp-login.php', 'wp-mail.php', 'wp-pass.php', 'wp-register.php', 'wp-settings.php', 'wp-signup.php', 'wp-trackback.php', 'xmlrpc.php');
 		$baseContents = scandir(ABSPATH);
 		if(! is_array($baseContents)){
@@ -627,7 +608,8 @@ class wfScanEngine {
 		$this->status(2, 'info', "Found " . sizeof($knownFilesThemes) . " themes");
 		$this->i->updateSummaryItem('totalThemes', sizeof($knownFilesThemes));
 
-		$this->hasher = new wordfenceHash(strlen(ABSPATH), ABSPATH, $includeInKnownFilesScan, $knownFilesThemes, $knownFilesPlugins, $this);
+		$malwarePrefixesHash = (isset($response['malwarePrefixes']) ? wfUtils::hex2bin($response['malwarePrefixes']) : '');
+		$this->hasher = new wordfenceHash(strlen(ABSPATH), ABSPATH, $includeInKnownFilesScan, $knownFilesThemes, $knownFilesPlugins, $this, $malwarePrefixesHash);
 	}
 	private function scan_knownFiles_main(){
 		$this->hasher->run($this); //Include this so we can call addIssue and ->api->
@@ -1337,8 +1319,17 @@ class wfScanEngine {
 	public function status($level, $type, $msg){
 		wordfence::status($level, $type, $msg);
 	}
-	public function addIssue($type, $severity, $ignoreP, $ignoreC, $shortMsg, $longMsg, $templateData){
-		return $this->i->addIssue($type, $severity, $ignoreP, $ignoreC, $shortMsg, $longMsg, $templateData);
+	public function addIssue($type, $severity, $ignoreP, $ignoreC, $shortMsg, $longMsg, $templateData, $alreadyHashed = false) {
+		return $this->i->addIssue($type, $severity, $ignoreP, $ignoreC, $shortMsg, $longMsg, $templateData, $alreadyHashed);
+	}
+	public function addPendingIssue($type, $severity, $ignoreP, $ignoreC, $shortMsg, $longMsg, $templateData){
+		return $this->i->addPendingIssue($type, $severity, $ignoreP, $ignoreC, $shortMsg, $longMsg, $templateData);
+	}
+	public function getPendingIssueCount() {
+		return $this->i->getPendingIssueCount();
+	}
+	public function getPendingIssues($offset = 0, $limit = 100) {
+		return $this->i->getPendingIssues($offset, $limit);
 	}
 	public static function requestKill(){
 		wfConfig::set('wfKillRequested', time(), wfConfig::DONT_AUTOLOAD);

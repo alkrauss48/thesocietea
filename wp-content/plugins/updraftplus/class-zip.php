@@ -34,28 +34,39 @@ class UpdraftPlus_PclZip {
 	}
 
 	public function __get($name) {
-		if ($name != 'numFiles') return null;
+		if ($name == 'numFiles' || $name == 'numAll') {
 
-		if (empty($this->pclzip)) return false;
+			if (empty($this->pclzip)) return false;
 
-		$statindex = $this->pclzip->listContent();
+			$statindex = $this->pclzip->listContent();
 
-		if (empty($statindex)) {
-			$this->statindex=array();
-			return 0;
-		}
-
-		$result = array();
-		foreach ($statindex as $i => $file) {
-			if (!isset($statindex[$i]['folder']) || 0 == $statindex[$i]['folder']) {
-				$result[] = $file;
+			if (empty($statindex)) {
+				$this->statindex = array();
+				// We return a value that is == 0, but allowing a PclZip error to be detected (PclZip returns 0 in the case of an error).
+				if (0 === $statindex) $this->last_error = $this->pclzip->errorInfo(true);
+				return (0 === $statindex) ? false : 0;
 			}
-			unset($statindex[$i]);
+
+			if ($name == 'numFiles') {
+				
+				$result = array();
+				foreach ($statindex as $i => $file) {
+					if (!isset($statindex[$i]['folder']) || 0 == $statindex[$i]['folder']) {
+						$result[] = $file;
+					}
+					unset($statindex[$i]);
+				}
+
+				$this->statindex=$result;
+
+			} else {
+				$this->statindex=$statindex;
+			}
+
+			return count($this->statindex);
 		}
 
-		$this->statindex=$result;
-
-		return count($this->statindex);
+		return null;
 
 	}
 
@@ -67,6 +78,7 @@ class UpdraftPlus_PclZip {
 	}
 
 	public function open($path, $flags = 0) {
+	
 		if(!class_exists('PclZip')) include_once(ABSPATH.'/wp-admin/includes/class-pclzip.php');
 		if(!class_exists('PclZip')) {
 			$this->last_error = "No PclZip class was found";
@@ -79,6 +91,7 @@ class UpdraftPlus_PclZip {
 		if ($flags == $ziparchive_create_match && file_exists($path)) @unlink($path);
 
 		$this->pclzip = new PclZip($path);
+
 		if (empty($this->pclzip)) {
 			$this->last_error = 'Could not get a PclZip object';
 			return false;
@@ -154,6 +167,10 @@ class UpdraftPlus_PclZip {
 	# PclZip doesn't have a direct way to do this
 	public function addEmptyDir($dir) {
 		$this->adddirs[] = $dir;
+	}
+
+	public function extract($path_to_extract, $path) {
+		return $this->pclzip->extract(PCLZIP_OPT_PATH, $path_to_extract, PCLZIP_OPT_BY_NAME, $path);
 	}
 
 }

@@ -331,6 +331,8 @@ h6 a:visited { color: purple !important; }
 					</tbody>
 				</table>
 
+				<div style="font-size: 12px; font-style: italic; vertical-align: baseline; clear: both; margin: 8px 0 4px; padding: 0; border: 0;">This list may include WordPress core/plugin/theme updates, error logs, cache files, and other normal changes.</div>
+
 				<?php wfHelperString::cycle(); ?>
 
 				<h2 style="font-size: 20px; vertical-align: baseline; clear: both; color: #222 !important; margin: 20px 0 4px; padding: 0; border: 0;">Updates Needed</h2>

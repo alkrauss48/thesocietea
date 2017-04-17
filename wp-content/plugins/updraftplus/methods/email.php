@@ -4,7 +4,9 @@ if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed.');
 
 // Files can easily get too big for this method
 
-class UpdraftPlus_BackupModule_email {
+if (!class_exists('UpdraftPlus_BackupModule')) require_once(UPDRAFTPLUS_DIR.'/methods/backup-module.php');
+
+class UpdraftPlus_BackupModule_email extends UpdraftPlus_BackupModule {
 
 	public function backup($backup_array) {
 

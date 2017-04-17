@@ -324,6 +324,69 @@ h3 .thank-you {
 	#updraft_webdav_host_error {
 		color: red;
 	}
+
+	/* jstree styles */
+
+	/* these styles hide the dots from the parent but keep the arrows */
+	#updraft_zip_files_jstree .jstree-container-ul > .jstree-node,
+	#updraft_more_files_jstree .jstree-container-ul > .jstree-node {
+		background:transparent;
+	}
+
+	#updraft_zip_files_jstree .jstree-container-ul > .jstree-open > .jstree-ocl,
+	#updraft_more_files_jstree .jstree-container-ul > .jstree-open > .jstree-ocl {
+		background-position:-36px -4px;
+	}
+
+	#updraft_zip_files_jstree .jstree-container-ul > .jstree-closed> .jstree-ocl,
+	#updraft_more_files_jstree .jstree-container-ul > .jstree-closed> .jstree-ocl {
+		background-position:-4px -4px;
+	}
+
+	#updraft_zip_files_jstree .jstree-container-ul > .jstree-leaf> .jstree-ocl,
+	#updraft_more_files_jstree .jstree-container-ul > .jstree-leaf> .jstree-ocl {
+		background:transparent;
+	}
+	
+	/* zip browser jstree styles */
+	#updraft_zip_files_container {
+		position: relative;
+		height: 450px;
+		overflow: none;
+	}
+
+	#updraft_zip_info_container {
+		position: relative;
+		height: auto;
+		width: 100%;
+		border: 1px dotted;
+		margin-bottom: 5px;
+	}
+
+	#updraft_zip_info_container p {
+		margin: 1px;
+		padding-left: 10px;
+		font-size: 14px;
+	}
+
+	#updraft_zip_download_item {
+		display: none;
+		color: #0073aa;
+		padding-left: 10px;
+	}
+	
+	#updraft_zip_download_notice {
+		padding-left: 10px;
+	}
+
+	#updraft_zip_files_jstree_container {
+		position: relative;
+		border: 1px dotted;
+		height: 80%;
+		width: 100%;
+		overflow: auto;
+	}
+
 	/* More files jstree styles */
 	#updraft_more_files_container {
 		position: relative;

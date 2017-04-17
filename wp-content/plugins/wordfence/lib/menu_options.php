@@ -401,10 +401,6 @@ $w = new wfConfig();
 								'label'		=> 'Scan for misconfigured How does Wordfence get IPs <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_for_misconfigured_How_does_Wordfence_get_IPs" target="_blank" class="wfhelp"></a>',
 							),
 							array(
-								'id' 		=> 'scansEnabled_heartbleed',
-								'label'		=> 'Scan for the HeartBleed vulnerability <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_for_the_HeartBleed_vulnerability" target="_blank" class="wfhelp"></a>',
-							),
-							array(
 								'id' 		=> 'scansEnabled_checkReadableConfig',
 								'label'		=> 'Scan for publicly accessible configuration, backup, or log files <a href="http://docs.wordfence.com/en/Wordfence_options#Configuration_Readable" target="_blank" class="wfhelp"></a>',
 							),
@@ -648,7 +644,7 @@ $w = new wfConfig();
 						<div class="wfMarker" id="wfMarkerLoginSecurity"></div>
 						<h3>Login Security Options <a href="http://docs.wordfence.com/en/Wordfence_options#Login_Security_Options" target="_blank" class="wfhelp"></a></h3>
 						<div class="wf-form-group">
-							<label for="blockedTime" class="wf-col-sm-5 wf-control-label">Enforce strong passwords <a href="http://docs.wordfence.com/en/Wordfence_options#Enforce_strong_passwords.3F" target="_blank" class="wfhelp"></a></label>
+							<label for="loginSec_strongPasswds" class="wf-col-sm-5 wf-control-label">Enforce strong passwords <a href="http://docs.wordfence.com/en/Wordfence_options#Enforce_strong_passwords.3F" target="_blank" class="wfhelp"></a></label>
 							<div class="wf-col-sm-7">
 								<select class="wf-form-control" id="loginSec_strongPasswds" name="loginSec_strongPasswds">
 									<option value="">Do not force users to use strong passwords</option>
@@ -939,6 +935,10 @@ $w = new wfConfig();
 						</div>
 						<?php
 						$options = array( //Contents should already be HTML-escaped as needed
+							array(
+								'id'		=> 'liveActivityPauseEnabled',
+								'label'		=> 'Pause live updates when window loses focus <a href="http://docs.wordfence.com/en/Wordfence_options#Pause_live_updates_when_window_loses_focus" target="_blank" class="wfhelp"></a>',
+							),
 							array(
 								'id' 		=> 'deleteTablesOnDeact',
 								'label'		=> 'Delete Wordfence tables and data on deactivation <a href="http://docs.wordfence.com/en/Wordfence_options#Delete_Wordfence_tables_and_data_on_deactivation.3F" target="_blank" class="wfhelp"></a>',

@@ -25,7 +25,9 @@ class UpdraftPlus_S3Exception extends Exception {
 	}
 }
 
-class UpdraftPlus_BackupModule_s3 {
+if (!class_exists('UpdraftPlus_BackupModule')) require_once(UPDRAFTPLUS_DIR.'/methods/backup-module.php');
+
+class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 
 	private $s3_object;
 	private $got_with;
@@ -100,7 +102,7 @@ class UpdraftPlus_BackupModule_s3 {
 		$ssl_ca = true;
 		if (!$nossl) {
 			$curl_version = (function_exists('curl_version')) ? curl_version() : array('features' => null);
-			$curl_ssl_supported = ($curl_version['features'] & CURL_VERSION_SSL);
+			$curl_ssl_supported = ($curl_version['features'] & defined('CURL_VERSION_SSL') && CURL_VERSION_SSL);
 			if ($curl_ssl_supported) {
 				if ($disableverify) {
 					$ssl_ca = false;

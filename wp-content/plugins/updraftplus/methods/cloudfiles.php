@@ -4,6 +4,7 @@ if (!defined('UPDRAFTPLUS_DIR')) die('No direct access.');
 
 # Converted to job_options: yes
 # Converted to array options: yes
+# Migration code for "new"-style options removed: Feb 2017 (created: Dec 2013)
 
 if (version_compare(phpversion(), '5.3.3', '>=') && (!defined('UPDRAFTPLUS_CLOUDFILES_USEOLDSDK') || UPDRAFTPLUS_CLOUDFILES_USEOLDSDK != true)) {
 	require_once(UPDRAFTPLUS_DIR.'/methods/cloudfiles-new.php');
@@ -12,25 +13,10 @@ if (version_compare(phpversion(), '5.3.3', '>=') && (!defined('UPDRAFTPLUS_CLOUD
 	class UpdraftPlus_BackupModule_cloudfiles extends UpdraftPlus_BackupModule_cloudfiles_oldsdk { }
 }
 
-# Migrate options to new-style storage - Dec 2013
-if (!is_array(UpdraftPlus_Options::get_updraft_option('updraft_cloudfiles')) && '' != UpdraftPlus_Options::get_updraft_option('updraft_cloudfiles_user', '')) {
-	$opts = array(
-		'user' => UpdraftPlus_Options::get_updraft_option('updraft_cloudfiles_user'),
-		'apikey' => UpdraftPlus_Options::get_updraft_option('updraft_cloudfiles_apikey'),
-		'path' => UpdraftPlus_Options::get_updraft_option('updraft_cloudfiles_path'),
-		'authurl' => UpdraftPlus_Options::get_updraft_option('updraft_cloudfiles_authurl'),
-		'region' => UpdraftPlus_Options::get_updraft_option('updraft_cloudfiles_region')
-	);
-	UpdraftPlus_Options::update_updraft_option('updraft_cloudfiles', $opts);
-	UpdraftPlus_Options::delete_updraft_option('updraft_cloudfiles_user');
-	UpdraftPlus_Options::delete_updraft_option('updraft_cloudfiles_apikey');
-	UpdraftPlus_Options::delete_updraft_option('updraft_cloudfiles_path');
-	UpdraftPlus_Options::delete_updraft_option('updraft_cloudfiles_authurl');
-	UpdraftPlus_Options::delete_updraft_option('updraft_cloudfiles_region');
-}
+if (!class_exists('UpdraftPlus_BackupModule')) require_once(UPDRAFTPLUS_DIR.'/methods/backup-module.php');
 
 # Old SDK
-class UpdraftPlus_BackupModule_cloudfiles_oldsdk {
+class UpdraftPlus_BackupModule_cloudfiles_oldsdk extends UpdraftPlus_BackupModule {
 
 	private $cloudfiles_object;
 
@@ -61,20 +47,21 @@ class UpdraftPlus_BackupModule_cloudfiles_oldsdk {
 		return array('updraft_cloudfiles');
 	}
 
-	public function get_opts() {
-		global $updraftplus;
-		$opts = $updraftplus->get_job_option('updraft_cloudfiles');
-		if (!is_array($opts)) $opts = array('user' => '', 'authurl' => 'https://auth.api.rackspacecloud.com', 'apikey' => '', 'path' => '');
-		if (empty($opts['authurl'])) $opts['authurl'] = 'https://auth.api.rackspacecloud.com';
-		if (empty($opts['region'])) $opts['region'] = null;
-		return $opts;
+	public function get_default_options() {
+		return array(
+			'user' => '',
+			'authurl' => 'https://auth.api.rackspacecloud.com',
+			'apikey' => '',
+			'path' => '',
+			'region' => null
+		);
 	}
-
+	
 	public function backup($backup_array) {
 
 		global $updraftplus, $updraftplus_backup;
 
-		$opts = $this->get_opts();
+		$opts = $this->get_options();
 
 		$updraft_dir = $updraftplus->backups_dir_location().'/';
 
@@ -228,7 +215,7 @@ class UpdraftPlus_BackupModule_cloudfiles_oldsdk {
 
 	public function listfiles($match = 'backup_') {
 
-		$opts = $this->get_opts();
+		$opts = $this->get_options();
 		$container = $opts['path'];
 
 		if (empty($opts['user']) || empty($opts['apikey'])) new WP_Error('no_settings', __('No settings were found','updraftplus'));
@@ -276,7 +263,7 @@ class UpdraftPlus_BackupModule_cloudfiles_oldsdk {
 			$path = $cloudfilesarr['cloudfiles_orig_path'];
 		} else {
 			try {
-				$opts = $this->get_opts();
+				$opts = $this->get_options();
 				$container = $opts['path'];
 				$conn = $this->getCF($opts['user'], $opts['apikey'], $opts['authurl'], UpdraftPlus_Options::get_updraft_option('updraft_ssl_useservercerts'));
 				$container_object = $conn->create_container($container);
@@ -327,7 +314,7 @@ class UpdraftPlus_BackupModule_cloudfiles_oldsdk {
 		global $updraftplus;
 		$updraft_dir = $updraftplus->backups_dir_location();
 
-		$opts = $this->get_opts();
+		$opts = $this->get_options();
 
 		try {
 			$conn = $this->getCF($opts['user'], $opts['apikey'], $opts['authurl'], UpdraftPlus_Options::get_updraft_option('updraft_ssl_useservercerts'));
@@ -429,7 +416,7 @@ class UpdraftPlus_BackupModule_cloudfiles_oldsdk {
 
 	public function config_print() {
 
-		$opts = $this->get_opts();
+		$opts = $this->get_options();
 
 		?>
 		<tr class="updraftplusmethod cloudfiles">

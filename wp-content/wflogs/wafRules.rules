@@ -61,6 +61,7 @@ whitelistParam(url='/\/wp-admin\/admin-ajax\.php$/i', param=request.body['dir'])
 whitelistParam(url='/(?:lint|import)\.php$/i', param=request.body['sql_query'])
 whitelistParam(url='/\/wp-admin\/admin-ajax\.php$/i', param=request.body['divi_integration_body'])
 whitelistParam(url='/\/wp-admin\/admin-ajax\.php$/i', param=request.body['divi_integration_head'])
+whitelistParam(url='/.*/', param=request.body['fl_builder_data']['settings']['html'], rules=[9], conditional=((currentUserIs('administrator', server.empty) or currentUserIs('editor', server.empty))))
 whitelistParam(url='#wp\-admin/+options\-general.php$#i', param=request.body['options']['modules']['ga_code'], rules=[9])
 whitelistParam(url='#importbuddy\.php$#i', param=request.fileNames, rules=[76])
 
@@ -102,7 +103,7 @@ if (notEquals('', request.body.ure_other_roles) and match('#/wp\-admin/(network/
 if (match('#/wp\-admin/admin\-ajax\.php$#i', server.script_filename) and equals('update-plugin', request.body.action, request.queryString.action) and match('/(^|\/|\\|%2f|%5c)\.\.(\\|\/|%2f|%5c)/i', request.body, request.queryString)):
 	block(id=66, category='dos', description='WordPress Core <= 4.5.3 - DoS')
 
-if ((match('#/wp\-admin/(network/)?(post|profile|user-new|settings)\.php$#i', server.script_filename)) or (match('#/wp\-admin/admin\-ajax\.php$#i', server.script_filename) and (equals('wordfence_loadLiveTraffic', request.body.action) or equals('wordfence_ticker', request.body.action) or (currentUserIs('administrator', server.empty) and (equals('install-plugin', request.body.action) or equals('update-plugin', request.body.action) or equals('delete-plugin', request.body.action) or equals('search-plugins', request.body.action) or equals('search-install-plugins', request.body.action) or equals('activate-plugin', request.body.action) or equals('update-theme', request.body.action) or equals('delete-theme', request.body.action) or equals('install-theme', request.body.action)))))):
+if ((match('#/wp\-admin/(network/)?(post|profile|user-new|settings)\.php$#i', server.script_filename)) or (match('#/wp\-admin/admin\-ajax\.php$#i', server.script_filename) and (equals('wordfence_loadLiveTraffic', request.body.action) or equals('wordfence_ticker', request.body.action) or (currentUserIs('administrator', server.empty) and (equals('install-plugin', request.body.action) or equals('update-plugin', request.body.action) or equals('delete-plugin', request.body.action) or equals('search-plugins', request.body.action) or equals('search-install-plugins', request.body.action) or equals('activate-plugin', request.body.action) or equals('update-theme', request.body.action) or equals('delete-theme', request.body.action) or equals('install-theme', request.body.action) or equals('customize_save', request.body.action)))))):
 	allow(id=1, category='whitelist', description='Whitelisted URL')
 
 if (match('#/wp\-admin/admin\-ajax\.php$#i', server.script_filename) and (((equals('revslider_show_image', request.queryString.action) or equals('nopriv_revslider_show_image', request.queryString.action)) and match('/\.php$/i', request.queryString.img)) or ((equals('revslider_show_image', request.body.action) or equals('nopriv_revslider_show_image', request.body.action)) and match('/\.php$/i', request.body.img)))):
@@ -213,6 +214,9 @@ if (match('/sitemap_.*?<.*?(:?_\d+)?\.xml(:?\.gz)?/i', request.path)):
 if (match('#/wp\-admin/admin\-ajax\.php$#i', server.script_filename) and equals('frs_save', request.body.action) and currentUserIsNot('administrator', server.empty) and currentUserIsNot('editor', server.empty)):
 	block(id=50, category='auth-bypass', description='Fluid Responsive Slideshow <= 2.2.26 - Unauthorized Content Modification')
 
+if (match('#/wp\-admin/admin\-ajax\.php$#i', server.script_filename) and currentUserIsNot('administrator', server.empty) and md5Equals('2b63a6d3fd55f80cc3b453fb11a7b538', request.body.action, request.queryString.action)):
+	block(id=51, category='sde', description='WP Backup <= 1.2 - Sensitive Data Exposure')
+
 if (match('#/wp\-admin/admin\-ajax\.php$#i', server.script_filename) and currentUserIsNot('administrator', server.empty) and lengthGreaterThan('0', request.md5Body.dfff0a7fa1a55c8c1a4966c19f6da452, request.md5QueryString.dfff0a7fa1a55c8c1a4966c19f6da452) and md5Equals('266e0d3d29830abfe7d4ed98b47966f7', request.body.action, request.queryString.action)):
 	block(id=52, category='file_upload', description='File Manager <= 3.0.0 - Arbitrary File Upload/Download')
 
@@ -246,11 +250,50 @@ if (match('/\/(?:timthumb\.php|img\.php)/i', request.path) and notMatch('_^[^\?]
 if (currentUserIsNot('administrator', server.empty) and match('/^(?:wysija_)+campaigns/i', request.body.page, request.queryString.page) and (equals('themes', request.body.action, request.queryString.action) or equals('themeupload', request.body.action, request.queryString.action))):
 	block(id=65, category='file_upload', description='MailPoet <= 2.6.7 - Arbitrary File Upload')
 
+if ((match('#/wp\-admin/admin\-ajax\.php$#i', server.script_filename) and currentUserIsNot('administrator', server.empty) and match('/^(?:nopriv_)?nm_postfront_save_settings$/i', request.body.action, request.queryString.action)) or (currentUserIsNot('administrator', server.empty) and currentUserIsNot('editor', server.empty) and currentUserIsNot('author', server.empty) and ((match('#/wp\-admin/admin\-ajax\.php$#i', server.script_filename) and match('/^(?:nopriv_)?nm_postfront_(?:load_post_form|save_post|upload_file)$/i', request.body.action, request.queryString.action)) or match('#/plupload[^/]*/+examples/+upload\.php#i', request.path)))):
+	block(id=69, category='file_upload', description='N-Media Post Front-end Form <= 1.0 - Unauthenticated Arbitrary File Upload')
+
+if (match('#/cysteme\-finder[^/]*/+php/+connector\.php#i', request.path) and currentUserIsNot('administrator', server.empty)):
+	block(id=70, category='file_upload', description='CYSTEME Finder <= 1.3 - Multiple Unauthenticated Vulnerabilities')
+
+if (match('#/wp\-admin/admin\-ajax\.php$#i', server.script_filename) and currentUserIsNot('administrator', server.empty) and match('/^(?:nopriv_)?es_prop_media_images$/i', request.body.action, request.queryString.action)):
+	block(id=71, category='file_upload', description='Estatik <= 2.2.5 - Unauthenticated Arbitrary File Upload')
+
+if (match('#/mail\-masta/inc/(?:campaign/count_of_send\.php|lists/csvexport\.php)$#i', server.script_filename) and (currentUserIsNot('administrator', server.empty) or notMatch('/wp\-load\.php$/', request.queryString.pl))):
+	block(id=72, category='lfi', description='Mail Masta <= 1.0 - Unauthenticated Local File Inclusion')
+
+if (lengthGreaterThan('0', request.body.fdx_page) and currentUserIsNot('administrator', server.empty)):
+	block(id=74, category='auth-bypass', description='Total Security <= 3.3.8 - Unauthenticated Options Update')
+
+if (match('/O:\d+:"(?!stdClass")[^"]+":/', request.cookies.ecwid_oauth_state)):
+	block(id=75, category='obji', description='Ecwid Ecommerce Shopping Cart <= 4.4.3 - Unauthenticated Object Injection')
+
 if (currentUserIsNot('administrator', server.empty) and currentUserIsNot('editor', server.empty) and currentUserIsNot('author', server.empty) and filePatternsMatch('', request.fileNames)):
 	block(id=68, category='file_upload', description='Malicious File Upload (Patterns)')
 
 if (currentUserIsNot('administrator', server.empty) and currentUserIsNot('editor', server.empty) and currentUserIsNot('author', server.empty) and fileHasPHP('', request.fileNames)):
 	block(id=76, category='file_upload', description='Malicious File Upload (PHP)')
+
+if (currentUserIsNot('administrator', server.empty) and match('/^aamc?$/i', request.queryString.page, request.body.action) and lengthGreaterThan('0', request.queryString.sub_action, request.body.sub_action)):
+	block(id=77, category='priv-esc', description='Advanced Access Manager <= 3.2.1 - Privilege Escalation')
+
+if (notMatch('/\.(jpe?g|png|mpeg|mov|flv|pdf|docx?|txt|csv|avi|mp3|wma|wav)($|\.)/i', request.fileNames) and lengthGreaterThan('0', request.body.save_bepro_listing)):
+	block(id=78, category='file_upload', description='BePro Listings <= 2.2.0020 - Unauthenticated Arbitrary File Upload')
+
+if ((match('#/delete\-all\-comments/delete\-all\-comments\.php$#i', server.script_filename) or (lengthGreaterThan('0', request.body.restorefromfileNAME) and lengthGreaterThan('0', request.body.restorefromfileURL))) and currentUserIsNot('administrator', server.empty)):
+	block(id=83, category='file_download', description='Delete All Comments <= 2.0.0 - Unauthenticated Remote File Download')
+
+if ((match('#wp-json/wp/v\d+/posts/#i', request.path) or match('#/wp/v\d+/posts/#i', request.queryString.rest_route)) and match('/[^0-9]/', request.queryString.id)):
+	block(id=84, category='auth-bypass', description='WordPress 4.7.0-4.7.1 - Authentication Bypass: Page/Post Content Modification via REST API')
+
+if ((match('#wp-json/wp/v\d+/posts/#i', request.path) or match('#/wp/v\d+/posts/#i', request.queryString.rest_route) or match('#/wp/v\d+/posts/#i', request.body.rest_route)) and (match('/^(post|patch|put)$/i', server.request_method) or match('/^(post|patch|put)$/i', request.headers['X-Http-Method-Override']) or match('/^(post|patch|put)$/i', request.queryString._method)) and currentUserIsNot('administrator', server.empty) and currentUserIsNot('editor', server.empty) and currentUserIsNot('author', server.empty)):
+	block(id=85, category='auth-bypass', description='WordPress 4.7.0-4.7.1 - Authentication Bypass')
+
+if (match('/iwp_action/i', base64decode(request.rawBody)) and match('/(^|;|{|})O:+?\+*[0-9]+:(?!"stdClass")/i', base64decode(request.rawBody))):
+	block(id=86, category='obji', description='InfiniteWP Client <= 1.6.11 - Unauthenticated Object Injection')
+
+if (match('#/nggallery/+tags/+.*?%25#i', request.path) and match('#/nggallery/+tags/+(?:[^\$]*\$|.*?%24)#i', request.path)):
+	block(id=87, category='sqli', description='NextGEN Gallery <= 2.1.77 - SQL Injection')
 
 if (matchCount(sqliRegex, request.body, request.queryString)):
 	failSQLi(id=3, category='sqli', score=40, description='SQL Injection')
@@ -259,7 +302,7 @@ if (matchCount(xssRegex, request.body, request.queryString)):
 	failXSS(id=9, category='xss', score=100, description='XSS: Cross Site Scripting')
 
 if (match('/\.(p(h(p|tml)[0-9]?|l|y)|(j|a)sp|aspx|sh|shtml|html?|cgi|htaccess|user\.ini)($|\.)/i', request.fileNames) and currentUserIsNot('administrator', server.empty)):
-	block(id=11, category='file_upload', description='Malicous File Upload')
+	block(id=11, category='file_upload', description='Malicious File Upload')
 
 if (match('/(^|\/|\\)(\.\.?(\\|\/)+)+wp\-config\.php/i', request.body, request.queryString) and currentUserIsNot('administrator', server.empty)):
 	block(id=67, category='lfi', description='Directory Traversal - wp-config.php', whitelist=0)

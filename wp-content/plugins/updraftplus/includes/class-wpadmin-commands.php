@@ -338,6 +338,21 @@ class UpdraftPlus_WPAdmin_Commands extends UpdraftPlus_Commands {
 	}
 
 	/**
+	 * This is an handler function that checks what entity has been specified in the $params and calls the required method
+	 * @param  [array] $params this is an array of parameters sent via ajax it can include various things depending on what has called this method, this method only cares about the entity parameter which is used to call the correct method and return tree nodes based on that
+	 * @return [array] returns an array of jstree nodes
+	 */
+	public function get_jstree_directory_nodes($params) {
+
+		if ('filebrowser' == $params['entity']) {
+			$node_array = $this->_updraft_jstree_directory($params);
+		} elseif ($params['entity'] == 'zipbrowser') {
+			$node_array = $this->_updraft_jstree_zip($params);
+		}
+		return empty($node_array['error']) ? array('nodes' => $node_array) : $node_array;
+	}
+
+	/**
 	 * This creates an array of nodes, built from either ABSPATH or the given directory ready to be returned to the jstree object.
 	 * @param  [array] $params this is an array of parameters sent via ajax it can include the following:
 	 * node - this is a jstree node object containing information about the selected node
@@ -345,46 +360,203 @@ class UpdraftPlus_WPAdmin_Commands extends UpdraftPlus_Commands {
 	 * drop_directory - this is a boolean that if set to true will drop one directory level off the path this is used so that you can move above the current root directory
 	 * @return [array] returns an array of jstree nodes
 	 */
-	public function get_jstree_directory_nodes($params) {
-		
+	private function _updraft_jstree_directory($params) {
 		$node_array = array();
 
 		// # is the root node if it's the root node then this is the first call so create a parent node otherwise it's a child node and we should get the path from the node id
 		if ($params['node']['id'] == '#') {
-			if ($params['entity'] == 'filebrowser') {
 				$path = ABSPATH;
 				
 				if (!empty($params['path'])) $path = $params['path'];
 
 				if (!empty($params['drop_directory']) && true == $params['drop_directory']) $path = dirname($path);
 
-				$node_array[] = array('text' => basename($path), 'children' => true, 'id' => $path , 'icon' => 'jstree-folder', 'state' => array('opened' => true));
-			}
+				$node_array[] = array(
+					'text' => basename($path),
+					'children' => true,
+					'id' => $path,
+					'icon' => 'jstree-folder',
+					'state' => array(
+						'opened' => true
+					)
+				);
 		} else {
-			if ($params['entity'] == 'filebrowser') {
-				$path = $params['node']['id'];
-			}
+			$path = $params['node']['id'];
 		}
 
-		if ($params['entity'] == 'filebrowser') {
-			if ($dh = opendir($path)) {
-				$path = rtrim($path, DIRECTORY_SEPARATOR);
+		if ($dh = opendir($path)) {
+			$path = rtrim($path, DIRECTORY_SEPARATOR);
 
-				$skip_paths = array(".", "..");
+			$skip_paths = array(".", "..");
 
-				while (($value = readdir($dh)) !== false) {
-					if (!in_array($value, $skip_paths)) {
-						if (is_dir($path . DIRECTORY_SEPARATOR . $value)) {
-							$node_array[] = array('text' => $value, 'children' => true, 'id' => $path . DIRECTORY_SEPARATOR . $value, 'icon' => 'jstree-folder');
-						} else {
-							$node_array[] = array('text' => $value, 'children' => false, 'id' => $path . DIRECTORY_SEPARATOR . $value, 'type' => 'file', 'icon' => 'jstree-file');
-						}
+			while (($value = readdir($dh)) !== false) {
+				if (!in_array($value, $skip_paths)) {
+					if (is_dir($path . DIRECTORY_SEPARATOR . $value)) {
+						$node_array[] = array(
+							'text' => $value,
+							'children' => true,
+							'id' => $path . DIRECTORY_SEPARATOR . $value,
+							'icon' => 'jstree-folder'
+						);
+					} else {
+						$node_array[] = array('text' => $value,
+							'children' => false,
+							'id' => $path . DIRECTORY_SEPARATOR . $value,
+							'type' => 'file',
+							'icon' => 'jstree-file'
+						);
 					}
 				}
 			}
 		}
 
-		return array('nodes' => $node_array);
+		return $node_array;
 	}
-	
+
+	/**
+	 * This creates an array of nodes, built from a unzipped zip file structure.
+	 * @param  [array] $params this is an array of parameters sent via ajax it can include the following:
+	 * node - this is a jstree node object containing information about the selected node
+	 * timestamp - this is the backup timestamp and is used to get the backup archive
+	 * type - this is the type of backup and is used to get the backup archive
+	 * findex - this is the index used to get the correct backup archive if theres more than one of a single archive type
+	 * @return [array] returns an array of jstree nodes
+	 */
+	private function _updraft_jstree_zip($params) {
+		
+		$updraftplus = $this->_updraftplus;
+
+		$node_array = array();
+
+		require_once(UPDRAFTPLUS_DIR.'/class-zip.php');
+		
+		$zip_object = 'UpdraftPlus_ZipArchive';
+
+		# In tests, PclZip was found to be 25% slower than ZipArchive
+		if (((defined('UPDRAFTPLUS_PREFERPCLZIP') && UPDRAFTPLUS_PREFERPCLZIP == true) || !class_exists('ZipArchive') || !class_exists('UpdraftPlus_ZipArchive') || (!extension_loaded('zip') && !method_exists('ZipArchive', 'AddFile')))) {
+			$zip_object = 'UpdraftPlus_PclZip';
+		}
+
+		// Retrieve the information from our backup history
+		$backup_history = $updraftplus->get_backup_history();
+
+		if (!isset($backup_history[$params['timestamp']][$params['type']])) {
+			return array('error' => __('Backup set not found', 'updraftplus'));
+		}
+		
+		// Base name
+		$file = $backup_history[$params['timestamp']][$params['type']];
+
+		// Get date in human readable form
+		$pretty_date = get_date_from_gmt(gmdate('Y-m-d H:i:s', (int)$params['timestamp']), 'M d, Y G:i');
+
+		$backupable_entities = $updraftplus->get_backupable_file_entities(true, true);
+		
+		// Check the file type and set the name in a more friendly way
+		$archive_name = isset($backupable_entities[$params['type']]['description']) ? $backupable_entities[$params['type']]['description'] : $params['type'];
+
+		if (substr($params['type'], 0, 2) === 'db') $archive_name = __('Extra database', 'updraftplus') . ' ' . substr($params['type'], 3, 1);
+		if ('db' == $params['type']) $archive_name = __('Database', 'updraftplus');
+		if ('more' == $params['type']) $archive_name = $backupable_entities[$params['type']]['shortdescription'];
+		if ('wpcore' == $params['type']) $archive_name = __('WordPress Core', 'updraftplus');
+
+		$archive_set = ($params['findex'] + 1) . '/' . sizeof($file);
+
+		if ('1/1' == $archive_set) $archive_set = '';
+
+		$parent_name = $archive_name . ' ' . __('archive','updraftplus') . ' ' . $archive_set . ' ' . $pretty_date;
+
+		// Deal with multi-archive sets
+		if (is_array($file)) $file = $file[$params['findex']];
+
+		// Where it should end up being downloaded to
+		$fullpath = $updraftplus->backups_dir_location().'/'.$file;
+
+		if (file_exists($fullpath) && is_readable($fullpath) && filesize($fullpath)>0) {
+
+			$node_array[] = array(
+				'text' => $parent_name,
+				'parent' => '#',
+				'id' => $parent_name,
+				'icon' => 'jstree-folder',
+				'state' => array('opened' => true),
+				'li_attr' => array('path' => $parent_name)
+			);
+
+			$zip = new $zip_object;
+			
+			$zip_opened = $zip->open($fullpath);
+
+			if (true !== $zip_opened) {
+				return array('error' => 'UpdraftPlus: opening zip (' . $fullpath . '): failed to open this zip file (object='.$zip_object.', code: '.$zip_opened.')');
+			} else {
+				if ($zip_object == 'UpdraftPlus_PclZip') {
+					$numfiles = $zip->numAll;
+					if (false === $numfiles) {
+						return array('error' => 'UpdraftPlus: reading zip: '.$zip->last_error);
+					}
+				} else {
+					$numfiles = $zip->numFiles;
+				}
+
+				for ($i=0; $i < $numfiles; $i++) {
+					$si = $zip->statIndex($i);
+
+					// Fix for windows being unable to build jstree due to different directory separators being used
+					$si['name'] = str_replace("/", DIRECTORY_SEPARATOR, $si['name']);
+
+					// if it's a dot then we don't want to append this as it will break the id's and the tree structure
+					if ('.' == dirname($si['name'])){
+						$node_id = $parent_name;
+					} else {
+						$node_id = $parent_name . DIRECTORY_SEPARATOR . dirname($si['name']) . DIRECTORY_SEPARATOR;
+					}
+
+					$extension = substr(strrchr($si['name'], "."), 1);
+					
+					if (0 == $si['size'] && empty($extension)) {
+						$node_array[] = array(
+							'text' => basename($si['name']),
+							'parent' => $node_id,
+							'id' => $parent_name . DIRECTORY_SEPARATOR . $si['name'],
+							'icon' => 'jstree-folder',
+							'li_attr' => array(
+								'path' => $parent_name . DIRECTORY_SEPARATOR . $si['name']
+							)
+						);
+					} else {
+						$node_array[] = array(
+							'text' => basename($si['name']),
+							'parent' => $node_id,
+							'id' => $parent_name . DIRECTORY_SEPARATOR . $si['name'],
+							'type' => 'file',
+							'icon' => 'jstree-file',
+							'li_attr' => array(
+								'path' => $parent_name . DIRECTORY_SEPARATOR . $si['name'], 'size' => $updraftplus->convert_numeric_size_to_text($si['size'])
+							)
+						);
+					}
+				}
+
+				// check if this is an upload archive if it is add a 'uploads' folder so that the children can attach to it
+				if ('uploads' == $params['type']) $node_array[] = array(
+					'text' => 'uploads',
+					'parent' => $parent_name,
+					'id' => $parent_name . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR, 
+					'icon' => 'jstree-folder',
+					'li_attr' => array(
+						'path' => $parent_name . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR
+					)
+				);
+
+				@$zip->close();
+			}
+		}
+
+		return $node_array;
+	}
+
+	public function get_zipfile_download($params) {
+		return apply_filters('updraftplus_command_get_zipfile_download', array('error' => 'UpdraftPlus: command (get_zipfile_download) not installed (are you missing an add-on?)'), $params);
+	}
 }

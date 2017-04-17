@@ -16,10 +16,6 @@ $w = new wfConfig();
 			'label'		=> 'Scan for misconfigured How does Wordfence get IPs <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_for_misconfigured_How_does_Wordfence_get_IPs" target="_blank" class="wfhelp"></a>',
 		),
 		array(
-			'id' 		=> 'scansEnabled_heartbleed',
-			'label'		=> 'Scan for the HeartBleed vulnerability <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_for_the_HeartBleed_vulnerability" target="_blank" class="wfhelp"></a>',
-		),
-		array(
 			'id' 		=> 'scansEnabled_checkReadableConfig',
 			'label'		=> 'Scan for publicly accessible configuration, backup, or log files <a href="http://docs.wordfence.com/en/Wordfence_options#Configuration_Readable" target="_blank" class="wfhelp"></a>',
 		),

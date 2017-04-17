@@ -160,7 +160,7 @@ class UpdraftPlus_Dropbox_API {
      */
     public function chunkedUpload($file, $filename = false, $path = '', $overwrite = true, $offset = 0, $uploadID = null, $callback = null) {
 
-        if (file_exists($file)) {
+		if (file_exists($file)) {
             if ($handle = @fopen($file, 'r')) {
                 // Set initial upload ID and offset
                 if ($offset > 0) {
@@ -190,7 +190,8 @@ class UpdraftPlus_Dropbox_API {
                         $params = array(
 							'cursor' => array(
 								'session_id' => $uploadID,
-								'offset' => $offset
+								// If you send it as a string, Dropbox will be unhappy
+								'offset' => (int)$offset
 							),
 							'api_v2' => true,
 							'content_upload' => true
@@ -250,8 +251,11 @@ class UpdraftPlus_Dropbox_API {
         } catch (Exception $e) {
             $responseCheck = json_decode($e->getMessage());
             if (isset($responseCheck) && strpos($responseCheck[0] , 'incorrect_offset') !== false) {
-                $params['cursor']['offset'] = $responseCheck[1];
-                $response = $this->append_upload($params, $last_call);
+				$expected_offset = $responseCheck[1];
+				throw new Exception('Submitted input out of alignment: got ['.$params['cursor']['offset'].'] expected ['.$expected_offset.']');
+				
+//                 $params['cursor']['offset'] = $responseCheck[1];
+//                 $response = $this->append_upload($params, $last_call);
             } else {
                 throw $e;
             }

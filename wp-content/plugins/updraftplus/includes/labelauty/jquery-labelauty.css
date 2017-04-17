@@ -156,11 +156,6 @@ input.labelauty.cloudfiles + label > span.labelauty-unchecked-image {
 	background-image: url( ../../images/icons/cloudfiles.png );
 }
 
-input.labelauty.copycom + label > span.labelauty-checked-image,
-input.labelauty.copycom + label > span.labelauty-unchecked-image {
-	background-image: url( ../../images/icons/copycom.png );
-}
-
 input.labelauty.dreamobjects + label > span.labelauty-checked-image,
 input.labelauty.dreamobjects + label > span.labelauty-unchecked-image {
 	background-image: url( ../../images/icons/dreamobjects.png );

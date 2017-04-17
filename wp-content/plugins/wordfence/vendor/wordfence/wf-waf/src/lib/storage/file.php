@@ -3,6 +3,7 @@
 class wfWAFStorageFile implements wfWAFStorageInterface {
 
 	const LOG_FILE_HEADER = "<?php exit('Access denied'); __halt_compiler(); ?>\n";
+	const LOG_INFO_HEADER = "******************************************************************\nThis file is used by the Wordfence Web Application Firewall. Read \nmore at https://docs.wordfence.com/en/Web_Application_Firewall_FAQ\n******************************************************************\n";
 	const IP_BLOCK_RECORD_SIZE = 24;
 
 	public static function atomicFilePutContents($file, $content, $prefix = 'config') {
@@ -349,7 +350,7 @@ class wfWAFStorageFile implements wfWAFStorageInterface {
 
 		$files = array(
 			array($this->getIPCacheFile(), 'ipCacheFileHandle', self::LOG_FILE_HEADER),
-			array($this->getConfigFile(), 'configFileHandle', self::LOG_FILE_HEADER . serialize($this->getDefaultConfiguration())),
+			array($this->getConfigFile(), 'configFileHandle', self::LOG_FILE_HEADER . self::LOG_INFO_HEADER . serialize($this->getDefaultConfiguration())),
 		);
 		foreach ($files as $file) {
 			list($filePath, $fileHandle, $defaultContents) = $file;
@@ -506,6 +507,9 @@ class wfWAFStorageFile implements wfWAFStorageInterface {
 		while (!feof($this->configFileHandle)) {
 			$serializedData .= fread($this->configFileHandle, 1024);
 		}
+		if (wfWAFUtils::substr($serializedData, 0, 1) == '*') {
+			$serializedData = wfWAFUtils::substr($serializedData, wfWAFUtils::strlen(self::LOG_INFO_HEADER));
+		}
 		$this->data = @unserialize($serializedData);
 
 		if ($this->data === false) {
@@ -533,9 +537,9 @@ class wfWAFStorageFile implements wfWAFStorageInterface {
 		if (WFWAF_IS_WINDOWS) {
 			self::lock($this->configFileHandle, LOCK_UN);
 			fclose($this->configFileHandle);
-			file_put_contents($this->getConfigFile(), self::LOG_FILE_HEADER . serialize($this->data), LOCK_EX);
+			file_put_contents($this->getConfigFile(), self::LOG_FILE_HEADER . self::LOG_INFO_HEADER . serialize($this->data), LOCK_EX);
 		} else {
-			wfWAFStorageFile::atomicFilePutContents($this->getConfigFile(), self::LOG_FILE_HEADER . serialize($this->data));
+			wfWAFStorageFile::atomicFilePutContents($this->getConfigFile(), self::LOG_FILE_HEADER . self::LOG_INFO_HEADER . serialize($this->data));
 		}
 
 		if (WFWAF_IS_WINDOWS) {

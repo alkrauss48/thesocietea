@@ -78,15 +78,19 @@ class UpdraftPlus_BackupModule_openstack extends UpdraftPlus_BackupModule_openst
 		return array('updraft_openstack');
 	}
 
-	public function get_opts() {
-		global $updraftplus;
-		$opts = $updraftplus->get_job_option('updraft_openstack');
-		if (!is_array($opts)) $opts = array('user' => '', 'authurl' => '', 'password' => '', 'tenant' => '', 'path' => '', 'region' => '');
-		return $opts;
+	public function get_default_options() {
+		return array(
+			'user' => '',
+			'authurl' => '',
+			'password' => '',
+			'tenant' => '',
+			'path' => '',
+			'region' => ''
+		);
 	}
-
+	
 	public function config_print_middlesection() {
-		$opts = $this->get_opts();
+		$opts = $this->get_options();
 		?>
 		<tr class="updraftplusmethod <?php echo $this->method;?>">
 		<th></th>

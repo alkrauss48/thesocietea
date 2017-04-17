@@ -52,7 +52,7 @@ $premv = UPDRAFTPLUS_URL.'/images/updraft_premv.png';
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo UPDRAFTPLUS_URL.'/images/notices/multiplestorage_destinations.png'?>" alt="<?php esc_attr_e('Remote storage', 'updraftplus');?>" width="80" height="80" class="udp-premium-image">
+				<img src="<?php echo UPDRAFTPLUS_URL.'/images/addons-images/morestorage.png'?>" alt="<?php esc_attr_e('Remote storage', 'updraftplus');?>" width="80" height="80" class="udp-premium-image">
 				<h4><?php _e('Backup to remote storage locations', 'updraftplus');?></h4>
 				<p><?php _e('To avoid server-wide risks, always backup to remote cloud storage. UpdraftPlus free includes Dropbox, Google Drive, Amazon S3, Rackspace and more.', 'updraftplus');?></p>
 			</td>
@@ -68,7 +68,7 @@ $premv = UPDRAFTPLUS_URL.'/images/updraft_premv.png';
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo UPDRAFTPLUS_URL.'/images/notices/multiplestorage_destinations.png'?>" alt="<?php esc_attr_e('Additional storage', 'updraftplus');?>" width="80" height="80" class="udp-premium-image">
+				<img src="<?php echo UPDRAFTPLUS_URL.'/images/addons-images/morestorage.png'?>" alt="<?php esc_attr_e('Additional storage', 'updraftplus');?>" width="80" height="80" class="udp-premium-image">
 				<h4><?php _e('Additional and enhanced remote storage locations', 'updraftplus');?></h4>
 				<p><?php _e('Get enhanced versions of the free remote storage options and even more remote storage options like OneDrive, SFTP, Azure, WebDAV and more with UpdraftPlus Premium.', 'updraftplus');?></p>
 			</td>
@@ -84,7 +84,7 @@ $premv = UPDRAFTPLUS_URL.'/images/updraft_premv.png';
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo UPDRAFTPLUS_URL.'/images/notices/migrator.png'?>" alt="<?php esc_attr_e('Migrator', 'updraftplus');?>" width="80" height="80" class="udp-premium-image">
+				<img src="<?php echo UPDRAFTPLUS_URL.'/images/addons-images/migrator.png'?>" alt="<?php esc_attr_e('Migrator', 'updraftplus');?>" width="80" height="80" class="udp-premium-image">
 				<h4><?php _e('Cloning and migration', 'updraftplus');?></h4>
 				<p><?php _e('UpdraftPlus Migrator clones your WordPress site and moves it to a new domain directly and simply.', 'updraftplus');?></p>
 			</td>
@@ -132,7 +132,7 @@ $premv = UPDRAFTPLUS_URL.'/images/updraft_premv.png';
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo UPDRAFTPLUS_URL.'/images/notices/morefiles.png'?>" alt="<?php esc_attr_e('Backup non-WordPress files and databases', 'updraftplus');?>" width="80" height="80" class="udp-premium-image">
+				<img src="<?php echo UPDRAFTPLUS_URL.'/images/addons-images/morefiles.png'?>" alt="<?php esc_attr_e('Backup non-WordPress files and databases', 'updraftplus');?>" width="80" height="80" class="udp-premium-image">
 				<h4><?php _e('Backup non-WordPress files and databases', 'updraftplus');?></h4>
 				<p><?php _e('Backup WordPress core and non-WP files and databases.', 'updraftplus');?></p>
 			</td>
@@ -148,7 +148,7 @@ $premv = UPDRAFTPLUS_URL.'/images/updraft_premv.png';
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo UPDRAFTPLUS_URL.'/images/notices/networkmultisite.png'?>" alt="<?php esc_attr_e('Network and multisite', 'updraftplus');?>" width="80" height="80" class="udp-premium-image">
+				<img src="<?php echo UPDRAFTPLUS_URL.'/images/addons-images/multisite.png'?>" alt="<?php esc_attr_e('Network and multisite', 'updraftplus');?>" width="80" height="80" class="udp-premium-image">
 				<h4><?php _e('Network / multisite', 'updraftplus');?></h4>
 				<p><?php _e('Backup WordPress multisites (i.e, networks), securely.', 'updraftplus');?></p>
 			</td>
@@ -164,7 +164,7 @@ $premv = UPDRAFTPLUS_URL.'/images/updraft_premv.png';
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo UPDRAFTPLUS_URL.'/images/notices/backuptime.png'?>" alt="<?php esc_attr_e('Backup time and scheduling', 'updraftplus');?>" width="80" height="80" class="udp-premium-image">
+				<img src="<?php echo UPDRAFTPLUS_URL.'/images/addons-images/fixtime.png'?>" alt="<?php esc_attr_e('Backup time and scheduling', 'updraftplus');?>" width="80" height="80" class="udp-premium-image">
 				<h4><?php _e('Backup time and scheduling', 'updraftplus');?></h4>
 				<p><?php _e('Set exact times to create or delete backups.', 'updraftplus');?></p>
 			</td>
@@ -180,7 +180,7 @@ $premv = UPDRAFTPLUS_URL.'/images/updraft_premv.png';
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo UPDRAFTPLUS_URL.'/images/notices/moredatabase_option.png'?>" alt="<?php esc_attr_e('More database options', 'updraftplus');?>" width="80" height="80" class="udp-premium-image">
+				<img src="<?php echo UPDRAFTPLUS_URL.'/images/addons-images/moredatabase.png'?>" alt="<?php esc_attr_e('More database options', 'updraftplus');?>" width="80" height="80" class="udp-premium-image">
 				<h4><?php _e('More database options', 'updraftplus');?></h4>
 				<p><?php _e('Encrypt your sensitive databases (e.g. customer information or passwords); Backup external databases too.', 'updraftplus');?></p>
 			</td>
@@ -196,7 +196,7 @@ $premv = UPDRAFTPLUS_URL.'/images/updraft_premv.png';
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo UPDRAFTPLUS_URL.'/images/notices/reporting.png'?>" alt="<?php esc_attr_e('Reporting', 'updraftplus');?>" width="80" height="80" class="udp-premium-image">
+				<img src="<?php echo UPDRAFTPLUS_URL.'/images/addons-images/reporting.png'?>" alt="<?php esc_attr_e('Reporting', 'updraftplus');?>" width="80" height="80" class="udp-premium-image">
 				<h4><?php _e('Reporting', 'updraftplus');?></h4>
 				<p><?php _e('Sophisticated reporting and emailing capabilities.', 'updraftplus');?></p>
 			</td>
@@ -212,7 +212,7 @@ $premv = UPDRAFTPLUS_URL.'/images/updraft_premv.png';
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo UPDRAFTPLUS_URL.'/images/notices/noads.png'?>" alt="<?php esc_attr_e('No ads', 'updraftplus');?>" width="80" height="80" class="udp-premium-image">
+				<img src="<?php echo UPDRAFTPLUS_URL.'/images/addons-images/noadverts.png'?>" alt="<?php esc_attr_e('No ads', 'updraftplus');?>" width="80" height="80" class="udp-premium-image">
 				<h4><?php _e('No ads', 'updraftplus');?></h4>
 				<p><?php _e('Tidy things up for clients and remove all adverts for our other products.', 'updraftplus');?></p>
 			</td>
@@ -228,7 +228,7 @@ $premv = UPDRAFTPLUS_URL.'/images/updraft_premv.png';
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo UPDRAFTPLUS_URL.'/images/notices/importer.png'?>" alt="<?php esc_attr_e('Importer', 'updraftplus');?>" width="80" height="80" class="udp-premium-image">
+				<img src="<?php echo UPDRAFTPLUS_URL.'/images/addons-images/importer.png'?>" alt="<?php esc_attr_e('Importer', 'updraftplus');?>" width="80" height="80" class="udp-premium-image">
 				<h4><?php _e('Importer', 'updraftplus');?></h4>
 				<p><?php _e('Some backup plugins can’t restore a backup, so Premium allows you to restore backups from other plugins.', 'updraftplus');?></p>
 			</td>
@@ -244,7 +244,7 @@ $premv = UPDRAFTPLUS_URL.'/images/updraft_premv.png';
 		</tr>
 		<tr>
 			<td>
-				<img src="<?php echo UPDRAFTPLUS_URL.'/images/notices/locksettings.png'?>" alt="<?php esc_attr_e('Lock settings', 'updraftplus');?>" width="80" height="80" class="udp-premium-image">
+				<img src="<?php echo UPDRAFTPLUS_URL.'/images/addons-images/lockadmin.png'?>" alt="<?php esc_attr_e('Lock settings', 'updraftplus');?>" width="80" height="80" class="udp-premium-image">
 				<h4><?php _e('Lock settings', 'updraftplus');?></h4>
 				<p><?php _e('Lock access to UpdraftPlus via a password so you choose which admin users can access backups.', 'updraftplus');?></p>
 			</td>

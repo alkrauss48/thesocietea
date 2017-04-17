@@ -571,17 +571,26 @@ PHP
 			if (isset($rules[$key]) && is_array($rules[$key])) {
 				/** @var wfWAFRuleParserURLParam $urlParam */
 				foreach ($rules[$key] as $urlParam) {
-					if ($urlParam->getRules()) {
-						$url = array(
-							'url'   => $urlParam->getUrl(),
-							'rules' => $urlParam->getRules(),
-						);
-					} else {
-						$url = $urlParam->getUrl();
+					if ($urlParam->getConditional()) {
+						
+						$exportedCode .= sprintf("\$this->{$key}[%s][] = array(\n%s => %s,\n%s => %s,\n%s => %s\n);\n", var_export($urlParam->getParam(), true), 
+							var_export('url', true), var_export($urlParam->getUrl(), true),
+							var_export('rules', true), var_export($urlParam->getRules(), true),
+							var_export('conditional', true), $urlParam->getConditional()->render());
 					}
-
-					$exportedCode .= sprintf("\$this->{$key}[%s][] = %s;\n", var_export($urlParam->getParam(), true),
-						var_export($url, true));
+					else {
+						if ($urlParam->getRules()) {
+							$url = array(
+								'url'   => $urlParam->getUrl(),
+								'rules' => $urlParam->getRules(),
+							);
+						} else {
+							$url = $urlParam->getUrl();
+						}
+						
+						$exportedCode .= sprintf("\$this->{$key}[%s][] = %s;\n", var_export($urlParam->getParam(), true), 
+							var_export($url, true));
+					}
 				}
 				$exportedCode .= "\n";
 			}
@@ -969,6 +978,9 @@ HTML
 					if (!in_array($ruleID, $urlRegex['rules'])) {
 						continue;
 					}
+					if (isset($urlRegex['conditional']) && !$urlRegex['conditional']->evaluate()) {
+						continue;
+					}
 					$urlRegex = $urlRegex['url'];
 				}
 				if (preg_match($urlRegex, $urlPath)) {
@@ -1101,6 +1113,9 @@ HTML
 			foreach ($this->blacklistedParams[$paramKey] as $urlRegex) {
 				if (is_array($urlRegex)) {
 					if (!in_array($ruleID, $urlRegex['rules'])) {
+						continue;
+					}
+					if (isset($urlRegex['conditional']) && !$urlRegex['conditional']->evaluate()) {
 						continue;
 					}
 					$urlRegex = $urlRegex['url'];

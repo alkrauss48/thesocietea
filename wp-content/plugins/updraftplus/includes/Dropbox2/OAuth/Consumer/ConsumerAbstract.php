@@ -180,7 +180,7 @@ abstract class Dropbox_ConsumerAbstract
     protected function deauthenticate()
     {
 	    $url = UpdraftPlus_Dropbox_API::API_URL_V2 . self::DEAUTHORISE_METHOD;
-	    $response = $this->fetch('POST', $url, '');
+	    $response = $this->fetch('POST', $url, '', array('api_v2' => true));
         $this->storage->delete();
     }
     
@@ -278,7 +278,7 @@ abstract class Dropbox_ConsumerAbstract
         // Get the request/access token
         $token = $this->getToken();
 
-        // Prepare the standard request parameters differnt for OAuth1 and OAuth2, we still need OAuth1 to make the request to the upgrade token endpoint
+        // Prepare the standard request parameters differently for OAuth1 and OAuth2; we still need OAuth1 to make the request to the upgrade token endpoint
         if (isset($token->token_type)) {
 	        $params = array(
 	        	'access_token' => $token->oauth_token,

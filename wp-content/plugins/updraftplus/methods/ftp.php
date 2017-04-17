@@ -21,7 +21,9 @@ if (!is_array(UpdraftPlus_Options::get_updraft_option('updraft_ftp')) && '' != U
 	UpdraftPlus_Options::delete_updraft_option('updraft_ftp_login');
 }
 
-class UpdraftPlus_BackupModule_ftp {
+if (!class_exists('UpdraftPlus_BackupModule')) require_once(UPDRAFTPLUS_DIR.'/methods/backup-module.php');
+
+class UpdraftPlus_BackupModule_ftp extends UpdraftPlus_BackupModule {
 
 	// Get FTP object with parameters set
 	private function getFTP($server, $user, $pass, $disable_ssl = false, $disable_verify = true, $use_server_certs = false, $passive = true) {
@@ -46,24 +48,27 @@ class UpdraftPlus_BackupModule_ftp {
 		return $ftp;
 
 	}
-
-	private function get_opts() {
-		global $updraftplus;
-		$opts = $updraftplus->get_job_option('updraft_ftp');
-		if (!is_array($opts)) $opts = array();
-		if (empty($opts['host'])) $opts['host'] = '';
-		if (empty($opts['user'])) $opts['user'] = '';
-		if (empty($opts['pass'])) $opts['pass'] = '';
-		if (empty($opts['path'])) $opts['path'] = '';
-		if (!isset($opts['passive'])) $opts['passive'] = true; // Use isset() to cope with upgrades from previous versions that did not have this option
-		return $opts;
+	
+	public function get_supported_features() {
+		// This options format is handled via only accessing options via $this->get_options()
+		return array('multi_options');
 	}
 
+	public function get_default_options() {
+		return array(
+			'host' => '',
+			'user' => '',
+			'pass' => '',
+			'path' => '',
+			'passive' => true
+		);
+	}
+	
 	public function backup($backup_array) {
 
-		global $updraftplus, $updraftplus_backup;
+		global $updraftplus;
 
-		$opts = $this->get_opts();
+		$opts = $this->get_options();
 
 		$ftp = $this->getFTP(
 			$opts['host'],
@@ -118,7 +123,7 @@ class UpdraftPlus_BackupModule_ftp {
 	public function listfiles($match = 'backup_') {
 		global $updraftplus;
 
-		$opts = $this->get_opts();
+		$opts = $this->get_options();
 
 		$ftp = $this->getFTP(
 			$opts['host'],
@@ -179,7 +184,7 @@ class UpdraftPlus_BackupModule_ftp {
 		global $updraftplus;
 		if (is_string($files)) $files=array($files);
 
-		$opts = $this->get_opts();
+		$opts = $this->get_options();
 
 		if (is_array($ftparr) && isset($ftparr['ftp_object'])) {
 			$ftp = $ftparr['ftp_object'];
@@ -221,7 +226,7 @@ class UpdraftPlus_BackupModule_ftp {
 
 		global $updraftplus;
 
-		$opts = $this->get_opts();
+		$opts = $this->get_options();
 
 		$ftp = $this->getFTP(
 			$opts['host'],
@@ -266,10 +271,12 @@ class UpdraftPlus_BackupModule_ftp {
 	public function config_print() {
 		global $updraftplus;
 
+		$classes = $this->get_css_classes();
+		
 		$possible = $this->ftp_possible();
 		if (is_array($possible)) {
 			?>
-			<tr class="updraftplusmethod ftp">
+			<tr class="<?php echo $classes;?>">
 			<th></th>
 			<td>
 			<?php
@@ -289,50 +296,50 @@ class UpdraftPlus_BackupModule_ftp {
 			<?php
 		}
 
-		$opts = $this->get_opts();
-
+		$opts = $this->get_options();
+		
 		?>
 
-		<tr class="updraftplusmethod ftp">
+		<tr class="<?php echo $classes;?>">
 			<td></td>
 			<td><p><em><?php printf(__('%s is a great choice, because UpdraftPlus supports chunked uploads - no matter how big your site is, UpdraftPlus can upload it a little at a time, and not get thwarted by timeouts.','updraftplus'),'FTP');?></em></p></td>
 		</tr>
 
-		<tr class="updraftplusmethod ftp">
+		<tr class="<?php echo $classes;?>">
 			<th></th>
 			<td><em><?php echo apply_filters('updraft_sftp_ftps_notice', '<strong>'.htmlspecialchars(__('Only non-encrypted FTP is supported by regular UpdraftPlus.')).'</strong> <a href="'.apply_filters("updraftplus_com_link","https://updraftplus.com/shop/sftp/").'">'.__('If you want encryption (e.g. you are storing sensitive business data), then an add-on is available.','updraftplus')).'</a>'; ?></em></td>
 		</tr>
 
-		<tr class="updraftplusmethod ftp">
+		<tr class="<?php echo $classes;?>">
 			<th><?php _e('FTP server','updraftplus');?>:</th>
-			<td><input type="text" size="40" data-updraft_settings_test="server" id="updraft_ftp_host" name="updraft_ftp[host]" value="<?php echo htmlspecialchars($opts['host']); ?>" /></td>
+			<td><input type="text" size="40" data-updraft_settings_test="server" <?php $this->output_settings_field_name_and_id('host');?> value="<?php echo htmlspecialchars($opts['host']); ?>" /></td>
 		</tr>
-		<tr class="updraftplusmethod ftp">
+		
+		<tr class="<?php echo $classes;?>">
 			<th><?php _e('FTP login','updraftplus');?>:</th>
-			<td><input type="text" size="40" data-updraft_settings_test="login" id="updraft_ftp_user" name="updraft_ftp[user]" value="<?php echo htmlspecialchars($opts['user']) ?>" /></td>
+			<td><input type="text" size="40" data-updraft_settings_test="login" <?php $this->output_settings_field_name_and_id('user');?> value="<?php echo htmlspecialchars($opts['user']) ?>" /></td>
 		</tr>
-		<tr class="updraftplusmethod ftp">
+		
+		<tr class="<?php echo $classes;?>">
 			<th><?php _e('FTP password','updraftplus');?>:</th>
-			<td><input type="<?php echo apply_filters('updraftplus_admin_secret_field_type', 'password'); ?>" size="40" data-updraft_settings_test="pass" id="updraft_ftp_pass" name="updraft_ftp[pass]" value="<?php echo htmlspecialchars(trim($opts['pass'], "\n\r\0\x0B")); ?>" /></td>
+			<td><input type="<?php echo apply_filters('updraftplus_admin_secret_field_type', 'password'); ?>" size="40" data-updraft_settings_test="pass" <?php $this->output_settings_field_name_and_id('pass');?> value="<?php echo htmlspecialchars(trim($opts['pass'], "\n\r\0\x0B")); ?>" /></td>
 		</tr>
-		<tr class="updraftplusmethod ftp">
+		
+		<tr class="<?php echo $classes;?>">
 			<th><?php _e('Remote path','updraftplus');?>:</th>
-			<td><input type="text" size="64" data-updraft_settings_test="path" id="updraft_ftp_path" name="updraft_ftp[path]" value="<?php echo htmlspecialchars($opts['path']); ?>" /> <em><?php _e('Needs to already exist','updraftplus');?></em></td>
+			<td><input type="text" size="64" data-updraft_settings_test="path" <?php $this->output_settings_field_name_and_id('path');?> value="<?php echo htmlspecialchars($opts['path']); ?>" /> <em><?php _e('Needs to already exist','updraftplus');?></em></td>
 		</tr>
-		<tr class="updraftplusmethod ftp">
+		
+		<tr class="<?php echo $classes;?>">
 			<th><?php _e('Passive mode','updraftplus');?>:</th>
 			<td>
-			<input type="checkbox" data-updraft_settings_test="passive" id="updraft_ftp_passive" name="updraft_ftp[passive]" value="1" <?php if ($opts['passive']) echo 'checked="checked"'; ?> /> <br><em><?php echo __('Almost all FTP servers will want passive mode; but if you need active mode, then uncheck this.', 'updraftplus');?></em></td>
+			<input type="checkbox" data-updraft_settings_test="passive" <?php $this->output_settings_field_name_and_id('passive');?> value="1" <?php if ($opts['passive']) echo 'checked="checked"'; ?> /> <br><em><?php echo __('Almost all FTP servers will want passive mode; but if you need active mode, then uncheck this.', 'updraftplus');?></em></td>
 		</tr>
-		<tr class="updraftplusmethod ftp">
-		<th></th>
-		<td><p><button id="updraft-ftp-test" type="button" class="button-primary updraft-test-button" data-method="ftp" data-method_label="FTP"><?php printf(__('Test %s Settings', 'updraftplus'), 'FTP');?></button></p></td>
-		</tr>
+		
 		<?php
-	}
-
-	public function get_credentials() {
-		return array('updraft_ftp', 'updraft_ssl_disableverify', 'updraft_ssl_nossl', 'updraft_ssl_useservercerts');
+		
+		echo $this->get_test_button_html('FTP');
+		
 	}
 
 	public function credentials_test($posted_settings) {

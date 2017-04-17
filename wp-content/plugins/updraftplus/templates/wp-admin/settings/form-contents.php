@@ -147,12 +147,57 @@ foreach ($default_options as $k => $v) {
 	<?php
 		$method_objects = array();
 		foreach ($updraftplus->backup_methods as $method => $description) {
-			do_action('updraftplus_config_print_before_storage', $method);
+		
 			require_once(UPDRAFTPLUS_DIR.'/methods/'.$method.'.php');
+			
 			$call_method = 'UpdraftPlus_BackupModule_'.$method;
+			
 			if (class_exists($call_method)) {
-				$method_objects[$method] = new $call_method;
-				$method_objects[$method]->config_print();
+			
+				$remote_storage = new $call_method;
+				$method_objects[$method] = $remote_storage;
+				
+				if ($remote_storage->supports_feature('multi_options')) {
+				
+					$settings = UpdraftPlus_Options::get_updraft_option('updraft_'.$method);
+					
+					if (!is_array($settings)) $settings = array();
+				
+					if (!isset($settings['version'])) $settings = $updraftplus->update_remote_storage_options_format($method);
+					
+					if (is_wp_error($settings)) {
+						error_log("UpdraftPlus: failed to convert storage options format: $method");
+						$settings = array('settings' => array());
+					}
+
+					if (empty($settings['settings'])) {
+						// See: https://wordpress.org/support/topic/cannot-setup-connectionauthenticate-with-dropbox/
+						error_log("UpdraftPlus: Warning: settings for $method are empty. A dummy field is usually needed so that something is saved.");
+						
+						// Try to recover by getting a default set of options for display
+						if (is_callable(array($remote_storage, 'get_default_options'))) {
+							$uuid = 's-'.md5(rand().uniqid().microtime(true));
+							$settings['settings'] = array($uuid => $remote_storage->get_default_options());
+						}
+						
+					}
+
+					if (!empty($settings['settings'])) {
+						foreach ($settings['settings'] as $instance_id => $storage_options) {
+							$remote_storage->set_options($storage_options, false, $instance_id);
+							do_action('updraftplus_config_print_before_storage', $method, $remote_storage);
+							$remote_storage->print_configuration();
+						}
+					}
+				
+				} else {
+				
+					do_action('updraftplus_config_print_before_storage', $method, null);
+				
+					$remote_storage->config_print();
+					
+				}
+				
 				do_action('updraftplus_config_print_after_storage', $method);
 			} else {
 				error_log("UpdraftPlus: no such storage class: $call_method");
@@ -297,7 +342,7 @@ foreach ($default_options as $k => $v) {
 
 <script type="text/javascript">
 /* <![CDATA[ */
-<?php echo $updraftplus_admin->get_settings_js($method_objects, $really_is_writable, $updraft_dir); ?>
+<?php echo $updraftplus_admin->get_settings_js($method_objects, $really_is_writable, $updraft_dir, $active_service); ?>
 /* ]]> */
 </script>
 <table class="form-table width-900">

@@ -1,6 +1,10 @@
 <?php
 
-class UpdraftPlus_BackupModule_openstack_base {
+if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed.');
+
+if (!class_exists('UpdraftPlus_BackupModule')) require_once(UPDRAFTPLUS_DIR.'/methods/backup-module.php');
+
+class UpdraftPlus_BackupModule_openstack_base extends UpdraftPlus_BackupModule {
 
 	protected $chunk_size;
 
@@ -25,7 +29,7 @@ class UpdraftPlus_BackupModule_openstack_base {
 
 		$this->chunk_size = $updraftplus->jobdata_get('openstack_chunk_size', $default_chunk_size);
 		
-		$opts = $this->get_opts();
+		$opts = $this->get_options();
 
 		$this->container = $opts['path'];
 
@@ -96,7 +100,7 @@ class UpdraftPlus_BackupModule_openstack_base {
 	}
 
 	public function listfiles($match = 'backup_') {
-		$opts = $this->get_opts();
+		$opts = $this->get_options();
 		$container = $opts['path'];
 		$path = $container;
 
@@ -290,7 +294,7 @@ class UpdraftPlus_BackupModule_openstack_base {
 			$container = $data['container'];
 			$path = $data['orig_path'];
 		} else {
-			$opts = $this->get_opts();
+			$opts = $this->get_options();
 			$container = $opts['path'];
 			$path = $container;
 			try {
@@ -356,7 +360,7 @@ class UpdraftPlus_BackupModule_openstack_base {
 
 		global $updraftplus;
 
-		$opts = $this->get_opts();
+		$opts = $this->get_options();
 
 		try {
 			$service = $this->get_service($opts, UpdraftPlus_Options::get_updraft_option('updraft_ssl_useservercerts'), UpdraftPlus_Options::get_updraft_option('updraft_ssl_disableverify'));

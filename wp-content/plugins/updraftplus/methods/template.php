@@ -19,7 +19,9 @@ Some handy tips:
 
 if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed.');
 
-class UpdraftPlus_BackupModule_template {
+if (!class_exists('UpdraftPlus_BackupModule')) require_once(UPDRAFTPLUS_DIR.'/methods/backup-module.php');
+
+class UpdraftPlus_BackupModule_template extends UpdraftPlus_BackupModule {
 
 	// backup method: takes an array, and shovels them off to the cloud storage
 	public function backup($backup_array) {
