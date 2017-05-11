@@ -21,7 +21,7 @@
 
     <meta name="description" content="<?php the_post();echo get_the_excerpt(); ?>">
     <meta property="og:description" content="<?php echo get_the_excerpt(); ?>">
-    <?php $og_image = $cfs->get('og_image') ? $cfs->get('og_image') : "https://thesocietea.org/assets/images/dist/ak-smile-optimized.jpg"; ?>
+    <?php $og_image = CFS()->get('og_image') ? CFS()->get('og_image') : "https://thesocietea.org/assets/images/dist/ak-smile-optimized.jpg"; ?>
     <meta property="og:image" content="<?php echo $og_image; ?>">
     <meta property="og:title" content="<?php wp_title( '|', true, 'right' ); ?>">
     <meta property="og:type" content="website" />

@@ -18,7 +18,7 @@
 
   <div class="entry-content">
     <div class="pre-post-content">
-      <?php echo $cfs->get('pre_post_content'); ?>
+      <?php echo CFS()->get('pre_post_content'); ?>
     </div>
     <?php the_content(); ?>
  <?php

@@ -74,7 +74,7 @@ get_header(); ?>
         <div class="container-padding">
           <div class="home-projects-list">
             <?php
-              $fields = $cfs->get('projects');
+              $fields = CFS()->get('projects');
               if($fields):
             ?>
               <?php foreach($fields as $index => $field): ?>

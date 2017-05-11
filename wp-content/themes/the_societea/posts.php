@@ -7,7 +7,7 @@ get_header(); ?>
 
 	<div id="primary" class="content-area">
     <main id="main" class="blogs-page site-main scene_element scene_element--fadein" role="main">
-      <div class="subpage-header-image" style="background-image: url('<?php echo $cfs->get('header_image'); ?>');"></div>
+      <div class="subpage-header-image" style="background-image: url('<?php echo CFS()->get('header_image'); ?>');"></div>
       <div class="subpage-header-overlay"></div>
       <div class="subpage-title">
         <div class="container">
@@ -54,7 +54,7 @@ get_header(); ?>
         <div class="container">
           <div class="blog-list">
           <?php
-            $post_type = $cfs->get('post_type');
+            $post_type = CFS()->get('post_type');
             $paged = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
             $args=array('post_type' => $post_type, 's' => $_GET['search'], 'posts_per_page' => 18, 'post_status' => 'publish', 'paged' => $paged, 'has_password' => false);
             $my_query = new WP_Query($args);

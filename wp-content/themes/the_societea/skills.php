@@ -7,7 +7,7 @@ get_header(); ?>
 
 	<div id="primary" class="content-area">
     <main id="main" class="site-main scene_element scene_element--fadein" role="main">
-      <div class="subpage-header-image" style="background-image: url('<?php echo $cfs->get('header_image'); ?>');"
+      <div class="subpage-header-image" style="background-image: url('<?php echo CFS()->get('header_image'); ?>');"
   data-start="background-position: 50% 55%;"
   data-400="background-position: 50% 40%;"
 ></div>
@@ -28,7 +28,7 @@ get_header(); ?>
             <div class="entry-content">
               <?php the_content(); ?>
             </div>
-            <?php $categories = $cfs->get('categories'); ?>
+            <?php $categories = CFS()->get('categories'); ?>
             <?php if($categories): ?>
               <?php foreach($categories as $category): ?>
                 <div class="skill-category">

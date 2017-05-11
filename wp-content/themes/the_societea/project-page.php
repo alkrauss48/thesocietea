@@ -12,7 +12,7 @@
       <div class="container">
         <?php the_title( '<h2 class="entry-title">', '</h2>' ); ?>
         <?php
-          $link = $cfs->get('link');
+          $link = CFS()->get('link');
           if($link):
         ?>
           <p class="entry-title-link-extra"><a href="<?php echo $link; ?>" target="_blank">Visit <i class="icon2-play"></i></a></p>
@@ -24,14 +24,14 @@
   <div class="entry-content">
     <div class="container-padding">
       <div class="container">
-        <p><strong>Project Type: </strong><?php echo $cfs->get('project_type'); ?></p>
-        <p><strong>Languages Used: </strong><?php echo $cfs->get('languages'); ?></p>
-        <!-- <p><strong>Role: </strong><?php echo $cfs->get('role'); ?></p> -->
+        <p><strong>Project Type: </strong><?php echo CFS()->get('project_type'); ?></p>
+        <p><strong>Languages Used: </strong><?php echo CFS()->get('languages'); ?></p>
+        <!-- <p><strong>Role: </strong><?php echo CFS()->get('role'); ?></p> -->
         <p><strong>Company: </strong>
-        <?php if($cfs->get('company_link')): ?>
-          <a class="project-link" target="_blank" href="<?php echo $cfs->get('company_link') ?>"><?php echo $cfs->get('company') ?></a>
+        <?php if(CFS()->get('company_link')): ?>
+          <a class="project-link" target="_blank" href="<?php echo CFS()->get('company_link') ?>"><?php echo CFS()->get('company') ?></a>
         <?php else: ?>
-          <?php echo $cfs->get('company') ?>
+          <?php echo CFS()->get('company') ?>
         <?php endif; ?>
         </p>
         <!-- <br /> -->
@@ -45,7 +45,7 @@
     <div class="container">
       <div>
         <?php
-          $fields = $cfs->get('screenshots');
+          $fields = CFS()->get('screenshots');
           if($fields):
         ?>
           <?php foreach($fields as $field): ?>
