@@ -157,7 +157,7 @@ class wfSchema {
 	owner text,
 	host text,
 	path text,
-	hostKey binary(4),
+	hostKey varbinary(124),
 	KEY k2(hostKey)
 ) default charset=utf8",
 'wfFileMods' => "(

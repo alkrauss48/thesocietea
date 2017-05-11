@@ -92,7 +92,7 @@ class wordfence {
 			$schema->dropAll();
 			wfConfig::updateTableExists();
 			foreach(array('wordfence_version', 'wordfenceActivated') as $opt){
-				if (is_multisite()) {
+				if (is_multisite() && function_exists('delete_network_option')) {
 					delete_network_option(null, $opt);
 				}
 				delete_option($opt);
@@ -364,8 +364,8 @@ class wordfence {
 		if (function_exists('ignore_user_abort')) {
 			ignore_user_abort(true);
 		}
-		$previous_version = (is_multisite() ? get_network_option(null, 'wordfence_version', '0.0.0') : get_option('wordfence_version', '0.0.0'));
-		if (is_multisite()) {
+		$previous_version = ((is_multisite() && function_exists('get_network_option')) ? get_network_option(null, 'wordfence_version', '0.0.0') : get_option('wordfence_version', '0.0.0'));
+		if (is_multisite() && function_exists('update_network_option')) {
 			update_network_option(null, 'wordfence_version', WORDFENCE_VERSION); //In case we have a fatal error we don't want to keep running install.	
 		}
 		else {
@@ -700,6 +700,20 @@ SQL
 			$wpdb->query("ALTER TABLE {$fileModsTable} ADD COLUMN `isSafeFile` VARCHAR(1) NOT NULL  DEFAULT '?' AFTER `stoppedOnPosition`");
 		}
 		
+		//6.3.7
+		$hooverTable = wfDB::networkPrefix() . 'wfHoover';
+		$hostKeySize = $wpdb->get_var($wpdb->prepare(<<<SQL
+SELECT CHARACTER_MAXIMUM_LENGTH FROM information_schema.COLUMNS
+WHERE TABLE_SCHEMA=DATABASE()
+AND COLUMN_NAME='hostKey'
+AND TABLE_NAME=%s
+SQL
+			, $hooverTable));
+		if ($hostKeySize < 124) {
+			$wpdb->query("ALTER TABLE {$hooverTable} CHANGE `hostKey` `hostKey` VARBINARY(124) NULL DEFAULT NULL");
+		}
+		
+		
 		//Check the How does Wordfence get IPs setting
 		wfUtils::requestDetectProxyCallback();
 
@@ -752,7 +766,7 @@ SQL
 		register_activation_hook(WORDFENCE_FCPATH, 'wordfence::installPlugin');
 		register_deactivation_hook(WORDFENCE_FCPATH, 'wordfence::uninstallPlugin');
 
-		$versionInOptions = (is_multisite() ? get_network_option(null, 'wordfence_version', false) : get_option('wordfence_version', false));
+		$versionInOptions = ((is_multisite() && function_exists('get_network_option')) ? get_network_option(null, 'wordfence_version', false) : get_option('wordfence_version', false));
 		if( (! $versionInOptions) || version_compare(WORDFENCE_VERSION, $versionInOptions, '>')){
 			//Either there is no version in options or the version in options is greater and we need to run the upgrade
 			self::runInstall();
@@ -6041,9 +6055,13 @@ HTML
 		self::status(10, 'info', "SUM_PAIDONLY:" . $msg);
 	}
 	public static function wfSchemaExists(){
-		$db = new wfDB();
-		global $wpdb; $prefix = $wpdb->base_prefix;
-		$exists = $db->querySingle("show tables like '$prefix"."wfConfig'");
+		global $wpdb;
+		$exists = $wpdb->get_col($wpdb->prepare(<<<SQL
+SELECT TABLE_NAME FROM information_schema.TABLES
+WHERE TABLE_SCHEMA=DATABASE()
+AND TABLE_NAME=%s
+SQL
+			, $wpdb->base_prefix . 'wfConfig'));
 		return $exists ? true : false;
 	}
 	public static function isDebugOn(){

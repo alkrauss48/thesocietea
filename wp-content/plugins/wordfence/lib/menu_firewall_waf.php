@@ -236,7 +236,7 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&wafAction=removeA
 							<label class="wf-checkbox-inline"><input type="checkbox" id="waf-disable-ip-blocking" name="waf-disable-ip-blocking" value="1"<?php echo $config->getConfig('disableWAFIPBlocking') ? ' checked' : ''; ?>>Delay IP and Country blocking until after WordPress and plugins have loaded (only process firewall rules early) <a href="https://docs.wordfence.com/en/WAF#Advanced_Configuration" target="_blank" class="wfhelp"></a></label>
 						</div>
 						<div class="wf-col-xs-12">
-							<label class="wf-checkbox-inline"><input type="checkbox" id="waf-disable-blacklist-blocking" name="waf-disable-blacklist-blocking" value="1"<?php echo !$config->getConfig('disableWAFBlacklistBlocking') ? ' checked' : ''; ?>>Preemptively block malicious IP addresses <span style="color: #F00;">Premium Feature</span> <a href="https://docs.wordfence.com/en/WAF#Advanced_Configuration" target="_blank" class="wfhelp"></a></label> 
+							<label class="wf-checkbox-inline<?php echo (wfConfig::p() ? '' : ' wf-disabled'); ?>"><input type="checkbox" id="waf-disable-blacklist-blocking" name="waf-disable-blacklist-blocking" value="1"<?php echo !$config->getConfig('disableWAFBlacklistBlocking') ? ' checked' : ''; echo (wfConfig::p() ? '' : ' disabled'); ?>>Preemptively block malicious IP addresses <span style="color: #F00;">Premium Feature</span> <a href="https://docs.wordfence.com/en/WAF#Advanced_Configuration" target="_blank" class="wfhelp"></a></label> 
 						</div>
 					</div>
 				</div>

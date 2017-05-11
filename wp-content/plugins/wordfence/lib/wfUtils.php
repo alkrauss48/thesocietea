@@ -1476,7 +1476,7 @@ class wfUtils {
 			$span = '<span style="color:#587ECB">';
 		}
 		
-		for ($i = 0; $i < strlen($string); $i++) {
+		for ($i = 0; $i < wfUtils::strlen($string); $i++) {
 			$c = $string[$i];
 			$b = ord($c);
 			if ($b < 0x20) {
@@ -1494,7 +1494,7 @@ class wfUtils {
 					$test = (($test << 1) & 0xff);
 				}
 				
-				$brokenUTF8 = ($i + $bytes > strlen($string) || $bytes == 1);
+				$brokenUTF8 = ($i + $bytes > wfUtils::strlen($string) || $bytes == 1);
 				if (!$brokenUTF8) { //Make sure we have all the bytes
 					for ($n = 1; $n < $bytes; $n++) {
 						$c2 = $string[$i + $n];
@@ -1935,6 +1935,24 @@ class wfUtils {
 	public static function strrpos($haystack, $needle, $offset = 0) {
 		$args = func_get_args();
 		return self::callMBSafeStrFunction('strrpos', $args);
+	}
+	
+	public static function array_first($array) {
+		if (empty($array)) {
+			return null;
+		}
+		
+		$values = array_values($array);
+		return $values[0];
+	}
+	
+	public static function array_last($array) {
+		if (empty($array)) {
+			return null;
+		}
+		
+		$values = array_values($array);
+		return $values[count($values) - 1];
 	}
 	
 	/**

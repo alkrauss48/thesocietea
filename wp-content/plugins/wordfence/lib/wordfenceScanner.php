@@ -444,7 +444,7 @@ class wordfenceScanner {
 					continue;
 				}
 				
-				if($result['badList'] == 'goog-malware-shavar'){
+				if ($result['badList'] == 'goog-malware-shavar') {
 					$this->addResult(array(
 						'type' => 'file',
 						'severity' => 1,
@@ -459,7 +459,8 @@ class wordfenceScanner {
 							'gsb' => 'goog-malware-shavar'
 						), $dataForFile),
 					));
-				} else if($result['badList'] == 'googpub-phish-shavar'){
+				}
+				else if ($result['badList'] == 'googpub-phish-shavar') {
 					$this->addResult(array(
 						'type' => 'file',
 						'severity' => 1,
@@ -472,6 +473,22 @@ class wordfenceScanner {
 							'shac' => $record->SHAC,
 							'badURL' => $result['URL'],
 							'gsb' => 'googpub-phish-shavar'
+						), $dataForFile),
+					));
+				}
+				else if ($result['badList'] == 'wordfence-dbl') {
+					$this->addResult(array(
+						'type' => 'file',
+						'severity' => 1,
+						'ignoreP' => $this->path . $file,
+						'ignoreC' => md5_file($this->path . $file),
+						'shortMsg' => "File contains suspected malware URL: " . esc_html($this->path . $file),
+						'longMsg' => "This file contains a URL that is currently listed on Wordfence's domain blacklist. The URL is: " . esc_html($result['URL']),
+						'data' => array_merge(array(
+							'file' => $file,
+							'shac' => $record->SHAC,
+							'badURL' => $result['URL'],
+							'gsb' => 'wordfence-dbl'
 						), $dataForFile),
 					));
 				}

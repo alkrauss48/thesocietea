@@ -25,10 +25,10 @@ class wfIssues {
 		$this->db = new wfDB();
 	}
 	public function addIssue($type, $severity,  $ignoreP, $ignoreC, $shortMsg, $longMsg, $templateData, $alreadyHashed = false) {
-		$this->_addIssue('issue', $type, $severity, $ignoreP, $ignoreC, $shortMsg, $longMsg, $templateData, $alreadyHashed);
+		return $this->_addIssue('issue', $type, $severity, $ignoreP, $ignoreC, $shortMsg, $longMsg, $templateData, $alreadyHashed);
 	}
 	public function addPendingIssue($type, $severity,  $ignoreP, $ignoreC, $shortMsg, $longMsg, $templateData) {
-		$this->_addIssue('pending', $type, $severity, $ignoreP, $ignoreC, $shortMsg, $longMsg, $templateData);
+		return $this->_addIssue('pending', $type, $severity, $ignoreP, $ignoreC, $shortMsg, $longMsg, $templateData);
 	}
 	private function _addIssue($group, $type, $severity,
 		$ignoreP, /* some piece of data used for md5 for permanent ignores */ 
@@ -351,7 +351,7 @@ class wfIssues {
 		$res1 = $wpdb->get_col("SELECT count(*) as cnt FROM $wpdb->posts where post_type='post' and post_status NOT IN ('auto-draft')"); $dat['totalPosts'] = $res1['0'];
 		$res1 = $wpdb->get_col("SELECT count(*) as cnt FROM $wpdb->comments"); $dat['totalComments'] = $res1['0'];
 		$res1 = $wpdb->get_col("SELECT count(*) as cnt FROM $wpdb->term_taxonomy where taxonomy='category'"); $dat['totalCategories'] = $res1['0'];
-		$res1 = $wpdb->get_col("show tables"); $dat['totalTables'] = sizeof($res1);
+		$res1 = $wpdb->get_col("SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE()"); $dat['totalTables'] = sizeof($res1);
 		$totalRows = 0;
 		foreach($res1 as $table){
 			$res2 = $wpdb->get_col("select count(*) from `$table`");
