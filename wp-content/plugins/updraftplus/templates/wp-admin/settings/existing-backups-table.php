@@ -4,6 +4,8 @@ if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed');
 
 $accept = apply_filters('updraftplus_accept_archivename', array());
 if (!is_array($accept)) $accept = array();
+$image_folder = UPDRAFTPLUS_DIR.'/images/icons/';
+$image_folder_url = UPDRAFTPLUS_URL.'/images/icons/';  
 
 ?>
 <table class="existing-backups-table">
@@ -54,7 +56,22 @@ if (!is_array($accept)) $accept = array();
 			<tr class="updraft_existing_backups_row updraft_existing_backups_row_<?php echo $key;?>" data-key="<?php echo $key;?>" data-nonce="<?php echo $non;?>">
 
 				<td class="updraft_existingbackup_date " data-rawbackup="<?php echo $rawbackup;?>">
-					<?php echo $date_label;?>
+					<div class="backup_date_label">
+						<?php echo $date_label;?>
+						<?php
+							if (!is_array($backup['service'])) $backup['service'] = array($backup['service']);
+							foreach ($backup['service'] as $service) {  
+								if ('none' === $service || '' === $service || (is_array($service) && (empty($service) || $service === array('none')))) {
+									// Do nothing
+								} else {
+									$image_url = file_exists($image_folder.$service.'.png') ? $image_folder_url.$service.'.png' : $image_folder_url.'folder.png';
+									?>
+									<img class="stored_icon" src="<?php echo esc_attr($image_url);?>" title="<?php echo esc_attr(sprintf(__('Stored at: %s', 'updraftplus'), $updraftplus->backup_methods[$service]));?>">
+						<?php
+								}	 	
+							}
+						?>
+					</div>
 				</td>
 				
 				<td><?php
@@ -106,7 +123,6 @@ if (!is_array($accept)) $accept = array();
 					if (empty($backup['meta_foreign'])) echo $log_button;
 					?>
 				</td>
-
 			</tr>
 
 			<tr style="height:2px; padding:1px; margin:0px;">

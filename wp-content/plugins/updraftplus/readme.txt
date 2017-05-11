@@ -3,7 +3,7 @@ Contributors: Backup with UpdraftPlus, DavidAnderson, DNutbourne, aporter, snigh
 Tags: backup, restore, database backup, wordpress backup, cloud backup, s3, dropbox, google drive, onedrive, ftp, backups
 Requires at least: 3.2
 Tested up to: 4.7
-Stable tag: 1.12.40
+Stable tag: 1.13.1
 Author URI: https://updraftplus.com
 Donate link: https://david.dw-perspective.org.uk/donate
 License: GPLv3 or later
@@ -125,7 +125,18 @@ Thanks for asking; yes, we've got a few. Check out this profile page - https://p
 
 The <a href="https://updraftplus.com/news/">UpdraftPlus backup blog</a> is the best place to learn in more detail about any important changes.
 
-N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.12.38 of the free version correspond to changes made in 2.12.38.x of the paid version.
+N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.13.1 of the free version correspond to changes made in 2.13.1.x of the paid version.
+
+= 1.13.1 - 09/May/2017 =
+
+* REFACTOR: Completed re-factoring of the remote storage modules, so that now all remote storage code has completed this current stage of re-factoring (more to come in future - laying the foundation for a significant new feature)
+* FIX: Added a nonce to the Dropbox deauth link. This is a minor security issue - someone personally targetting you, who knew that you were logged in to your WordPress admin, and who could persuade you to visit a personally-crafted web page, could cause the connection between UpdraftPlus and your Dropbox to be broken. The only impact of this is that the sending of your next backup to Dropbox would fail, and you would be alerted about the need to re-connect.
+* FIX: Import settings now handle the new remote storage options format
+* TWEAK: Added a version check when saving settings to prevent errors or lost settings
+* TWEAK: 'Existing Backups' table now shows an icon for each remote destination that the backup was sent to
+* TWEAK: Update SSL CA certificates file
+* TWEAK: If, when uploading to S3, a file is not found, handle it slightly more elegantly
+* TWEAK: Work with some WebDAV servers that previously sent empty responses to OPTIONS requests
 
 = 1.12.40 - 01/Apr/2017 =
 
@@ -447,4 +458,4 @@ We recognise and thank the following for code and/or libraries used and/or modif
 
 
 == Upgrade Notice ==
-* 1.12.40: The free version of 1.12.37/38 in some circumstances could fail to complete Dropbox authentication; and for new users, the Google Drive settings might fail to show.
+* 1.13.1: Complete remote storage module re-factoring. Minor Dropbox security fix. Fix import settings function. Other small tweaks.

@@ -123,8 +123,8 @@ class UpdraftPlus_Options {
 		register_setting('updraft-options-group', 'updraft_azure', array($updraftplus, 'azure_checkchange'));
 		register_setting('updraft-options-group', 'updraft_googlecloud', array($updraftplus, 'googlecloud_checkchange'));
 
-		register_setting('updraft-options-group', 'updraft_sftp_settings');
-		register_setting('updraft-options-group', 'updraft_webdav_settings', array($updraftplus, 'construct_webdav_url'));
+		register_setting('updraft-options-group', 'updraft_sftp');
+		register_setting('updraft-options-group', 'updraft_webdav', array($updraftplus, 'construct_webdav_url'));
 
 		register_setting('updraft-options-group', 'updraft_ssl_nossl', 'absint');
 		register_setting('updraft-options-group', 'updraft_log_syslog', 'absint');

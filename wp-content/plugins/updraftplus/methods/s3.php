@@ -2,18 +2,7 @@
 
 if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed.');
 
-# Migrate options to new-style storage - Jan 2014
-if (!is_array(UpdraftPlus_Options::get_updraft_option('updraft_s3')) && '' != UpdraftPlus_Options::get_updraft_option('updraft_s3_login', '')) {
-	$opts = array(
-		'accesskey' => UpdraftPlus_Options::get_updraft_option('updraft_s3_login'),
-		'secretkey' => UpdraftPlus_Options::get_updraft_option('updraft_s3_pass'),
-		'path' => UpdraftPlus_Options::get_updraft_option('updraft_s3_remote_path')
-	);
-	UpdraftPlus_Options::update_updraft_option('updraft_s3', $opts);
-	UpdraftPlus_Options::delete_updraft_option('updraft_s3_login');
-	UpdraftPlus_Options::delete_updraft_option('updraft_s3_pass');
-	UpdraftPlus_Options::delete_updraft_option('updraft_s3_remote_path');
-}
+# Converted to multi-options (Feb 2017-) and previous options conversion removed: Yes
 
 // This class is used by both UpdraftPlus_S3 and UpdraftPlus_S3_Compat
 class UpdraftPlus_S3Exception extends Exception {
@@ -35,18 +24,39 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 	protected $s3_exception;
 	protected $download_chunk_size = 10485760;
 
+	/**
+	 * Retrieve specific options for this remote storage module
+	 * @return Array - an array of options
+	 */
 	protected function get_config() {
-		global $updraftplus;
-		$opts = $updraftplus->get_job_option('updraft_s3');
-		if (!is_array($opts)) $opts = array('accesskey' => '', 'secretkey' => '', 'path' => '');
+		$opts = $this->get_options();
 		$opts['whoweare'] = 'S3';
 		$opts['whoweare_long'] = 'Amazon S3';
 		$opts['key'] = 's3';
 		return $opts;
 	}
 
-	public function get_credentials() {
-		return array('updraft_s3');
+	/**
+	 * This method overrides the parent method and lists the supported features of this remote storage option.
+	 * @return Array - an array of supported features (any features not mentioned are asuumed to not be supported)
+	 */
+	public function get_supported_features() {
+		// This options format is handled via only accessing options via $this->get_options()
+		return array('multi_options');
+	}
+
+	/**
+	 * Retrieve default options for this remote storage module.
+	 * @return Array - an array of options
+	 */
+	public function get_default_options() {
+		return array(
+			'accesskey' => '',
+			'secretkey' => '',
+			'path' => '',
+			'rrs' => '',
+			'server_side_encryption' => '',
+		);
 	}
 
 	protected function indicate_s3_class() {
@@ -304,6 +314,12 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 				// N.B.: 5MB is Amazon's minimum. So don't go lower or you'll break it.
 				$fullpath = $updraft_dir.$file;
 				$orig_file_size = filesize($fullpath);
+				
+				if (!file_exists($fullpath)) {
+					$updraftplus->log("File not found: $file: $whoweare: ".$e->getMessage().' (line: '.$e->getLine().', file: '.$e->getFile());
+					$updraftplus->log("$file: ".sprintf(__('Error: %s','updraftplus'), __('File not found', 'updraftplus')), 'error');
+					continue;
+				}
 
 				if (isset($config['quota']) && method_exists($this, 's3_get_quota_info')) {
 					$quota_used = $this->s3_get_quota_info('numeric', $config['quota']);
@@ -767,8 +783,10 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 	public function config_print_engine($key, $whoweare_short, $whoweare_long, $console_descrip, $console_url, $img_html = '', $include_endpoint_chooser = false) {
 
 		$opts = $this->get_config();
+
+		$classes = $this->get_css_classes();
 		?>
-		<tr class="updraftplusmethod <?php echo $key; ?>">
+		<tr class="<?php echo $classes;?>">
 			<td></td>
 			<td><?php echo $img_html ?><p><em><?php printf(__('%s is a great choice, because UpdraftPlus supports chunked uploads - no matter how big your site is, UpdraftPlus can upload it a little at a time, and not get thwarted by timeouts.','updraftplus'),$whoweare_long);?></em></p>
 			<?php
@@ -785,7 +803,7 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 			?>
 			</td>
 		</tr>
-		<tr class="updraftplusmethod <?php echo $key; ?>">
+		<tr class="<?php echo $classes;?>">
 		<th></th>
 		<td>
 		<?php
@@ -805,7 +823,7 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 
 		</td>
 		</tr>
-		<tr class="updraftplusmethod <?php echo $key; ?>">
+		<tr class="<?php echo $classes;?>">
 		<th></th>
 		<td>
 			<p>
@@ -817,12 +835,12 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 			</p>
 		</td></tr>
 		<?php if (!empty($include_endpoint_chooser)) { ?>
-			<tr class="updraftplusmethod <?php echo $key; ?>">
+			<tr class="<?php echo $classes;?>">
 				<th><?php echo sprintf(__('%s end-point','updraftplus'), $whoweare_short);?>:</th>
 				<td>
 					<?php
 					if (is_array($include_endpoint_chooser)) {
-						?><select data-updraft_settings_test="endpoint" id="updraft_<?php echo $key; ?>_endpoint" name="updraft_<?php echo $key; ?>[endpoint]" style="width: 360px">
+						?><select data-updraft_settings_test="endpoint" <?php $this->output_settings_field_name_and_id('endpoint');?> style="width: 360px">
 						<?php
 						$selected_endpoint = (!empty($opts['endpoint']) && in_array($opts['endpoint'], $include_endpoint_chooser)) ? $opts['endpoint'] : $include_endpoint_chooser[0];
 						foreach ($include_endpoint_chooser as $endpoint) {
@@ -831,37 +849,36 @@ class UpdraftPlus_BackupModule_s3 extends UpdraftPlus_BackupModule {
 					} else {
 						echo '</select>';
 					?>
-					<input data-updraft_settings_test="endpoint" type="text" style="width: 360px" id="updraft_<?php echo $key; ?>_endpoint" name="updraft_<?php echo $key; ?>[endpoint]" value="<?php if (!empty($opts['endpoint'])) echo esc_attr($opts['endpoint']); ?>" />
+					<input data-updraft_settings_test="endpoint" type="text" style="width: 360px" <?php $this->output_settings_field_name_and_id('endpoint');?> value="<?php if (!empty($opts['endpoint'])) echo esc_attr($opts['endpoint']); ?>" />
 					<?php } ?>
 				</td>
 			</tr>
 		<?php } else { ?>
-			<input data-updraft_settings_test="endpoint" type="hidden" id="updraft_<?php echo $key; ?>_endpoint" name="updraft_<?php echo $key; ?>_endpoint" value="">
+			<input data-updraft_settings_test="endpoint" type="hidden" <?php $this->output_settings_field_name_and_id('endpoint');?> value="">
 		<?php } ?>
 		<?php if ('s3' == $key && version_compare(PHP_VERSION, '5.3.3', '>=') && class_exists('UpdraftPlus_Addon_S3_Enhanced')) { ?>
-			<tr class="updraftplusmethod <?php echo $key; ?>">
+			<tr class="<?php echo $classes;?>">
 				<th></th>
 				<td><?php echo apply_filters('updraft_s3_apikeysetting', '<a href="'.apply_filters("updraftplus_com_link","https://updraftplus.com/shop/s3-enhanced/").'"><em>'.__('To create a new IAM sub-user and access key that has access only to this bucket, use this add-on.', 'updraftplus').'</em></a>'); ?></td>
 			</tr>
 		<?php } ?>
 
-		<tr class="updraftplusmethod <?php echo $key; ?>">
+		<tr class="<?php echo $classes;?>">
 			<th><?php echo sprintf(__('%s access key','updraftplus'), $whoweare_short);?>:</th>
-			<td><input data-updraft_settings_test="apikey" type="text" autocomplete="off" style="width: 360px" id="updraft_<?php echo $key; ?>_apikey" name="updraft_<?php echo $key; ?>[accesskey]" value="<?php echo esc_attr($opts['accesskey']); ?>" /></td>
+			<td><input data-updraft_settings_test="apikey" type="text" autocomplete="off" style="width: 360px" <?php $this->output_settings_field_name_and_id('accesskey');?> value="<?php echo esc_attr($opts['accesskey']); ?>" /></td>
 		</tr>
-		<tr class="updraftplusmethod <?php echo $key; ?>">
+		<tr class="<?php echo $classes;?>">
 			<th><?php echo sprintf(__('%s secret key','updraftplus'), $whoweare_short);?>:</th>
-			<td><input data-updraft_settings_test="apisecret" type="<?php echo apply_filters('updraftplus_admin_secret_field_type', 'password'); ?>" autocomplete="off" style="width: 360px" id="updraft_<?php echo $key; ?>_apisecret" name="updraft_<?php echo $key; ?>[secretkey]" value="<?php echo esc_attr($opts['secretkey']); ?>" /></td>
+			<td><input data-updraft_settings_test="apisecret" type="<?php echo apply_filters('updraftplus_admin_secret_field_type', 'password'); ?>" autocomplete="off" style="width: 360px" <?php $this->output_settings_field_name_and_id('secretkey');?> value="<?php echo esc_attr($opts['secretkey']); ?>" /></td>
 		</tr>
-		<tr class="updraftplusmethod <?php echo $key; ?>">
+		<tr class="<?php echo $classes;?>">
 			<th><?php echo sprintf(__('%s location','updraftplus'), $whoweare_short);?>:</th>
-			<td><?php echo $key; ?>://<input data-updraft_settings_test="path" title="<?php echo htmlspecialchars(__('Enter only a bucket name or a bucket and path. Examples: mybucket, mybucket/mypath', 'updraftplus')); ?>" type="text" style="width: 360px" name="updraft_<?php echo $key; ?>[path]" id="updraft_<?php echo $key; ?>_path" value="<?php echo esc_attr($opts['path']); ?>" /></td>
+			<td><?php echo $key; ?>://<input data-updraft_settings_test="path" title="<?php echo htmlspecialchars(__('Enter only a bucket name or a bucket and path. Examples: mybucket, mybucket/mypath', 'updraftplus')); ?>" type="text" style="width: 360px" <?php $this->output_settings_field_name_and_id('path');?> value="<?php echo esc_attr($opts['path']); ?>" /></td>
 		</tr>
-		<?php do_action('updraft_'.$key.'_extra_storage_options', $opts); ?>
-		<tr class="updraftplusmethod <?php echo $key; ?>">
-			<th></th>
-			<td><p><button id="updraft-<?php echo $key; ?>-test" type="button" class="button-primary updraft-test-button" data-method_label="<?php esc_attr_e($whoweare_short);?>" data-method="<?php echo $key;?>"><?php echo htmlspecialchars(sprintf(__('Test %s Settings','updraftplus'),$whoweare_short));?></button></p></td>
-		</tr>
+		<?php 
+			do_action('updraft_'.$key.'_extra_storage_options', $this);
+			echo $this->get_test_button_html($whoweare_short);
+		?>
 
 	<?php
 	}

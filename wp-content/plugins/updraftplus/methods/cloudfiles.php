@@ -43,10 +43,21 @@ class UpdraftPlus_BackupModule_cloudfiles_oldsdk extends UpdraftPlus_BackupModul
 
 	}
 
-	public function get_credentials() {
-		return array('updraft_cloudfiles');
+	/**
+	 * This method overrides the parent method and lists the supported features of this remote storage option.
+	 * @return Array - an array of supported features (any features not
+	 * mentioned are assumed to not be supported)
+	 */
+	public function get_supported_features() {
+		// This options format is handled via only accessing options via $this->get_options()
+		return array('multi_options');
 	}
 
+	/**
+	 * Retrieve default options for this remote storage module.
+	 * 
+	 * @return Array - an array of options
+	 */
 	public function get_default_options() {
 		return array(
 			'user' => '',
@@ -414,18 +425,24 @@ class UpdraftPlus_BackupModule_cloudfiles_oldsdk extends UpdraftPlus_BackupModul
 
 	}
 
+	/**
+	 * This outputs the html to the settings page for the CloudFiles settings.
+	 * @param  Array $opts - this is an array of CloudFiles settings
+	 */
 	public function config_print() {
 
 		$opts = $this->get_options();
 
+		$classes = $this->get_css_classes();
+
 		?>
-		<tr class="updraftplusmethod cloudfiles">
+		<tr class="<?php echo $classes; ?>">
 			<td></td>
 			<td><img alt="Rackspace Cloud Files" src="<?php echo UPDRAFTPLUS_URL.'/images/rackspacecloud-logo.png' ?>">
 				<p><em><?php printf(__('%s is a great choice, because UpdraftPlus supports chunked uploads - no matter how big your site is, UpdraftPlus can upload it a little at a time, and not get thwarted by timeouts.','updraftplus'),'Rackspace Cloud Files');?></em></p></td>
 		</tr>
 
-		<tr class="updraftplusmethod cloudfiles">
+		<tr class="<?php echo $classes; ?>">
 			<th></th>
 			<td>
 			<?php
@@ -439,23 +456,23 @@ class UpdraftPlus_BackupModule_cloudfiles_oldsdk extends UpdraftPlus_BackupModul
 			</td>
 		</tr>
 
-		<tr class="updraftplusmethod cloudfiles">
+		<tr class="<?php echo $classes; ?>">
 		<th></th>
 			<td>
 				<p><?php _e('Get your API key <a href="https://mycloud.rackspace.com/">from your Rackspace Cloud console</a> (read instructions <a href="http://www.rackspace.com/knowledge_center/article/rackspace-cloud-essentials-1-generating-your-api-key">here</a>), then pick a container name to use for storage. This container will be created for you if it does not already exist.','updraftplus');?> <a href="https://updraftplus.com/faqs/there-appear-to-be-lots-of-extra-files-in-my-rackspace-cloud-files-container/"><?php _e('Also, you should read this important FAQ.', 'updraftplus'); ?></a></p>
 			</td>
 		</tr>
-		<tr class="updraftplusmethod cloudfiles">
+		<tr class="<?php echo $classes; ?>">
 			<th><?php _e('US or UK Cloud','updraftplus');?>:</th>
 			<td>
-				<select data-updraft_settings_test="authurl" id="updraft_cloudfiles_authurl" name="updraft_cloudfiles[authurl]">
+				<select data-updraft_settings_test="authurl" <?php $this->output_settings_field_name_and_id('authurl');?>>
 					<option <?php if ($opts['authurl'] != 'https://lon.auth.api.rackspacecloud.com') echo 'selected="selected"'; ?> value="https://auth.api.rackspacecloud.com"><?php _e('US (default)','updraftplus'); ?></option>
 					<option <?php if ($opts['authurl'] =='https://lon.auth.api.rackspacecloud.com') echo 'selected="selected"'; ?> value="https://lon.auth.api.rackspacecloud.com"><?php _e('UK', 'updraftplus'); ?></option>
 				</select>
 			</td>
 		</tr>
 		
-		<input type="hidden" data-updraft_settings_test="region" name="updraft_cloudfiles[region]" value="">
+		<input type="hidden" data-updraft_settings_test="region" <?php $this->output_settings_field_name_and_id('region');?> value="">
 		<?php /*
 		// Can put a message here if someone asks why region storage is not available (only available on new SDK)
 		<tr class="updraftplusmethod cloudfiles">
@@ -465,24 +482,22 @@ class UpdraftPlus_BackupModule_cloudfiles_oldsdk extends UpdraftPlus_BackupModul
 			</td>
 		</tr> */ ?>
 
-		<tr class="updraftplusmethod cloudfiles">
+		<tr class="<?php echo $classes; ?>">
 			<th><?php _e('Cloud Files username','updraftplus');?>:</th>
-			<td><input data-updraft_settings_test="user" type="text" autocomplete="off" style="width: 282px" id="updraft_cloudfiles_user" name="updraft_cloudfiles[user]" value="<?php echo htmlspecialchars($opts['user']) ?>" /></td>
+			<td><input data-updraft_settings_test="user" type="text" autocomplete="off" style="width: 282px" <?php $this->output_settings_field_name_and_id('user');?> value="<?php echo htmlspecialchars($opts['user']) ?>" /></td>
 		</tr>
-		<tr class="updraftplusmethod cloudfiles">
+		<tr class="<?php echo $classes; ?>">
 			<th><?php _e('Cloud Files API key','updraftplus');?>:</th>
-			<td><input data-updraft_settings_test="apikey" type="<?php echo apply_filters('updraftplus_admin_secret_field_type', 'password'); ?>" autocomplete="off" style="width: 282px" id="updraft_cloudfiles_apikey" name="updraft_cloudfiles[apikey]" value="<?php echo htmlspecialchars(trim($opts['apikey'])); ?>" /></td>
+			<td><input data-updraft_settings_test="apikey" type="<?php echo apply_filters('updraftplus_admin_secret_field_type', 'password'); ?>" autocomplete="off" style="width: 282px" <?php $this->output_settings_field_name_and_id('apikey');?> value="<?php echo htmlspecialchars(trim($opts['apikey'])); ?>" /></td>
 		</tr>
-		<tr class="updraftplusmethod cloudfiles">
+		<tr class="<?php echo $classes; ?>">
 			<th><?php echo apply_filters('updraftplus_cloudfiles_location_description',__('Cloud Files container','updraftplus'));?>:</th>
-			<td><input data-updraft_settings_test="path" type="text" style="width: 282px" name="updraft_cloudfiles[path]" id="updraft_cloudfiles_path" value="<?php echo htmlspecialchars($opts['path']); ?>" /></td>
+			<td><input data-updraft_settings_test="path" type="text" style="width: 282px" <?php $this->output_settings_field_name_and_id('path');?> value="<?php echo htmlspecialchars($opts['path']); ?>" /></td>
 		</tr>
 
-		<tr class="updraftplusmethod cloudfiles">
-		<th></th>
-		<td><p><button id="updraft-cloudfiles-test" type="button" class="button-primary updraft-test-button" data-method="cloudfiles" data-method_label="<?php esc_attr_e('Cloud Files'); ?>"><?php echo sprintf(__('Test %s Settings','updraftplus'),'Cloud Files');?></button></p></td>
-		</tr>
-	<?php
+		<?php
+		
+		echo $this->get_test_button_html(__('Cloud Files', 'updraftplus'));
 	}
 
 	public function credentials_test($posted_settings) {

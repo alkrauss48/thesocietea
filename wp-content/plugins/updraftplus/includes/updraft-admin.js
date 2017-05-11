@@ -1318,12 +1318,16 @@ jQuery(document).ready(function($){
 	$(".updraft_webdav_settings").on("change keyup paste", function(){
 		
 		var updraft_webdav_settings = [];
+		var instance_id = "";
 		$('.updraft_webdav_settings').each(function(index, item) {
 			
 			var id = $(item).attr('id');
 			
-			if (id && 'updraft_webdav_settings_' == id.substring(0, 24)) {
-				var which_one = id.substring(24);
+			if (id && 'updraft_webdav_' == id.substring(0, 15)) {
+				var which_one = id.substring(15);
+				id_split = which_one.split('_');
+				which_one = id_split[0];
+				instance_id = id_split[1];
 				updraft_webdav_settings[which_one] = this.value;
 			}
 		});
@@ -1357,7 +1361,7 @@ jQuery(document).ready(function($){
 		
 		updraft_webdav_url = updraft_webdav_settings['webdav'] + updraft_webdav_settings['user'] + colon + updraft_webdav_settings['pass'] + host +encodeURIComponent(updraft_webdav_settings['host']) + colon_port + updraft_webdav_settings['port'] + slash + updraft_webdav_settings['path'];
 		
-		$('#updraft_webdav_settings_url').val(updraft_webdav_url);
+		$('#updraft_webdav_url_' + instance_id).val(updraft_webdav_url);
 	});
 	
 	$('#updraft-navtab-backups-content').on('click', '.updraft_existing_backups .updraft_existing_backups_row', function(e) {
@@ -2472,10 +2476,11 @@ jQuery(document).ready(function($){
 		e.preventDefault();
 		$.blockUI({ message: '<div style="margin: 8px; font-size:150%;"><img src="'+updraftlion.ud_url+'/images/udlogo-rotating.gif" height="80" width="80" style="padding-bottom:10px;"><br>'+updraftlion.saving+'</div>'});
 		
-		var form_data = gather_updraft_settings();
+		var form_data = gather_updraft_settings('string');
 		// POST the settings back to the AJAX handler
 		updraft_send_command('savesettings', {
 			settings: form_data,
+			updraftplus_version: updraftlion.updraftplus_version
 		}, function(response) {
 			// Add page updates etc based on response
 			updraft_handle_page_updates(response);
@@ -2516,46 +2521,20 @@ jQuery(document).ready(function($){
 	});
 	
 	function export_settings() {
-		var form_data = gather_updraft_settings().split('&');
-		var input = {};
-		
-		//Function to convert serialized settings to the correct format ready for json encoding
-		$.each(form_data, function(key, value) {
-		var data = value.split('=');
-
-			var name = decodeURIComponent(data[0]);
-			if (name.indexOf("option_page") >= 0 || name.indexOf("_wpnonce") >= 0 || name.indexOf("_wp_http_referer") >= 0){
-				return true;
-			}
-			
-			if (name.indexOf("[") >= 0){
-				var extract = name.match(/\[(.*)\]/).pop();
-				name = name.substring(0, name.indexOf('['));
-				//some options either have a blank or 0 as their nested array key and need to be delt with differently 
-				if (!extract || extract === '0'){
-					if(typeof input[name] === "undefined") input[name] = [];
-					input[name].push(decodeURIComponent(data[1]));
-				}else{
-					if(typeof input[name] === "undefined") input[name] = {};
-					input[name][extract] = decodeURIComponent(data[1]);
-				}
-			} else {
-				input[name] = decodeURIComponent(data[1]);   
-			}
-		});
+		var form_data = gather_updraft_settings('object');
 		
 		var date_now = new Date();
 		
 		form_data = JSON.stringify({
 			// Indicate the last time the format changed - i.e. do not update this unless there is a format change
-			version: '1.12.19',
+			version: '1.12.40',
 			epoch_date: date_now.getTime(),
 			local_date: date_now.toLocaleString(),
 			network_site_url: updraftlion.network_site_url,
-			data: input
+			data: form_data
 		});
 		
-		//Attach this data to an anchor on page
+		// Attach this data to an anchor on page
 		var link = document.body.appendChild(document.createElement('a'));
 		link.setAttribute('download', 'updraftplus-settings.json');
 		link.setAttribute('style', "display:none;");
@@ -2574,6 +2553,7 @@ jQuery(document).ready(function($){
 			data = JSON.stringify(data['data']);
 			updraft_send_command('importsettings', {
 				settings: data,
+				updraftplus_version: updraftlion.updraftplus_version,
 			}, function(response) {
 				updraft_handle_page_updates(response);
 				// Prevent the user being told they have unsaved settings
@@ -2585,23 +2565,39 @@ jQuery(document).ready(function($){
 			$.unblockUI();
 		}
 	}
+	
+	/**
+	 * Retrieve the current settings from the DOM
+	 *
+	 * @param {string} [output_format='string'] - the output format; valid values are 'string' or 'object'
+	 *
+	 * @returns String|Object
+	 */
+	function gather_updraft_settings(output_format) {
+
+		var form_data = '';
+		var output_format = ('object' === typeof output_format) ? output_format : 'string';
+		
+		if ('object' == output_format) {
+			// Excluding the unnecessary 'action' input avoids triggering a very mis-conceived mod_security rule seen on one user's site
+			form_data = $("#updraft-navtab-settings-content form input[name!='action'][name!='option_page'][name!='_wpnonce'][name!='_wp_http_referer'], #updraft-navtab-settings-content form textarea, #updraft-navtab-settings-content form select, #updraft-navtab-settings-content form input[type=checkbox]").serializeJSON({checkboxUncheckedValue: '0', useIntKeysAsArrayIndex: true});
+		} else {
+			// Excluding the unnecessary 'action' input avoids triggering a very mis-conceived mod_security rule seen on one user's site
+			form_data = $("#updraft-navtab-settings-content form input[name!='action'], #updraft-navtab-settings-content form textarea, #updraft-navtab-settings-content form select").serialize();
 			
-	function gather_updraft_settings() {
-		// Excluding the unnecessary 'action' input avoids triggering a very mis-conceived mod_security rule seen on one user's site
-		var form_data = $("#updraft-navtab-settings-content form input[name!='action'], #updraft-navtab-settings-content form textarea, #updraft-navtab-settings-content form select").serialize();
-		
-		//include unchecked checkboxes. user filter to only include unchecked boxes.
-		$.each($('#updraft-navtab-settings-content form input[type=checkbox]')
-		.filter(function(idx){
-			return $(this).prop('checked') == false
-		}),
-			function(idx, el){
-				//attach matched element names to the form_data with chosen value.
-				var empty_val = '0';
-				form_data += '&' + $(el).attr('name') + '=' + empty_val;
-			}
-		);
-		
+			//include unchecked checkboxes. user filter to only include unchecked boxes.
+			$.each($('#updraft-navtab-settings-content form input[type=checkbox]')
+			.filter(function(idx){
+				return $(this).prop('checked') == false
+			}),
+				function(idx, el){
+					//attach matched element names to the form_data with chosen value.
+					var empty_val = '0';
+					form_data += '&' + $(el).attr('name') + '=' + empty_val;
+				}
+			);
+		}
+
 		return form_data;
 	}
 	

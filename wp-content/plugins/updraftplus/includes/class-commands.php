@@ -188,6 +188,7 @@ class UpdraftPlus_Commands {
 		return array(
 			'settings' => $output,
 			'meta' => apply_filters('updraftplus_get_settings_meta', array()),
+			'updraftplus_version' => $updraftplus->version,
 		);
 		
 	}

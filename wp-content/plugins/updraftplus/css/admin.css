@@ -212,6 +212,27 @@
 		margin-right: 0px;
 	}
 	
+	.stored_local {
+		border-radius: 5px;
+		background-color: #007FE7;
+		padding: 3px 5px 5px 5px;
+		color: #ffffff;
+		font-size: 75%;
+	}
+	
+	.form-table td.updraft_existingbackup_date {
+		padding-bottom: 5px;
+	}
+	
+	.stored_icon {
+		height: 1.3em;
+		position: relative;
+		top: 0.2em;
+	}
+	
+	.backup_date_label .clear-right {
+		clear: right;
+	}
 	/* End Main Buttons */
 
 /* End of common elements */

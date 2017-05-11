@@ -4,20 +4,7 @@ if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed.');
 
 require_once(UPDRAFTPLUS_DIR.'/methods/s3.php');
 
-# Migrate options to new-style storage - Jan 2014
-if (!is_array(UpdraftPlus_Options::get_updraft_option('updraft_s3generic')) && '' != UpdraftPlus_Options::get_updraft_option('updraft_s3generic_login', '')) {
-	$opts = array(
-		'accesskey' => UpdraftPlus_Options::get_updraft_option('updraft_s3generic_login'),
-		'secretkey' => UpdraftPlus_Options::get_updraft_option('updraft_s3generic_pass'),
-		'path' => UpdraftPlus_Options::get_updraft_option('updraft_s3generic_remote_path'),
-		'endpoint' => UpdraftPlus_Options::get_updraft_option('updraft_s3generic_endpoint')
-	);
-	UpdraftPlus_Options::update_updraft_option('updraft_s3generic', $opts);
-	UpdraftPlus_Options::delete_updraft_option('updraft_s3generic_login');
-	UpdraftPlus_Options::delete_updraft_option('updraft_s3generic_pass');
-	UpdraftPlus_Options::delete_updraft_option('updraft_s3generic_remote_path');
-	UpdraftPlus_Options::delete_updraft_option('updraft_s3generic_endpoint');
-}
+# Converted to multi-options (Feb 2017-) and previous options conversion removed: Yes
 
 class UpdraftPlus_BackupModule_s3generic extends UpdraftPlus_BackupModule_s3 {
 
@@ -29,14 +16,34 @@ class UpdraftPlus_BackupModule_s3generic extends UpdraftPlus_BackupModule_s3 {
 		$obj->setEndpoint($endpoint);
 	}
 
-	public function get_credentials() {
-		return array('updraft_s3generic');
+	/**
+	 * This method overrides the parent method and lists the supported features of this remote storage option.
+	 * @return Array - an array of supported features (any features not mentioned are asuumed to not be supported)
+	 */
+	public function get_supported_features() {
+		// This options format is handled via only accessing options via $this->get_options()
+		return array('multi_options');
 	}
 
+	/**
+	 * Retrieve default options for this remote storage module.
+	 * @return Array - an array of options
+	 */
+	public function get_default_options() {
+		return array(
+			'accesskey' => '',
+			'secretkey' => '',
+			'path' => '',
+			'endpoint' => '',
+		);
+	}
+
+	/**
+	 * Retrieve specific options for this remote storage module
+	 * @return Array - an array of options
+	 */
 	protected function get_config() {
-		global $updraftplus;
-		$opts = $updraftplus->get_job_option('updraft_s3generic');
-		if (!is_array($opts)) $opts = array('accesskey' => '', 'secretkey' => '', 'path' => '');
+		$opts = $this->get_options();
 		$opts['whoweare'] = 'S3';
 		$opts['whoweare_long'] = __('S3 (Compatible)', 'updraftplus');
 		$opts['key'] = 's3generic';

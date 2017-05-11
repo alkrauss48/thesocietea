@@ -138,8 +138,19 @@ abstract class UpdraftPlus_BackupModule {
 	 * @uses self::config_print()
 	 */
 	public function print_configuration() {
-		?><input type="hidden" name="updraft_<?php echo $this->get_id();?>[version]" value="1"><?php
+		// Allow methods to not use this hidden field, if they do not output any settings (to prevent their saved settings being over-written by just this hidden field)
+		if ($this->print_shared_settings_fields()) {
+			?><input type="hidden" name="updraft_<?php echo $this->get_id();?>[version]" value="1"><?php
+		}
 		$this->config_print();
+	}
+
+	/**
+	 * Over-ride this to allow methods to not use the hidden version field, if they do not output any settings (to prevent their saved settings being over-written by just this hidden field
+	 * @return [boolean] - return true to output the version field or false to not output the field
+	 */
+	public function print_shared_settings_fields() {
+		return true;
 	}
 
 	/**

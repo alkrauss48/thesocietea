@@ -122,12 +122,21 @@ class UpdraftPlus_Admin {
 			}
 		}
 		if ('googlecloud' === $services || (is_array($services) && in_array('googlecloud', $services))) {
-			$opts = UpdraftPlus_Options::get_updraft_option('updraft_googlecloud');
-			if (!empty($opts)) {
-				$clientid = $opts['clientid'];
-				$token = (empty($opts['token'])) ? '' : $opts['token'];
+			$settings = $updraftplus->update_remote_storage_options_format('googlecloud');
+			
+			if (is_wp_error($settings)) {
+				if (!isset($this->storage_module_option_errors)) $this->storage_module_option_errors = '';
+				$this->storage_module_option_errors .= "Google Cloud (".$settings->get_error_code()."): ".$settings->get_error_message();
+				add_action('all_admin_notices', array($this, 'show_admin_warning_multiple_storage_options'));
+				$updraftplus->log_wp_error($settings, true, true);
+			} elseif (!empty($settings['settings'])) {
+				foreach ($settings['settings'] as $instance_id => $storage_options) {
+					$clientid = $storage_options['clientid'];
+					$token = (empty($storage_options['token'])) ? '' : $storage_options['token'];
+					
+					if (!empty($clientid) && empty($token)) add_action('all_admin_notices', array($this,'show_admin_warning_googlecloud'));
+				}
 			}
-			if (!empty($clientid) && empty($token)) add_action('all_admin_notices', array($this,'show_admin_warning_googlecloud'));
 		}
 		
 		if ('dropbox' === $services || (is_array($services) && in_array('dropbox', $services))) {
@@ -148,19 +157,43 @@ class UpdraftPlus_Admin {
 		}
 		
 		if ('onedrive' === $services || (is_array($services) && in_array('onedrive', $services))) {
-			$opts = UpdraftPlus_Options::get_updraft_option('updraft_onedrive');
-			//if (((!empty($opts['clientid']) && !empty($opts['secret'])) || !empty($opts['use_master'])) && empty($opts['refresh_token'])) 
-			if((defined('UPDRAFTPLUS_CUSTOM_ONEDRIVE_APP') && UPDRAFTPLUS_CUSTOM_ONEDRIVE_APP)){
-				if(!empty($opts['clientid']) && !empty($opts['secret']) && empty($opts['refresh_token'])) add_action('all_admin_notices', array($this,'show_admin_warning_onedrive') );
-			} else{
-				if(empty($opts['refresh_token']))add_action('all_admin_notices', array($this,'show_admin_warning_onedrive') );
+			$settings = $updraftplus->update_remote_storage_options_format('onedrive');
+			
+			if (is_wp_error($settings)) {
+				if (!isset($this->storage_module_option_errors)) $this->storage_module_option_errors = '';
+				$this->storage_module_option_errors .= "OneDrive (".$settings->get_error_code()."): ".$settings->get_error_message();
+				add_action('all_admin_notices', array($this, 'show_admin_warning_multiple_storage_options'));
+				$updraftplus->log_wp_error($settings, true, true);
+			} elseif (!empty($settings['settings'])) {
+				foreach ($settings['settings'] as $instance_id => $storage_options) {
+					if((defined('UPDRAFTPLUS_CUSTOM_ONEDRIVE_APP') && UPDRAFTPLUS_CUSTOM_ONEDRIVE_APP)){
+						if(!empty($storage_options['clientid']) && !empty($storage_options['secret']) && empty($storage_options['refresh_token'])) {
+								add_action('all_admin_notices', array($this,'show_admin_warning_onedrive') );
+						} elseif (empty($storage_options['refresh_token'])) {
+							add_action('all_admin_notices', array($this,'show_admin_warning_onedrive') );
+						}
+					} else{
+						if(empty($storage_options['refresh_token']))add_action('all_admin_notices', array($this,'show_admin_warning_onedrive') );
+					}
+				}
 			}
 		}
 
 		if ('updraftvault' === $services || (is_array($services) && in_array('updraftvault', $services))) {
-			$vault_settings = UpdraftPlus_Options::get_updraft_option('updraft_updraftvault');
-			$connected = (is_array($vault_settings) && !empty($vault_settings['token']) && !empty($vault_settings['email'])) ? true : false;
-			if (!$connected) add_action('all_admin_notices', array($this,'show_admin_warning_updraftvault') );
+			$settings = $updraftplus->update_remote_storage_options_format('updraftvault');
+			
+			if (is_wp_error($settings)) {
+				if (!isset($this->storage_module_option_errors)) $this->storage_module_option_errors = '';
+				$this->storage_module_option_errors .= "UpdraftVault (".$settings->get_error_code()."): ".$settings->get_error_message();
+				add_action('all_admin_notices', array($this, 'show_admin_warning_multiple_storage_options'));
+				$updraftplus->log_wp_error($settings, true, true);
+			} elseif (!empty($settings['settings'])) {
+				foreach ($settings['settings'] as $instance_id => $storage_options) {
+					if (empty($storage_options['token']) && empty($storage_options['email'])) {
+						add_action('all_admin_notices', array($this,'show_admin_warning_updraftvault') );
+					}
+				}
+			}
 		}
 
 		if ($this->disk_space_check(1048576*35) === false) add_action('all_admin_notices', array($this, 'show_admin_warning_diskspace'));
@@ -571,8 +604,12 @@ class UpdraftPlus_Admin {
 		wp_enqueue_script('jquery-blockui', UPDRAFTPLUS_URL.'/includes/jquery.blockUI.js', array('jquery'), '2.70.0');
 	
 		wp_enqueue_script('jquery-labelauty', UPDRAFTPLUS_URL.'/includes/labelauty/jquery-labelauty.js', array('jquery'), '20160622-ud');
-		wp_enqueue_style('jquery-labelauty', UPDRAFTPLUS_URL.'/includes/labelauty/jquery-labelauty.css', array(), '20150925'); 
+		wp_enqueue_style('jquery-labelauty', UPDRAFTPLUS_URL.'/includes/labelauty/jquery-labelauty.css', array(), '20150925');
 
+		wp_enqueue_script('jquery.serializeJSON', UPDRAFTPLUS_URL.'/includes/jquery.serializeJSON/jquery.serializejson.min.js', array('jquery'), '2.8.1');
+
+		$this->enqueue_jstree();
+		
 		do_action('updraftplus_admin_enqueue_scripts');
 		
 		$day_selector = '';
@@ -708,6 +745,7 @@ class UpdraftPlus_Admin {
 			'search' => __('Search', 'updraftplus'),
 			'download_timeout' => __('Unable to download file. This could be caused by a timeout. It would be best to download the zip to your computer.', 'updraftplus'),
 			'loading_log_file' => __('Loading log file', 'updraftplus'),
+			'updraftplus_version' => $updraftplus->version
 		) );
 	}
 
@@ -1057,7 +1095,7 @@ class UpdraftPlus_Admin {
 		$itext = empty($findex) ? '' : $findex;
 		$known_size = isset($backup_history[$timestamp][$type.$itext.'-size']) ? $backup_history[$timestamp][$type.$itext.'-size'] : 0;
 
-		$services = (isset($backup_history[$timestamp]['service'])) ? $backup_history[$timestamp]['service'] : false;
+		$services = isset($backup_history[$timestamp]['service']) ? $backup_history[$timestamp]['service'] : false;
 		if (is_string($services)) $services = array($services);
 
 		$updraftplus->jobdata_set('service', $services);
@@ -1148,7 +1186,14 @@ class UpdraftPlus_Admin {
 
 	}
 
-	# Pass only a single service, as a string, into this function
+	/**
+	 * Downloads a specified file into UD's directory
+	 *
+	 * @param String $file - The name of the file
+	 * @param String $service - The identifier of the service to download from. You cannot pass multiple services.
+	 * 
+	 * @return Boolean - Whether the operation succeeded. Inherited from the storage module's download() method. N.B. At the time of writing it looks like not all modules necessarily return true upon success; but false can be relied upon for detecting failure.
+	 */
 	private function download_file($file, $service) {
 
 		global $updraftplus;
@@ -2833,9 +2878,30 @@ class UpdraftPlus_Admin {
 		return false;
 	}
 
+	/**
+	 * Outputs html for a storage method using the parameters passed in, this version should be removed when all remote storages use the multi version
+	 * @param  [String] $classes - a list of classes to be used when
+	 * @param  [String] $header - the table header content
+	 * @param  [String] $contents - the table contents
+	 */
 	public function storagemethod_row($method, $header, $contents) {
 		?>
 			<tr class="updraftplusmethod <?php echo $method;?>">
+				<th><?php echo $header;?></th>
+				<td><?php echo $contents;?></td>
+			</tr>
+		<?php
+	}
+
+	/**
+	 * Outputs html for a storage method using the parameters passed in, this version of the method is compatible with multi storage options
+	 * @param  [String] $classes - a list of classes to be used when
+	 * @param  [String] $header - the table header content
+	 * @param  [String] $contents - the table contents
+	 */
+	public function storagemethod_row_multi($classes, $header, $contents) {
+		?>
+			<tr class="<?php echo $classes;?>">
 				<th><?php echo $header;?></th>
 				<td><?php echo $contents;?></td>
 			</tr>
@@ -3337,6 +3403,9 @@ class UpdraftPlus_Admin {
 
 	public function date_label($pretty_date, $key, $backup, $jobdata, $nonce, $simple_format = false) {
 // 		$ret = apply_filters('updraftplus_showbackup_date', '<strong>'.$pretty_date.'</strong>', $backup, $jobdata, (int)$key);
+
+		$pretty_date = $simple_format ? $pretty_date : '<div class="clear-right">'.$pretty_date.'</div>';
+
 		$ret = apply_filters('updraftplus_showbackup_date', $pretty_date, $backup, $jobdata, (int)$key, $simple_format);
 		if (is_array($jobdata) && !empty($jobdata['resume_interval']) && (empty($jobdata['jobstatus']) || 'finished' != $jobdata['jobstatus'])) {
 			if ($simple_format) {
@@ -3599,7 +3668,7 @@ ENDHERE;
 				continue;
 			}
 
-			if (is_string($files)) $files=array($files);
+			if (is_string($files)) $files = array($files);
 
 			foreach ($files as $ind => $file) {
 
@@ -3846,11 +3915,12 @@ ENDHERE;
 		global $updraftplus;
 		
 		if (empty($_POST) || empty($_POST['subaction']) || 'savesettings' != $_POST['subaction'] || !isset($_POST['nonce']) || !is_user_logged_in() || !UpdraftPlus_Options::user_can_manage() || !wp_verify_nonce($_POST['nonce'], 'updraftplus-settings-nonce')) die('Security check');
-		
+
 		if (empty($_POST['settings']) || !is_string($_POST['settings'])) die('Invalid data');
 
 		parse_str(stripslashes($_POST['settings']), $posted_settings);
 		// We now have $posted_settings as an array
+		if (!empty($_POST['updraftplus_version'])) $posted_settings['updraftplus_version'] = $_POST['updraftplus_version'];
 		
 		echo json_encode($this->save_settings($posted_settings));
 
@@ -3867,13 +3937,40 @@ ENDHERE;
 		$this->import_settings($_POST);
 	} 
 	
+	/**
+	 * This method handles the imported json settings it will convert them into a readable format for the existing save settings function, it will also update some of the options to match the new remote storage options format (Apr 2017)
+	 *
+	 * @param  Array $settings - The settings from the imported json file
+	 */
 	public function import_settings($settings) {
-		
-		$settings = json_decode(stripslashes($settings['settings']),true); 
-	     
-	    echo json_encode($this->save_settings($settings)); 
-	     
-	    die; 
+		global $updraftplus;
+
+		$posted_settings = json_decode(stripslashes($settings['settings']),true);
+
+		if (!empty($settings['updraftplus_version'])) $posted_settings['updraftplus_version'] = $settings['updraftplus_version'];
+
+		// Handle the settings name change of WebDAV and SFTP (Apr 2017) if someone tries to import an old settings to this version
+		if (isset($posted_settings['updraft_webdav_settings'])) {
+			$posted_settings['updraft_webdav'] = $posted_settings['updraft_webdav_settings'];
+			unset($posted_settings['updraft_webdav_settings']);
+		}
+
+		if (isset($posted_settings['updraft_sftp_settings'])) {
+			$posted_settings['updraft_sftp'] = $posted_settings['updraft_sftp_settings'];
+			unset($posted_settings['updraft_sftp_settings']);
+		}
+
+		// We also need to wrap some of the options in the new style settings array otherwise later on we will lose the settings if this information is missing
+		if (empty($posted_settings['updraft_webdav']['settings'])) $posted_settings['updraft_webdav'] = $updraftplus->wrap_remote_storage_options($posted_settings['updraft_webdav']);
+		if (empty($posted_settings['updraft_googledrive']['settings'])) $posted_settings['updraft_googledrive'] = $updraftplus->wrap_remote_storage_options($posted_settings['updraft_googledrive']);
+		if (empty($posted_settings['updraft_googlecloud']['settings'])) $posted_settings['updraft_googlecloud'] = $updraftplus->wrap_remote_storage_options($posted_settings['updraft_googlecloud']);
+		if (empty($posted_settings['updraft_onedrive']['settings'])) $posted_settings['updraft_onedrive'] = $updraftplus->wrap_remote_storage_options($posted_settings['updraft_onedrive']);
+		if (empty($posted_settings['updraft_azure']['settings'])) $posted_settings['updraft_azure'] = $updraftplus->wrap_remote_storage_options($posted_settings['updraft_azure']);
+		if (empty($posted_settings['updraft_dropbox']['settings'])) $posted_settings['updraft_dropbox'] = $updraftplus->wrap_remote_storage_options($posted_settings['updraft_dropbox']);
+
+		echo json_encode($this->save_settings($posted_settings)); 
+
+		die; 
 	}
 	
 	private function backup_now_remote_message() {
@@ -3900,77 +3997,82 @@ ENDHERE;
 	public function save_settings($settings) {
 	
 		global $updraftplus;
-	
+		
 		// Make sure that settings filters are registered
 		UpdraftPlus_Options::admin_init();
-	
-		$return_array = array('saved' => true);
 		
-		$add_to_post_keys = array('updraft_interval', 'updraft_interval_database', 'updraft_starttime_files', 'updraft_starttime_db', 'updraft_startday_files', 'updraft_startday_db');
-		
-		//If database and files are on same schedule, override the db day/time settings
-		if (isset($settings['updraft_interval_database']) && isset($settings['updraft_interval_database']) && $settings['updraft_interval_database'] == $settings['updraft_interval'] && isset($settings['updraft_starttime_files'])) {
-			$settings['updraft_starttime_db'] = $settings['updraft_starttime_files'];
-			$settings['updraft_startday_db'] = $settings['updraft_startday_files'];
-		}	
-		foreach ($add_to_post_keys as $key) {
-			// For add-ons that look at $_POST to find saved settings, add the relevant keys to $_POST so that they find them there
-			if (isset($settings[$key])) {
-				$_POST[$key] = $settings[$key];
-			}
-		}
-
-		// Check if updraft_include_more_path is set, if it is then we need to update the page, if it's not set but there's content already in the database that is cleared down below so again we should update the page.
 		$more_files_path_updated = false;
+		
+		if (isset($settings['updraftplus_version']) && $updraftplus->version == $settings['updraftplus_version']) {
 
-		// i.e. If an option has been set, or if it was currently active in the settings
-		if (isset($settings['updraft_include_more_path']) || UpdraftPlus_Options::get_updraft_option('updraft_include_more_path')) {
-			$more_files_path_updated = true;
-		}
-		
-		// Wipe the extra retention rules, as they are not saved correctly if the last one is deleted
-		UpdraftPlus_Options::update_updraft_option('updraft_retain_extrarules', array());
-		UpdraftPlus_Options::update_updraft_option('updraft_email', array());
-		UpdraftPlus_Options::update_updraft_option('updraft_report_warningsonly', array());
-		UpdraftPlus_Options::update_updraft_option('updraft_report_wholebackup', array());
-		UpdraftPlus_Options::update_updraft_option('updraft_extradbs', array());
-		UpdraftPlus_Options::update_updraft_option('updraft_include_more_path', array());
-		
-		$relevant_keys = $updraftplus->get_settings_keys();
-		
-		if (method_exists('UpdraftPlus_Options', 'mass_options_update')) {
-			$original_settings = $settings;
-			$settings = UpdraftPlus_Options::mass_options_update($settings);
-			$mass_updated = true;
-		}
-
-		foreach ($settings as $key => $value) {
-// 			$exclude_keys = array('option_page', 'action', '_wpnonce', '_wp_http_referer');
-							
-// 			if (!in_array($key, $exclude_keys)) {
-			if (in_array($key, $relevant_keys)) {
-				if ($key == 'updraft_service' && is_array($value)){
-					foreach ($value as $subkey => $subvalue){
-						if ($subvalue == '0') unset($value[$subkey]);
-					}
+			$return_array = array('saved' => true);
+			
+			$add_to_post_keys = array('updraft_interval', 'updraft_interval_database', 'updraft_starttime_files', 'updraft_starttime_db', 'updraft_startday_files', 'updraft_startday_db');
+			
+			//If database and files are on same schedule, override the db day/time settings
+			if (isset($settings['updraft_interval_database']) && isset($settings['updraft_interval_database']) && $settings['updraft_interval_database'] == $settings['updraft_interval'] && isset($settings['updraft_starttime_files'])) {
+				$settings['updraft_starttime_db'] = $settings['updraft_starttime_files'];
+				$settings['updraft_startday_db'] = $settings['updraft_startday_files'];
+			}	
+			foreach ($add_to_post_keys as $key) {
+				// For add-ons that look at $_POST to find saved settings, add the relevant keys to $_POST so that they find them there
+				if (isset($settings[$key])) {
+					$_POST[$key] = $settings[$key];
 				}
-
-				// This flag indicates that either the stored database option was changed, or that the supplied option was changed before being stored. It isn't comprehensive - it's only used to update some UI elements with invalid input.
-				$updated = empty($mass_updated) ? (is_string($value) && $value != UpdraftPlus_Options::get_updraft_option($key)) : (is_string($value) && (!isset($original_settings[$key]) || $original_settings[$key] != $value));
-				
-				$db_updated = empty($mass_updated) ? UpdraftPlus_Options::update_updraft_option($key, $value) : true;
-				
-				// Add information on what has changed to array to loop through to update links etc.
-				// Restricting to strings for now, to prevent any unintended leakage (since this is just used for UI updating)
-				if ($updated) {
-					$value = UpdraftPlus_Options::get_updraft_option($key);
-					if (is_string($value)) $return_array['changed'][$key] = $value;
-				}
-
-			} else {
-				// When last active, it was catching: option_page, action, _wpnonce, _wp_http_referer, updraft_s3_endpoint, updraft_dreamobjects_endpoint. The latter two are empty; probably don't need to be in the page at all.
-				//error_log("Non-UD key when saving from POSTed data: ".$key);
 			}
+
+			// Check if updraft_include_more_path is set, if it is then we need to update the page, if it's not set but there's content already in the database that is cleared down below so again we should update the page.
+			$more_files_path_updated = false;
+
+			// i.e. If an option has been set, or if it was currently active in the settings
+			if (isset($settings['updraft_include_more_path']) || UpdraftPlus_Options::get_updraft_option('updraft_include_more_path')) {
+				$more_files_path_updated = true;
+			}
+			
+			// Wipe the extra retention rules, as they are not saved correctly if the last one is deleted
+			UpdraftPlus_Options::update_updraft_option('updraft_retain_extrarules', array());
+			UpdraftPlus_Options::update_updraft_option('updraft_email', array());
+			UpdraftPlus_Options::update_updraft_option('updraft_report_warningsonly', array());
+			UpdraftPlus_Options::update_updraft_option('updraft_report_wholebackup', array());
+			UpdraftPlus_Options::update_updraft_option('updraft_extradbs', array());
+			UpdraftPlus_Options::update_updraft_option('updraft_include_more_path', array());
+			
+			$relevant_keys = $updraftplus->get_settings_keys();
+			
+			if (method_exists('UpdraftPlus_Options', 'mass_options_update')) {
+				$original_settings = $settings;
+				$settings = UpdraftPlus_Options::mass_options_update($settings);
+				$mass_updated = true;
+			}
+
+			foreach ($settings as $key => $value) {
+
+				if (in_array($key, $relevant_keys)) {
+					if ($key == 'updraft_service' && is_array($value)){
+						foreach ($value as $subkey => $subvalue){
+							if ($subvalue == '0') unset($value[$subkey]);
+						}
+					}
+
+					// This flag indicates that either the stored database option was changed, or that the supplied option was changed before being stored. It isn't comprehensive - it's only used to update some UI elements with invalid input.
+					$updated = empty($mass_updated) ? (is_string($value) && $value != UpdraftPlus_Options::get_updraft_option($key)) : (is_string($value) && (!isset($original_settings[$key]) || $original_settings[$key] != $value));
+					
+					$db_updated = empty($mass_updated) ? UpdraftPlus_Options::update_updraft_option($key, $value) : true;
+					
+					// Add information on what has changed to array to loop through to update links etc.
+					// Restricting to strings for now, to prevent any unintended leakage (since this is just used for UI updating)
+					if ($updated) {
+						$value = UpdraftPlus_Options::get_updraft_option($key);
+						if (is_string($value)) $return_array['changed'][$key] = $value;
+					}
+
+				} else {
+					// When last active, it was catching: option_page, action, _wpnonce, _wp_http_referer, updraft_s3_endpoint, updraft_dreamobjects_endpoint. The latter two are empty; probably don't need to be in the page at all.
+					//error_log("Non-UD key when saving from POSTed data: ".$key);
+				}
+			}
+		} else {
+			$return_array = array('saved' => false, 'error_message' => sprintf(__('UpdraftPlus seems to have been updated to version (%s) different to the version running when this settings page was loaded. Please reload the settings page before trying to save settings.', 'updraftplus'), $updraftplus->version));
 		}
 		
 		// Checking for various possible messages
@@ -4005,8 +4107,14 @@ ENDHERE;
 			$this->show_admin_warning_unwritable();
 		}
 		
-		if ($return_array['saved'] == true){ //
+		if ($return_array['saved']){ //
 			$this->show_admin_warning(__('Your settings have been saved.', 'updraftplus'), 'updated fade');
+		} else {
+			if (isset($return_array['error_message'])) {
+				$this->show_admin_warning($return_array['error_message'], 'error');
+			} else {
+				$this->show_admin_warning(__('Your settings failed to save. Please refresh the settings page and try again', 'updraftplus'), 'error');
+			}
 		}
 		
 		$messages_output = ob_get_contents();

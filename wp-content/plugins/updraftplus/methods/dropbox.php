@@ -507,7 +507,7 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 						$rt = (empty($opts['tk_access_token'])) ? '' : $opts['tk_access_token']; 
 						if (!empty($rt)) { 
 							echo "<p><strong>".__('(You appear to be already authenticated).','updraftplus')."</strong>"; 
-							echo ' <a class="updraft_deauthlink" href="'; echo UpdraftPlus_Options::admin_page_url(); echo'?page=updraftplus&action=updraftmethod-dropbox-auth&updraftplus_dropboxauth=deauth">'; echo sprintf(__('Follow this link to  deauthenticate with %s.','updraftplus'), __('Dropbox', 'updraftplus'));echo '</a></p>';
+							echo ' <a class="updraft_deauthlink" href="'; echo UpdraftPlus_Options::admin_page_url(); echo'?page=updraftplus&action=updraftmethod-dropbox-auth&updraftplus_dropboxauth=deauth&nonce='.wp_create_nonce('dropbox_deauth_nonce').'">'; echo sprintf(__('Follow this link to  deauthenticate with %s.','updraftplus'), __('Dropbox', 'updraftplus'));echo '</a></p>';
 						}
 						echo '<p><a class="updraft_authlink" href="'; echo UpdraftPlus_Options::admin_page_url(); echo'?page=updraftplus&action=updraftmethod-dropbox-auth&updraftplus_dropboxauth=doit">'; echo sprintf(__('<strong>After</strong> you have saved your settings (by clicking \'Save Changes\' below), then come back here once and click this link to complete authentication with %s.','updraftplus'), __('Dropbox', 'updraftplus'));echo '</a></p>';
 					?>
@@ -562,7 +562,7 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 				unset($opts['tk_request_token']);
 				$opts['ownername'] = '';
 				$this->set_options($opts, true);
-			} elseif ('deauth' == $_GET['updraftplus_dropboxauth']) {
+			} elseif ('deauth' == $_GET['updraftplus_dropboxauth'] && isset($_GET['nonce']) && wp_verify_nonce($_GET['nonce'], 'dropbox_deauth_nonce')) {
 					
 				try {
 					$this->bootstrap(true);
