@@ -109,8 +109,8 @@ get_header(); ?>
     data-2900="top: -14em; opacity: 0;"
 >
     <p>Recently I’ve been doing a lot of full-stack development, getting my hands dirty with a bunch of <span class="hi">HTML5</span>, <span class="hi">Sass</span>,
-      <span class="hi">Javascript</span>, <span class="hi">Grunt.js</span>, CMSs like <span class="hi">Wordpress</span>,
-      <span class="hi">ModX</span>, <span class="hi">Umbraco</span>, and <span class="hi">Craft</span>, and some enterprise web app development using <span class="hi">.NET</span>,<span class="hi">Rails</span>, and <span class="hi">Angular</span>. I use <span class="hi">Foundation</span> and
+      <span class="hi">Javascript</span>, <span class="hi">build automation</span>, CMSs like <span class="hi">Wordpress</span>,
+      <span class="hi">ModX</span>, <span class="hi">Umbraco</span>, and <span class="hi">Craft</span>, and some enterprise web app development using <span class="hi">.NET</span>, <span class="hi">Rails</span>, and <span class="hi">Angular</span>. I use <span class="hi">Foundation</span> and
       <span class="hi">Bootstrap</span> when I need to, but I usually opt to build completely custom styles.
       Check out my projects to see what I’ve been working on!</p>
   </div>
@@ -180,13 +180,13 @@ get_header(); ?>
 >
         <p>I love <span class="hi">craft beer</span>. I love experiencing all the various styles of beer; as long as it's not a session beer, then I'm probably gonna like it. I even homebrewed some batches of beer for a while!
           I was born in Germany, so maybe it stems from that a little bit. You’ll never see me go to a bar and order a bottle.
-          It has to be on tap. My friends call me a beer snob, but I just don’t want to appreciate it unless it’s in its finest form.</p>
+          It has to be on tap. My friends call me a beer geek, but I just don’t want to appreciate it unless it’s in its finest form.</p>
       </div>
       <div class="interest-text-wrapper small-left"
     data-4600="opacity: 0;top: -8em; left: -8em;"
     data-4800="opacity: 1;top: 0em; left: 0em;"
 >
-        <p>I love <span class="hi">Layla</span>. We have been dating for over 11 years, and are currently engaged!.
+        <p>I love <span class="hi">Layla</span>. We have been dating for over 11 years, and are currently engaged!
           She's the coolest, most down-to-earth person I've ever met, and it's so awesome to be the lucky guy who gets to have her.
           I couldn’t imagine a life without her, and hanging out with her – doing anything – is always my favorite thing to do. I love her.
           She’s an incredibly talented dietitian too!</p>
