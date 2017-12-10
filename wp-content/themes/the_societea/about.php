@@ -110,9 +110,9 @@ get_header(); ?>
 >
     <p>Recently I’ve been doing a lot of full-stack development, getting my hands dirty with a bunch of <span class="hi">HTML5</span>, <span class="hi">Sass</span>,
       <span class="hi">Javascript</span>, <span class="hi">Grunt.js</span>, CMSs like <span class="hi">Wordpress</span>,
-      <span class="hi">ModX</span>, and <span class="hi">Craft</span>, and some enterprise web app development using <span class="hi">Rails</span> and <span class="hi">Angular</span>. I use <span class="hi">Foundation</span> and
-      <span class="hi">Bootstrap</span> when I need to, but I usually opt to build completely custom styles using just a tiny sass plugin to provide a grid.
-      Check out my projects to see what I’ve been working on, or you can hire me if you have a cool project and need a remote developer!</p>
+      <span class="hi">ModX</span>, <span class="hi">Umbraco</span>, and <span class="hi">Craft</span>, and some enterprise web app development using <span class="hi">.NET</span>,<span class="hi">Rails</span>, and <span class="hi">Angular</span>. I use <span class="hi">Foundation</span> and
+      <span class="hi">Bootstrap</span> when I need to, but I usually opt to build completely custom styles.
+      Check out my projects to see what I’ve been working on!</p>
   </div>
 </div>
 </div>
@@ -143,15 +143,14 @@ get_header(); ?>
     data-3600="opacity: 1;top: 0em; left: 0em;"
 >
         <p>I love <span class="hi">tea</span>. Not your everyday grocery store tea though.
-          I purchase my tea from a special vendor with direct tea farmer relationships so that I can know exactly what province it was plucked in,
-          and what month it was plucked. Sound intense? It is.</p>
+          I usually purchase my tea from special vendors with direct tea farmer relationships so that I can know exactly what province it was plucked in,
+          and what month it was plucked.</p>
       </div>
       <div class="interest-text-wrapper small-right"
     data-3700="opacity: 0;top: -8em; left: 8em;"
     data-3900="opacity: 1;top: 0em; left: 0em;"
 >
-        <p>I love <span class="hi">walking my dog.</span> I find it super relaxing, I get to experience raw sunlight (something us developers don’t do often enough) and I’m giving both me and my dog exercise.
-          Plus, I get to listen to a lot of podcasts, which leads me to...</p>
+        <p>I love <span class="hi">walking my dog.</span> I find it super relaxing, I get to experience raw sunlight (something us developers don’t do often enough) and I’m giving both me and my dog exercise.</p>
       </div>
       <img class="left" src="/assets/images/dist/jackson.jpg" alt=""
         data-3800="opacity: 0;top: -8em; left: -8em;transform: rotate(0deg);"
@@ -172,17 +171,14 @@ get_header(); ?>
     data-4200="opacity: 0;top: -8em; left: -8em;"
     data-4400="opacity: 1;top: 0em; left: 0em;"
 >
-        <p>I love <span class='hi'>podcasts</span>. I’m currently subscribed to several podcasts, updating regularly anywhere from daily to a few times a year, and I usually knock them all out.
-          My favorites are those where I can walk away thinking I gained a chunk of tangible knowledge that I didn’t have before.
-          HowStuffWorks is easily my favorite network of podcasts.
-        </p>
+        <p>I love <span class='hi'>learning</span>. Anything from educational podcasts, YouTube videos, books - if I can learn from it, then I'm interested.
+        I know most people like learning things - but this has become a serious passion of mine. I truly want to learn everything there is to learn.</p>
       </div>
       <div class="interest-text-wrapper"
     data-4400="opacity: 0;top: -8em; left: 8em;"
     data-4600="opacity: 1;top: 0em; left: 0em;"
 >
-        <p>I love <span class="hi">beer</span>. I love experiencing all the different kinds of beer, with more malty types such as stouts, bocks,
-          brown ales, and scotch ales being my favorites; I even made my own beer chart to categorize all the different beer types.
+        <p>I love <span class="hi">craft beer</span>. I love experiencing all the various styles of beer; as long as it's not a session beer, then I'm probably gonna like it. I even homebrewed some batches of beer for a while!
           I was born in Germany, so maybe it stems from that a little bit. You’ll never see me go to a bar and order a bottle.
           It has to be on tap. My friends call me a beer snob, but I just don’t want to appreciate it unless it’s in its finest form.</p>
       </div>
@@ -190,10 +186,10 @@ get_header(); ?>
     data-4600="opacity: 0;top: -8em; left: -8em;"
     data-4800="opacity: 1;top: 0em; left: 0em;"
 >
-        <p>I love <span class="hi">Layla</span>. We have been dating for over 9 years, and it’s been nothing but bliss.
+        <p>I love <span class="hi">Layla</span>. We have been dating for over 11 years, and are currently engaged!.
           She's the coolest, most down-to-earth person I've ever met, and it's so awesome to be the lucky guy who gets to have her.
           I couldn’t imagine a life without her, and hanging out with her – doing anything – is always my favorite thing to do. I love her.
-          She’s an incredibly talented cake decorator too!</p>
+          She’s an incredibly talented dietitian too!</p>
       </div>
       <img class="right" src="/assets/images/dist/layla-and-me.jpg" alt=""
         data-4700="opacity: 0;top: -8em; left: 8em;transform: rotate(0deg);"
