@@ -173,6 +173,20 @@ a:focus { outline: 1px solid #ffa500; }
   @include animation(blink .7s infinite)
 }
 
+.video-wrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  padding-top: 25px;
+  height: 0;
+}
+.video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
 span.light-orange { color: $light-orange; }
 span.orange { color: $orange; }
 span.blue { color: $blue; }
