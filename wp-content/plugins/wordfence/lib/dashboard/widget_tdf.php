@@ -35,7 +35,7 @@
 						<li>
 							<div class="wf-dashboard-item-list-text">
 								<p>As a free Wordfence user, you are currently using the Community version of the Threat Defense Feed. Premium users are protected by an additional <?php echo ($d->tdfPremium - $d->tdfCommunity); ?> firewall rules and malware signatures. Upgrade to Premium today to improve your protection.</p>
-								<p><a class="wf-btn wf-btn-primary wf-btn-callout" href="https://www.wordfence.com/gnl1scanUpgrade/wordfence-signup/" target="_blank">Upgrade to Premium</a></p>
+								<p><a class="wf-btn wf-btn-primary wf-btn-callout" href="https://www.wordfence.com/gnl1scanUpgrade/wordfence-signup/" target="_blank" rel="noopener noreferrer">Upgrade to Premium</a></p>
 							</div>
 						</li>
 					<?php else: ?>

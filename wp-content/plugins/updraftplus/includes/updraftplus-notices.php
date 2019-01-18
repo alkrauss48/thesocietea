@@ -28,8 +28,8 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 		$child_notice_content = array(
 			1 => array(
 				'prefix' => __('UpdraftPlus Premium:', 'updraftplus'),
-				'title' => __('support', 'updraftplus'), 
-				'text' => __('Enjoy professional, fast, and friendly help whenever you need it.', 'updraftplus'),
+				'title' => __('Support', 'updraftplus'),
+				'text' => __('Enjoy professional, fast, and friendly help whenever you need it with Premium.', 'updraftplus'),
 				'image' => 'notices/support.png',
 				'button_link' => 'https://updraftplus.com/landing/updraftplus-premium',
 				'button_meta' => 'updraftplus',
@@ -48,7 +48,7 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 			),
 			3 => array(
 				'prefix' => __('UpdraftPlus Premium:', 'updraftplus'),
-				'title' => __('enhanced remote storage options', 'updraftplus'), 
+				'title' => __('enhanced remote storage options', 'updraftplus'),
 				'text' => __('Enhanced storage options for Dropbox, Google Drive and S3. Plus many more options.', 'updraftplus'),
 				'image' => 'addons-images/morestorage.png',
 				'button_link' => 'https://updraftplus.com/landing/updraftplus-premium',
@@ -68,7 +68,7 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 			),
 			5 => array(
 				'prefix' => __('UpdraftPlus Premium:', 'updraftplus'),
-				'title' => __('secure your backups', 'updraftplus'), 
+				'title' => __('secure your backups', 'updraftplus'),
 				'text' => __('Add SFTP to send your data securely, lock settings and encrypt your database backups for extra security.', 'updraftplus'),
 				'image' => 'addons-images/lockadmin.png',
 				'button_link' => 'https://updraftplus.com/landing/updraftplus-premium',
@@ -78,7 +78,7 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 			),
 			6 => array(
 				'prefix' => __('UpdraftPlus Premium:', 'updraftplus'),
-				'title' => __('easily migrate or clone your site in minutes', 'updraftplus'), 
+				'title' => __('easily migrate or clone your site in minutes', 'updraftplus'),
 				'text' => __('Copy your site to another domain directly. Includes find-and-replace tool for database references.', 'updraftplus'),
 				'image' => 'addons-images/migrator.png',
 				'button_link' => 'https://updraftplus.com/landing/updraftplus-premium',
@@ -88,7 +88,7 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 			),
 			7 => array(
 				'prefix' => '',
-				'title' => __('Introducing UpdraftCentral', 'updraftplus'), 
+				'title' => __('Introducing UpdraftCentral', 'updraftplus'),
 				'text' => __('UpdraftCentral is a highly efficient way to manage, update and backup multiple websites from one place.', 'updraftplus'),
 				'image' => 'notices/updraft_logo.png',
 				'button_link' => 'https://updraftcentral.com',
@@ -98,7 +98,7 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 			),
 			8 => array(
 				'prefix' => '',
-				'title' => __('Like UpdraftPlus and can spare one minute?', 'updraftplus'), 
+				'title' => __('Like UpdraftPlus and can spare one minute?', 'updraftplus'),
 				'text' => __('Please help UpdraftPlus by giving a positive review at wordpress.org.', 'updraftplus'),
 				'image' => 'notices/updraft_logo.png',
 				'button_link' => 'https://wordpress.org/support/plugin/updraftplus/reviews/?rate=5#new-post',
@@ -108,7 +108,7 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 			),
 			9 => array(
 				'prefix' => '',
-				'title' => __('Do you use UpdraftPlus on multiple sites?', 'updraftplus'), 
+				'title' => __('Do you use UpdraftPlus on multiple sites?', 'updraftplus'),
 				'text' => __('Control all your WordPress installations from one place using UpdraftCentral remote site management!', 'updraftplus'),
 				'image' => 'notices/updraft_logo.png',
 				'button_link' => 'https://updraftcentral.com',
@@ -119,8 +119,8 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 			'translation_needed' => array(
 				'prefix' => '',
 				'title' => 'Can you translate? Want to improve UpdraftPlus for speakers of your language?',
-				'text' => $this->url_start(true,'updraftplus.com/translate/')."Please go here for instructions - it is easy.".$this->url_end(true,'updraftplus.com/translate/'),
-				'text_plain' => $this->url_start(false,'updraftplus.com/translate/')."Please go here for instructions - it is easy.".$this->url_end(false,'updraftplus.com/translate/'),
+				'text' => $this->url_start(true, 'updraftplus.com/translate/')."Please go here for instructions - it is easy.".$this->url_end(true, 'updraftplus.com/translate/'),
+				'text_plain' => $this->url_start(false, 'updraftplus.com/translate/')."Please go here for instructions - it is easy.".$this->url_end(false, 'updraftplus.com/translate/'),
 				'image' => 'notices/updraft_logo.png',
 				'button_link' => false,
 				'dismiss_time' => false,
@@ -129,9 +129,9 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 			),
 			'social_media' => array(
 				'prefix' => '',
-				'title' => __('UpdraftPlus is on social media - check us out!', 'updraftplus'), 
-				'text' => $this->url_start(true,'twitter.com/updraftplus', true).__('Twitter', 'updraftplus').$this->url_end(true,'twitter.com/updraftplus', true).' - '.$this->url_start(true,'facebook.com/updraftplus', true).__('Facebook', 'updraftplus').$this->url_end(true,'facebook.com/updraftplus', true).' - '.$this->url_start(true,'plus.google.com/u/0/b/112313994681166369508/112313994681166369508/about', true).__('Google+', 'updraftplus').$this->url_end(true,'plus.google.com/u/0/b/112313994681166369508/112313994681166369508/about', true).' - '.$this->url_start(true,'www.linkedin.com/company/updraftplus', true).__('LinkedIn', 'updraftplus').$this->url_end(true,'www.linkedin.com/company/updraftplus', true),
-				'text_plain' => $this->url_start(false,'twitter.com/updraftplus', true).__('Twitter', 'updraftplus').$this->url_end(false,'twitter.com/updraftplus', true).' - '.$this->url_start(false,'facebook.com/updraftplus', true).__('Facebook', 'updraftplus').$this->url_end(false,'facebook.com/updraftplus', true).' - '.$this->url_start(false,'plus.google.com/u/0/b/112313994681166369508/112313994681166369508/about', true).__('Google+', 'updraftplus').$this->url_end(false,'plus.google.com/u/0/b/112313994681166369508/112313994681166369508/about', true).' - '.$this->url_start(false,'www.linkedin.com/company/updraftplus', true).__('LinkedIn', 'updraftplus').$this->url_end(false,'www.linkedin.com/company/updraftplus', true),
+				'title' => __('UpdraftPlus is on social media - check us out!', 'updraftplus'),
+				'text' => $this->url_start(true, 'twitter.com/updraftplus', true).__('Twitter', 'updraftplus').$this->url_end(true, 'twitter.com/updraftplus', true).' - '.$this->url_start(true, 'facebook.com/updraftplus', true).__('Facebook', 'updraftplus').$this->url_end(true, 'facebook.com/updraftplus', true).' - '.$this->url_start(true, 'plus.google.com/u/0/b/112313994681166369508/112313994681166369508/about', true).__('Google+', 'updraftplus').$this->url_end(true, 'plus.google.com/u/0/b/112313994681166369508/112313994681166369508/about', true).' - '.$this->url_start(true, 'www.linkedin.com/company/updraftplus', true).__('LinkedIn', 'updraftplus').$this->url_end(true, 'www.linkedin.com/company/updraftplus', true),
+				'text_plain' => $this->url_start(false, 'twitter.com/updraftplus', true).__('Twitter', 'updraftplus').$this->url_end(false, 'twitter.com/updraftplus', true).' - '.$this->url_start(false, 'facebook.com/updraftplus', true).__('Facebook', 'updraftplus').$this->url_end(false, 'facebook.com/updraftplus', true).' - '.$this->url_start(false, 'plus.google.com/u/0/b/112313994681166369508/112313994681166369508/about', true).__('Google+', 'updraftplus').$this->url_end(false, 'plus.google.com/u/0/b/112313994681166369508/112313994681166369508/about', true).' - '.$this->url_start(false, 'www.linkedin.com/company/updraftplus', true).__('LinkedIn', 'updraftplus').$this->url_end(false, 'www.linkedin.com/company/updraftplus', true),
 				'image' => 'notices/updraft_logo.png',
 				'dismiss_time' => false,
 				'supported_positions' => $this->anywhere,
@@ -149,8 +149,8 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 			'subscribe_blog' => array(
 				'prefix' => '',
 				'title' => __('UpdraftPlus Blog - get up-to-date news and offers', 'updraftplus'),
-				'text' => $this->url_start(true,'updraftplus.com/news/').__("Blog link",'updraftplus').$this->url_end(true,'updraftplus.com/news/').' - '.$this->url_start(true,'feeds.feedburner.com/UpdraftPlus').__("RSS link",'updraftplus').$this->url_end(true,'feeds.feedburner.com/UpdraftPlus'),
-				'text_plain' => $this->url_start(false,'updraftplus.com/news/').__("Blog link",'updraftplus').$this->url_end(false,'updraftplus.com/news/').' - '.$this->url_start(false,'feeds.feedburner.com/UpdraftPlus').__("RSS link",'updraftplus').$this->url_end(false,'feeds.feedburner.com/UpdraftPlus'),
+				'text' => $this->url_start(true, 'updraftplus.com/news/').__("Blog link", 'updraftplus').$this->url_end(true, 'updraftplus.com/news/').' - '.$this->url_start(true, 'feeds.feedburner.com/UpdraftPlus').__("RSS link", 'updraftplus').$this->url_end(true, 'feeds.feedburner.com/UpdraftPlus'),
+				'text_plain' => $this->url_start(false, 'updraftplus.com/news/').__("Blog link", 'updraftplus').$this->url_end(false, 'updraftplus.com/news/').' - '.$this->url_start(false, 'feeds.feedburner.com/UpdraftPlus').__("RSS link", 'updraftplus').$this->url_end(false, 'feeds.feedburner.com/UpdraftPlus'),
 				'image' => 'notices/updraft_logo.png',
 				'button_link' => false,
 				'supported_positions' => $this->anywhere,
@@ -159,8 +159,8 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 			'check_out_updraftplus_com' => array(
 				'prefix' => '',
 				'title' => __('UpdraftPlus Blog - get up-to-date news and offers', 'updraftplus'),
-				'text' => $this->url_start(true,'updraftplus.com/news/').__("Blog link",'updraftplus').$this->url_end(true,'updraftplus.com/news/').' - '.$this->url_start(true,'feeds.feedburner.com/UpdraftPlus').__("RSS link",'updraftplus').$this->url_end(true,'feeds.feedburner.com/UpdraftPlus'),
-				'text_plain' => $this->url_start(false,'updraftplus.com/news/').__("Blog link",'updraftplus').$this->url_end(false,'updraftplus.com/news/').' - '.$this->url_start(false,'feeds.feedburner.com/UpdraftPlus').__("RSS link",'updraftplus').$this->url_end(false,'feeds.feedburner.com/UpdraftPlus'),
+				'text' => $this->url_start(true, 'updraftplus.com/news/').__("Blog link", 'updraftplus').$this->url_end(true, 'updraftplus.com/news/').' - '.$this->url_start(true, 'feeds.feedburner.com/UpdraftPlus').__("RSS link", 'updraftplus').$this->url_end(true, 'feeds.feedburner.com/UpdraftPlus'),
+				'text_plain' => $this->url_start(false, 'updraftplus.com/news/').__("Blog link", 'updraftplus').$this->url_end(false, 'updraftplus.com/news/').' - '.$this->url_start(false, 'feeds.feedburner.com/UpdraftPlus').__("RSS link", 'updraftplus').$this->url_end(false, 'feeds.feedburner.com/UpdraftPlus'),
 				'image' => 'notices/updraft_logo.png',
 				'button_link' => false,
 				'supported_positions' => $this->dashboard_bottom_or_report,
@@ -187,8 +187,26 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 				'supported_positions' => $this->anywhere,
 				'validity_function' => 'wp_optimize_installed',
 			),
+			'keyy' => array(
+				'prefix' => '',
+				'title' => 'Keyy',
+				'text' => __("Instant and secure logon with a wave of your phone.", "updraftplus") . ' ' . $this->url_start(true, 'getkeyy.com') . __("No more forgotten passwords. Find out more about our revolutionary new WordPress plugin", 'updraftplus') . $this->url_end(true, 'getkeyy.com'),
+				'image' => 'notices/keyy_logo.png',
+				'dismiss_time' => 'dismiss_notice',
+				'supported_positions' => $this->anywhere,
+				'validity_function' => 'keyy_installed',
+			),
+			'metaslider' => array(
+				'prefix' => '',
+				'title' => "MetaSlider: The world's #1 slider plugin from the makers of UpdraftPlus",
+				'text' => __("With Metaslider, you can easily add style and flare with beautifully-designed sliders.", "updraftplus") . ' ' . $this->url_start(true, 'metaslider.com'),
+				'image' => 'notices/metaslider_logo.png',
+				'dismiss_time' => 'dismiss_notice',
+				'supported_positions' => $this->anywhere,
+				'validity_function' => 'metaslider_installed',
+			),
 			
-			//The sale adverts content starts here
+			// The sale adverts content starts here
 			'blackfriday' => array(
 				'prefix' => '',
 				'title' => __('Black Friday - 20% off UpdraftPlus Premium until November 30th', 'updraftplus'),
@@ -197,9 +215,9 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 				'button_link' => 'https://updraftplus.com/landing/updraftplus-premium',
 				'button_meta' => 'updraftplus',
 				'dismiss_time' => 'dismiss_season',
-				'discount_code' => 'blackfridaysale2016',
-				'valid_from' => '2016-11-23 00:00:00',
-				'valid_to' => '2016-11-30 23:59:59',
+				'discount_code' => 'blackfridaysale2017',
+				'valid_from' => '2017-11-20 00:00:00',
+				'valid_to' => '2017-11-30 23:59:59',
 				'supported_positions' => $this->dashboard_top_or_report,
 			),
 			'christmas' => array(
@@ -210,9 +228,9 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 				'button_link' => 'https://updraftplus.com/landing/updraftplus-premium',
 				'button_meta' => 'updraftplus',
 				'dismiss_time' => 'dismiss_season',
-				'discount_code' => 'christmassale2016',
-				'valid_from' => '2016-12-01 00:00:00',
-				'valid_to' => '2016-12-25 23:59:59',
+				'discount_code' => 'christmassale2017',
+				'valid_from' => '2017-12-01 00:00:00',
+				'valid_to' => '2017-12-25 23:59:59',
 				'supported_positions' => $this->dashboard_top_or_report,
 			),
 			'newyear' => array(
@@ -223,9 +241,9 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 				'button_link' => 'https://updraftplus.com/landing/updraftplus-premium',
 				'button_meta' => 'updraftplus',
 				'dismiss_time' => 'dismiss_season',
-				'discount_code' => 'newyearsale2017',
-				'valid_from' => '2016-12-26 00:00:00',
-				'valid_to' => '2017-01-01 23:59:59',
+				'discount_code' => 'newyearsale2018',
+				'valid_from' => '2017-12-26 00:00:00',
+				'valid_to' => '2018-01-14 23:59:59',
 				'supported_positions' => $this->dashboard_top_or_report,
 			),
 			'spring' => array(
@@ -236,9 +254,9 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 				'button_link' => 'https://updraftplus.com/landing/updraftplus-premium',
 				'button_meta' => 'updraftplus',
 				'dismiss_time' => 'dismiss_season',
-				'discount_code' => 'springsale2017',
-				'valid_from' => '2017-04-01 00:00:00',
-				'valid_to' => '2017-04-30 23:59:59',
+				'discount_code' => 'springsale2018',
+				'valid_from' => '2018-04-01 00:00:00',
+				'valid_to' => '2018-04-30 23:59:59',
 				'supported_positions' => $this->dashboard_top_or_report,
 			),
 			'summer' => array(
@@ -249,34 +267,29 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 				'button_link' => 'https://updraftplus.com/landing/updraftplus-premium',
 				'button_meta' => 'updraftplus',
 				'dismiss_time' => 'dismiss_season',
-				'discount_code' => 'summersale2017',
-				'valid_from' => '2017-07-01 00:00:00',
-				'valid_to' => '2017-07-31 23:59:59',
+				'discount_code' => 'summersale2018',
+				'valid_from' => '2018-07-01 00:00:00',
+				'valid_to' => '2018-07-31 23:59:59',
 				'supported_positions' => $this->dashboard_top_or_report,
-			),
-			'2fa' => array(
-				'prefix' => '',
-				'title' => 'Clef Two Factor Authentication is shutting down',
-				'text' => $this->url_start(true,'blog.getclef.com/discontinuing-support-for-clef-6c89febef5f3') . __("Clef confirms that they are closing down their two factor security plugin.",'updraftplus') . $this->url_end(true,'blog.getclef.com/discontinuing-support-for-clef-6c89febef5f3') . ' ' . __("Switch to UpdraftPlus's free alternative:", "updraftplus").' <a href="'.wp_nonce_url(self_admin_url('update.php?action=install-plugin&amp;updraftplus_noautobackup=1&amp;plugin=two-factor-authentication'), 'install-plugin_two-factor-authentication').'">'.__("install","updraftplus") .'</a> '. __("or", "updraftplus") . ' ' .$this->url_start(true,'wordpress.org/plugins/two-factor-authentication/') . __("get more info",'updraftplus') . $this->url_end(true,'wordpress.org/plugins/two-factor-authentication/') . '.',
-				'image' => 'notices/updraft_logo.png',
-				'dismiss_time' => 'dismiss_notice',
-				'supported_positions' => $this->anywhere,
-				'validity_function' => 'clef_2fa_installed',
-			),
+			)
 		);
 
 		return array_merge($parent_notice_content, $child_notice_content);
 	}
 	
-	// Call this method to setup the notices
+	/**
+	 * Call this method to setup the notices
+	 */
 	public function notices_init() {
 		if ($this->initialized) return;
 		$this->initialized = true;
-		//parent::notices_init();
+		// parent::notices_init();
 		$this->notices_content = (defined('UPDRAFTPLUS_NOADS_B') && UPDRAFTPLUS_NOADS_B) ? array() : $this->populate_notices_content();
 		global $updraftplus;
-		$our_version = @constant('SCRIPT_DEBUG') ? $updraftplus->version.'.'.time() : $updraftplus->version;
-		wp_enqueue_style('updraftplus-notices-css',  UPDRAFTPLUS_URL.'/css/updraftplus-notices.css', array(), $our_version);
+		$enqueue_version = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? $updraftplus->version.'.'.time() : $updraftplus->version;
+		$min_or_not = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '' : '.min';
+
+		wp_enqueue_style('updraftplus-notices-css',  UPDRAFTPLUS_URL.'/css/updraftplus-notices'.$min_or_not.'.css', array(), $enqueue_version);
 	}
 
 	protected function translation_needed($plugin_base_dir = null, $product_name = null) {
@@ -285,11 +298,36 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 	
 	protected function wp_optimize_installed($plugin_base_dir = null, $product_name = null) {
 		$wp_optimize_file = false;
-		if (!function_exists('get_plugins')) require_once(ABSPATH.'wp-admin/includes/plugin.php');
+		if (!function_exists('get_plugins')) include_once(ABSPATH.'wp-admin/includes/plugin.php');
 		$plugins = get_plugins();
 
 		foreach ($plugins as $key => $value) {
-			if ($value['TextDomain'] == 'wp-optimize') {
+			if ('wp-optimize' == $value['TextDomain']) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	protected function keyy_installed($plugin_base_dir = null, $product_name = null) {
+		$wp_optimize_file = false;
+		if (!function_exists('get_plugins')) include_once(ABSPATH.'wp-admin/includes/plugin.php');
+		$plugins = get_plugins();
+
+		foreach ($plugins as $key => $value) {
+			if ('keyy' == $value['TextDomain']) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	protected function metaslider_installed($plugin_base_dir = null, $product_name = null) {
+		if (!function_exists('get_plugins')) include_once(ABSPATH.'wp-admin/includes/plugin.php');
+		$plugins = get_plugins();
+
+		foreach ($plugins as $key => $value) {
+			if ('ml-slider' == $value['TextDomain']) {
 				return false;
 			}
 		}
@@ -298,7 +336,7 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 
 	protected function clef_2fa_installed($plugin_base_dir = null, $product_name = null) {
 
-		if (!function_exists('get_plugins')) require_once(ABSPATH.'wp-admin/includes/plugin.php');
+		if (!function_exists('get_plugins')) include_once(ABSPATH.'wp-admin/includes/plugin.php');
 
 		$plugins = get_plugins();
 		$clef_found = false;
@@ -329,7 +367,7 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 			$valid_to = strtotime($notice_data['valid_to']);
 			$dismiss = $this->check_notice_dismissed($notice_data['dismiss_time']);
 			if (($time_now >= $valid_from && $time_now <= $valid_to) && !$dismiss) {
-				//return true so that we return this notice to be displayed
+				// return true so that we return this notice to be displayed
 				return true;
 			}
 		}
@@ -337,9 +375,9 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 		return false;
 	}
 	
-	protected function check_notice_dismissed($dismiss_time){
+	protected function check_notice_dismissed($dismiss_time) {
 
-		$time_now = defined('UPDRAFTPLUS_NOTICES_FORCE_TIME') ? UPDRAFTPLUS_NOTICES_FORCE_TIME : time(); 
+		$time_now = defined('UPDRAFTPLUS_NOTICES_FORCE_TIME') ? UPDRAFTPLUS_NOTICES_FORCE_TIME : time();
 	
 		$notice_dismiss = ($time_now < UpdraftPlus_Options::get_updraft_option('dismissed_general_notices_until', 0));
 		$seasonal_dismiss = ($time_now < UpdraftPlus_Options::get_updraft_option('dismissed_season_notices_until', 0));
@@ -366,15 +404,15 @@ class UpdraftPlus_Notices extends Updraft_Notices {
 			$template_file = 'horizontal-notice.php';
 		}
 		
-		/* 
+		/*
 			Check to see if the updraftplus_com_link filter is being used, if it's not then add our tracking to the link.
 		*/
 	
-		if(!has_filter('updraftplus_com_link') && isset($advert_information['button_link']) && false !== strpos($advert_information['button_link'], '//updraftplus.com')) {
+		if (!has_filter('updraftplus_com_link') && isset($advert_information['button_link']) && false !== strpos($advert_information['button_link'], '//updraftplus.com')) {
 			$advert_information['button_link'] = trailingslashit($advert_information['button_link']).'?afref='.$this->self_affiliate_id;
 		}
 
-		require_once(UPDRAFTPLUS_DIR.'/admin.php');
+		include_once(UPDRAFTPLUS_DIR.'/admin.php');
 		global $updraftplus_admin;
 		return $updraftplus_admin->include_template('wp-admin/notices/'.$template_file, $return_instead_of_echo, $advert_information);
 	}

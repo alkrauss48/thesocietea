@@ -1,5 +1,7 @@
 <?php
 
+    if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+    
     class Post_Types_Order_Walker extends Walker 
         {
 

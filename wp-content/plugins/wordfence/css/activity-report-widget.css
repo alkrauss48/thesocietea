@@ -35,6 +35,9 @@
 	max-width: 100%;
 	border-collapse: collapse;
 }
+#wordfence_activity_report_widget table.wf-fixed-table {
+	table-layout: fixed;
+}
 #wordfence_activity_report_widget table.wf-striped-table th,
 #wordfence_activity_report_widget table.wf-striped-table td {
 	text-align: left;
@@ -80,4 +83,9 @@
 #wordfence_activity_report_widget .recently-modified-files th:nth-child(2),
 #wordfence_activity_report_widget .recently-modified-files td:nth-child(2) {
 	width: 70%;
+}
+
+#wordfence_activity_report_widget .wf-split-word {
+	word-wrap: break-word;
+	word-break: break-all;
 }

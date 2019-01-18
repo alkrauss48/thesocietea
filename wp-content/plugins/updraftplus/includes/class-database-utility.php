@@ -5,7 +5,9 @@ if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed');
 class UpdraftPlus_Database_Utility {
 
 	private $whichdb;
+
 	private $table_prefix_raw;
+
 	private $dbhandle;
 
 	public function __construct($whichdb, $table_prefix_raw, $dbhandle) {
@@ -16,6 +18,7 @@ class UpdraftPlus_Database_Utility {
 
 	/**
 	 * The purpose of this function is to make sure that the options table is put in the database first, then the users table, then the site + blogs tables (if present - multisite), then the usermeta table; and after that the core WP tables - so that when restoring we restore the core tables first
+	 *
 	 * @param  [array] $a_arr the first array
 	 * @param  [array] $b_arr the second array
 	 * @return [array] returns a sorted array
@@ -37,15 +40,15 @@ class UpdraftPlus_Database_Utility {
 		if ($a == $b) return 0;
 		$our_table_prefix = $this->table_prefix_raw;
 		if ($a == $our_table_prefix.'options') return -1;
-		if ($b ==  $our_table_prefix.'options') return 1;
+		if ($b == $our_table_prefix.'options') return 1;
 		if ($a == $our_table_prefix.'site') return -1;
-		if ($b ==  $our_table_prefix.'site') return 1;
+		if ($b == $our_table_prefix.'site') return 1;
 		if ($a == $our_table_prefix.'blogs') return -1;
-		if ($b ==  $our_table_prefix.'blogs') return 1;
+		if ($b == $our_table_prefix.'blogs') return 1;
 		if ($a == $our_table_prefix.'users') return -1;
-		if ($b ==  $our_table_prefix.'users') return 1;
+		if ($b == $our_table_prefix.'users') return 1;
 		if ($a == $our_table_prefix.'usermeta') return -1;
-		if ($b ==  $our_table_prefix.'usermeta') return 1;
+		if ($b == $our_table_prefix.'usermeta') return 1;
 
 		if (empty($our_table_prefix)) return strcmp($a, $b);
 
@@ -68,7 +71,8 @@ class UpdraftPlus_Database_Utility {
 class UpdraftPlus_WPDB_OtherDB_Utility extends wpdb {
 	/**
 	 * This adjusted bail() does two things: 1) Never dies and 2) logs in the UD log
-	 * @param  [string] $message a string containing a message
+	 *
+	 * @param  [string] $message    a string containing a message
 	 * @param  [string] $error_code a string containing an error code
 	 * @return [bool] returns false
 	 */
@@ -76,11 +80,10 @@ class UpdraftPlus_WPDB_OtherDB_Utility extends wpdb {
 		global $updraftplus;
 		if ('db_connect_fail' == $error_code) $message = 'Connection failed: check your access details, that the database server is up, and that the network connection is not firewalled.';
 		$updraftplus->log("WPDB_OtherDB error: $message ($error_code)");
-		# Now do the things that would have been done anyway
-		if ( class_exists( 'WP_Error' ) )
+		// Now do the things that would have been done anyway
+		if (class_exists('WP_Error'))
 			$this->error = new WP_Error($error_code, $message);
-		else
-			$this->error = $message;
+		else $this->error = $message;
 		return false;
 	}
 }

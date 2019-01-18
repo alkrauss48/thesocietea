@@ -13,8 +13,49 @@ class wordfenceURLHoover {
 	private $hostList = array();
 	public $currentHooverID = false;
 	private $_foundSome = false;
+	private $_excludedHosts = array();
 	private $api = false;
 	private $db = false;
+	
+	public static function standardExcludedHosts() {
+		static $standardExcludedHosts = null;
+		if ($standardExcludedHosts !== null) {
+			return $standardExcludedHosts;
+		}
+		
+		global $wpdb;
+		$excludedHosts = array();
+		if (is_multisite()) {
+			$blogIDs = $wpdb->get_col("SELECT blog_id FROM {$wpdb->blogs}"); //Can't use wp_get_sites or get_sites because they return empty at 10k sites
+			foreach ($blogIDs as $id) {
+				$homeURL = get_home_url($id);
+				$host = parse_url($homeURL, PHP_URL_HOST);
+				if ($host) {
+					$excludedHosts[$host] = 1;
+				}
+				$siteURL = get_site_url($id);
+				$host = parse_url($siteURL, PHP_URL_HOST);
+				if ($host) {
+					$excludedHosts[$host] = 1;
+				}
+			}
+		}
+		else {
+			$homeURL = wfUtils::wpHomeURL();
+			$host = parse_url($homeURL, PHP_URL_HOST);
+			if ($host) {
+				$excludedHosts[$host] = 1;
+			}
+			$siteURL = wfUtils::wpSiteURL();
+			$host = parse_url($siteURL, PHP_URL_HOST);
+			if ($host) {
+				$excludedHosts[$host] = 1;
+			}
+		}
+		
+		$standardExcludedHosts = array_keys($excludedHosts);
+		return $standardExcludedHosts;
+	}
 	
 	public function __sleep() {
 		$this->writeHosts();	
@@ -27,7 +68,7 @@ class wordfenceURLHoover {
 		$this->db = new wfDB();
 	}
 	
-	public function __construct($apiKey, $wordpressVersion, $db = false) {
+	public function __construct($apiKey, $wordpressVersion, $db = false, $continuation = false) {
 		$this->hostsToAdd = new wfArray(array('owner', 'host', 'path', 'hostKey'));
 		$this->apiKey = $apiKey;
 		$this->wordpressVersion = $wordpressVersion;
@@ -44,16 +85,19 @@ class wordfenceURLHoover {
 			$this->table = 'wp_wfHoover';
 		}
 		
-		$this->cleanup();
+		if (!$continuation) {
+			$this->cleanup();
+		}
 	}
 	
 	public function cleanup() {
 		$this->db->truncate($this->table);
 	}
 	
-	public function hoover($id, $data) {
+	public function hoover($id, $data, $excludedHosts = array()) {
 		$this->currentHooverID = $id;
 		$this->_foundSome = false;
+		$this->_excludedHosts = $excludedHosts;
 		@preg_replace_callback('/\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’]))/i', array($this, 'captureURL'), $data);
 		$this->writeHosts();
 		return $this->_foundSome;
@@ -70,6 +114,11 @@ class wordfenceURLHoover {
 		if (!isset($components['scheme']) || !preg_match('/^https?$/i', $components['scheme'])) {
 			return;
 		}
+		foreach ($this->_excludedHosts as $h) {
+			if (strcasecmp($h, $components['host']) === 0) {
+				return;
+			}
+		}
 		if (!filter_var($url, FILTER_VALIDATE_URL)) {
 			return;
 		}
@@ -77,11 +126,9 @@ class wordfenceURLHoover {
 		$host = (isset($components['host']) ? $components['host'] : '');
 		$path = (isset($components['path']) && !empty($components['path']) ? $components['path'] : '/');
 		$hashes = $this->_generateHashes($url);
-		$prefixes = '';
 		foreach ($hashes as $h) {
-			$prefixes .= wfUtils::substr($h, 0, 4);
+			$this->hostsToAdd->push(array('owner' => $id, 'host' => $host, 'path' => $path, 'hostKey' => wfUtils::substr($h, 0, 4)));
 		}
-		$this->hostsToAdd->push(array('owner' => $id, 'host' => $host, 'path' => $path, 'hostKey' => $prefixes));
 		
 		if($this->hostsToAdd->size() > 1000){ $this->writeHosts(); }
 	}
@@ -101,6 +148,7 @@ class wordfenceURLHoover {
 			}
 			$sql = rtrim($sql, ',');
 			$this->db->queryWrite($sql);
+			$this->hostsToAdd->collectGarbage();
 		}
 		else {
 			while ($elem = $this->hostsToAdd->shift()) {
@@ -115,62 +163,79 @@ class wordfenceURLHoover {
 					'hostKey' => $elem['hostKey']
 					);
 			}
+			$this->hostsToAdd->collectGarbage();
 		}
 		
 		$this->_foundSome = true;
 	}
 	public function getBaddies() {
-		$allHostKeys = array();
+		wordfence::status(4, 'info', "Gathering host keys.");
+		$allHostKeys = '';
 		if ($this->useDB) {
-			$q1 = $this->db->querySelect("SELECT DISTINCT hostKey FROM {$this->table}");
-			foreach ($q1 as $hRec) {
-				$keys = str_split($hRec['hostKey'], 4);
-				foreach ($keys as $k) {
-					$allHostKeys[] = $k;
+			global $wpdb;
+			$dbh = $wpdb->dbh;
+			$useMySQLi = (is_object($dbh) && $wpdb->use_mysqli);
+			if ($useMySQLi) { //If direct-access MySQLi is available, we use it to minimize the memory footprint instead of letting it fetch everything into an array first
+				wordfence::status(4, 'info', "Using MySQLi directly.");
+				$result = $dbh->query("SELECT DISTINCT hostKey FROM {$this->table} ORDER BY hostKey ASC LIMIT 100000"); /* We limit to 100,000 prefixes since more than that cannot be reliably checked within the default max_execution_time */
+				if (!is_object($result)) {
+					$this->errorMsg = "Unable to query database";
+					$this->dbg($this->errorMsg);
+					return false;
+				}
+				while ($row = $result->fetch_assoc()) {
+					$allHostKeys .= $row['hostKey'];
+				}
+			}
+			else {
+				$q1 = $this->db->querySelect("SELECT DISTINCT hostKey FROM {$this->table} ORDER BY hostKey ASC LIMIT 100000"); /* We limit to 100,000 prefixes since more than that cannot be reliably checked within the default max_execution_time */
+				foreach ($q1 as $hRec) {
+					$allHostKeys .= $hRec['hostKey'];
 				}
 			}
 		}
 		else {
-			$allHostKeys = $this->hostKeys;
+			$allHostKeys = implode('', array_values(array_unique($this->hostKeys)));
 		}
-		
-		$allHostKeys = array_values(array_unique($allHostKeys));
 		
 		/**
 		 * Check hash prefixes first. Each one is a 4-byte binary prefix of a SHA-256 hash of the URL. The response will
 		 * be a binary list of 4-byte indices; The full URL for each index should be sent in the secondary query to
 		 * find the true good/bad status.
 		 */
-		if (count($allHostKeys) > 0) {
+		
+		$allCount = wfUtils::strlen($allHostKeys) / 4;
+		if ($allCount > 0) {
 			if ($this->debug) {
-				$this->dbg("Checking " . count($allHostKeys) . " hostkeys");
-				foreach ($allHostKeys as $key) {
+				$this->dbg("Checking {$allCount} hostkeys");
+				for ($i = 0; $i < $allCount; $i++) {
+					$key = wfUtils::substr($allHostKeys, $i * 4, 4);
 					$this->dbg("Checking hostkey: " . bin2hex($key));
 				}
 			}
 			
-			wordfence::status(2, 'info', "Checking " . count($allHostKeys) . " host keys against Wordfence scanning servers.");
-			$resp = $this->api->binCall('check_host_keys', implode('', $allHostKeys));
+			wordfence::status(2, 'info', "Checking {$allCount} host keys against Wordfence scanning servers.");
+			$resp = $this->api->binCall('check_host_keys', $allHostKeys);
 			wordfence::status(2, 'info', "Done host key check.");
 			$this->dbg("Done host key check");
 
-			$badHostKeys = array();
+			$badHostKeys = '';
 			if ($resp['code'] >= 200 && $resp['code'] <= 299) {
 				$this->dbg("Host key response: " . bin2hex($resp['data']));
-				$dataLen = strlen($resp['data']);
+				$dataLen = wfUtils::strlen($resp['data']);
 				if ($dataLen > 0 && $dataLen % 2 == 0) {
 					$this->dbg("Checking response indexes");
 					for ($i = 0; $i < $dataLen; $i += 2) {
-						$idxArr = unpack('n', substr($resp['data'], $i, 2));
-						$idx = $idxArr[1];
+						$idx = wfUtils::array_first(unpack('n', wfUtils::substr($resp['data'], $i, 2)));
 						$this->dbg("Checking index {$idx}");
-						if (isset($allHostKeys[$idx])) {
-							$badHostKeys[] = $allHostKeys[$idx];
-							$this->dbg("Got bad hostkey for record: " . bin2hex($allHostKeys[$idx]));
+						if ($idx < $allCount) {
+							$prefix = wfUtils::substr($allHostKeys, $idx * 4, 4);
+							$badHostKeys .= $prefix;
+							$this->dbg("Got bad hostkey for record: " . bin2hex($prefix));
 						}
 						else {
-							$this->dbg("Bad allHostKeys index: $idx");
-							$this->errorMsg = "Bad allHostKeys index: $idx";
+							$this->dbg("Bad allHostKeys index: {$idx}");
+							$this->errorMsg = "Bad allHostKeys index: {$idx}";
 							return false;
 						}
 					}
@@ -186,12 +251,15 @@ class wordfenceURLHoover {
 				return false;
 			}
 			
-			if (count($badHostKeys) > 0) {
+			$badCount = wfUtils::strlen($badHostKeys) / 4;
+			if ($badCount > 0) {
 				$urlsToCheck = array();
 				$totalURLs = 0;
 				
 				//Reconcile flagged prefixes with their corresponding URLs
-				foreach ($badHostKeys as $badHostKey) {
+				for ($i = 0; $i < $badCount; $i++) {
+					$prefix = wfUtils::substr($badHostKeys, $i * 4, 4);
+					
 					if ($this->useDB) {
 						/**
 						 * Putting a 10000 limit in here for sites that have a huge number of items with the same URL 
@@ -199,7 +267,7 @@ class wordfenceURLHoover {
 						 * will fix the malicious URLs and on subsequent scans the items (owners) that are above the 
 						 * 10000 limit will appear.
 						 */
-						$q1 = $this->db->querySelect("SELECT owner, host, path, LOCATE('%s', hostKey) AS position FROM {$this->table} HAVING position != 0 AND MOD(position - 1, 4) = 0 LIMIT 10000", $badHostKey);
+						$q1 = $this->db->querySelect("SELECT DISTINCT owner, host, path FROM {$this->table} WHERE hostKey = %s LIMIT 10000", $prefix);
 						foreach ($q1 as $rec) {
 							$url = 'http://' . $rec['host'] . $rec['path'];
 							if (!isset($urlsToCheck[$rec['owner']])) {
@@ -213,7 +281,7 @@ class wordfenceURLHoover {
 					}
 					else {
 						foreach ($this->hostList as $rec) {
-							$pos = strpos($rec['hostKey'], $badHostKey);
+							$pos = wfUtils::strpos($rec['hostKey'], $prefix);
 							if ($pos !== false && $pos % 4 == 0) {
 								$url = 'http://' . $rec['host'] . $rec['path'];
 								if (!isset($urlsToCheck[$rec['owner']])) {

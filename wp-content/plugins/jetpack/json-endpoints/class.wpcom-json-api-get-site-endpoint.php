@@ -1,4 +1,28 @@
 <?php
+
+new WPCOM_JSON_API_GET_Site_Endpoint( array(
+	'description' => 'Get information about a site.',
+	'group'       => 'sites',
+	'stat'        => 'sites:X',
+	'allowed_if_flagged' => true,
+	'method'      => 'GET',
+	'max_version' => '1.1',
+	'new_version' => '1.2',
+	'path'        => '/sites/%s',
+	'path_labels' => array(
+		'$site' => '(int|string) Site ID or domain',
+	),
+	'allow_jetpack_site_auth' => true,
+	'query_parameters' => array(
+		'context' => false,
+		'options' => '(string) Optional. Returns specified options only. Comma-separated list. Example: options=login_url,timezone',
+	),
+
+	'response_format' => WPCOM_JSON_API_GET_Site_Endpoint::$site_format,
+
+	'example_request' => 'https://public-api.wordpress.com/rest/v1/sites/en.blog.wordpress.com/',
+) );
+
 class WPCOM_JSON_API_GET_Site_Endpoint extends WPCOM_JSON_API_Endpoint {
 
 	public static $site_format = array(
@@ -25,6 +49,7 @@ class WPCOM_JSON_API_GET_Site_Endpoint extends WPCOM_JSON_API_Endpoint {
 		'updates'           => '(array) An array of available updates for plugins, themes, wordpress, and languages.',
 		'jetpack_modules'   => '(array) A list of active Jetpack modules.',
 		'meta'              => '(object) Meta data',
+		'quota'             => '(array) An array describing how much space a user has left for uploads',
 	);
 
 	protected static $no_member_fields = array(
@@ -48,6 +73,7 @@ class WPCOM_JSON_API_GET_Site_Endpoint extends WPCOM_JSON_API_Endpoint {
 	protected static $site_options_format = array(
 		'timezone',
 		'gmt_offset',
+		'blog_public',
 		'videopress_enabled',
 		'upgraded_filetypes_enabled',
 		'login_url',
@@ -86,10 +112,14 @@ class WPCOM_JSON_API_GET_Site_Endpoint extends WPCOM_JSON_API_Endpoint {
 		'page_on_front',
 		'page_for_posts',
 		'headstart',
+		'headstart_is_fresh',
 		'ak_vp_bundle_enabled',
-		'verification_services_codes',
 		Jetpack_SEO_Utils::FRONT_PAGE_META_OPTION,
 		Jetpack_SEO_Titles::TITLE_FORMATS_OPTION,
+		'verification_services_codes',
+		'podcasting_archive',
+		'is_domain_only',
+		'is_automated_transfer',
 	);
 
 	protected static $jetpack_response_field_additions = array(
@@ -103,7 +133,9 @@ class WPCOM_JSON_API_GET_Site_Endpoint extends WPCOM_JSON_API_Endpoint {
 
 	protected static $jetpack_response_option_additions = array(
 		'publicize_permanently_disabled',
-		'ak_vp_bundle_enabled'
+		'ak_vp_bundle_enabled',
+		'is_automated_transfer',
+		'frame_nonce'
 	);
 
 	private $site;
@@ -128,10 +160,7 @@ class WPCOM_JSON_API_GET_Site_Endpoint extends WPCOM_JSON_API_Endpoint {
 			return $blog_id;
 		}
 
-		// TODO: enable this when we can do so without being interfered with by
-		// other endpoints that might be wrapping this one.
-		// Uncomment and see failing test: test_jetpack_site_should_have_true_jetpack_property_via_site_meta
-		// $this->filter_fields_and_options();
+		$this->filter_fields_and_options();
 
 		$response = $this->build_current_site_response();
 
@@ -151,7 +180,7 @@ class WPCOM_JSON_API_GET_Site_Endpoint extends WPCOM_JSON_API_Endpoint {
 	/**
 	 * Collects the necessary information to return for a site's response.
 	 *
-	 * @return (array)
+	 * @return array
 	 */
 	public function build_current_site_response() {
 
@@ -174,11 +203,31 @@ class WPCOM_JSON_API_GET_Site_Endpoint extends WPCOM_JSON_API_Endpoint {
 			array_intersect( $default_fields, $this->fields_to_include ) :
 			$default_fields;
 
-		if ( ! is_user_member_of_blog( get_current_user_id(), get_current_blog_id() ) ) {
+		if ( ! $this->has_blog_access( $this->api->token_details, $blog_id ) ) {
 			$response_keys = array_intersect( $response_keys, self::$no_member_fields );
 		}
 
 		return $this->render_response_keys( $response_keys );
+	}
+
+	private function has_blog_access( $token_details, $wpcom_blog_id ) {
+		if ( is_user_member_of_blog( get_current_user_id(), get_current_blog_id() ) ) {
+			return true;
+		}
+
+		$token_details = (array) $token_details;
+		if ( ! isset( $token_details['access'], $token_details['auth'], $token_details['blog_id'] ) ) {
+			return false;
+		}
+
+		if (
+			'jetpack' === $token_details['auth'] &&
+			'blog' === $token_details['access'] &&
+			$wpcom_blog_id === $token_details['blog_id']
+		) {
+			return true;
+		}
+		return false;
 	}
 
 	private function render_response_keys( &$response_keys ) {
@@ -289,6 +338,9 @@ class WPCOM_JSON_API_GET_Site_Endpoint extends WPCOM_JSON_API_Endpoint {
 			case 'plan' :
 				$response[ $key ] = $this->site->get_plan();
 				break;
+			case 'quota' :
+				$response[ $key ] = $this->site->get_quota();
+				break;
 		}
 
 		do_action( 'post_render_site_response_key', $key );
@@ -303,7 +355,6 @@ class WPCOM_JSON_API_GET_Site_Endpoint extends WPCOM_JSON_API_Endpoint {
 		$site = $this->site;
 
 		$custom_front_page = $site->is_custom_front_page();
-
 
 		foreach ( $options_response_keys as $key ) {
 			switch ( $key ) {
@@ -429,6 +480,9 @@ class WPCOM_JSON_API_GET_Site_Endpoint extends WPCOM_JSON_API_Endpoint {
 				case 'headstart' :
 					$options[ $key ] = $site->is_headstart();
 					break;
+				case 'headstart_is_fresh' :
+					$options[ $key ] = $site->is_headstart_fresh();
+					break;
 				case 'ak_vp_bundle_enabled' :
 					$options[ $key ] = $site->get_ak_vp_bundle_enabled();
 					break;
@@ -440,6 +494,18 @@ class WPCOM_JSON_API_GET_Site_Endpoint extends WPCOM_JSON_API_Endpoint {
 					break;
 				case 'verification_services_codes' :
 					$options[ $key ] = $site->get_verification_services_codes();
+					break;
+				case 'podcasting_archive':
+					$options[ $key ] = $site->get_podcasting_archive();
+					break;
+				case 'is_domain_only':
+					$options[ $key ] = $site->is_domain_only();
+					break;
+				case 'is_automated_transfer':
+					$options[ $key ] = $site->is_automated_transfer();
+					break;
+				case 'blog_public':
+					$options[ $key ] = $site->get_blog_public();
 					break;
 			}
 		}
@@ -469,6 +535,7 @@ class WPCOM_JSON_API_GET_Site_Endpoint extends WPCOM_JSON_API_Endpoint {
 	// apply any WPCOM-only response components to a Jetpack site response
 	public function decorate_jetpack_response( &$response ) {
 		$this->site = $this->get_platform()->get_site( $response->ID );
+		switch_to_blog( $this->site->get_id() );
 
 		// ensure the response is marked as being from Jetpack
 		$response->jetpack = true;
@@ -479,8 +546,7 @@ class WPCOM_JSON_API_GET_Site_Endpoint extends WPCOM_JSON_API_Endpoint {
 			$response->{ $key } = $value;
 		}
 
-		$token_details = (object) $this->api->token_details;
-		if ( is_user_member_of_blog( get_current_user_id(), get_current_blog_id() ) || 'blog' === $token_details->access ) {
+		if ( $this->has_blog_access( $this->api->token_details, $response->ID ) ) {
 			$wpcom_member_response = $this->render_response_keys( self::$jetpack_response_field_member_additions );
 
 			foreach( $wpcom_member_response as $key => $value ) {
@@ -508,9 +574,30 @@ class WPCOM_JSON_API_GET_Site_Endpoint extends WPCOM_JSON_API_Endpoint {
 			}
 		}
 
+		restore_current_blog();
 		return $response; // possibly no need since it's modified in place
 	}
 }
+
+new WPCOM_JSON_API_List_Post_Formats_Endpoint( array(
+	'description' => 'Get a list of post formats supported by a site.',
+	'group'       => '__do_not_document',
+	'stat'        => 'sites:X:post-formats',
+
+	'method'      => 'GET',
+	'path'        => '/sites/%s/post-formats',
+	'path_labels' => array(
+		'$site' => '(int|string) Site ID or domain',
+	),
+
+	'query_parameters' => array(
+		'context' => false,
+	),
+
+	'response_format' => array(
+		'formats' => '(object) An object of supported post formats, each key a supported format slug mapped to its display string.',
+	)
+) );
 
 class WPCOM_JSON_API_List_Post_Formats_Endpoint extends WPCOM_JSON_API_Endpoint {
 	// /sites/%s/post-formats -> $blog_id
@@ -541,6 +628,25 @@ class WPCOM_JSON_API_List_Post_Formats_Endpoint extends WPCOM_JSON_API_Endpoint 
 		return $response;
 	}
 }
+
+new WPCOM_JSON_API_List_Page_Templates_Endpoint( array(
+	'description' => 'Get a list of page templates supported by a site.',
+	'group'       => 'sites',
+	'stat'        => 'sites:X:post-templates',
+
+	'method'      => 'GET',
+	'path'        => '/sites/%s/page-templates',
+	'path_labels' => array(
+		'$site' => '(int|string) Site ID or domain',
+	),
+	'query_parameters' => array(
+		'context' => false,
+	),
+	'response_format' => array(
+		'templates' => '(array) A list of supported page templates. Contains label and file.',
+	),
+	'example_request' => 'https://public-api.wordpress.com/rest/v1.1/sites/33534099/page-templates'
+) );
 
 class WPCOM_JSON_API_List_Page_Templates_Endpoint extends WPCOM_JSON_API_Endpoint {
 	// /sites/%s/page-templates -> $blog_id

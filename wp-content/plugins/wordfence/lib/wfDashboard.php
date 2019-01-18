@@ -53,6 +53,21 @@ class wfDashboard {
 			
 			unset($data['notifications']);
 		}
+		
+		if (isset($data['revoked'])) {
+			foreach ($data['revoked'] as $r) {
+				if (!isset($r['id'])) {
+					continue;
+				}
+				
+				$notification = wfNotification::getNotificationForID($r['id']);
+				if ($notification !== null) {
+					$notification->markAsRead();
+				}
+			}
+			
+			unset($data['revoked']);
+		}
 		wfConfig::set_ser('dashboardData', $data);
 	}
 	

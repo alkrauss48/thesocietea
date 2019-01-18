@@ -4,7 +4,7 @@ $d = new wfDashboard();
 <div class="wrap wordfence">
 	<div class="wf-container-fluid">
 		<?php $pageTitle = "Wordfence Dashboard"; include('pageTitle.php'); ?>
-		<div class="wordfenceHelpLink"><a href="http://docs.wordfence.com/en/Wordfence_Dashboard" target="_blank" class="wfhelp"></a><a href="http://docs.wordfence.com/en/Wordfence_Dashboard" target="_blank">Learn more about the Wordfence Dashboard</a></div>
+		<div class="wordfenceHelpLink"><a href="http://docs.wordfence.com/en/Wordfence_Dashboard" target="_blank" rel="noopener noreferrer" class="wfhelp"></a><a href="http://docs.wordfence.com/en/Wordfence_Dashboard" target="_blank" rel="noopener noreferrer">Learn more about the Wordfence Dashboard</a></div>
 		<div id="wordfenceMode_dashboard"></div>
 		<div class="wf-row wf-add-top">
 			<div class="wf-col-xs-12">
@@ -17,12 +17,12 @@ $d = new wfDashboard();
 							</div>
 						<?php elseif ($d->scanLastStatus == wfDashboard::SCAN_SUCCESS): ?>
 							<div class="wf-dashboard-item-title">
-								<strong>Last scan completed: <?php echo esc_html(date_i18n(get_option('date_format') . ' ' . get_option('time_format'), $d->scanLastCompletion)); ?></strong>
+								<strong>Last scan completed: <?php echo esc_html(wfUtils::formatLocalTime(get_option('date_format') . ' ' . get_option('time_format'), $d->scanLastCompletion)); ?></strong>
 							</div>
 							<div class="wf-dashboard-item-action wf-dashboard-item-action-text wf-dashboard-item-action-text-success">No security problems detected</div>
 						<?php elseif ($d->scanLastStatus == wfDashboard::SCAN_WARNINGS): ?>
 							<div class="wf-dashboard-item-title">
-								<strong>Last scan completed: <?php echo esc_html(date_i18n(get_option('date_format') . ' ' . get_option('time_format'), $d->scanLastCompletion)); ?></strong>
+								<strong>Last scan completed: <?php echo esc_html(wfUtils::formatLocalTime(get_option('date_format') . ' ' . get_option('time_format'), $d->scanLastCompletion)); ?></strong>
 							</div>
 							<div class="wf-dashboard-item-action wf-dashboard-item-action-text wf-dashboard-item-action-text-warning"><a href="<?php echo network_admin_url('admin.php?page=WordfenceScan'); ?>"><?php echo esc_html($d->scanLastStatusMessage); ?></a></div>
 						<?php elseif ($d->scanLastStatus == wfDashboard::SCAN_FAILED): ?>

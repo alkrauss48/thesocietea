@@ -1,11 +1,11 @@
 <?php
 $w = new wfConfig();
 ?>
-<div class="wordfenceHelpLink"><a href="<?php echo $helpLink; ?>" target="_blank" class="wfhelp"></a><a href="<?php echo $helpLink; ?>" target="_blank"><?php echo $helpLabel; ?></a></div>
+<div class="wordfenceHelpLink"><a href="<?php echo $helpLink; ?>" target="_blank" rel="noopener noreferrer" class="wfhelp"></a><a href="<?php echo $helpLink; ?>" target="_blank" rel="noopener noreferrer"><?php echo $helpLabel; ?></a></div>
 <div class="wf-add-top">
 	<form id="wfConfigForm-bruteForce" class="wf-form-horizontal">
 		<div class="wf-form-group">
-			<label for="blockedTime" class="wf-col-sm-5 wf-control-label">Enforce strong passwords <a href="http://docs.wordfence.com/en/Wordfence_options#Enforce_strong_passwords.3F" target="_blank" class="wfhelp"></a></label>
+			<label for="blockedTime" class="wf-col-sm-5 wf-control-label">Enforce strong passwords <a href="http://docs.wordfence.com/en/Wordfence_options#Enforce_strong_passwords.3F" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 			<div class="wf-col-sm-7">
 				<select class="wf-form-control" id="loginSec_strongPasswds" name="loginSec_strongPasswds">
 					<option value="">Do not force users to use strong passwords</option>
@@ -15,7 +15,7 @@ $w = new wfConfig();
 			</div>
 		</div>
 		<div class="wf-form-group">
-			<label for="loginSec_maxFailures" class="wf-col-sm-5 wf-control-label">Lock out after how many login failures <a href="http://docs.wordfence.com/en/Wordfence_options#Lock_out_after_how_many_login_failures" target="_blank" class="wfhelp"></a></label>
+			<label for="loginSec_maxFailures" class="wf-col-sm-5 wf-control-label">Lock out after how many login failures <a href="http://docs.wordfence.com/en/Wordfence_options#Lock_out_after_how_many_login_failures" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 			<div class="wf-col-sm-7">
 				<select id="loginSec_maxFailures" class="wf-form-control" name="loginSec_maxFailures">
 					<option value="1"<?php $w->sel( 'loginSec_maxFailures', '1' ); ?>>1</option>
@@ -39,7 +39,7 @@ $w = new wfConfig();
 			</div>
 		</div>
 		<div class="wf-form-group">
-			<label for="loginSec_maxForgotPasswd" class="wf-col-sm-5 wf-control-label">Lock out after how many forgot password attempts <a href="http://docs.wordfence.com/en/Wordfence_options#Lock_out_after_how_many_forgot_password_attempts" target="_blank" class="wfhelp"></a></label>
+			<label for="loginSec_maxForgotPasswd" class="wf-col-sm-5 wf-control-label">Lock out after how many forgot password attempts <a href="http://docs.wordfence.com/en/Wordfence_options#Lock_out_after_how_many_forgot_password_attempts" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 			<div class="wf-col-sm-7">
 				<select id="loginSec_maxForgotPasswd" class="wf-form-control" name="loginSec_maxForgotPasswd">
 					<option value="1"<?php $w->sel( 'loginSec_maxForgotPasswd', '1' ); ?>>1</option>
@@ -63,7 +63,7 @@ $w = new wfConfig();
 			</div>
 		</div>
 		<div class="wf-form-group">
-			<label for="loginSec_countFailMins" class="wf-col-sm-5 wf-control-label">Count failures over what time period <a href="http://docs.wordfence.com/en/Wordfence_options#Count_failures_over_what_time_period" target="_blank" class="wfhelp"></a></label>
+			<label for="loginSec_countFailMins" class="wf-col-sm-5 wf-control-label">Count failures over what time period <a href="http://docs.wordfence.com/en/Wordfence_options#Count_failures_over_what_time_period" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 			<div class="wf-col-sm-7">
 				<select id="loginSec_countFailMins" class="wf-form-control" name="loginSec_countFailMins">
 					<option value="5"<?php $w->sel( 'loginSec_countFailMins', '5' ); ?>>5 minutes</option>
@@ -78,7 +78,7 @@ $w = new wfConfig();
 			</div>
 		</div>
 		<div class="wf-form-group">
-			<label for="loginSec_lockoutMins" class="wf-col-sm-5 wf-control-label">Amount of time a user is locked out <a href="http://docs.wordfence.com/en/Wordfence_options#Amount_of_time_a_user_is_locked_out" target="_blank" class="wfhelp"></a></label>
+			<label for="loginSec_lockoutMins" class="wf-col-sm-5 wf-control-label">Amount of time a user is locked out <a href="http://docs.wordfence.com/en/Wordfence_options#Amount_of_time_a_user_is_locked_out" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 			<div class="wf-col-sm-7">
 				<select id="loginSec_lockoutMins" class="wf-form-control" name="loginSec_lockoutMins">
 					<option value="5"<?php $w->sel( 'loginSec_lockoutMins', '5' ); ?>>5 minutes</option>
@@ -99,31 +99,31 @@ $w = new wfConfig();
 			</div>
 		</div>
 		<div class="wf-form-group">
-			<label for="loginSec_lockInvalidUsers" class="wf-col-sm-5 wf-control-label">Immediately lock out invalid usernames <a href="http://docs.wordfence.com/en/Wordfence_options#Immediately_lock_out_invalid_usernames" target="_blank" class="wfhelp"></a></label>
+			<label for="loginSec_lockInvalidUsers" class="wf-col-sm-5 wf-control-label">Immediately lock out invalid usernames <a href="http://docs.wordfence.com/en/Wordfence_options#Immediately_lock_out_invalid_usernames" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 			<div class="wf-col-sm-7">
 				<div class="wf-checkbox"><input type="checkbox" id="loginSec_lockInvalidUsers" name="loginSec_lockInvalidUsers" value="1" <?php $w->cb('loginSec_lockInvalidUsers'); ?>></div>
 			</div>
 		</div>
 		<div class="wf-form-group">
-			<label for="loginSec_maskLoginErrors" class="wf-col-sm-5 wf-control-label">Don't let WordPress reveal valid users in login errors <a href="http://docs.wordfence.com/en/Wordfence_options#Don.27t_let_WordPress_reveal_valid_users_in_login_errors" target="_blank" class="wfhelp"></a></label>
+			<label for="loginSec_maskLoginErrors" class="wf-col-sm-5 wf-control-label">Don't let WordPress reveal valid users in login errors <a href="http://docs.wordfence.com/en/Wordfence_options#Don.27t_let_WordPress_reveal_valid_users_in_login_errors" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 			<div class="wf-col-sm-7">
 				<div class="wf-checkbox"><input type="checkbox" id="loginSec_maskLoginErrors" name="loginSec_maskLoginErrors" value="1" <?php $w->cb('loginSec_maskLoginErrors'); ?>></div>
 			</div>
 		</div>
 		<div class="wf-form-group">
-			<label for="loginSec_blockAdminReg" class="wf-col-sm-5 wf-control-label">Prevent users registering 'admin' username if it doesn't exist <a href="http://docs.wordfence.com/en/Wordfence_options#Prevent_users_registering_.27admin.27_username_if_it_doesn.27t_exist" target="_blank" class="wfhelp"></a></label>
+			<label for="loginSec_blockAdminReg" class="wf-col-sm-5 wf-control-label">Prevent users registering 'admin' username if it doesn't exist <a href="http://docs.wordfence.com/en/Wordfence_options#Prevent_users_registering_.27admin.27_username_if_it_doesn.27t_exist" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 			<div class="wf-col-sm-7">
 				<div class="wf-checkbox"><input type="checkbox" id="loginSec_blockAdminReg" name="loginSec_blockAdminReg" value="1" <?php $w->cb('loginSec_blockAdminReg'); ?>></div>
 			</div>
 		</div>
 		<div class="wf-form-group">
-			<label for="loginSec_disableAuthorScan" class="wf-col-sm-5 wf-control-label">Prevent discovery of usernames through '/?author=N' scans, the oEmbed API, and the WordPress REST API <a href="http://docs.wordfence.com/en/Wordfence_options#Prevent_discovery_of_usernames_through_.27.3F.2Fauthor.3DN.27_scans" target="_blank" class="wfhelp"></a></label>
+			<label for="loginSec_disableAuthorScan" class="wf-col-sm-5 wf-control-label">Prevent discovery of usernames through '/?author=N' scans, the oEmbed API, and the WordPress REST API <a href="http://docs.wordfence.com/en/Wordfence_options#Prevent_discovery_of_usernames_through_.27.3F.2Fauthor.3DN.27_scans" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 			<div class="wf-col-sm-7">
 				<div class="wf-checkbox"><input type="checkbox" id="loginSec_disableAuthorScan" name="loginSec_disableAuthorScan" value="1" <?php $w->cb('loginSec_disableAuthorScan'); ?>></div>
 			</div>
 		</div>
 		<div class="wf-form-group">
-			<label for="loginSec_userBlacklist" class="wf-col-sm-5 wf-control-label">Immediately block the IP of users who try to sign in as these usernames <a href="http://docs.wordfence.com/en/Wordfence_options#Immediately_block_the_IP_of_users_who_try_to_sign_in_as_these_usernames" target="_blank" class="wfhelp"></a></label>
+			<label for="loginSec_userBlacklist" class="wf-col-sm-5 wf-control-label">Immediately block the IP of users who try to sign in as these usernames <a href="http://docs.wordfence.com/en/Wordfence_options#Immediately_block_the_IP_of_users_who_try_to_sign_in_as_these_usernames" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 			<div class="wf-col-sm-7">
 				<textarea id="loginSec_userBlacklist" class="wf-form-control" rows="4" name="loginSec_userBlacklist"><?php echo wfUtils::cleanupOneEntryPerLine($w->getHTML( 'loginSec_userBlacklist' )); ?></textarea>
 				<span class="wf-help-block">(One per line. Existing users won't be blocked.)</span>

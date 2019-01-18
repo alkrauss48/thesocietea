@@ -2,7 +2,7 @@
 /**
  * @var wfActivityReportView $this
  */
-$title = 'Wordfence Activity for the week of ' . date_i18n(get_option('date_format'));
+$title = 'Wordfence Activity for the week of ' . wfUtils::formatLocalTime(get_option('date_format'));
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -293,7 +293,7 @@ $title = 'Wordfence Activity for the week of ' . date_i18n(get_option('date_form
 		<td valign="top">
 			<div class="wrapper wp-core-ui">
 				<div style="float: right;text-align: right;line-height:1.1;color: #666666;margin:20px 0 0;">
-					Activity for week of<br> <strong><?php echo date_i18n(get_option('date_format')) ?></strong>
+					Activity for week of<br> <strong><?php echo wfUtils::formatLocalTime(get_option('date_format')) ?></strong>
 				</div>
 				<a href="http://www.wordfence.com/zz7/"><img src="<?php echo wfUtils::getBaseURL(); ?>images/logo.png" alt=""/></a>
 
@@ -329,7 +329,7 @@ $title = 'Wordfence Activity for the week of ' . date_i18n(get_option('date_form
 				</table>
 
 				<p>
-					<a class="button" href="<?php echo network_admin_url('admin.php?page=WordfenceWAF#top#blockedips') ?>">Update Blocked IPs</a>
+					<a class="button" href="<?php echo network_admin_url('admin.php?page=WordfenceBlocking#top#blockedips') ?>">Update Blocked IPs</a>
 				</p>
 
 				<?php wfHelperString::cycle(); ?>
@@ -364,7 +364,7 @@ $title = 'Wordfence Activity for the week of ' . date_i18n(get_option('date_form
 				</table>
 
 				<p>
-					<a class="button" href="<?php echo network_admin_url('admin.php?page=WordfenceWAF#top#countryblocking') ?>">Update Blocked Countries</a>
+					<a class="button" href="<?php echo network_admin_url('admin.php?page=WordfenceBlocking#top#countryblocking') ?>">Update Blocked Countries</a>
 				</p>
 
 				<?php wfHelperString::cycle(); ?>

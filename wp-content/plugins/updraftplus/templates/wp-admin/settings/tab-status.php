@@ -8,7 +8,7 @@
 		<noscript>
 		<tr>
 			<th><?php _e('JavaScript warning', 'updraftplus');?>:</th>
-			<td style="color:red"><?php _e('This admin interface uses JavaScript heavily. You either need to activate it within your browser, or to use a JavaScript-capable browser.','updraftplus');?></td>
+			<td style="color:red"><?php _e('This admin interface uses JavaScript heavily. You either need to activate it within your browser, or to use a JavaScript-capable browser.', 'updraftplus');?></td>
 		</tr>
 		</noscript>
 
@@ -16,7 +16,7 @@
 			<th></th>
 			<td>
 
-			<?php 
+			<?php
 				if ($backup_disabled) {
 					$this->show_admin_warning(
 						htmlspecialchars(__("The 'Backup Now' button is disabled as your backup directory is not writable (go to the 'Settings' tab and find the relevant option).", 'updraftplus')),
@@ -24,21 +24,20 @@
 					);
 				}
 			?>
-			<button id="updraft-backupnow-button" type="button" <?php echo $backup_disabled ?> class="updraft-bigbutton button-primary" <?php if ($backup_disabled) echo 'title="'.esc_attr(__('This button is disabled because your backup directory is not writable (see the settings).', 'updraftplus')).'" ';?> onclick="updraft_backup_dialog_open();"><?php _e('Backup Now', 'updraftplus');?></button>
+			<button id="updraft-backupnow-button" type="button" <?php echo $backup_disabled; ?> class="updraft-bigbutton button-primary" <?php if ($backup_disabled) echo 'title="'.esc_attr(__('This button is disabled because your backup directory is not writable (see the settings).', 'updraftplus')).'" ';?> onclick="updraft_backup_dialog_open();"><?php _e('Backup Now', 'updraftplus');?></button>
 
 			<button type="button" class="updraft-bigbutton button-primary" onclick="updraft_openrestorepanel();">
-				<?php _e('Restore','updraftplus');?>
+				<?php _e('Restore', 'updraftplus');?>
 			</button>
 
-			<button type="button" class="updraft-bigbutton button-primary" onclick="updraft_migrate_dialog_open();"><?php _e('Clone/Migrate','updraftplus');?></button>
+			<button type="button" class="updraft-bigbutton button-primary" onclick="updraft_migrate_dialog_open();"><?php _e('Clone/Migrate', 'updraftplus');?></button>
 
 			</td>
 		</tr>
 
 		<?php
-			$last_backup_html = $this->last_backup_html(); 
+			$last_backup_html = $this->last_backup_html();
 			$current_time = get_date_from_gmt(gmdate('Y-m-d H:i:s'), 'D, F j, Y H:i');
-// 			$current_time = date_i18n('D, F j, Y H:i');
 		?>
 
 		<script>var lastbackup_laststatus = '<?php echo esc_js($last_backup_html);?>';</script>
@@ -54,8 +53,8 @@
 		</tr>
 		
 		<tr>
-			<th><?php _e('Last backup job run:','updraftplus');?></th>
-			<td id="updraft_last_backup"><?php echo $last_backup_html ?></td>
+			<th><?php _e('Last backup job run:', 'updraftplus');?></th>
+			<td id="updraft_last_backup"><?php echo $last_backup_html; ?></td>
 		</tr>
 	</table>
 
@@ -94,11 +93,11 @@
 	</div>
 
 	<?php if (is_multisite() && !file_exists(UPDRAFTPLUS_DIR.'/addons/multisite.php')) { ?>
-		<h2>UpdraftPlus <?php _e('Multisite','updraftplus');?></h2>
+		<h2>UpdraftPlus <?php _e('Multisite', 'updraftplus');?></h2>
 		<table>
 			<tr>
 				<td>
-					<p class="multisite-advert-width"><?php echo __('Do you need WordPress Multisite support?','updraftplus').' <a href="'.apply_filters('updraftplus_com_link', "https://updraftplus.com/shop/updraftplus-premium/").'">'. __('Please check out UpdraftPlus Premium, or the stand-alone Multisite add-on.','updraftplus');?></a>.</p>
+					<p class="multisite-advert-width"><?php echo __('Do you need WordPress Multisite support?', 'updraftplus').' <a href="'.apply_filters('updraftplus_com_link', "https://updraftplus.com/shop/updraftplus-premium/").'">'. __('Please check out UpdraftPlus Premium, or the stand-alone Multisite add-on.', 'updraftplus');?></a>.</p>
 				</td>
 			</tr>
 		</table>

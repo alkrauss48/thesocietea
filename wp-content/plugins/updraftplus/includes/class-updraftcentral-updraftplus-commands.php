@@ -15,7 +15,7 @@ class UpdraftCentral_UpdraftPlus_Commands extends UpdraftCentral_Commands {
 	
 		parent::__construct($rc);
 	
-		if (!class_exists('UpdraftPlus_Commands')) require_once(UPDRAFTPLUS_DIR.'/includes/class-commands.php');
+		if (!class_exists('UpdraftPlus_Commands')) include_once(UPDRAFTPLUS_DIR.'/includes/class-commands.php');
 		$this->commands = new UpdraftPlus_Commands($this);
 		
 	}
@@ -58,5 +58,4 @@ class UpdraftCentral_UpdraftPlus_Commands extends UpdraftCentral_Commands {
 		$updraftplus->close_browser_connection($encoded);
 
 	}
-
 }

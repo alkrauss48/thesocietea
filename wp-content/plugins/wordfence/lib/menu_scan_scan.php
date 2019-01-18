@@ -1,4 +1,8 @@
 <div class="wordfenceModeElem" id="wordfenceMode_scan"></div>
+<div class="wf-alert wf-alert-danger" id="wf-scan-failed" style="display: none;">
+	<h4>Scan Failed</h4>
+	<p>The current scan looks like it has failed. Its last status update was <span id="wf-scan-failed-time-ago"></span> ago. You may continue to wait in case it resumes or cancel and restart the scan. Some sites may need adjustments to run scans reliably. <a href="https://docs.wordfence.com/en/My_scans_don%27t_finish._What_would_cause_that%3F" target="_blank" rel="noopener noreferrer">Click here for steps you can try.</a></p>
+</div> 
 <div class="wordfenceScanButton wf-center">
 	<a href="#" id="wfStartScanButton1" class="wfStartScanButton button button-primary" onclick="wordfenceAdmin.startScan(); return false;">Start a Wordfence Scan</a><br />
 	<a href="#" onclick="WFAD.killScan(); return false;" style="font-size: 10px; color: #AAA;">Click to kill the current scan.</a>
@@ -22,7 +26,7 @@
 		<?php if (wfConfig::get('scansEnabled_fileContents')): ?>
 			<div>
 				<p class="wf-success">You are running the Premium version of the Threat Defense Feed which is
-					updated in real-time as new threats emerge. <a href="https://www.wordfence.com/zz13/sign-in/" target="_blank">Protect additional sites.</a></p>
+					updated in real-time as new threats emerge. <a href="https://www.wordfence.com/zz13/sign-in/" target="_blank" rel="noopener noreferrer">Protect additional sites.</a></p>
 			</div>
 		<?php else: ?>
 			<div class="wfSecure">Premium scanning enabled</div>
@@ -40,7 +44,7 @@
 			<p>As new threats emerge, the Threat Defense Feed is updated to detect these new hacks. The Premium
 				version of the Threat Defense Feed is updated in real-time protecting you immediately. As a free
 				user <strong>you are receiving the community version</strong> of the feed which is updated 30 days later.</p>
-			<p class="center"><a class="wf-btn wf-btn-primary wf-btn-callout" href="https://www.wordfence.com/gnl1scanUpgrade/wordfence-signup/" target="_blank">Get Premium</a></p>
+			<p class="center"><a class="wf-btn wf-btn-primary wf-btn-callout" href="https://www.wordfence.com/gnl1scanUpgrade/wordfence-signup/" target="_blank" rel="noopener noreferrer">Get Premium</a></p>
 		</div>
 	
 	<?php } ?>
@@ -83,20 +87,20 @@
 				?>
 	</div></div></div>
 	<div class="consoleFooter">
-		&nbsp;<a href="#" target="_blank" class="wfALogViewLink" id="wfALogViewLink">View activity log</a>
+		&nbsp;<a href="#" target="_blank" rel="noopener noreferrer" class="wfALogViewLink" id="wfALogViewLink">View activity log</a>
 	</div>
 	
 	<div class="wf-premium-callout">
 		<h3>Need help with a hacked website?</h3>
 		<p>Our team of security experts will clean the infection and remove malicious content. Once your site is restored we will provide a detailed report of our findings. All for an affordable rate.</p>
 		<?php if (!wfConfig::get('isPaid')) { ?><p><strong>Includes a 1 year Wordfence Premium license.</strong></p><?php } ?>
-		<p class="center"><a class="wf-btn wf-btn-primary wf-btn-callout" href="https://www.wordfence.com/gnl1scanGetHelp/wordfence-site-cleanings/" target="_blank">Get Help</a></p>
+		<p class="center"><a class="wf-btn wf-btn-primary wf-btn-callout" href="https://www.wordfence.com/gnl1scanGetHelp/wordfence-site-cleanings/" target="_blank" rel="noopener noreferrer">Get Help</a></p>
 	</div>
 </div>
 <div id="wfScanIssuesWrapper" style="margin-top: 20px;">
 	<div id="wfTabs">
-		<a href="#" id="wfNewIssuesTab" class="wfTab2 wfTabSwitch selected" onclick="wordfenceAdmin.switchIssuesTab(this, 'new'); return false;">New Issues</a>
-		<a href="#" class="wfTab2 wfTabSwitch" onclick="wordfenceAdmin.switchIssuesTab(this, 'ignored'); return false;">Ignored Issues</a>
+		<a href="#" id="wfNewIssuesTab" class="wfTab2 wfTabSwitch selected" onclick="wordfenceAdmin.switchIssuesTab(this, 'new'); return false;">New Issues<span class="wfIssuesCount"></span></a>
+		<a href="#" id="wfIgnoredIssuesTab" class="wfTab2 wfTabSwitch" onclick="wordfenceAdmin.switchIssuesTab(this, 'ignored'); return false;">Ignored Issues<span class="wfIssuesCount"></span></a>
 	</div>
 	<div class="wfTabsContainer wfScanIssuesTabs">
 		<div id="wfIssues_new" class="wfIssuesContainer">

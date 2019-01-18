@@ -41,6 +41,10 @@ class wfWAFUserIPRange {
 				$IPparts = explode('.', $ip);
 				$whiteParts = explode('.', $ip_string);
 				$mismatch = false;
+				if (count($whiteParts) != 4 || count($IPparts) != 4) {
+					return false;
+				}
+				
 				for ($i = 0; $i <= 3; $i++) {
 					if (preg_match('/^\[(\d+)\-(\d+)\]$/', $whiteParts[$i], $m)) {
 						if ($IPparts[$i] < $m[1] || $IPparts[$i] > $m[2]) {
@@ -65,6 +69,10 @@ class wfWAFUserIPRange {
 				$IPparts = explode(':', $ip);
 				$whiteParts = explode(':', $ip_string);
 				$mismatch = false;
+				if (count($whiteParts) != 8 || count($IPparts) != 8) {
+					return false;
+				}
+				
 				for ($i = 0; $i <= 7; $i++) {
 					if (preg_match('/^\[([a-f0-9]+)\-([a-f0-9]+)\]$/i', $whiteParts[$i], $m)) {
 						$ip_group = hexdec($IPparts[$i]);

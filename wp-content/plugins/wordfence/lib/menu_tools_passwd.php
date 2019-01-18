@@ -1,4 +1,4 @@
-<div class="wordfenceHelpLink"><a href="<?php echo $helpLink; ?>" target="_blank" class="wfhelp"></a><a href="<?php echo $helpLink; ?>" target="_blank"><?php echo $helpLabel; ?></a></div>
+<div class="wordfenceHelpLink"><a href="<?php echo $helpLink; ?>" target="_blank" rel="noopener noreferrer" class="wfhelp"></a><a href="<?php echo $helpLink; ?>" target="_blank" rel="noopener noreferrer"><?php echo $helpLabel; ?></a></div>
 <div>
 	<div id="wordfenceMode_passwd"></div>
 	<?php if (!wfConfig::get('isPaid')) { ?>
@@ -13,7 +13,7 @@
 				<li>Access to Premium Support</li>
 				<li>Discounts of up to 90% available for multiyear and multi-license purchases</li>
 			</ul>
-			<p class="center"><a class="wf-btn wf-btn-primary wf-btn-callout" href="https://www.wordfence.com/gnl1pwAuditUp1/wordfence-signup/" target="_blank">Get Premium</a></p>
+			<p class="center"><a class="wf-btn wf-btn-primary wf-btn-callout" href="https://www.wordfence.com/gnl1pwAuditUp1/wordfence-signup/" target="_blank" rel="noopener noreferrer">Get Premium</a></p>
 		</div>
 	<?php } ?>
 
@@ -169,7 +169,7 @@
 		} else {
 		?>
 		If you would like access to this premium feature, please
-		<a href="https://www.wordfence.com/gnl1pwAuditUp2/wordfence-signup/" target="_blank">upgrade to our premium version</a>.
+		<a href="https://www.wordfence.com/gnl1pwAuditUp2/wordfence-signup/" target="_blank" rel="noopener noreferrer">upgrade to our premium version</a>.
 	</p>
 	<?php
 	}

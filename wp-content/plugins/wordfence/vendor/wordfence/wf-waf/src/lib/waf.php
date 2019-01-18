@@ -70,6 +70,15 @@ auEa+7b+FGTKs7dUo2BNGR7OVifK4GZ8w/ajS0TelhrSRi3BBQCGXLzUO/UURUAh
 		$this->setEventBus($eventBus ? $eventBus : new wfWAFEventBus);
 		$this->setCompiledRulesFile($rulesFile === null ? WFWAF_PATH . 'rules.php' : $rulesFile);
 	}
+	
+	public function isReadOnly() {
+		$storage = $this->getStorageEngine();
+		if ($storage instanceof wfWAFStorageFile) {
+			return !wfWAFStorageFile::allowFileWriting();
+		}
+		
+		return false;
+	}
 
 	public function getGlobal($global) {
 		if (wfWAFUtils::strpos($global, '.') === false) {
@@ -100,6 +109,8 @@ auEa+7b+FGTKs7dUo2BNGR7OVifK4GZ8w/ajS0TelhrSRi3BBQCGXLzUO/UURUAh
 	 *
 	 */
 	public function runCron() {
+		if (!wfWAFStorageFile::allowFileWriting()) { return false; }
+		
 		if ((
 				$this->getStorageEngine()->getConfig('attackDataNextInterval', null) === null ||
 				$this->getStorageEngine()->getConfig('attackDataNextInterval', time() + 0xffff) <= time()
@@ -486,6 +497,84 @@ auEa+7b+FGTKs7dUo2BNGR7OVifK4GZ8w/ajS0TelhrSRi3BBQCGXLzUO/UURUAh
 			if ($updateLastUpdatedTimestamp) {
 				$this->getStorageEngine()->setConfig('signaturesLastUpdated', is_int($updateLastUpdatedTimestamp) ? $updateLastUpdatedTimestamp : time());
 			}
+		}
+		catch (Exception $e) {
+			//Ignore
+		}
+	}
+	
+	/**
+	 * @return array
+	 */
+	public function getMalwareSignatureCommonStrings() {
+		try {
+			$encoded = $this->getStorageEngine()->getConfig('filePatternCommonStrings');
+			if (empty($encoded)) {
+				return array();
+			}
+			
+			//Grab the list of words
+			$authKey = $this->getStorageEngine()->getConfig('authKey');
+			$encoded = base64_decode($encoded);
+			$paddedKey = wfWAFUtils::substr(str_repeat($authKey, ceil(strlen($encoded) / strlen($authKey))), 0, strlen($encoded));
+			$json = $encoded ^ $paddedKey;
+			$commonStrings = wfWAFUtils::json_decode($json, true);
+			if (!is_array($commonStrings)) {
+				return array();
+			}
+			
+			//Grab the list of indexes
+			$json = $this->getStorageEngine()->getConfig('filePatternIndexes');
+			if (empty($json)) {
+				return array();
+			}
+			$signatureIndexes = wfWAFUtils::json_decode($json, true);
+			if (!is_array($signatureIndexes)) {
+				return array();
+			}
+			
+			//Reconcile the list of indexes and transform into a list of words
+			$signatureCommonWords = array();
+			foreach ($signatureIndexes as $indexSet) {
+				$entry = array();
+				foreach ($indexSet as $i) {
+					if (isset($commonStrings[$i])) {
+						$entry[] = &$commonStrings[$i];
+					}
+				}
+				$signatureCommonWords[] = $entry;
+			}
+			
+			return $signatureCommonWords;
+		}
+		catch (Exception $e) {
+			//Ignore
+		}
+		return array();
+	}
+	
+	/**
+	 * @param array $commonStrings
+	 * @param array $signatureIndexes
+	 */
+	public function setMalwareSignatureCommonStrings($commonStrings, $signatureIndexes) {
+		try {
+			if (!is_array($commonStrings)) {
+				$commonStrings = array();
+			}
+			
+			if (!is_array($signatureIndexes)) {
+				$signatureIndexes = array();
+			}
+			
+			$authKey = $this->getStorageEngine()->getConfig('authKey');
+			$json = wfWAFUtils::json_encode($commonStrings);
+			$paddedKey = wfWAFUtils::substr(str_repeat($authKey, ceil(strlen($json) / strlen($authKey))), 0, strlen($json));
+			$payload = $json ^ $paddedKey;
+			$this->getStorageEngine()->setConfig('filePatternCommonStrings', base64_encode($payload));
+			
+			$payload = wfWAFUtils::json_encode($signatureIndexes);
+			$this->getStorageEngine()->setConfig('filePatternIndexes', $payload);
 		}
 		catch (Exception $e) {
 			//Ignore
@@ -878,8 +967,18 @@ HTML
 				$template = '403';
 			}
 		}
+		try {
+			$homeURL = wfWAF::getInstance()->getStorageEngine()->getConfig('homeURL');
+			$siteURL = wfWAF::getInstance()->getStorageEngine()->getConfig('siteURL');
+		}
+		catch (Exception $e) {
+			//Do nothing
+		}
+		
 		return wfWAFView::create($template, array(
 			'waf' => $this,
+			'homeURL' => $homeURL,
+			'siteURL' => $siteURL,
 		))->render();
 	}
 	
@@ -890,6 +989,7 @@ HTML
 		if ($template === null) { $template = '503'; }
 		try {
 			$homeURL = wfWAF::getInstance()->getStorageEngine()->getConfig('homeURL');
+			$siteURL = wfWAF::getInstance()->getStorageEngine()->getConfig('siteURL');
 		}
 		catch (Exception $e) {
 			//Do nothing
@@ -899,6 +999,7 @@ HTML
 			'waf' => $this,
 			'reason' => $reason,
 			'homeURL' => $homeURL,
+			'siteURL' => $siteURL,
 		))->render();
 	}
 
@@ -1527,6 +1628,14 @@ class wfWAFCronFetchRulesEvent extends wfWAFCronEvent {
 							$waf->getStorageEngine()->setConfig('signaturePremiumCount', $jsonData['data']['premiumCount']);
 						}
 						
+						if (array_key_exists('commonStringsSignature', $jsonData['data']) && 
+							array_key_exists('commonStrings', $jsonData['data']) && 
+							array_key_exists('signatureIndexes', $jsonData['data']) &&
+							$waf->verifySignedRequest(base64_decode($jsonData['data']['commonStringsSignature']), $jsonData['data']['commonStrings'] . $jsonData['data']['signatureIndexes'])
+						) {
+							$waf->setMalwareSignatureCommonStrings(wfWAFUtils::json_decode(base64_decode($jsonData['data']['commonStrings'])), wfWAFUtils::json_decode(base64_decode($jsonData['data']['signatureIndexes'])));
+						}
+						
 					} else if (!$waf->hasOpenSSL() &&
 						isset($jsonData['data']['hash']) &&
 						isset($jsonData['data']['signatures']) &&
@@ -1536,6 +1645,14 @@ class wfWAFCronFetchRulesEvent extends wfWAFCronEvent {
 							isset($jsonData['data']['timestamp']) ? $jsonData['data']['timestamp'] : true);
 						if (array_key_exists('premiumCount', $jsonData['data'])) {
 							$waf->getStorageEngine()->setConfig('signaturePremiumCount', $jsonData['data']['premiumCount']);
+						}
+						
+						if (array_key_exists('commonStringsHash', $jsonData['data']) &&
+							array_key_exists('commonStrings', $jsonData['data']) &&
+							array_key_exists('signatureIndexes', $jsonData['data']) &&
+							$waf->verifyHashedRequest($jsonData['data']['commonStringsHash'], $jsonData['data']['commonStrings'] . $jsonData['data']['signatureIndexes'])
+						) {
+							$waf->setMalwareSignatureCommonStrings(wfWAFUtils::json_decode(base64_decode($jsonData['data']['commonStrings'])), wfWAFUtils::json_decode(base64_decode($jsonData['data']['signatureIndexes'])));
 						}
 					}
 					else {
@@ -1651,6 +1768,8 @@ class wfWAFCronFetchBlacklistPrefixesEvent extends wfWAFCronEvent {
 					$waf->getStorageEngine()->setConfig('blacklistAllowedCache', '');
 				}
 			}
+			
+			$waf->getStorageEngine()->vacuum();
 		} catch (wfWAFHTTPTransportException $e) {
 			error_log($e->getMessage());
 		}

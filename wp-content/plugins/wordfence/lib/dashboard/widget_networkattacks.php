@@ -62,23 +62,9 @@ STYLING;
 												$labels = array();
 												$values = array();
 												
-												$utc = new DateTimeZone('UTC');
 												foreach ($blocks as $b) {
 													$values[] = $b['c'];
-													
-													$dtStr = gmdate("c", $b['t']); //Have to do it this way because of PHP 5.2
-													$dt = new DateTime($dtStr, $utc);
-													$tz = get_option('timezone_string');
-													if (!empty($tz)) {
-														$dt->setTimezone(new DateTimeZone($tz));
-													}
-													else {
-														$gmt = get_option('gmt_offset');
-														if (!empty($gmt)) {
-															$dt->setTimezone(new DateTimeZone('Etc/GMT' . ($gmt < 0 ? '+' : '-') . abs($gmt))); //The Etc/GMT timezones have the +- signs flipped
-														}
-													}
-													$labels[] = "'" . $dt->format('g a') . "'";
+													$labels[] = "'" . wfUtils::formatLocalTime('g a', $b['t']) . "'";
 												}
 												?>
 												labels: [<?php echo implode(',', $labels); ?>],
@@ -120,23 +106,9 @@ STYLING;
 												$labels = array();
 												$values = array();
 												
-												$utc = new DateTimeZone('UTC');
 												foreach ($blocks as $b) {
 													$values[] = $b['c'];
-													
-													$dtStr = gmdate("c", $b['t']); //Have to do it this way because of PHP 5.2
-													$dt = new DateTime($dtStr, $utc);
-													$tz = get_option('timezone_string');
-													if (!empty($tz)) {
-														$dt->setTimezone(new DateTimeZone($tz));
-													}
-													else {
-														$gmt = get_option('gmt_offset');
-														if (!empty($gmt)) {
-															$dt->setTimezone(new DateTimeZone('Etc/GMT' . ($gmt < 0 ? '+' : '-') . abs($gmt))); //The Etc/GMT timezones have the +- signs flipped
-														}
-													}
-													$labels[] = "'" . $dt->format('M j') . "'";
+													$labels[] = "'" . wfUtils::formatLocalTime('M j', $b['t']) . "'";
 												}
 												?>
 												labels: [<?php echo implode(',', $labels); ?>],
@@ -178,23 +150,9 @@ STYLING;
 												$labels = array();
 												$values = array();
 												
-												$utc = new DateTimeZone('UTC');
 												foreach ($blocks as $b) {
 													$values[] = $b['c'];
-													
-													$dtStr = gmdate("c", $b['t']); //Have to do it this way because of PHP 5.2
-													$dt = new DateTime($dtStr, $utc);
-													$tz = get_option('timezone_string');
-													if (!empty($tz)) {
-														$dt->setTimezone(new DateTimeZone($tz));
-													}
-													else {
-														$gmt = get_option('gmt_offset');
-														if (!empty($gmt)) {
-															$dt->setTimezone(new DateTimeZone('Etc/GMT' . ($gmt < 0 ? '+' : '-') . abs($gmt))); //The Etc/GMT timezones have the +- signs flipped
-														}
-													}
-													$labels[] = "'" . $dt->format('M j') . "'";
+													$labels[] = "'" . wfUtils::formatLocalTime('M j', $b['t']) . "'";
 												}
 												?>
 												labels: [<?php echo implode(',', $labels); ?>],

@@ -1,5 +1,7 @@
 <?php
 
+    if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+    
     class CPTO 
         {
             var $current_post_type = null;
@@ -131,6 +133,10 @@
                     //check for orderby GET paramether in which case return default data
                     if (isset($_GET['orderby']) && $_GET['orderby'] !=  'menu_order')
                         return $orderBy;
+                        
+                    //Avada orderby
+                    if (isset($_GET['product_orderby']) && $_GET['product_orderby'] !=  'default')
+                        return $orderBy;
                     
                     //check to ignore
                     /**
@@ -169,12 +175,16 @@
                                 if($query->is_search())
                                     return($orderBy);
                                 
+                                $order  =   '';
+                                if ($options['use_query_ASC_DESC'] == "1")
+                                    $order  =   isset($query->query_vars['order'])  ?   " " . $query->query_vars['order'] : '';
+                                
                                 if ($options['autosort'] == "1")
                                     {
                                         if(trim($orderBy) == '')
-                                            $orderBy = "{$wpdb->posts}.menu_order ";
+                                            $orderBy = "{$wpdb->posts}.menu_order " . $order;
                                         else
-                                            $orderBy = "{$wpdb->posts}.menu_order, " . $orderBy;
+                                            $orderBy = "{$wpdb->posts}.menu_order". $order .", " . $orderBy;
                                     }
                             }
 
@@ -449,7 +459,7 @@
                         }
                         else
                             {
-                                $capability = 'install_plugins';  
+                                $capability = 'manage_options';  
                             }
                     
                     foreach( $post_types as $post_type_name ) 

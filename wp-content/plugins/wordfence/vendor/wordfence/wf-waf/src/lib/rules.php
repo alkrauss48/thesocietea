@@ -458,6 +458,18 @@ class wfWAFRuleComparison implements wfWAFRuleInterface {
 		'md5equals',
 		'filepatternsmatch',
 		'filehasphp',
+		'islocalurl',
+		'isremoteurl',
+		'isvalidurl',
+		'isnotvalidurl',
+		'urlhostequals',
+		'urlhostnotequals',
+		'urlhostmatches',
+		'urlhostnotmatches',
+		'urlschemeequals',
+		'urlschemenotequals',
+		'urlschemematches',
+		'urlschemenotmatches',
 	);
 
 	/**
@@ -704,6 +716,7 @@ class wfWAFRuleComparison implements wfWAFRuleInterface {
 		$request = $this->getWAF()->getRequest();
 		$files = $request->getFiles();
 		$patterns = $this->getWAF()->getMalwareSignatures();
+		$commonStrings = $this->getWAF()->getMalwareSignatureCommonStrings();
 		if (!is_array($patterns) || !is_array($files)) {
 			return false;
 		}
@@ -723,9 +736,26 @@ class wfWAFRuleComparison implements wfWAFRuleInterface {
 					if ($totalRead < 1) {
 						return false;
 					}
-				
-					foreach ($patterns as $rule) {
-						if (preg_match('/(' . $rule . ')/i', $data, $matches)) {
+					
+					$commonStringsChecked = array();
+					foreach ($patterns as $index => $rule) {
+						if (@preg_match('/' . $rule . '/iS', null) === false) {
+							continue; //This PCRE version can't compile the rule
+						}
+						
+						if (isset($commonStrings[$index])) {
+							foreach ($commonStrings[$index] as $s) {
+								if (!isset($commonStringsChecked[$s])) {
+									$commonStringsChecked[$s] = (preg_match('/' . $s . '/iS', $data) == 1);
+								}
+								
+								if (!$commonStringsChecked[$s]) {
+									continue 2;
+								}
+							}
+						}
+						
+						if (preg_match('/(' . $rule . ')/iS', $data, $matches)) {
 							return true;
 						}
 					}
@@ -926,6 +956,124 @@ class wfWAFRuleComparison implements wfWAFRuleInterface {
 	
 	public function _resetErrorsHandler($errno, $errstr, $errfile, $errline) {
 		//Do nothing
+	}
+	
+	public function isLocalURL($subject) {
+		if (empty($subject)) {
+			return false;
+		}
+		
+		$parsed = wfWAFUtils::parse_url((string) $subject);
+		if (!isset($parsed['host'])) {
+			return true;
+		}
+		
+		$guessSiteURL = sprintf('%s://%s/', wfWAF::getInstance()->getRequest()->getProtocol(), wfWAF::getInstance()->getRequest()->getHost());
+		$siteURL = wfWAF::getInstance()->getStorageEngine()->getConfig('siteURL') ? wfWAF::getInstance()->getStorageEngine()->getConfig('siteURL') : $guessSiteURL;
+		$homeURL = wfWAF::getInstance()->getStorageEngine()->getConfig('homeURL') ? wfWAF::getInstance()->getStorageEngine()->getConfig('homeURL') : $guessSiteURL;
+		
+		$siteHost = wfWAFUtils::parse_url($siteURL, PHP_URL_HOST);
+		$homeHost = wfWAFUtils::parse_url($homeURL, PHP_URL_HOST);
+		
+		return (is_string($siteHost) && strtolower($parsed['host']) == strtolower($siteHost)) || (is_string($homeHost) && strtolower($parsed['host']) == strtolower($homeHost));
+	}
+	
+	public function isRemoteURL($subject) {
+		if (empty($subject)) {
+			return false;
+		}
+		
+		return !$this->isLocalURL($subject);
+	}
+	
+	public function isValidURL($subject) {
+		if ($subject === null) {
+			return false;
+		}
+		return wfWAFUtils::validate_url((string) $subject) !== false;
+	}
+	
+	public function isNotValidURL($subject) {
+		if ($subject === null) {
+			return false;
+		}
+		return !$this->isValidURL($subject);
+	}
+	
+	public function urlHostEquals($subject) {
+		if ($subject === null) {
+			return false;
+		}
+		$host = wfWAFUtils::parse_url((string) $subject, PHP_URL_HOST);
+		if (!is_string($host)) {
+			return wfWAFUtils::strlen($this->getExpected()) == 0;
+		}
+		
+		return strtolower($host) == strtolower($this->getExpected());
+	}
+	
+	public function urlHostNotEquals($subject) {
+		if ($subject === null) {
+			return false;
+		}
+		return !$this->urlHostEquals($subject);
+	}
+	
+	public function urlHostMatches($subject) {
+		if ($subject === null) {
+			return false;
+		}
+		$host = wfWAFUtils::parse_url((string) $subject, PHP_URL_HOST);
+		if (!is_string($host)) {
+			return false;
+		}
+		
+		return preg_match((string) $this->getExpected(), $host, $this->matches) > 0;
+	}
+	
+	public function urlHostNotMatches($subject) {
+		if ($subject === null) {
+			return false;
+		}
+		return !$this->urlHostMatches($subject);
+	}
+	
+	public function urlSchemeEquals($subject) {
+		if ($subject === null) {
+			return false;
+		}
+		$scheme = wfWAFUtils::parse_url((string) $subject, PHP_URL_SCHEME);
+		if (!is_string($scheme)) {
+			return wfWAFUtils::strlen($this->getExpected()) == 0;
+		}
+		
+		return strtolower($scheme) == strtolower($this->getExpected());
+	}
+	
+	public function urlSchemeNotEquals($subject) {
+		if ($subject === null) {
+			return false;
+		}
+		return !$this->urlSchemeEquals($subject);
+	}
+	
+	public function urlSchemeMatches($subject) {
+		if ($subject === null) {
+			return false;
+		}
+		$scheme = wfWAFUtils::parse_url((string) $subject, PHP_URL_SCHEME);
+		if (!is_string($scheme)) {
+			return false;
+		}
+		
+		return preg_match((string) $this->getExpected(), $scheme, $this->matches) > 0;
+	}
+	
+	public function urlSchemeNotMatches($subject) {
+		if ($subject === null) {
+			return false;
+		}
+		return !$this->urlSchemeMatches($subject);
 	}
 
 	/**

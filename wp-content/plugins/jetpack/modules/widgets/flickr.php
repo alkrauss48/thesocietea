@@ -50,7 +50,7 @@ if ( ! class_exists( 'Jetpack_Flickr_Widget' ) ) {
 		public function defaults() {
 			return array(
 				'title'             => esc_html__( 'Flickr Photos', 'jetpack' ),
-				'items'             => 3,
+				'items'             => 4,
 				'flickr_image_size' => 'thumbnail',
 				'flickr_rss_url'    => ''
 			);
@@ -116,19 +116,24 @@ if ( ! class_exists( 'Jetpack_Flickr_Widget' ) ) {
 			$photos = '';
 			if ( ! is_wp_error( $rss ) ) {
 				foreach ( $rss->get_items( 0, $instance['items'] ) as $photo ) {
-					if ( $enclosure = $photo->get_enclosure() ) {
-						$src = str_replace( '_s.jpg', $image_size_string, $enclosure->get_thumbnail() );
-					} else {
-						$src = preg_match( '/src="(.*?)"/i', $photo->get_description(), $p );
-						$src = str_replace( '_m.jpg', $image_size_string, $p[1] );
+					switch ( $instance['flickr_image_size'] ) {
+						case 'thumbnail':
+							$src = $photo->get_enclosure()->get_thumbnail();
+							break;
+						case 'small':
+							$src = preg_match( '/src="(.*?)"/i', $photo->get_description(), $p );
+							$src = $p[1];
+							break;
+						case 'large':
+							$src = $photo->get_enclosure()->get_link();
+							break;
 					}
 
 					$photos .= '<a href="' . esc_url( $photo->get_permalink(), array( 'http', 'https' ) ) . '">';
 					$photos .= '<img src="' . esc_url( $src, array( 'http', 'https' ) ) . '" ';
 					$photos .= 'alt="' . esc_attr( $photo->get_title() ) . '" ';
-					$photos .= 'border="0" ';
 					$photos .= 'title="' . esc_attr( $photo->get_title() ) . '" ';
-					$photos .= ' /></a><br /><br />';
+					$photos .= ' /></a>';
 				}
 				if ( ! empty( $photos ) && class_exists( 'Jetpack_Photon' ) && Jetpack::is_module_active( 'photon' ) ) {
 					$photos = Jetpack_Photon::filter_the_content( $photos );
@@ -186,7 +191,7 @@ if ( ! class_exists( 'Jetpack_Flickr_Widget' ) ) {
 
 			if (
 				isset( $new_instance['flickr_image_size'] ) &&
-				in_array( $new_instance['flickr_image_size'], array( 'thumbnail', 'small' ) )
+				in_array( $new_instance['flickr_image_size'], array( 'thumbnail', 'small', 'large' ) )
 			) {
 				$instance['flickr_image_size'] = $new_instance['flickr_image_size'];
 			} else {

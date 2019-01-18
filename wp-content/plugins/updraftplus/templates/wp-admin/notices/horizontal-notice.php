@@ -3,7 +3,7 @@
 <div class="updraft-ad-container updated">
 	<div class="updraft_notice_container">
 		<div class="updraft_advert_content_left">
-			<img src="<?php echo UPDRAFTPLUS_URL.'/images/'.$image;?>" width="60" height="60" alt="<?php _e('notice image','updraftplus');?>" />
+			<img src="<?php echo UPDRAFTPLUS_URL.'/images/'.$image;?>" width="60" height="60" alt="<?php _e('notice image', 'updraftplus');?>" />
 		</div>
 		<div class="updraft_advert_content_right">
 			<h3 class="updraft_advert_heading">
@@ -20,33 +20,31 @@
 				</div>
 			</h3>
 			<p>
-				<?php 
+				<?php
 					echo $text;
 
 					if (isset($discount_code)) echo ' <b>' . $discount_code . '</b>';
-
-// 					if (isset($text2)) {
-// 						echo '</p><p>' . $text2 . '</p><p>';
-// 					}
 					
 					if (!empty($button_link) && !empty($button_meta)) {
 				?>
-				<a class="updraft_notice_link" href="<?php esc_attr_e(apply_filters('updraftplus_com_link',$button_link));?>"><?php 
-						if ($button_meta == 'updraftcentral') {
+				<a class="updraft_notice_link" href="<?php esc_attr_e(apply_filters('updraftplus_com_link', $button_link));?>"><?php
+						if ('updraftcentral' == $button_meta) {
 							_e('Get UpdraftCentral', 'updraftplus');
-						} elseif ($button_meta == 'review') {
+						} elseif ('review' == $button_meta) {
 							_e('Review UpdraftPlus', 'updraftplus');
-						} elseif ($button_meta == 'updraftplus') {
+						} elseif ('updraftplus' == $button_meta) {
 							_e('Get Premium', 'updraftplus');
-						} elseif ($button_meta == 'signup') {
+						} elseif ('signup' == $button_meta) {
 							_e('Sign up', 'updraftplus');
-						} elseif ($button_meta == 'go_there') {
+						} elseif ('go_there' == $button_meta) {
 							_e('Go there', 'updraftplus');
 						} else {
 							_e('Read more', 'updraftplus');
 						}
 					?></a>
-				<?php } ?>
+				<?php
+					}
+				?>
 			</p>
 		</div>
 	</div>

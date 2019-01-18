@@ -94,6 +94,15 @@
 					$(this).hide();
 				});
 
+				$(window).bind("scroll", function() {
+					$(this).scrollTop() > 200 ? $(".wf-scrollTop").fadeIn() : $(".wf-scrollTop").fadeOut()
+				});
+				$(".wf-scrollTop").click(function(e) {
+					return e.stopPropagation(), $("body,html").animate({
+						scrollTop: 0
+					}, 800), !1;
+				});
+
 				var tabs = jQuery('#wordfenceTopTabs').find('a');
 				if (tabs.length > 0) {
 					tabs.click(function() {
@@ -438,7 +447,7 @@
 				});
 			},
 			downgradeLicense: function() {
-				this.colorbox((this.isSmallScreen ? '300px' : '400px'), "Confirm Downgrade", "Are you sure you want to downgrade your Wordfence Premium License? This will disable all Premium features and return you to the free version of Wordfence. <a href=\"https://www.wordfence.com/manage-wordfence-api-keys/\" target=\"_blank\">Click here to renew your paid membership</a> or click the button below to confirm you want to downgrade.<br /><br /><input class=\"wf-btn wf-btn-default\" type=\"button\" value=\"Downgrade and disable Premium features\" onclick=\"WFAD.downgradeLicenseConfirm();\" /><br />");
+				this.colorbox((this.isSmallScreen ? '300px' : '400px'), "Confirm Downgrade", "Are you sure you want to downgrade your Wordfence Premium License? This will disable all Premium features and return you to the free version of Wordfence. <a href=\"https://www.wordfence.com/manage-wordfence-api-keys/\" target=\"_blank\" rel=\"noopener noreferrer\">Click here to renew your paid membership</a> or click the button below to confirm you want to downgrade.<br /><br /><input class=\"wf-btn wf-btn-default\" type=\"button\" value=\"Downgrade and disable Premium features\" onclick=\"WFAD.downgradeLicenseConfirm();\" /><br />");
 			},
 			downgradeLicenseConfirm: function() {
 				jQuery.colorbox.close();
@@ -454,7 +463,7 @@
 				}
 				var options = {
 					buttons: function(event, t) {
-						var buttonElem = jQuery('<div id="wfTourButCont"><a id="pointer-close" style="margin-left:5px" class="wf-btn wf-btn-default">End the Tour</a></div><div><a id="wfRateLink" href="http://wordpress.org/extend/plugins/wordfence/" target="_blank" style="font-size: 10px; font-family: Verdana;">Help spread the word by rating us 5&#9733; on WordPress.org</a></div>');
+						var buttonElem = jQuery('<div id="wfTourButCont"><a id="pointer-close" style="margin-left:5px" class="wf-btn wf-btn-default">End the Tour</a></div><div><a id="wfRateLink" href="http://wordpress.org/extend/plugins/wordfence/" target="_blank" rel="noopener noreferrer" style="font-size: 10px; font-family: Verdana;">Help spread the word by rating us 5&#9733; on WordPress.org</a></div>');
 						buttonElem.find('#pointer-close').bind('click.pointer', function(evtObj) {
 							var evtSourceElem = evtObj.srcElement ? evtObj.srcElement : evtObj.target;
 							if (evtSourceElem.id == 'wfRateLink') {
@@ -541,6 +550,14 @@
 					}
 					if (res.signatureUpdateTime) {
 						this.updateSignaturesTimestamp(res.signatureUpdateTime);
+					}
+					
+					if (res.scanFailed) {
+						jQuery('#wf-scan-failed-time-ago').text(res.scanFailedTiming);
+						jQuery('#wf-scan-failed').show();
+					}
+					else {
+						jQuery('#wf-scan-failed').hide();
 					}
 				}
 				this.activityLogUpdatePending = false;
@@ -666,13 +683,17 @@
 					msg = item.msg.replace('SUM_ENDSKIPPED:', '');
 					jQuery('div.wfSummaryMsg:contains("' + msg + '")').next().addClass('wfSummaryResult').html('Skipped.');
 					summaryUpdated = true;
+				} else if (item.msg.indexOf('SUM_ENDIGNORED') != -1) {
+					msg = item.msg.replace('SUM_ENDIGNORED:', '');
+					jQuery('div.wfSummaryMsg:contains("' + msg + '")').next().addClass('wfSummaryIgnored').html('Ignored.');
+					summaryUpdated = true;
 				} else if (item.msg.indexOf('SUM_DISABLED:') != -1) {
 					msg = item.msg.replace('SUM_DISABLED:', '');
 					jQuery('#consoleSummary').append('<div class="wfSummaryLine"><div class="wfSummaryDate">[' + item.date + ']</div><div class="wfSummaryMsg">' + msg + '</div><div class="wfSummaryResult">Disabled [<a href="admin.php?page=WordfenceSecOpt">Visit Options to Enable</a>]</div><div class="wfClear"></div>');
 					summaryUpdated = true;
 				} else if (item.msg.indexOf('SUM_PAIDONLY:') != -1) {
 					msg = item.msg.replace('SUM_PAIDONLY:', '');
-					jQuery('#consoleSummary').append('<div class="wfSummaryLine"><div class="wfSummaryDate">[' + item.date + ']</div><div class="wfSummaryMsg">' + msg + '</div><div class="wfSummaryResult"><a href="https://www.wordfence.com/wordfence-signup/" target="_blank">Paid Members Only</a></div><div class="wfClear"></div>');
+					jQuery('#consoleSummary').append('<div class="wfSummaryLine"><div class="wfSummaryDate">[' + item.date + ']</div><div class="wfSummaryMsg">' + msg + '</div><div class="wfSummaryResult"><a href="https://www.wordfence.com/wordfence-signup/" target="_blank"  rel="noopener noreferrer">Paid Members Only</a></div><div class="wfClear"></div>');
 					summaryUpdated = true;
 				} else if (item.msg.indexOf('SUM_FINAL:') != -1) {
 					msg = item.msg.replace('SUM_FINAL:', '');
@@ -915,6 +936,10 @@
 				limit = limit || WordfenceAdminVars.scanIssuesPerPage;
 				var self = this;
 				this.ajax('wordfence_loadIssues', {offset: offset, limit: limit}, function(res) {
+					var newCount = parseInt(res.issueCounts.new) || 0;
+					var ignoredCount = (parseInt(res.issueCounts.ignoreP) || 0) + (parseInt(res.issueCounts.ignoreC) || 0);
+					jQuery('#wfNewIssuesTab .wfIssuesCount').text(' (' + newCount + ')');
+					jQuery('#wfIgnoredIssuesTab .wfIssuesCount').text(' (' + ignoredCount + ')'); 
 					self.displayIssues(res, callback);
 				});
 			},
@@ -1368,7 +1393,7 @@
 					} else if (res.nginx) {
 						self.colorbox((self.isSmallScreen ? '300px' : '400px'), "You are using Nginx as your web server. " +
 							"You'll need to disable autoindexing in your nginx.conf. " +
-							"See the <a target='_blank' href='http://nginx.org/en/docs/http/ngx_http_autoindex_module.html'>Nginx docs for more info</a> on how to do this.");
+							"See the <a target='_blank'  rel='noopener noreferrer' href='http://nginx.org/en/docs/http/ngx_http_autoindex_module.html'>Nginx docs for more info</a> on how to do this.");
 					} else if (res.err) {
 						self.colorbox((self.isSmallScreen ? '300px' : '400px'), "We encountered a problem", "We can't modify your .htaccess file for you because: " + res.err);
 					}
@@ -1855,7 +1880,7 @@
 					for (var i = 0; i < res.result.rawdata.length; i++) {
 						res.result.rawdata[i] = jQuery('<div />').text(res.result.rawdata[i]).html();
 						res.result.rawdata[i] = res.result.rawdata[i].replace(/([^\s\t\r\n:;]+@[^\s\t\r\n:;\.]+\.[^\s\t\r\n:;]+)/, "<a href=\"mailto:$1\">$1<\/a>");
-						res.result.rawdata[i] = res.result.rawdata[i].replace(/(https?:\/\/[^\/]+[^\s\r\n\t]+)/, "<a target=\"_blank\" href=\"$1\">$1<\/a>");
+						res.result.rawdata[i] = res.result.rawdata[i].replace(/(https?:\/\/[^\/]+[^\s\r\n\t]+)/, "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"$1\">$1<\/a>");
 						var redStyle = "";
 						if (this.getQueryParam('wfnetworkblock')) {
 							redStyle = " style=\"color: #F00;\"";
@@ -2225,7 +2250,7 @@
 				var pos = jQuery('#paidWrap').position();
 				var width = jQuery('#paidWrap').width();
 				var height = jQuery('#paidWrap').height();
-				jQuery('<div style="position: absolute; left: ' + pos.left + 'px; top: ' + pos.top + 'px; background-color: #FFF; width: ' + width + 'px; height: ' + height + 'px;"><div class="paidInnerMsg">' + msg + ' <a href="https://www.wordfence.com/wordfence-signup/" target="_blank">Click here to upgrade and gain access to this feature.</div></div>').insertAfter('#paidWrap').fadeTo(10000, 0.7);
+				jQuery('<div style="position: absolute; left: ' + pos.left + 'px; top: ' + pos.top + 'px; background-color: #FFF; width: ' + width + 'px; height: ' + height + 'px;"><div class="paidInnerMsg">' + msg + ' <a href="https://www.wordfence.com/wordfence-signup/" target="_blank" rel="noopener noreferrer">Click here to upgrade and gain access to this feature.</div></div>').insertAfter('#paidWrap').fadeTo(10000, 0.7);
 			},
 			sched_modeChange: function() {
 				var self = this;
@@ -2344,7 +2369,7 @@
 								
 								message = message + "</ul>";
 								
-								message = message + "<p class=\"wf-center\"><a href=\"#\" class=\"wf-btn wf-btn-default\" id=\"wfTwoFactorDownload\" target=\"_blank\"><i class=\"dashicons dashicons-download\"></i> Download</a></p>";
+								message = message + "<p class=\"wf-center\"><a href=\"#\" class=\"wf-btn wf-btn-default\" id=\"wfTwoFactorDownload\" target=\"_blank\" rel=\"noopener noreferrer\"><i class=\"dashicons dashicons-download\"></i> Download</a></p>";
 							}
 
 							message = message + "<p><em>This will be shown only once. Keep these codes somewhere safe.</em></p>";
@@ -2374,7 +2399,7 @@
 									recoveryCodeFileContents = recoveryCodeFileContents + chunks[0] + " " + chunks[1] + " " + chunks[2] + " " + chunks[3] + "\r\n";
 								}
 
-								message = message + "<p class=\"wf-center\"><a href=\"#\" class=\"wf-btn wf-btn-default\" id=\"wfTwoFactorDownload\" target=\"_blank\"><i class=\"dashicons dashicons-download\"></i> Download</a></p>";
+								message = message + "<p class=\"wf-center\"><a href=\"#\" class=\"wf-btn wf-btn-default\" id=\"wfTwoFactorDownload\" target=\"_blank\" rel=\"noopener noreferrer\"><i class=\"dashicons dashicons-download\"></i> Download</a></p>";
 
 								message = message + "</ul><p><em>This will be shown only once. Keep these codes somewhere safe.</em></p>";
 
@@ -2708,7 +2733,12 @@
 						if (typeof onSuccess === 'function') {
 							return onSuccess.apply(this, arguments);
 						}
-					} else {
+					}
+					else if (typeof res === 'object' && res.errorMsg) {
+						self.colorbox((self.isSmallScreen ? '300px' : '400px'), 'Error saving Firewall configuration', 'There was an error saving the ' +
+							'Web Application Firewall configuration settings: ' + res.errorMsg);
+					}
+					else {
 						self.colorbox((self.isSmallScreen ? '300px' : '400px'), 'Error saving Firewall configuration', 'There was an error saving the ' +
 							'Web Application Firewall configuration settings.');
 					}

@@ -16,7 +16,7 @@ class Jetpack_Sync_Module_Plugins extends Jetpack_Sync_Module {
 		add_action( 'activated_plugin', $callable, 10, 2 );
 		add_action( 'deactivated_plugin', $callable, 10, 2 );
 		add_action( 'delete_plugin',  array( $this, 'delete_plugin') );
-		add_action( 'upgrader_process_complete', array( $this, 'check_upgrader'), 10, 2 );
+		add_action( 'upgrader_process_complete', array( $this, 'check_upgrader' ), 10, 2 );
 		add_action( 'jetpack_installed_plugin', $callable, 10, 2 );
 		add_action( 'admin_action_update', array( $this, 'check_plugin_edit') );
 		add_action( 'jetpack_edited_plugin', $callable, 10, 2 );
@@ -111,6 +111,9 @@ class Jetpack_Sync_Module_Plugins extends Jetpack_Sync_Module {
 		$plugin_path = $args[0];
 		$plugin_data = array();
 
+		if ( ! function_exists( 'get_plugins' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
 		$all_plugins = get_plugins();
 		if ( isset( $all_plugins[ $plugin_path ] ) ) {
 			$all_plugin_data = $all_plugins[ $plugin_path ];

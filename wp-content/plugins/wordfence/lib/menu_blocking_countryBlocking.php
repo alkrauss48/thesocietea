@@ -4,7 +4,7 @@ require('wfBulkCountries.php');
 <script type="text/javascript">
 WFAD.countryMap = <?php echo json_encode($wfBulkCountries); ?>;
 </script>
-<div class="wordfenceHelpLink"><a href="<?php echo $helpLink; ?>" target="_blank" class="wfhelp"></a><a href="<?php echo $helpLink; ?>" target="_blank"><?php echo $helpLabel; ?></a></div>
+<div class="wordfenceHelpLink"><a href="<?php echo $helpLink; ?>" target="_blank" rel="noopener noreferrer" class="wfhelp"></a><a href="<?php echo $helpLink; ?>" target="_blank" rel="noopener noreferrer"><?php echo $helpLabel; ?></a></div>
 <div>
 	<div class="wordfenceModeElem" id="wordfenceMode_countryBlocking"></div>
 <?php if(! wfConfig::get('isPaid')){ ?>
@@ -20,7 +20,7 @@ WFAD.countryMap = <?php echo json_encode($wfBulkCountries); ?>;
 			<li>Discounts of up to 90% available for multiyear and multi-license purchases</li>
 		</ul>
 
-		<p class="center"><a class="wf-btn wf-btn-primary wf-btn-callout" href="https://www.wordfence.com/gnl1countryBlock1/wordfence-signup/" target="_blank">Get Premium</a></p>
+		<p class="center"><a class="wf-btn wf-btn-primary wf-btn-callout" href="https://www.wordfence.com/gnl1countryBlock1/wordfence-signup/" target="_blank" rel="noopener noreferrer">Get Premium</a></p>
 	</div>
 <?php } ?>
 	<?php if (!wfConfig::get('firewallEnabled')) { ?>
@@ -61,7 +61,7 @@ WFAD.countryMap = <?php echo json_encode($wfBulkCountries); ?>;
 			<label for="wfRestOfSiteBlocked" class="wf-col-sm-2 wf-control-label">Block access to the rest of the site (outside the login form)</label>
 			<div class="wf-col-sm-6">
 				<div class="wf-checkbox"><input type="checkbox" id="wfRestOfSiteBlocked" name="wfRestOfSiteBlocked" value="1" <?php if(wfConfig::get('cbl_restOfSiteBlocked')){ echo 'checked'; } ?>></div>
-				<span class="wf-help-block">If you use Google Adwords, this is not recommended. <a href="https://docs.wordfence.com/en/Country_blocking#Google_Adwords_says_I_can.27t_block_countries._How_do_I_work_around_that.3F" target="_blank">Learn More</a></span>
+				<span class="wf-help-block">If you use Google Adwords, this is not recommended. <a href="https://docs.wordfence.com/en/Country_blocking#Google_Adwords_says_I_can.27t_block_countries._How_do_I_work_around_that.3F" target="_blank" rel="noopener noreferrer">Learn More</a></span>
 			</div>
 		</div>
 	</div>
@@ -253,7 +253,7 @@ if(wfConfig::get('isPaid')){
 } else {
 ?>
 	If you would like access to this premium feature, please 
-	<a href="https://www.wordfence.com/gnl1countryBlock2/wordfence-signup/" target="_blank">upgrade to our premium version</a>.
+	<a href="https://www.wordfence.com/gnl1countryBlock2/wordfence-signup/" target="_blank" rel="noopener noreferrer">upgrade to our premium version</a>.
 </p>
 <?php
 }

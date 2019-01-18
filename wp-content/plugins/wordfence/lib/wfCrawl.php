@@ -1,6 +1,10 @@
 <?php
 require_once('wfUtils.php');
 class wfCrawl {
+	const GOOGLE_BOT_VERIFIED = 'verified';
+	const GOOGLE_BOT_FAKE = 'fakeBot';
+	const GOOGLE_BOT_UNDETERMINED = 'undetermined';
+	
 	public static function isCrawler($UA){
 		$browscap = new wfBrowscap();
 		$b = $browscap->getBrowser($UA);
@@ -120,18 +124,27 @@ class wfCrawl {
 				$verified[$ip] = true;
 				return $verified[$ip];
 			}
-			if (self::verifyGooglebotViaNOC1($ip)) {
+			$noc1Status = self::verifyGooglebotViaNOC1($ip);
+			if ($noc1Status == self::GOOGLE_BOT_VERIFIED) {
 				$verified[$ip] = true;
 				return $verified[$ip];
 			}
+			else if ($noc1Status == self::GOOGLE_BOT_FAKE) {
+				$verified[$ip] = false;
+				return $verified[$ip];
+			}
+			
+			return true; //We were unable to successfully validate Googlebot status so default to being permissive
 		}
 		$verified[$ip] = false;
 		return $verified[$ip];
 	}
 
 	/**
+	 * Attempts to verify whether an IP claiming to be Googlebot is actually Googlebot.
+	 * 
 	 * @param string|null $ip
-	 * @return bool
+	 * @return string
 	 */
 	public static function verifyGooglebotViaNOC1($ip = null) {
 		global $wpdb;
@@ -150,9 +163,9 @@ class wfCrawl {
 				$patternSig,
 				WORDFENCE_CRAWLER_VERIFY_CACHE_TIME);
 		if ($status === 'verified') {
-			return true;
+			return self::GOOGLE_BOT_VERIFIED;
 		} else if ($status === 'fakeBot') {
-			return false;
+			return self::GOOGLE_BOT_FAKE;
 		}
 
 		$api = new wfAPI(wfConfig::get('apiKey'), wfUtils::getWPVersion());
@@ -162,21 +175,16 @@ class wfCrawl {
 			));
 			if (is_array($data) && !empty($data['verified'])) {
 				// Cache results
-				$db->queryWrite("insert into $table (IP, patternSig, status, lastUpdate)
-values (%s, UNHEX(MD5('%s')), '%s', unix_timestamp())
-ON DUPLICATE KEY UPDATE status='%3\$s', lastUpdate=unix_timestamp()",
-						$IPn, $patternSig, 'verified');
-				return true;
+				$db->queryWrite("INSERT INTO {$table} (IP, patternSig, status, lastUpdate) VALUES ('%s', UNHEX(MD5('%s')), '%s', unix_timestamp()) ON DUPLICATE KEY UPDATE status = VALUES(status), lastUpdate = VALUES(lastUpdate)", $IPn, $patternSig, 'verified');
+				return self::GOOGLE_BOT_VERIFIED;
 			} else {
-				$db->queryWrite("insert into $table (IP, patternSig, status, lastUpdate)
-values (%s, UNHEX(MD5('%s')), '%s', unix_timestamp())
-ON DUPLICATE KEY UPDATE status='%3\$s', lastUpdate=unix_timestamp()",
-						$IPn, $patternSig, 'fakeBot');
+				$db->queryWrite("INSERT INTO {$table} (IP, patternSig, status, lastUpdate) VALUES ('%s', UNHEX(MD5('%s')), '%s', unix_timestamp()) ON DUPLICATE KEY UPDATE status = VALUES(status), lastUpdate = VALUES(lastUpdate)", $IPn, $patternSig, 'fakeBot');
+				self::GOOGLE_BOT_FAKE;
 			}
 		} catch (Exception $e) {
 			// Do nothing, bail
 		}
-		return false;
+		return self::GOOGLE_BOT_UNDETERMINED;
 	}
 }
 ?>

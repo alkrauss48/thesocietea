@@ -8,19 +8,6 @@ $w = new wfConfig();
 	$pageTitle      = "Wordfence Options";
 	$wantsLiveActivity = true;
 	include( 'pageTitle.php' ); ?>
-	<!-- <div class="wordfenceLive">
-		<table border="0" cellpadding="0" cellspacing="0" class="wordfenceLiveActivity">
-			<tr>
-				<td><h2>Wordfence Live Activity:</h2></td>
-				<td id="wfLiveStatus"></td>
-			</tr>
-		</table>
-		<table border="0" cellpadding="0" cellspacing="0" class="wordfenceLiveStateMessage">
-			<tr>
-				<td>Live Updates Paused &mdash; Click inside window to resume</td>
-			</tr>
-		</table>
-	</div> -->
 	
 	<div class="wf-container-fluid">
 		<div class="wf-row">
@@ -32,7 +19,7 @@ $w = new wfConfig();
 				<form id="wfConfigForm" class="wf-form-horizontal">
 					<h2>License</h2>
 					<div class="wf-form-group">
-						<label for="apiKey" class="wf-col-sm-3 wf-control-label">Your Wordfence API Key <a href="http://docs.wordfence.com/en/Wordfence_options#Wordfence_API_Key" target="_blank" class="wfhelp"></a></label>
+						<label for="apiKey" class="wf-col-sm-3 wf-control-label">Your Wordfence API Key <a href="http://docs.wordfence.com/en/Wordfence_options#Wordfence_API_Key" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 						<div class="wf-col-sm-9">
 							<input type="text" id="apiKey" class="wf-form-control" name="apiKey" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" value="<?php $w->f( 'apiKey' ); ?>" size="80">
 						</div>
@@ -47,7 +34,7 @@ $w = new wfConfig();
 									The currently active API Key is a Premium Key. <span style="font-weight: bold; color: #0A0;">Premium scanning enabled!</span>
 								<?php } else { ?>
 									The currently active API Key is a <span style="color: #F00; font-weight: bold;">Free Key</span>. <a
-											href="https://www.wordfence.com/gnl1optAPIKey1/wordfence-signup/" target="_blank">Click Here to Upgrade to
+											href="https://www.wordfence.com/gnl1optAPIKey1/wordfence-signup/" target="_blank" rel="noopener noreferrer">Click Here to Upgrade to
 										Wordfence Premium now.</a>
 								<?php } ?>
 							</p>
@@ -56,11 +43,11 @@ $w = new wfConfig();
 					<div class="wf-form-group">
 						<?php if (wfConfig::get('hasKeyConflict')): ?>
 						<div class="wf-col-sm-9 wf-col-sm-offset-3">
-							<a href="https://www.wordfence.com/gnl1optMngKysReset/manage-wordfence-api-keys/" target="_blank"><input type="button" class="wf-btn wf-btn-default wf-btn-sm" value="Reset your premium license"/></a> <input type="button" class="wf-btn wf-btn-default wf-btn-sm" value="Downgrade to a free license" onclick="WFAD.downgradeLicense();"/>
+							<a href="https://www.wordfence.com/gnl1optMngKysReset/manage-wordfence-api-keys/" target="_blank" rel="noopener noreferrer"><input type="button" class="wf-btn wf-btn-default wf-btn-sm" value="Reset your premium license"/></a> <input type="button" class="wf-btn wf-btn-default wf-btn-sm" value="Downgrade to a free license" onclick="WFAD.downgradeLicense();"/>
 						</div>
 						<?php elseif (wfConfig::get('isPaid')): ?>
 						<div class="wf-col-sm-9 wf-col-sm-offset-3">
-							<a href="https://www.wordfence.com/gnl1optMngKys/manage-wordfence-api-keys/" target="_blank"><input type="button" class="wf-btn wf-btn-default wf-btn-sm" value="Renew your premium license"/></a> <input type="button" class="wf-btn wf-btn-default wf-btn-sm" value="Downgrade to a free license"  onclick="WFAD.downgradeLicense();"/>
+							<a href="https://www.wordfence.com/gnl1optMngKys/manage-wordfence-api-keys/" target="_blank" rel="noopener noreferrer"><input type="button" class="wf-btn wf-btn-default wf-btn-sm" value="Renew your premium license"/></a> <input type="button" class="wf-btn wf-btn-default wf-btn-sm" value="Downgrade to a free license"  onclick="WFAD.downgradeLicense();"/>
 						</div>
 						<?php else: ?>
 						<div class="wf-col-xs-12">
@@ -73,82 +60,89 @@ $w = new wfConfig();
 									<li>Access to Premium Support</li>
 									<li>Discounts of up to 90% for multiyear and multi-license purchases</li>
 								</ul>
-								<p class="center"><a class="wf-btn wf-btn-primary wf-btn-callout" href="https://www.wordfence.com/gnl1optCallout1/wordfence-signup/" target="_blank">Get Premium</a></p>
+								<p class="center"><a class="wf-btn wf-btn-primary wf-btn-callout" href="https://www.wordfence.com/gnl1optCallout1/wordfence-signup/" target="_blank" rel="noopener noreferrer">Get Premium</a></p>
 							</div>
 						</div>
 						<?php endif ?>
 					</div>
 					
-					<h2>Basic Options <a href="http://docs.wordfence.com/en/Wordfence_options#Basic_Options" target="_blank" class="wfhelp"></a></h2>
+					<h2>Basic Options <a href="http://docs.wordfence.com/en/Wordfence_options#Basic_Options" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></h2>
 					<div class="wf-form-group">
-						<label for="firewallEnabled" class="wf-col-sm-5 wf-control-label">Enable Rate Limiting and Advanced Blocking <a href="https://docs.wordfence.com/en/Wordfence_options#Enable_Rate_Limiting_and_Advanced_Blocking" target="_blank" class="wfhelp"></a></label>
+						<label for="firewallEnabled" class="wf-col-sm-5 wf-control-label">Enable Rate Limiting and Advanced Blocking <a href="https://docs.wordfence.com/en/Wordfence_options#Enable_Rate_Limiting_and_Advanced_Blocking" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 						<div class="wf-col-sm-7">
 							<div class="wf-checkbox"><input type="checkbox" id="firewallEnabled" class="wfConfigElem" name="firewallEnabled" value="1" <?php $w->cb( 'firewallEnabled' ); ?>></div>
 							<span class="wf-help-block"><span style="color: #F00;">NOTE:</span> This checkbox enables ALL blocking/throttling functions including IP, country and advanced blocking, and the "Rate Limiting Rules" below.</span>
 						</div>
 					</div>
 					<div class="wf-form-group">
-						<label for="loginSecurityEnabled" class="wf-col-sm-5 wf-control-label">Enable login security <a href="http://docs.wordfence.com/en/Wordfence_options#Enable_login_security" target="_blank" class="wfhelp"></a></label>
+						<label for="loginSecurityEnabled" class="wf-col-sm-5 wf-control-label">Enable login security <a href="http://docs.wordfence.com/en/Wordfence_options#Enable_login_security" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 						<div class="wf-col-sm-7">
 							<div class="wf-checkbox"><input type="checkbox" id="loginSecurityEnabled" class="wfConfigElem" name="loginSecurityEnabled" value="1" <?php $w->cb( 'loginSecurityEnabled' ); ?>></div>
 							<span class="wf-help-block">This option enables all "Login Security" options, including two-factor authentication, strong password enforcement, and invalid login throttling. You can modify individual options further down this page.</span>
 						</div>
 					</div>
 					<div class="wf-form-group">
-						<label for="liveTrafficEnabled" class="wf-col-sm-5 wf-control-label">Enable Live Traffic View <a href="http://docs.wordfence.com/en/Wordfence_options#Enable_Live_Traffic_View" target="_blank" class="wfhelp"></a></label>
+						<label for="liveTrafficEnabled" class="wf-col-sm-5 wf-control-label">Enable Live Traffic View <a href="http://docs.wordfence.com/en/Wordfence_options#Enable_Live_Traffic_View" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 						<div class="wf-col-sm-7">
 							<div class="wf-checkbox"><input type="checkbox" id="liveTrafficEnabled" class="wfConfigElem" name="liveTrafficEnabled" value="1" <?php $w->cb( 'liveTrafficEnabled' ); ?> onclick="WFAD.reloadConfigPage = true; return true;"></div>
 							<span class="wf-help-block">This option enables live traffic logging.</span>
 						</div>
 					</div>
 					<div class="wf-form-group">
-						<label for="advancedCommentScanning" class="wf-col-sm-5 wf-control-label">Advanced Comment Spam Filter <a href="http://docs.wordfence.com/en/Wordfence_options#Advanced_Comment_Spam_Filter" target="_blank" class="wfhelp"></a></label>
+						<label for="advancedCommentScanning" class="wf-col-sm-5 wf-control-label">Advanced Comment Spam Filter <a href="http://docs.wordfence.com/en/Wordfence_options#Advanced_Comment_Spam_Filter" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 						<div class="wf-col-sm-7">
 							<div class="wf-checkbox"><input type="checkbox" id="advancedCommentScanning" class="wfConfigElem" name="advancedCommentScanning" value="1" <?php $w->cbp( 'advancedCommentScanning' ); if (!wfConfig::get('isPaid')) { ?>onclick="alert('This is a paid feature because it places significant additional load on our servers.'); jQuery('#advancedCommentScanning').attr('checked', false); return false;" <?php } ?>></div>
 							<span class="wf-help-block"><span style="color: #F00;">Premium Feature</span> In addition to free comment filtering (see below) this option filters comments against several additional real-time lists of known spammers and infected hosts.</span>
 						</div>
 					</div>
 					<div class="wf-form-group">
-						<label for="spamvertizeCheck" class="wf-col-sm-5 wf-control-label">Check if this website is being "Spamvertised" <a href="http://docs.wordfence.com/en/Wordfence_options#Check_if_this_website_is_being_.22Spamvertized.22" target="_blank" class="wfhelp"></a></label>
+						<label for="scansEnabled_checkGSB" class="wf-col-sm-5 wf-control-label">Check if this website is on a domain blacklist <a href="http://docs.wordfence.com/en/Wordfence_options#Check_if_this_website_is_on_a_domain_blacklist" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
+						<div class="wf-col-sm-7">
+							<div class="wf-checkbox"><input type="checkbox" id="scansEnabled_checkGSB" class="wfConfigElem" name="scansEnabled_checkGSB" value="1" <?php $w->cbp( 'scansEnabled_checkGSB' ); if (!wfConfig::get('isPaid')) { ?>onclick="alert('This is a paid feature because it places significant additional load on our servers.'); jQuery('#scansEnabled_checkGSB').attr('checked', false); return false;" <?php } ?>></div>
+							<span class="wf-help-block"><span style="color: #F00;">Premium Feature</span> When doing a scan, Wordfence will check with multiple domain blacklists to see if your site is listed.</span>
+						</div>
+					</div>
+					<div class="wf-form-group">
+						<label for="spamvertizeCheck" class="wf-col-sm-5 wf-control-label">Check if this website is being "Spamvertised" <a href="http://docs.wordfence.com/en/Wordfence_options#Check_if_this_website_is_being_.22Spamvertized.22" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 						<div class="wf-col-sm-7">
 							<div class="wf-checkbox"><input type="checkbox" id="spamvertizeCheck" class="wfConfigElem" name="spamvertizeCheck" value="1" <?php $w->cbp('spamvertizeCheck'); if (!wfConfig::get('isPaid')) { ?>onclick="alert('This is a paid feature because it places significant additional load on our servers.'); jQuery('#spamvertizeCheck').attr('checked', false); return false;" <?php } ?>></div>
 							<span class="wf-help-block"><span style="color: #F00;">Premium Feature</span> When doing a scan, Wordfence will check with spam services if your site domain name is appearing as a link in spam emails.</span>
 						</div>
 					</div>
 					<div class="wf-form-group">
-						<label for="checkSpamIP" class="wf-col-sm-5 wf-control-label">Check if this website IP is generating spam <a href="http://docs.wordfence.com/en/Wordfence_options#Check_if_this_website_IP_is_generating_spam" target="_blank" class="wfhelp"></a></label>
+						<label for="checkSpamIP" class="wf-col-sm-5 wf-control-label">Check if this website IP is generating spam <a href="http://docs.wordfence.com/en/Wordfence_options#Check_if_this_website_IP_is_generating_spam" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 						<div class="wf-col-sm-7">
 							<div class="wf-checkbox"><input type="checkbox" id="checkSpamIP" class="wfConfigElem" name="checkSpamIP" value="1" <?php $w->cbp( 'checkSpamIP' ); if (!wfConfig::get('isPaid')) { ?>onclick="alert('This is a paid feature because it places significant additional load on our servers.'); jQuery('#checkSpamIP').attr('checked', false); return false;" <?php } ?>></div>
 							<span class="wf-help-block"><span style="color: #F00;">Premium Feature</span> When doing a scan, Wordfence will check with spam services if your website IP address is listed as a known source of spam email.</span>
 						</div>
 					</div>
 					<div class="wf-form-group">
-						<label for="scheduledScansEnabled" class="wf-col-sm-5 wf-control-label">Enable automatic scheduled scans <a href="http://docs.wordfence.com/en/Wordfence_options#Enable_automatic_scheduled_scans" target="_blank" class="wfhelp"></a></label>
+						<label for="scheduledScansEnabled" class="wf-col-sm-5 wf-control-label">Enable automatic scheduled scans <a href="http://docs.wordfence.com/en/Wordfence_options#Enable_automatic_scheduled_scans" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 						<div class="wf-col-sm-7">
 							<div class="wf-checkbox"><input type="checkbox" id="scheduledScansEnabled" class="wfConfigElem" name="scheduledScansEnabled" value="1" <?php $w->cb( 'scheduledScansEnabled' ); ?>></div>
 							<span class="wf-help-block">Regular scans ensure your site stays secure.</span>
 						</div>
 					</div>
 					<div class="wf-form-group">
-						<label for="autoUpdate" class="wf-col-sm-5 wf-control-label">Update Wordfence automatically when a new version is released? <a href="http://docs.wordfence.com/en/Wordfence_options#Update_Wordfence_Automatically_when_a_new_version_is_released" target="_blank" class="wfhelp"></a></label>
+						<label for="autoUpdate" class="wf-col-sm-5 wf-control-label">Update Wordfence automatically when a new version is released? <a href="http://docs.wordfence.com/en/Wordfence_options#Update_Wordfence_Automatically_when_a_new_version_is_released" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 						<div class="wf-col-sm-7">
 							<div class="wf-checkbox"><input type="checkbox" id="autoUpdate" class="wfConfigElem" name="autoUpdate" value="1" <?php $w->cb( 'autoUpdate' ); ?>></div>
 							<span class="wf-help-block">Automatically updates Wordfence to the newest version within 24 hours of a new release.<br>
-								<?php if (getenv('noabort') != '1' && stristr($_SERVER['SERVER_SOFTWARE'], 'litespeed') !== false) { ?>
-									<span style="color: #F00;">Warning: </span>You are running LiteSpeed web server and you don't have the "noabort" variable set in your .htaccess.<br>
-									<a href="https://docs.wordfence.com/en/LiteSpeed_aborts_Wordfence_scans_and_updates._How_do_I_prevent_that%3F" target="_blank">Please read this article in our FAQ to make an important change that will ensure your site stability during an update.<br>
+								<?php if (!wfConfig::get('other_bypassLitespeedNoabort', false) && getenv('noabort') != '1' && stristr($_SERVER['SERVER_SOFTWARE'], 'litespeed') !== false) { ?>
+									<span style="color: #F00;">Warning: </span>You are running the LiteSpeed web server and Wordfence can't determine whether "noabort" is set. Please verify that the environmental variable "noabort" is set for the local site, or the server's global External Application Abort is set to "No Abort".<br>
+									<a href="https://docs.wordfence.com/en/LiteSpeed_aborts_Wordfence_scans_and_updates._How_do_I_prevent_that%3F" target="_blank" rel="noopener noreferrer">Please read this article in our FAQ to make an important change that will ensure your site stability during an update.<br>
 								<?php } ?></span>
 						</div>
 					</div>
 					<div class="wf-form-group">
-						<label for="alertEmails" class="wf-col-sm-5 wf-control-label">Where to email alerts <a href="http://docs.wordfence.com/en/Wordfence_options#Where_to_email_alerts" target="_blank" class="wfhelp"></a></label>
+						<label for="alertEmails" class="wf-col-sm-5 wf-control-label">Where to email alerts <a href="http://docs.wordfence.com/en/Wordfence_options#Where_to_email_alerts" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 						<div class="wf-col-sm-7">
 							<input type="text" id="alertEmails" name="alertEmails" class="wf-form-control" value="<?php $w->f( 'alertEmails' ); ?>" size="50">
 							<span class="wf-help-block">Separate multiple emails with commas.</span>
 						</div>
 					</div>
 					<div class="wf-form-group">
-						<label for="howGetIPs" class="wf-col-sm-5 wf-control-label">How does Wordfence get IPs <a href="http://docs.wordfence.com/en/Wordfence_options#How_does_Wordfence_get_IPs" target="_blank" class="wfhelp"></a></label>
+						<label for="howGetIPs" class="wf-col-sm-5 wf-control-label">How does Wordfence get IPs <a href="http://docs.wordfence.com/en/Wordfence_options#How_does_Wordfence_get_IPs" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 						<div class="wf-col-sm-7">
 							<select id="howGetIPs" name="howGetIPs" class="wf-form-control">
 								<option value="">Let Wordfence use the most secure method to get visitor IP addresses. Prevents spoofing and works with most sites.</option>
@@ -201,14 +195,14 @@ $w = new wfConfig();
 					</div>
 					<div class="wfMarker" id="wfMarkerBasicOptions"></div>
 
-					<h2>Advanced Options <a href="http://docs.wordfence.com/en/Wordfence_options#Advanced_Options" target="_blank" class="wfhelp"></a></h2>
+					<h2>Advanced Options <a href="http://docs.wordfence.com/en/Wordfence_options#Advanced_Options" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></h2>
 					<div class="wf-form-group">
 						<div class="wf-col-sm-9">
 							<span class="wf-help-block">Wordfence works great out of the box for most websites. Simply install Wordfence and your site and content is protected. For finer granularity of control, we have provided advanced options.</span>
 						</div>
 					</div>
 					<div id="wfConfigAdvanced">
-						<h3>Alerts <a href="http://docs.wordfence.com/en/Wordfence_options#Alerts" target="_blank" class="wfhelp"></a></h3>
+						<h3>Alerts <a href="http://docs.wordfence.com/en/Wordfence_options#Alerts" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></h3>
 						<?php
 						$emails = wfConfig::getAlertEmails();
 						if (count($emails) < 1):
@@ -313,7 +307,7 @@ $w = new wfConfig();
 						</div>
 
 						<div class="wfMarker" id="wfMarkerEmailSummary"></div>
-						<h3>Email Summary <a href="http://docs.wordfence.com/en/Wordfence_options#Email_Summary" target="_blank" class="wfhelp"></a></h3>
+						<h3>Email Summary <a href="http://docs.wordfence.com/en/Wordfence_options#Email_Summary" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></h3>
 						<div class="wf-form-group">
 							<label for="email_summary_enabled" class="wf-col-sm-5 wf-control-label">Enable email summary</label>
 							<div class="wf-col-sm-7">
@@ -331,9 +325,9 @@ $w = new wfConfig();
 							</div>
 						</div>
 						<div class="wf-form-group">
-							<label for="email_summary_excluded_directories" class="wf-col-sm-5 wf-control-label">Comma-separated list of directories to exclude from recently modified file list</label>
+							<label for="email_summary_excluded_directories" class="wf-col-sm-5 wf-control-label">List of directories to exclude from recently modified file list</label>
 							<div class="wf-col-sm-7">
-								<input type="text" id="email_summary_excluded_directories" name="email_summary_excluded_directories" class="wf-form-control" value="<?php $w->f( 'email_summary_excluded_directories' ); ?>">
+								<textarea id="email_summary_excluded_directories" name="email_summary_excluded_directories" class="wf-form-control" rows="4"><?php echo esc_html(wfUtils::cleanupOneEntryPerLine($w->get('email_summary_excluded_directories', ''))); ?></textarea>
 							</div>
 						</div>
 						<?php if ((defined('WP_DEBUG') && WP_DEBUG) || wfConfig::get('debugOn', 0)): ?>
@@ -355,7 +349,7 @@ $w = new wfConfig();
 						</div>
 
 						<div class="wfMarker" id="wfMarkerLiveTrafficOptions"></div>
-						<h3>Live Traffic View <a href="http://docs.wordfence.com/en/Wordfence_options#Live_Traffic_View" target="_blank" class="wfhelp"></a></h3>
+						<h3>Live Traffic View <a href="http://docs.wordfence.com/en/Wordfence_options#Live_Traffic_View" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></h3>
 						<div class="wf-form-group">
 							<label for="liveTraf_ignorePublishers" class="wf-col-sm-5 wf-control-label">Don't log signed-in users with publishing access</label>
 							<div class="wf-col-sm-7">
@@ -388,49 +382,44 @@ $w = new wfConfig();
 						</div>
 
 						<div class="wfMarker" id="wfMarkerScansToInclude"></div>
-						<h3>Scans to include <a href="http://docs.wordfence.com/en/Wordfence_options#Scans_to_Include" target="_blank" class="wfhelp"></a></h3>
+						<h3>Scans to include <a href="http://docs.wordfence.com/en/Wordfence_options#Scans_to_Include" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></h3>
 						<?php
 						$options = array( //Contents should already be HTML-escaped as needed
 							array(
-								'id' 		=> 'scansEnabled_public',
-								'label'		=> 'Scan public facing site for vulnerabilities <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_public_facing_site" target="_blank" class="wfhelp"></a>',
-								'premium'	=> true,
-							),
-							array(
 								'id' 		=> 'scansEnabled_checkHowGetIPs',
-								'label'		=> 'Scan for misconfigured How does Wordfence get IPs <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_for_misconfigured_How_does_Wordfence_get_IPs" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Scan for misconfigured How does Wordfence get IPs <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_for_misconfigured_How_does_Wordfence_get_IPs" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'scansEnabled_checkReadableConfig',
-								'label'		=> 'Scan for publicly accessible configuration, backup, or log files <a href="http://docs.wordfence.com/en/Wordfence_options#Configuration_Readable" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Scan for publicly accessible configuration, backup, or log files <a href="http://docs.wordfence.com/en/Wordfence_options#Configuration_Readable" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'scansEnabled_suspectedFiles',
-								'label'		=> 'Scan for publicly accessible quarantined files <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_for_publicly_accessible_quarantined_files" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Scan for publicly accessible quarantined files <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_for_publicly_accessible_quarantined_files" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'scansEnabled_core',
-								'label'		=> 'Scan core files against repository versions for changes <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_core_files_against_repository_version_for_changes" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Scan core files against repository versions for changes <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_core_files_against_repository_version_for_changes" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'scansEnabled_themes',
-								'label'		=> 'Scan theme files against repository versions for changes <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_theme_files_against_repository_versions_for_changes" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Scan theme files against repository versions for changes <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_theme_files_against_repository_versions_for_changes" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'scansEnabled_plugins',
-								'label'		=> 'Scan plugin files against repository versions for changes <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_plugin_files_against_repository_versions_for_changes" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Scan plugin files against repository versions for changes <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_plugin_files_against_repository_versions_for_changes" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'scansEnabled_coreUnknown',
-								'label'		=> 'Scan wp-admin and wp-includes for files not bundled with WordPress <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_wordpress_core_for_unknown_files" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Scan wp-admin and wp-includes for files not bundled with WordPress <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_wordpress_core_for_unknown_files" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'scansEnabled_malware',
-								'label'		=> 'Scan for signatures of known malicious files <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_for_signatures_of_known_malicious_files" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Scan for signatures of known malicious files <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_for_signatures_of_known_malicious_files" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'scansEnabled_fileContents',
-								'label'		=> 'Scan file contents for backdoors, trojans and suspicious code <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_file_contents_for_backdoors.2C_trojans_and_suspicious_code" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Scan file contents for backdoors, trojans and suspicious code <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_file_contents_for_backdoors.2C_trojans_and_suspicious_code" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 								'help'		=> '<a href="#add-more-rules" class="do-show" data-selector="#scan_include_extra">+ Add additional signatures</a>',
 								'subs'		=> array(
 									array(
@@ -446,48 +435,56 @@ $w = new wfConfig();
 								),
 							),
 							array(
+								'id' 		=> 'scansEnabled_fileContentsGSB',
+								'label'		=> 'Scan file contents for malicious URLs <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_file_contents_for_malicious_URLs" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
+							),
+							array(
 								'id' 		=> 'scansEnabled_posts',
-								'label'		=> 'Scan posts for known dangerous URLs and suspicious content <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_posts_for_known_dangerous_URLs_and_suspicious_content" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Scan posts for known dangerous URLs and suspicious content <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_posts_for_known_dangerous_URLs_and_suspicious_content" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'scansEnabled_comments',
-								'label'		=> 'Scan comments for known dangerous URLs and suspicious content <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_comments_for_known_dangerous_URLs_and_suspicious_content" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Scan comments for known dangerous URLs and suspicious content <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_comments_for_known_dangerous_URLs_and_suspicious_content" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
+							),
+							array(
+								'id' 		=> 'scansEnabled_suspiciousOptions',
+								'label'		=> 'Scan WordPress core, plugin, and theme options for known dangerous URLs and suspicious content <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_WordPress_core.2C_plugin.2C_and_theme_options_for_known_dangerous_URLs_and_suspicious_content" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'scansEnabled_oldVersions',
-								'label'		=> 'Scan for out of date plugins, themes and WordPress versions <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_for_out_of_date_plugins.2C_themes_and_WordPress_versions" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Scan for out of date, abandoned, and vulnerable plugins, themes, and WordPress versions <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_for_out_of_date_plugins.2C_themes_and_WordPress_versions" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'scansEnabled_suspiciousAdminUsers',
-								'label'		=> 'Scan for admin users created outside of WordPress <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_for_admin_users_created_outside_of_WordPress" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Scan for admin users created outside of WordPress <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_for_admin_users_created_outside_of_WordPress" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'scansEnabled_passwds',
-								'label'		=> 'Check the strength of passwords <a href="http://docs.wordfence.com/en/Wordfence_options#Check_the_strength_of_passwords" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Check the strength of passwords <a href="http://docs.wordfence.com/en/Wordfence_options#Check_the_strength_of_passwords" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'scansEnabled_diskSpace',
-								'label'		=> 'Monitor disk space<a href="http://docs.wordfence.com/en/Wordfence_options#Monitor_disk_space" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Monitor disk space<a href="http://docs.wordfence.com/en/Wordfence_options#Monitor_disk_space" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'scansEnabled_dns',
-								'label'		=> 'Scan for unauthorized DNS changes <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_for_unauthorized_DNS_changes" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Scan for unauthorized DNS changes <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_for_unauthorized_DNS_changes" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'other_scanOutside',
-								'label'		=> 'Scan files outside your WordPress installation <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_files_outside_your_WordPress_installation" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Scan files outside your WordPress installation <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_files_outside_your_WordPress_installation" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'scansEnabled_scanImages',
-								'label'		=> 'Scan images, binary, and other files as if they were executable <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_image_files_as_if_they_were_executable" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Scan images, binary, and other files as if they were executable <a href="http://docs.wordfence.com/en/Wordfence_options#Scan_image_files_as_if_they_were_executable" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'scansEnabled_highSense',
-								'label'		=> 'Enable HIGH SENSITIVITY scanning (may give false positives) <a href="http://docs.wordfence.com/en/Wordfence_options#Enable_HIGH_SENSITIVITY_scanning" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Enable HIGH SENSITIVITY scanning (may give false positives) <a href="http://docs.wordfence.com/en/Wordfence_options#Enable_HIGH_SENSITIVITY_scanning" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'lowResourceScansEnabled',
-								'label'		=> 'Use low resource scanning (reduces server load by lengthening the scan duration) <a href="http://docs.wordfence.com/en/Wordfence_options#Use_low_resource_scanning" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Use low resource scanning (reduces server load by lengthening the scan duration) <a href="http://docs.wordfence.com/en/Wordfence_options#Use_low_resource_scanning" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 						);
 						foreach ($options as $o):
@@ -497,7 +494,7 @@ $w = new wfConfig();
 								<div class="wf-col-sm-7">
 									<div class="wf-checkbox"><input type="checkbox" id="<?php echo $o['id']; ?>" class="wfConfigElem" name="<?php echo $o['id']; ?>" value="1" <?php $w->cb($o['id']); ?> <?php if (!wfConfig::get('isPaid') && isset($o['premium']) && $o['premium']) { echo 'disabled'; } ?>></div>
 									<?php if (isset($o['help']) || (!wfConfig::get('isPaid') && isset($o['premium']) && $o['premium'])): ?>
-										<span class="wf-help-block"><?php if (!wfConfig::get('isPaid') && isset($o['premium']) && $o['premium']) { echo '<span style="color: #F00;">Premium Feature</span> This feature requires a <a href="https://www.wordfence.com/gnl1optPdOnly1/wordfence-signup/" target="_blank">Wordfence Premium Key</a>. '; } ?><?php if (isset($o['help'])) { echo $o['help']; } ?></span>
+										<span class="wf-help-block"><?php if (!wfConfig::get('isPaid') && isset($o['premium']) && $o['premium']) { echo '<span style="color: #F00;">Premium Feature</span> This feature requires a <a href="https://www.wordfence.com/gnl1optPdOnly1/wordfence-signup/" target="_blank" rel="noopener noreferrer">Wordfence Premium Key</a>. '; } ?><?php if (isset($o['help'])) { echo $o['help']; } ?></span>
 									<?php endif; ?>
 								</div>
 							</div>
@@ -522,20 +519,20 @@ $w = new wfConfig();
 						endforeach;
 						?>
 						<div class="wf-form-group">
-							<label for="scan_exclude" class="wf-col-sm-5 wf-control-label">Exclude files from scan that match these wildcard patterns (one per line) <a href="http://docs.wordfence.com/en/Wordfence_options#Exclude_files_from_scan_that_match_these_wildcard_patterns." target="_blank" class="wfhelp"></a></label>
+							<label for="scan_exclude" class="wf-col-sm-5 wf-control-label">Exclude files from scan that match these wildcard patterns (one per line) <a href="http://docs.wordfence.com/en/Wordfence_options#Exclude_files_from_scan_that_match_these_wildcard_patterns." target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 							<div class="wf-col-sm-7">
 								<textarea id="scan_exclude" class="wf-form-control" rows="4" name="scan_exclude"><?php echo wfUtils::cleanupOneEntryPerLine($w->getHTML( 'scan_exclude' )); ?></textarea>
 							</div>
 						</div>
 						<div class="wf-form-group">
-							<label for="scan_maxIssues" class="wf-col-sm-5 wf-control-label">Limit the number of issues sent in the scan results email <a href="https://docs.wordfence.com/en/Wordfence_options#Limit_the_number_of_issues_sent_in_the_scan_results_email" target="_blank" class="wfhelp"></a></label>
+							<label for="scan_maxIssues" class="wf-col-sm-5 wf-control-label">Limit the number of issues sent in the scan results email <a href="https://docs.wordfence.com/en/Wordfence_options#Limit_the_number_of_issues_sent_in_the_scan_results_email" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 							<div class="wf-col-sm-7">
 								<input type="text" class="wf-form-control" name="scan_maxIssues" id="scan_maxIssues" value="<?php $w->f( 'scan_maxIssues' ); ?>">
 								<span class="wf-help-block">0 or empty means unlimited issues will be sent.</span>
 							</div>
 						</div>
 						<div class="wf-form-group">
-							<label for="scan_maxDuration" class="wf-col-sm-5 wf-control-label">Time limit that a scan can run in seconds <a href="http://docs.wordfence.com/en/Wordfence_options#Time_limit_that_a_scan_can_run_in_seconds" target="_blank" class="wfhelp"></a></label>
+							<label for="scan_maxDuration" class="wf-col-sm-5 wf-control-label">Time limit that a scan can run in seconds <a href="http://docs.wordfence.com/en/Wordfence_options#Time_limit_that_a_scan_can_run_in_seconds" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 							<div class="wf-col-sm-7">
 								<input type="text" class="wf-form-control" name="scan_maxDuration" id="scan_maxDuration" value="<?php $w->f( 'scan_maxDuration' ); ?>">
 								<span class="wf-help-block">0 or empty means the default of <?php echo wfUtils::makeDuration(WORDFENCE_DEFAULT_MAX_SCAN_TIME); ?> will be used.</span>
@@ -543,15 +540,15 @@ $w = new wfConfig();
 						</div>
 
 						<div class="wfMarker" id="wfMarkerFirewallRules"></div>
-						<h3>Rate Limiting Rules <a href="http://docs.wordfence.com/en/Wordfence_options#Rate_Limiting_Rules" target="_blank" class="wfhelp"></a></h3>
+						<h3>Rate Limiting Rules <a href="http://docs.wordfence.com/en/Wordfence_options#Rate_Limiting_Rules" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></h3>
 						<div class="wf-form-group">
-							<label for="blockFakeBots" class="wf-col-sm-5 wf-control-label">Immediately block fake Google crawlers <a href="http://docs.wordfence.com/en/Wordfence_options#Immediately_block_fake_Google_crawlers:" target="_blank" class="wfhelp"></a></label>
+							<label for="blockFakeBots" class="wf-col-sm-5 wf-control-label">Immediately block fake Google crawlers <a href="http://docs.wordfence.com/en/Wordfence_options#Immediately_block_fake_Google_crawlers:" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 							<div class="wf-col-sm-7">
 								<div class="wf-checkbox"><input type="checkbox" id="blockFakeBots" name="blockFakeBots" value="1" <?php $w->cb('blockFakeBots'); ?>></div>
 							</div>
 						</div>
 						<div class="wf-form-group">
-							<label for="neverBlockBG" class="wf-col-sm-5 wf-control-label">How should we treat Google's crawlers <a href="http://docs.wordfence.com/en/Wordfence_options#How_should_we_treat_Google.27s_crawlers" target="_blank" class="wfhelp"></a></label>
+							<label for="neverBlockBG" class="wf-col-sm-5 wf-control-label">How should we treat Google's crawlers <a href="http://docs.wordfence.com/en/Wordfence_options#How_should_we_treat_Google.27s_crawlers" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 							<div class="wf-col-sm-7">
 								<select id="neverBlockBG" class="wf-form-control" name="neverBlockBG">
 									<option value="neverBlockVerified"<?php $w->sel( 'neverBlockBG', 'neverBlockVerified' ); ?>>Verified Google crawlers have unlimited access to this site</option>
@@ -564,27 +561,27 @@ $w = new wfConfig();
 						$options = array( //Contents should already be HTML-escaped as needed
 							array(
 								'id' 		=> 'maxGlobalRequests',
-								'label'		=> 'If anyone\'s requests exceed <a href="http://docs.wordfence.com/en/Wordfence_options#If_anyone.27s_requests_exceed:" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'If anyone\'s requests exceed <a href="http://docs.wordfence.com/en/Wordfence_options#If_anyone.27s_requests_exceed:" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'maxRequestsCrawlers',
-								'label'		=> 'If a crawler\'s page views exceed <a href="http://docs.wordfence.com/en/Wordfence_options#If_a_crawler.27s_page_views_exceed" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'If a crawler\'s page views exceed <a href="http://docs.wordfence.com/en/Wordfence_options#If_a_crawler.27s_page_views_exceed" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'max404Crawlers',
-								'label'		=> 'If a crawler\'s pages not found (404s) exceed <a href="http://docs.wordfence.com/en/Wordfence_options#If_a_crawler.27s_pages_not_found_.28404s.29_exceed" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'If a crawler\'s pages not found (404s) exceed <a href="http://docs.wordfence.com/en/Wordfence_options#If_a_crawler.27s_pages_not_found_.28404s.29_exceed" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'maxRequestsHumans',
-								'label'		=> 'If a human\'s page views exceed <a href="http://docs.wordfence.com/en/Wordfence_options#If_a_human.27s_page_views_exceed" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'If a human\'s page views exceed <a href="http://docs.wordfence.com/en/Wordfence_options#If_a_human.27s_page_views_exceed" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'max404Humans',
-								'label'		=> 'If a human\'s pages not found (404s) exceed <a href="http://docs.wordfence.com/en/Wordfence_options#If_a_human.27s_pages_not_found_.28404s.29_exceed" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'If a human\'s pages not found (404s) exceed <a href="http://docs.wordfence.com/en/Wordfence_options#If_a_human.27s_pages_not_found_.28404s.29_exceed" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'maxScanHits',
-								'label'		=> 'If 404s for known vulnerable URLs exceed <a href="http://docs.wordfence.com/en/Wordfence_options#If_404.27s_for_known_vulnerable_URL.27s_exceed" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'If 404s for known vulnerable URLs exceed <a href="http://docs.wordfence.com/en/Wordfence_options#If_404.27s_for_known_vulnerable_URL.27s_exceed" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 						);
 						foreach ($options as $o): ?>
@@ -616,13 +613,13 @@ $w = new wfConfig();
 									</select>
 								</div>
 								<?php if (isset($o['help']) || (!wfConfig::get('isPaid') && isset($o['premium']) && $o['premium'])): ?>
-									<span class="wf-help-block"><?php if (!wfConfig::get('isPaid') && isset($o['premium']) && $o['premium']) { echo '<span style="color: #F00;">Premium Feature</span> This feature requires a <a href="https://www.wordfence.com/gnl1optPdOnly1/wordfence-signup/" target="_blank">Wordfence Premium Key</a>. '; } ?><?php if (isset($o['help'])) { echo $o['help']; } ?></span>
+									<span class="wf-help-block"><?php if (!wfConfig::get('isPaid') && isset($o['premium']) && $o['premium']) { echo '<span style="color: #F00;">Premium Feature</span> This feature requires a <a href="https://www.wordfence.com/gnl1optPdOnly1/wordfence-signup/" target="_blank" rel="noopener noreferrer">Wordfence Premium Key</a>. '; } ?><?php if (isset($o['help'])) { echo $o['help']; } ?></span>
 								<?php endif; ?>
 							</div>
 						</div>
 						<?php endforeach; ?>
 						<div class="wf-form-group">
-							<label for="blockedTime" class="wf-col-sm-5 wf-control-label">How long is an IP address blocked when it breaks a rule <a href="http://docs.wordfence.com/en/Wordfence_options#How_long_is_an_IP_address_blocked_when_it_breaks_a_rule" target="_blank" class="wfhelp"></a></label>
+							<label for="blockedTime" class="wf-col-sm-5 wf-control-label">How long is an IP address blocked when it breaks a rule <a href="http://docs.wordfence.com/en/Wordfence_options#How_long_is_an_IP_address_blocked_when_it_breaks_a_rule" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 							<div class="wf-col-sm-7">
 								<select id="blockedTime" class="wf-form-control" name="blockedTime">
 									<option value="60"<?php $w->sel( 'blockedTime', '60' ); ?>>1 minute</option>
@@ -642,9 +639,9 @@ $w = new wfConfig();
 						</div>
 
 						<div class="wfMarker" id="wfMarkerLoginSecurity"></div>
-						<h3>Login Security Options <a href="http://docs.wordfence.com/en/Wordfence_options#Login_Security_Options" target="_blank" class="wfhelp"></a></h3>
+						<h3>Login Security Options <a href="http://docs.wordfence.com/en/Wordfence_options#Login_Security_Options" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></h3>
 						<div class="wf-form-group">
-							<label for="loginSec_strongPasswds" class="wf-col-sm-5 wf-control-label">Enforce strong passwords <a href="http://docs.wordfence.com/en/Wordfence_options#Enforce_strong_passwords.3F" target="_blank" class="wfhelp"></a></label>
+							<label for="loginSec_strongPasswds" class="wf-col-sm-5 wf-control-label">Enforce strong passwords <a href="http://docs.wordfence.com/en/Wordfence_options#Enforce_strong_passwords.3F" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 							<div class="wf-col-sm-7">
 								<select class="wf-form-control" id="loginSec_strongPasswds" name="loginSec_strongPasswds">
 									<option value="">Do not force users to use strong passwords</option>
@@ -654,7 +651,7 @@ $w = new wfConfig();
 							</div>
 						</div>
 						<div class="wf-form-group">
-							<label for="loginSec_maxFailures" class="wf-col-sm-5 wf-control-label">Lock out after how many login failures <a href="http://docs.wordfence.com/en/Wordfence_options#Lock_out_after_how_many_login_failures" target="_blank" class="wfhelp"></a></label>
+							<label for="loginSec_maxFailures" class="wf-col-sm-5 wf-control-label">Lock out after how many login failures <a href="http://docs.wordfence.com/en/Wordfence_options#Lock_out_after_how_many_login_failures" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 							<div class="wf-col-sm-7">
 								<select id="loginSec_maxFailures" class="wf-form-control" name="loginSec_maxFailures">
 									<option value="1"<?php $w->sel( 'loginSec_maxFailures', '1' ); ?>>1</option>
@@ -678,7 +675,7 @@ $w = new wfConfig();
 							</div>
 						</div>
 						<div class="wf-form-group">
-							<label for="loginSec_maxForgotPasswd" class="wf-col-sm-5 wf-control-label">Lock out after how many forgot password attempts <a href="http://docs.wordfence.com/en/Wordfence_options#Lock_out_after_how_many_forgot_password_attempts" target="_blank" class="wfhelp"></a></label>
+							<label for="loginSec_maxForgotPasswd" class="wf-col-sm-5 wf-control-label">Lock out after how many forgot password attempts <a href="http://docs.wordfence.com/en/Wordfence_options#Lock_out_after_how_many_forgot_password_attempts" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 							<div class="wf-col-sm-7">
 								<select id="loginSec_maxForgotPasswd" class="wf-form-control" name="loginSec_maxForgotPasswd">
 									<option value="1"<?php $w->sel( 'loginSec_maxForgotPasswd', '1' ); ?>>1</option>
@@ -702,7 +699,7 @@ $w = new wfConfig();
 							</div>
 						</div>
 						<div class="wf-form-group">
-							<label for="loginSec_countFailMins" class="wf-col-sm-5 wf-control-label">Count failures over what time period <a href="http://docs.wordfence.com/en/Wordfence_options#Count_failures_over_what_time_period" target="_blank" class="wfhelp"></a></label>
+							<label for="loginSec_countFailMins" class="wf-col-sm-5 wf-control-label">Count failures over what time period <a href="http://docs.wordfence.com/en/Wordfence_options#Count_failures_over_what_time_period" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 							<div class="wf-col-sm-7">
 								<select id="loginSec_countFailMins" class="wf-form-control" name="loginSec_countFailMins">
 									<option value="5"<?php $w->sel( 'loginSec_countFailMins', '5' ); ?>>5 minutes</option>
@@ -717,7 +714,7 @@ $w = new wfConfig();
 							</div>
 						</div>
 						<div class="wf-form-group">
-							<label for="loginSec_lockoutMins" class="wf-col-sm-5 wf-control-label">Amount of time a user is locked out <a href="http://docs.wordfence.com/en/Wordfence_options#Amount_of_time_a_user_is_locked_out" target="_blank" class="wfhelp"></a></label>
+							<label for="loginSec_lockoutMins" class="wf-col-sm-5 wf-control-label">Amount of time a user is locked out <a href="http://docs.wordfence.com/en/Wordfence_options#Amount_of_time_a_user_is_locked_out" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 							<div class="wf-col-sm-7">
 								<select id="loginSec_lockoutMins" class="wf-form-control" name="loginSec_lockoutMins">
 									<option value="5"<?php $w->sel( 'loginSec_lockoutMins', '5' ); ?>>5 minutes</option>
@@ -738,31 +735,31 @@ $w = new wfConfig();
 							</div>
 						</div>
 						<div class="wf-form-group">
-							<label for="loginSec_lockInvalidUsers" class="wf-col-sm-5 wf-control-label">Immediately lock out invalid usernames <a href="http://docs.wordfence.com/en/Wordfence_options#Immediately_lock_out_invalid_usernames" target="_blank" class="wfhelp"></a></label>
+							<label for="loginSec_lockInvalidUsers" class="wf-col-sm-5 wf-control-label">Immediately lock out invalid usernames <a href="http://docs.wordfence.com/en/Wordfence_options#Immediately_lock_out_invalid_usernames" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 							<div class="wf-col-sm-7">
 								<div class="wf-checkbox"><input type="checkbox" id="loginSec_lockInvalidUsers" name="loginSec_lockInvalidUsers" value="1" <?php $w->cb('loginSec_lockInvalidUsers'); ?>></div>
 							</div>
 						</div>
 						<div class="wf-form-group">
-							<label for="loginSec_maskLoginErrors" class="wf-col-sm-5 wf-control-label">Don't let WordPress reveal valid users in login errors <a href="http://docs.wordfence.com/en/Wordfence_options#Don.27t_let_WordPress_reveal_valid_users_in_login_errors" target="_blank" class="wfhelp"></a></label>
+							<label for="loginSec_maskLoginErrors" class="wf-col-sm-5 wf-control-label">Don't let WordPress reveal valid users in login errors <a href="http://docs.wordfence.com/en/Wordfence_options#Don.27t_let_WordPress_reveal_valid_users_in_login_errors" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 							<div class="wf-col-sm-7">
 								<div class="wf-checkbox"><input type="checkbox" id="loginSec_maskLoginErrors" name="loginSec_maskLoginErrors" value="1" <?php $w->cb('loginSec_maskLoginErrors'); ?>></div>
 							</div>
 						</div>
 						<div class="wf-form-group">
-							<label for="loginSec_blockAdminReg" class="wf-col-sm-5 wf-control-label">Prevent users registering 'admin' username if it doesn't exist <a href="http://docs.wordfence.com/en/Wordfence_options#Prevent_users_registering_.27admin.27_username_if_it_doesn.27t_exist" target="_blank" class="wfhelp"></a></label>
+							<label for="loginSec_blockAdminReg" class="wf-col-sm-5 wf-control-label">Prevent users registering 'admin' username if it doesn't exist <a href="http://docs.wordfence.com/en/Wordfence_options#Prevent_users_registering_.27admin.27_username_if_it_doesn.27t_exist" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 							<div class="wf-col-sm-7">
 								<div class="wf-checkbox"><input type="checkbox" id="loginSec_blockAdminReg" name="loginSec_blockAdminReg" value="1" <?php $w->cb('loginSec_blockAdminReg'); ?>></div>
 							</div>
 						</div>
 						<div class="wf-form-group">
-							<label for="loginSec_disableAuthorScan" class="wf-col-sm-5 wf-control-label">Prevent discovery of usernames through '/?author=N' scans, the oEmbed API, and the WordPress REST API <a href="http://docs.wordfence.com/en/Wordfence_options#Prevent_discovery_of_usernames_through_.27.3F.2Fauthor.3DN.27_scans" target="_blank" class="wfhelp"></a></label>
+							<label for="loginSec_disableAuthorScan" class="wf-col-sm-5 wf-control-label">Prevent discovery of usernames through '/?author=N' scans, the oEmbed API, and the WordPress REST API <a href="http://docs.wordfence.com/en/Wordfence_options#Prevent_discovery_of_usernames_through_.27.3F.2Fauthor.3DN.27_scans" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 							<div class="wf-col-sm-7">
 								<div class="wf-checkbox"><input type="checkbox" id="loginSec_disableAuthorScan" name="loginSec_disableAuthorScan" value="1" <?php $w->cb('loginSec_disableAuthorScan'); ?>></div>
 							</div>
 						</div>
 						<div class="wf-form-group">
-							<label for="loginSec_userBlacklist" class="wf-col-sm-5 wf-control-label">Immediately block the IP of users who try to sign in as these usernames <a href="http://docs.wordfence.com/en/Wordfence_options#Immediately_block_the_IP_of_users_who_try_to_sign_in_as_these_usernames" target="_blank" class="wfhelp"></a></label>
+							<label for="loginSec_userBlacklist" class="wf-col-sm-5 wf-control-label">Immediately block the IP of users who try to sign in as these usernames <a href="http://docs.wordfence.com/en/Wordfence_options#Immediately_block_the_IP_of_users_who_try_to_sign_in_as_these_usernames" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 							<div class="wf-col-sm-7">
 								<textarea id="loginSec_userBlacklist" class="wf-form-control" rows="4" name="loginSec_userBlacklist"><?php echo wfUtils::cleanupOneEntryPerLine($w->getHTML( 'loginSec_userBlacklist' )); ?></textarea>
 								<span class="wf-help-block">(One per line. Existing users won't be blocked.)</span>
@@ -770,7 +767,7 @@ $w = new wfConfig();
 						</div>
 
 						<div class="wfMarker" id="wfMarkerNotification"></div>
-						<h3>Dashboard Notification Options <a href="http://docs.wordfence.com/en/Wordfence_options#Dashboard_Notification_Options" target="_blank" class="wfhelp"></a></h3>
+						<h3>Dashboard Notification Options <a href="http://docs.wordfence.com/en/Wordfence_options#Dashboard_Notification_Options" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></h3>
 						<div class="wf-form-group">
 							<label for="notification_updatesNeeded" class="wf-col-sm-5 wf-control-label">Updates Needed (Plugin, Theme, or Core)</label>
 							<div class="wf-col-sm-7">
@@ -782,7 +779,7 @@ $w = new wfConfig();
 							<div class="wf-col-sm-7">
 								<div class="wf-checkbox"><input type="checkbox" id="notification_securityAlerts"<?php if ($w->p()) { echo ' name="notification_securityAlerts"'; } ?> value="1" <?php if ($w->p()) { $w->cb('notification_securityAlerts'); } else { echo ' checked disabled'; } ?>></div>
 								<?php if (!$w->p()): ?>
-									<span class="wf-help-block"><span style="color: #F00;">Premium Option</span> This option requires a <a href="https://www.wordfence.com/gnl1optPdOnly1/wordfence-signup/" target="_blank">Wordfence Premium Key</a>.</span>
+									<span class="wf-help-block"><span style="color: #F00;">Premium Option</span> This option requires a <a href="https://www.wordfence.com/gnl1optPdOnly1/wordfence-signup/" target="_blank" rel="noopener noreferrer">Wordfence Premium Key</a>.</span>
 									<?php if ($w->get('notification_securityAlerts')): ?><input type="hidden" name="notification_securityAlerts" value="<?php $w->f('notification_securityAlerts'); ?>"><?php endif; ?>
 								<?php endif; ?>
 							</div>
@@ -792,7 +789,7 @@ $w = new wfConfig();
 							<div class="wf-col-sm-7">
 								<div class="wf-checkbox"><input type="checkbox" id="notification_promotions"<?php if ($w->p()) { echo ' name="notification_promotions"'; } ?> value="1" <?php if ($w->p()) { $w->cb('notification_promotions'); } else { echo ' checked disabled'; } ?>></div>
 								<?php if (!$w->p()): ?>
-									<span class="wf-help-block"><span style="color: #F00;">Premium Option</span> This option requires a <a href="https://www.wordfence.com/gnl1optPdOnly1/wordfence-signup/" target="_blank">Wordfence Premium Key</a>.</span>
+									<span class="wf-help-block"><span style="color: #F00;">Premium Option</span> This option requires a <a href="https://www.wordfence.com/gnl1optPdOnly1/wordfence-signup/" target="_blank" rel="noopener noreferrer">Wordfence Premium Key</a>.</span>
 									<?php if ($w->get('notification_promotions')): ?><input type="hidden" name="notification_promotions" value="<?php $w->f('notification_promotions'); ?>"><?php endif; ?>
 								<?php endif; ?>
 							</div>
@@ -802,7 +799,7 @@ $w = new wfConfig();
 							<div class="wf-col-sm-7">
 								<div class="wf-checkbox"><input type="checkbox" id="notification_blogHighlights"<?php if ($w->p()) { echo ' name="notification_blogHighlights"'; } ?> value="1" <?php if ($w->p()) { $w->cb('notification_blogHighlights'); } else { echo ' checked disabled'; } ?>></div>
 								<?php if (!$w->p()): ?>
-									<span class="wf-help-block"><span style="color: #F00;">Premium Option</span> This option requires a <a href="https://www.wordfence.com/gnl1optPdOnly1/wordfence-signup/" target="_blank">Wordfence Premium Key</a>.</span>
+									<span class="wf-help-block"><span style="color: #F00;">Premium Option</span> This option requires a <a href="https://www.wordfence.com/gnl1optPdOnly1/wordfence-signup/" target="_blank" rel="noopener noreferrer">Wordfence Premium Key</a>.</span>
 									<?php if ($w->get('notification_blogHighlights')): ?><input type="hidden" name="notification_blogHighlights" value="<?php $w->f('notification_blogHighlights'); ?>"><?php endif; ?>
 								<?php endif; ?>
 							</div>
@@ -812,7 +809,7 @@ $w = new wfConfig();
 							<div class="wf-col-sm-7">
 								<div class="wf-checkbox"><input type="checkbox" id="notification_productUpdates"<?php if ($w->p()) { echo ' name="notification_productUpdates"'; } ?> value="1" <?php if ($w->p()) { $w->cb('notification_productUpdates'); } else { echo ' checked disabled'; } ?>></div>
 								<?php if (!$w->p()): ?>
-									<span class="wf-help-block"><span style="color: #F00;">Premium Option</span> This option requires a <a href="https://www.wordfence.com/gnl1optPdOnly1/wordfence-signup/" target="_blank">Wordfence Premium Key</a>.</span>
+									<span class="wf-help-block"><span style="color: #F00;">Premium Option</span> This option requires a <a href="https://www.wordfence.com/gnl1optPdOnly1/wordfence-signup/" target="_blank" rel="noopener noreferrer">Wordfence Premium Key</a>.</span>
 									<?php if ($w->get('notification_productUpdates')): ?><input type="hidden" name="notification_productUpdates" value="<?php $w->f('notification_productUpdates'); ?>"><?php endif; ?>
 								<?php endif; ?>
 							</div>
@@ -825,23 +822,23 @@ $w = new wfConfig();
 						</div>
 
 						<div class="wfMarker" id="wfMarkerOtherOptions"></div>
-						<h3>Other Options <a href="http://docs.wordfence.com/en/Wordfence_options#Other_Options" target="_blank" class="wfhelp"></a></h3>
+						<h3>Other Options <a href="http://docs.wordfence.com/en/Wordfence_options#Other_Options" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></h3>
 						<div class="wf-form-group">
-							<label for="whitelisted" class="wf-col-sm-5 wf-control-label">Whitelisted IP addresses that bypass all rules <a href="http://docs.wordfence.com/en/Wordfence_options#Whitelisted_IP_addresses_that_bypass_all_rules" target="_blank" class="wfhelp"></a></label>
+							<label for="whitelisted" class="wf-col-sm-5 wf-control-label">Whitelisted IP addresses that bypass all rules <a href="http://docs.wordfence.com/en/Wordfence_options#Whitelisted_IP_addresses_that_bypass_all_rules" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 							<div class="wf-col-sm-7">
 								<textarea id="whitelisted" class="wf-form-control" rows="4" name="whitelisted"><?php echo esc_html(preg_replace('/,/', "\n", $w->get('whitelisted'))); ?></textarea>
-								<span class="wf-help-block">Whitelisted IPs must be separated by commas or placed on separate lines. You can specify ranges using the following format: 123.23.34.[1-50]<br/>Wordfence automatically whitelists <a href="http://en.wikipedia.org/wiki/Private_network" target="_blank">private networks</a> because these are not routable on the public Internet.</span>
+								<span class="wf-help-block">Whitelisted IPs must be separated by commas or placed on separate lines. You can specify ranges using the following format: 123.23.34.[1-50]<br/>Wordfence automatically whitelists <a href="http://en.wikipedia.org/wiki/Private_network" target="_blank" rel="noopener noreferrer">private networks</a> because these are not routable on the public Internet.</span>
 							</div>
 						</div>
 						<div class="wf-form-group">
-							<label for="bannedURLs" class="wf-col-sm-5 wf-control-label">Immediately block IPs that access these URLs <a href="http://docs.wordfence.com/en/Wordfence_options#Immediately_block_IP.27s_that_access_these_URLs" target="_blank" class="wfhelp"></a></label>
+							<label for="bannedURLs" class="wf-col-sm-5 wf-control-label">Immediately block IPs that access these URLs <a href="http://docs.wordfence.com/en/Wordfence_options#Immediately_block_IP.27s_that_access_these_URLs" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 							<div class="wf-col-sm-7">
 								<textarea id="bannedURLs" class="wf-form-control" rows="4" name="bannedURLs"><?php echo esc_html(preg_replace('/,/', "\n", $w->get('bannedURLs'))); ?></textarea>
 								<span class="wf-help-block">Separate multiple URLs with commas or place them on separate lines. Asterisks are wildcards, but use with care. If you see an attacker repeatedly probing your site for a known vulnerability you can use this to immediately block them. All URLs must start with a '/' without quotes and must be relative. e.g. /badURLone/, /bannedPage.html, /dont-access/this/URL/, /starts/with-*</span>
 							</div>
 						</div>
 						<div class="wf-form-group">
-							<label for="allowed404s" class="wf-col-sm-5 wf-control-label">Whitelisted 404 URLs (one per line) <a href="http://docs.wordfence.com/en/Wordfence_options#Whitelisted_404_URLs" target="_blank" class="wfhelp"></a></label>
+							<label for="allowed404s" class="wf-col-sm-5 wf-control-label">Whitelisted 404 URLs (one per line) <a href="http://docs.wordfence.com/en/Wordfence_options#Whitelisted_404_URLs" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 							<div class="wf-col-sm-7">
 								<textarea id="allowed404s" class="wf-form-control" rows="4" name="allowed404s"><?php echo $w->getHTML( 'allowed404s' ); ?></textarea>
 								<span class="wf-help-block">These URL patterns will be excluded from the throttling rules used to limit crawlers.</span>
@@ -870,7 +867,7 @@ $w = new wfConfig();
 						$options = array( //Contents should already be HTML-escaped as needed
 							array(
 								'id' 		=> 'other_hideWPVersion',
-								'label'		=> 'Hide WordPress version <a href="http://docs.wordfence.com/en/Wordfence_options#Hide_WordPress_version" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Hide WordPress version <a href="http://docs.wordfence.com/en/Wordfence_options#Hide_WordPress_version" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'showAdminBarMenu',
@@ -879,23 +876,27 @@ $w = new wfConfig();
 							),
 							array(
 								'id' 		=> 'other_blockBadPOST',
-								'label'		=> 'Block IPs who send POST requests with blank User-Agent and Referer <a href="http://docs.wordfence.com/en/Wordfence_options#Block_IP.27s_who_send_POST_requests_with_blank_User-Agent_and_Referer" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Block IPs who send POST requests with blank User-Agent and Referer <a href="http://docs.wordfence.com/en/Wordfence_options#Block_IP.27s_who_send_POST_requests_with_blank_User-Agent_and_Referer" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'other_noAnonMemberComments',
-								'label'		=> 'Hold anonymous comments using member emails for moderation <a href="http://docs.wordfence.com/en/Wordfence_options#Hold_anonymous_comments_using_member_emails_for_moderation" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Hold anonymous comments using member emails for moderation <a href="http://docs.wordfence.com/en/Wordfence_options#Hold_anonymous_comments_using_member_emails_for_moderation" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'other_scanComments',
-								'label'		=> 'Filter comments for malware and phishing URLs <a href="http://docs.wordfence.com/en/Wordfence_options#Filter_comments_for_malware_and_phishing_URL.27s" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Filter comments for malware and phishing URLs <a href="http://docs.wordfence.com/en/Wordfence_options#Filter_comments_for_malware_and_phishing_URL.27s" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'other_pwStrengthOnUpdate',
-								'label'		=> 'Check password strength on profile update <a href="http://docs.wordfence.com/en/Wordfence_options#Check_password_strength_on_profile_update" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Check password strength on profile update <a href="http://docs.wordfence.com/en/Wordfence_options#Check_password_strength_on_profile_update" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'other_WFNet',
-								'label'		=> 'Participate in the Real-Time WordPress Security Network <a href="http://docs.wordfence.com/en/Wordfence_options#Participate_in_the_Real-Time_WordPress_Security_Network" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Participate in the Real-Time WordPress Security Network <a href="http://docs.wordfence.com/en/Wordfence_options#Participate_in_the_Real-Time_WordPress_Security_Network" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
+							),
+							array(
+								'id'		=> 'other_bypassLitespeedNoabort',
+								'label'		=> 'Bypass the LiteSpeed "noabort" check <a href="https://docs.wordfence.com/en/Wordfence_options#Bypass_the_LiteSpeed_noabort_check" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 						);
 						foreach ($options as $o):
@@ -905,13 +906,13 @@ $w = new wfConfig();
 							<div class="wf-col-sm-7">
 								<div class="wf-checkbox"><input type="checkbox" id="<?php echo $o['id']; ?>" class="wfConfigElem" name="<?php echo $o['id']; ?>" value="1" <?php $w->cb($o['id']); ?> <?php if (!wfConfig::get('isPaid') && isset($o['premium']) && $o['premium']) { echo 'disabled'; } ?>></div>
 								<?php if (isset($o['help']) || (!wfConfig::get('isPaid') && isset($o['premium']) && $o['premium'])): ?>
-									<span class="wf-help-block"><?php if (!wfConfig::get('isPaid') && isset($o['premium']) && $o['premium']) { echo '<span style="color: #F00;">Premium Feature</span> This feature requires a <a href="https://www.wordfence.com/gnl1optPdOnly1/wordfence-signup/" target="_blank">Wordfence Premium Key</a>. '; } ?><?php if (isset($o['help'])) { echo $o['help']; } ?></span>
+									<span class="wf-help-block"><?php if (!wfConfig::get('isPaid') && isset($o['premium']) && $o['premium']) { echo '<span style="color: #F00;">Premium Feature</span> This feature requires a <a href="https://www.wordfence.com/gnl1optPdOnly1/wordfence-signup/" target="_blank" rel="noopener noreferrer">Wordfence Premium Key</a>. '; } ?><?php if (isset($o['help'])) { echo $o['help']; } ?></span>
 								<?php endif; ?>
 							</div>
 						</div>
 						<?php endforeach; ?>
 						<div class="wf-form-group">
-							<label for="maxMem" class="wf-col-sm-5 wf-control-label">How much memory should Wordfence request when scanning <a href="http://docs.wordfence.com/en/Wordfence_options#How_much_memory_should_Wordfence_request_when_scanning" target="_blank" class="wfhelp"></a></label>
+							<label for="maxMem" class="wf-col-sm-5 wf-control-label">How much memory should Wordfence request when scanning <a href="http://docs.wordfence.com/en/Wordfence_options#How_much_memory_should_Wordfence_request_when_scanning" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 							<div class="wf-col-sm-7">
 								<div class="wf-form-inline">
 									<input type="text" class="wf-form-control" name="maxMem" id="maxMem" value="<?php $w->f( 'maxMem' ); ?>">
@@ -920,14 +921,14 @@ $w = new wfConfig();
 							</div>
 						</div>
 						<div class="wf-form-group">
-							<label for="maxExecutionTime" class="wf-col-sm-5 wf-control-label">Maximum execution time for each scan stage <a href="http://docs.wordfence.com/en/Wordfence_options#Maximum_execution_time_for_each_scan_stage" target="_blank" class="wfhelp"></a></label>
+							<label for="maxExecutionTime" class="wf-col-sm-5 wf-control-label">Maximum execution time for each scan stage <a href="http://docs.wordfence.com/en/Wordfence_options#Maximum_execution_time_for_each_scan_stage" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 							<div class="wf-col-sm-7">
 								<input type="text" class="wf-form-control" name="maxExecutionTime" id="maxExecutionTime" value="<?php $w->f( 'maxExecutionTime' ); ?>">
-								<span class="wf-help-block">Blank for default. Must be greater than 9.</span>
+								<span class="wf-help-block">Blank for default. Must be greater than <?php echo intval(WORDFENCE_SCAN_MIN_EXECUTION_TIME) - 1; ?> and 10-20 or higher is recommended for most servers.</span>
 							</div>
 						</div>
 						<div class="wf-form-group">
-							<label for="actUpdateInterval" class="wf-col-sm-5 wf-control-label">Update interval in seconds (2 is default) <a href="http://docs.wordfence.com/en/Wordfence_options#Update_interval_in_seconds" target="_blank" class="wfhelp"></a></label>
+							<label for="actUpdateInterval" class="wf-col-sm-5 wf-control-label">Update interval in seconds (2 is default) <a href="http://docs.wordfence.com/en/Wordfence_options#Update_interval_in_seconds" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 							<div class="wf-col-sm-7">
 								<input type="text" class="wf-form-control" name="actUpdateInterval" id="actUpdateInterval" value="<?php $w->f( 'actUpdateInterval' ); ?>">
 								<span class="wf-help-block">Setting higher will reduce browser traffic but slow scan starts, live traffic &amp; status updates.</span>
@@ -937,20 +938,20 @@ $w = new wfConfig();
 						$options = array( //Contents should already be HTML-escaped as needed
 							array(
 								'id'		=> 'liveActivityPauseEnabled',
-								'label'		=> 'Pause live updates when window loses focus <a href="http://docs.wordfence.com/en/Wordfence_options#Pause_live_updates_when_window_loses_focus" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Pause live updates when window loses focus <a href="http://docs.wordfence.com/en/Wordfence_options#Pause_live_updates_when_window_loses_focus" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'deleteTablesOnDeact',
-								'label'		=> 'Delete Wordfence tables and data on deactivation <a href="http://docs.wordfence.com/en/Wordfence_options#Delete_Wordfence_tables_and_data_on_deactivation.3F" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Delete Wordfence tables and data on deactivation <a href="http://docs.wordfence.com/en/Wordfence_options#Delete_Wordfence_tables_and_data_on_deactivation.3F" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'disableCookies',
-								'label'		=> 'Disable Wordfence Cookies <a href="http://docs.wordfence.com/en/Wordfence_options#Disable_Wordfence_Cookies" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Disable Wordfence Cookies <a href="http://docs.wordfence.com/en/Wordfence_options#Disable_Wordfence_Cookies" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 								'help'		=> 'When enabled, all visits in live traffic will appear to be new visits.',
 							),
 							array(
 								'id' 		=> 'disableCodeExecutionUploads',
-								'label'		=> 'Disable Code Execution for Uploads directory <a href="http://docs.wordfence.com/en/Wordfence_options#Disable_Code_Execution_for_Uploads_directory" target="_blank" class="wfhelp"></a>',
+								'label'		=> 'Disable Code Execution for Uploads directory <a href="http://docs.wordfence.com/en/Wordfence_options#Disable_Code_Execution_for_Uploads_directory" target="_blank" rel="noopener noreferrer" class="wfhelp"></a>',
 							),
 							array(
 								'id' 		=> 'ajaxWatcherDisabled_front',
@@ -975,14 +976,14 @@ $w = new wfConfig();
 								<div class="wf-col-sm-7">
 									<div class="wf-checkbox"><input type="checkbox" id="<?php echo $o['id']; ?>" class="wfConfigElem" name="<?php echo $o['id']; ?>" value="1" <?php $w->cb($o['id']); ?> <?php if (!wfConfig::get('isPaid') && isset($o['premium']) && $o['premium']) { echo 'disabled'; } ?>></div>
 									<?php if (isset($o['help']) || (!wfConfig::get('isPaid') && isset($o['premium']) && $o['premium'])): ?>
-										<span class="wf-help-block"><?php if (!wfConfig::get('isPaid') && isset($o['premium']) && $o['premium']) { echo '<span style="color: #F00;">Premium Feature</span> This feature requires a <a href="https://www.wordfence.com/gnl1optPdOnly1/wordfence-signup/" target="_blank">Wordfence Premium Key</a>. '; } ?><?php if (isset($o['help'])) { echo $o['help']; } ?></span>
+										<span class="wf-help-block"><?php if (!wfConfig::get('isPaid') && isset($o['premium']) && $o['premium']) { echo '<span style="color: #F00;">Premium Feature</span> This feature requires a <a href="https://www.wordfence.com/gnl1optPdOnly1/wordfence-signup/" target="_blank" rel="noopener noreferrer">Wordfence Premium Key</a>. '; } ?><?php if (isset($o['help'])) { echo $o['help']; } ?></span>
 									<?php endif; ?>
 								</div>
 							</div>
 						<?php endforeach; ?>
 
 						<div class="wfMarker" id="wfMarkerExportOptions"></div>
-						<h3>Exporting and Importing Wordfence Settings <a href="http://docs.wordfence.com/en/Wordfence_options#Exporting_and_Importing_Wordfence_Settings" target="_blank" class="wfhelp"></a></h3>
+						<h3>Exporting and Importing Wordfence Settings <a href="http://docs.wordfence.com/en/Wordfence_options#Exporting_and_Importing_Wordfence_Settings" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></h3>
 						<div class="wf-form-group">
 							<label for="exportSettingsBut" class="wf-col-sm-5 wf-control-label">Export this site's Wordfence settings for import on another site</label>
 							<div class="wf-col-sm-7">
@@ -1049,7 +1050,7 @@ $w = new wfConfig();
 		<p>
 			If you use the free edition of Wordfence, you don't need to worry about entering an API key in the "API Key"
 			field above. One is automatically created for you. If you choose to <a
-				href="https://www.wordfence.com/gnl1optUpg1/wordfence-signup/" target="_blank">upgrade to Wordfence Premium
+				href="https://www.wordfence.com/gnl1optUpg1/wordfence-signup/" target="_blank" rel="noopener noreferrer">upgrade to Wordfence Premium
 				edition</a>, you will receive an API key. You will need to copy and paste that key into the "API Key"
 			field above and hit "Save" to activate your key.
 		</p>
@@ -1168,7 +1169,7 @@ $w = new wfConfig();
 
 		<p>
 			Thanks for completing this tour and I'm very happy to have you as our newest Wordfence customer. Don't
-			forget to <a href="http://wordpress.org/extend/plugins/wordfence/" target="_blank">rate us 5 stars if you
+			forget to <a href="http://wordpress.org/extend/plugins/wordfence/" target="_blank" rel="noopener noreferrer">rate us 5 stars if you
 				love Wordfence</a>.<br/>
 			<br/>
 			<strong>Mark Maunder</strong> - Wordfence Creator.

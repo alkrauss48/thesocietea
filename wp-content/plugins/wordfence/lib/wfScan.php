@@ -1,10 +1,29 @@
 <?php
 class wfScan {
+	const SCAN_SCHEDULING_MODE_AUTOMATIC = 'auto';
+	const SCAN_SCHEDULING_MODE_MANUAL = 'manual';
+	
 	public static $debugMode = false;
 	public static $errorHandlingOn = true;
 	private static $peakMemAtStart = 0;
+	
+	public static function scanSchedulingMode() {
+		$sched = wfConfig::get_ser('scanSched', array());
+		if (wfConfig::get('isPaid') && wfConfig::get('schedMode') == 'manual' && is_array($sched) && is_array($sched[0])) {
+			return self::SCAN_SCHEDULING_MODE_MANUAL;
+		}
+		return self::SCAN_SCHEDULING_MODE_AUTOMATIC;
+	}
+	public static function isAutoScanSchedule() { return self::scanSchedulingMode() == self::SCAN_SCHEDULING_MODE_AUTOMATIC; }
+	public static function isManualScanSchedule() { return self::scanSchedulingMode() == self::SCAN_SCHEDULING_MODE_MANUAL; }
+	
+	public static function shouldRunScan($scanMode) {
+		$jobs = wfScanEngine::jobsForScanMode($scanMode);
+		return count($jobs) > 0;
+	}
+	
 	public static function wfScanMain(){
-		self::$peakMemAtStart = memory_get_peak_usage();
+		self::$peakMemAtStart = memory_get_peak_usage(true);
 		$db = new wfDB();
 		if($db->errorMsg){
 			self::errorExit("Could not connect to database to start scan: " . $db->errorMsg);
@@ -55,7 +74,9 @@ class wfScan {
 				self::errorExit("There is already a scan running.");
 			}
 			
-			wfConfig::set('wfPeakMemory', 0);
+			wfIssues::updateScanStillRunning();
+			wfConfig::set('wfPeakMemory', 0, wfConfig::DONT_AUTOLOAD);
+			wfConfig::set('wfScanStartVersion', wfUtils::getWPVersion());
 			wfConfig::set('lowResourceScanWaitStep', false);
 			if (wfConfig::get('lowResourceScansEnabled')) {
 				self::status(1, 'info', "Using low resource scanning");
@@ -83,18 +104,83 @@ class wfScan {
 				exit();
 			}
 		} else {
-			wordfence::statusPrep(); //Re-initializes all status counters
-			$scan = new wfScanEngine();
-			$scan->deleteNewIssues();
+			$scanMode = wfScanEngine::SCAN_MODE_FULL;
+			if (isset($_GET['scanMode']) && self::_isValidScanMode($_GET['scanMode'])) {
+				$scanMode = $_GET['scanMode'];
+			}
+			
+			$delay = -1;
+			$isScheduled = false;
+			$originalScanStart = wfConfig::get('originalScheduledScanStart', 0);
+			$lastScanStart = wfConfig::get('lastScheduledScanStart', 0);
+			$minimumFrequency = (wfScan::isManualScanSchedule() ? 1800 : 43200);
+			if ($lastScanStart && (time() - $lastScanStart) < $minimumFrequency) {
+				$isScheduled = true;
+				
+				if ($originalScanStart > 0) {
+					$delay = max($lastScanStart - $originalScanStart, 0);
+				}
+			}
+			
+			wfIssues::statusPrep(); //Re-initializes all status counters
+			
+			if ($scanMode == wfScanEngine::SCAN_MODE_FULL) {
+				wordfence::status(1, 'info', "Contacting Wordfence to initiate scan");
+				$wp_version = wfUtils::getWPVersion();
+				$apiKey = wfConfig::get('apiKey');
+				$api = new wfAPI($apiKey, $wp_version);
+				$response = $api->call('log_scan', array(), array('delay' => $delay, 'scheduled' => (int) $isScheduled, 'mode' => wfConfig::get('schedMode')/*, 'forcedefer' => 1*/));
+				
+				if (!wfScan::isManualScanSchedule() && $isScheduled) {
+					if (isset($response['defer'])) {
+						$defer = (int) $response['defer'];
+						wordfence::status(2, 'info', "Deferring scheduled scan by " . wfUtils::makeDuration($defer));
+						wfConfig::set('lastScheduledScanStart', 0);
+						wfConfig::set('lastScanCompleted', 'ok');
+						wfConfig::set('lastScanFailureType', false);
+						wfConfig::set_ser('wfStatusStartMsgs', array());
+						$i = new wfIssues();
+						$i->setScanTimeNow();
+						wfScanEngine::refreshScanNotification($i);
+						wordfence::scheduleSingleScan(time() + $defer, $originalScanStart);
+						wfUtils::clearScanLock();
+						exit();
+					}
+				}
+				
+				$malwarePrefixesHash = (isset($response['malwarePrefixes']) ? $response['malwarePrefixes'] : '');
+				
+				$scan = new wfScanEngine($malwarePrefixesHash, $scanMode);
+				$scan->deleteNewIssues();
+			}
+			else {
+				wordfence::status(1, 'info', "Initiating quick scan");
+				$scan = new wfScanEngine('', $scanMode);
+			}
 		}
 		try {
 			$scan->go();
 		}
 		catch (wfScanEngineDurationLimitException $e) {
 			wfUtils::clearScanLock();
-			self::logPeakMemory();
-			self::status(2, 'info', "Wordfence used " . sprintf('%.2f', (wfConfig::get('wfPeakMemory') - self::$peakMemAtStart) / 1024 / 1024) . "MB of memory for scan. Server peak memory usage was: " . sprintf('%.2f', wfConfig::get('wfPeakMemory') / 1024 / 1024) . "MB");
+			$peakMemory = self::logPeakMemory();
+			self::status(2, 'info', "Wordfence used " . wfUtils::formatBytes($peakMemory - self::$peakMemAtStart) . " of memory for scan. Server peak memory usage was: " . wfUtils::formatBytes($peakMemory));
 			self::status(2, 'error', "Scan terminated with error: " . $e->getMessage());
+			exit();
+		}
+		catch (wfScanEngineCoreVersionChangeException $e) {
+			wfUtils::clearScanLock();
+			$peakMemory = self::logPeakMemory();
+			self::status(2, 'info', "Wordfence used " . wfUtils::formatBytes($peakMemory - self::$peakMemAtStart) . " of memory for scan. Server peak memory usage was: " . wfUtils::formatBytes($peakMemory));
+			self::status(2, 'error', "Scan terminated with message: " . $e->getMessage());
+			
+			$nextScheduledScan = wordfence::getNextScanStartTimestamp();
+			if ($nextScheduledScan !== false && $nextScheduledScan - time() > 21600 /* 6 hours */) {
+				$nextScheduledScan = time() + 3600;
+				wordfence::scheduleSingleScan($nextScheduledScan);
+			}
+			self::status(2, 'error', wordfence::getNextScanStartTime($nextScheduledScan));
+			
 			exit();
 		}
 		catch (Exception $e){
@@ -104,15 +190,20 @@ class wfScan {
 			exit();
 		}
 		wfUtils::clearScanLock();
-		self::logPeakMemory();
-		self::status(2, 'info', "Wordfence used " . sprintf('%.2f', (wfConfig::get('wfPeakMemory') - self::$peakMemAtStart) / 1024 / 1024) . "MB of memory for scan. Server peak memory usage was: " . sprintf('%.2f', wfConfig::get('wfPeakMemory') / 1024 / 1024) . "MB");
+		$peakMemory = self::logPeakMemory();
+		self::status(2, 'info', "Wordfence used " . wfUtils::formatBytes($peakMemory - self::$peakMemAtStart) . " of memory for scan. Server peak memory usage was: " . wfUtils::formatBytes($peakMemory));
+	}
+	private static function _isValidScanMode($scanMode) {
+		return ($scanMode == wfScanEngine::SCAN_MODE_QUICK || $scanMode == wfScanEngine::SCAN_MODE_FULL);
 	}
 	private static function logPeakMemory(){
-		$oldPeak = wfConfig::get('wfPeakMemory', 0);
-		$peak = memory_get_peak_usage();
-		if($peak > $oldPeak){
-			wfConfig::set('wfPeakMemory', $peak);
+		$oldPeak = wfConfig::get('wfPeakMemory', 0, false);
+		$peak = memory_get_peak_usage(true);
+		if ($peak > $oldPeak) {
+			wfConfig::set('wfPeakMemory', $peak, wfConfig::DONT_AUTOLOAD);
+			return $peak;
 		}
+		return $oldPeak;
 	}
 	public static function obHandler($buf){
 		if(strlen($buf) > 1000){

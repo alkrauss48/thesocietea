@@ -25,8 +25,7 @@
 			new GroupByModel('statusCode', 'HTTP Response Code'),
 			new GroupByModel('action', 'Firewall Response', 'enum', ['ok', 'throttled', 'lockedOut', 'blocked', 'blocked:waf']),
 			new GroupByModel('ip', 'IP'),
-			urlGroupBy,
-			new GroupByModel('host', 'Host')
+			urlGroupBy
 		];
 
 		self.presetFiltersOptions = ko.observableArray([
@@ -142,9 +141,15 @@
 		};
 		self.reloadListings = function(options) {
 			pullDownListings(options, function(listings) {
+				var groupByKO = self.groupBy();
+				var groupBy = '';
+				if (groupByKO) {
+					groupBy = groupByKO.param();
+				}
+				
 				var newListings = [];
 				for (var i = 0; i < listings.length; i++) {
-					newListings.push(new ListingModel(listings[i]));
+					newListings.push(new ListingModel(listings[i], groupBy));
 				}
 				self.listings(newListings);
 			})
@@ -284,7 +289,7 @@
 		self.sql = ko.observable('');
 	};
 
-	var ListingModel = function(data) {
+	var ListingModel = function(data, groupBy) {
 		var self = this;
 
 		self.id = ko.observable(0);
@@ -330,6 +335,10 @@
 				self[prop] !== undefined && self[prop](data[prop]);
 			}
 		}
+		
+		if (data['lastHit'] !== undefined) {
+			self['ctime'](data['lastHit']); 
+		}
 
 		// Use the same format as these update.
 		self.timeAgo = ko.pureComputed(function() {
@@ -351,6 +360,26 @@
 		});
 
 		self.firewallAction = ko.pureComputed(function() {
+			//Grouped by firewall action listing
+			if (groupBy == 'action') {
+				switch (self.action()) {
+					case 'lockedOut':
+						return 'Locked out from logging in';
+					case 'blocked:waf-always':
+						return 'Blocked by the Wordfence Application Firewall and plugin settings';
+					case 'blocked:wordfence':
+						return 'Blocked by Wordfence plugin settings';
+					case 'blocked:wfsnrepeat':
+					case 'blocked:wfsn':
+						return 'Blocked by the Wordfence Security Network';
+					case 'blocked:waf':
+						return 'Blocked by the Wordfence Web Application Firewall';
+					default:
+						return 'Blocked by Wordfence';
+				}
+			}
+			
+			//Standard listing
 			var desc = '';
 			switch (self.action()) {
 				case 'lockedOut':

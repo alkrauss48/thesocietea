@@ -190,7 +190,8 @@ class Diff_Renderer_Html_Array extends Diff_Renderer_Abstract
 	 */
 	private function fixSpacesCallback($matches)
 	{
-		return $this->fixSpaces($matches[1]);
+		$spaces = (isset($matches[1]) ? $matches[1] : '');
+		return $this->fixSpaces($spaces);
 	}
 
 	/**

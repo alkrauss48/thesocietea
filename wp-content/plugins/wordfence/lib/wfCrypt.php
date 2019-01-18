@@ -30,16 +30,10 @@ ENDKEY;
 		return $key;
 	}
 	public static function makeSymHexKey($length){
-		$charset='ABCDEF0123456789';
-		$str = '';
-		$count = strlen($charset);
-		while($length--) {
-			$str .= $charset[mt_rand(0, $count-1)];
-		}
-		return $str;
+		return bin2hex(wfWAFUtils::random_bytes($length / 2));
 	}
-	public static function pubCrypt($symKey){ #encrypts a symmetric key and returns it base64
-		openssl_public_encrypt($symKey, $encSymKey, self::getPubKey(), OPENSSL_PKCS1_PADDING); //OPENSSL_PKCS1_PADDING is the default but setting explicitly because that's what we expect on the server.
+	public static function pubCrypt($symKey){ //encrypts a symmetric key and returns it base64
+		openssl_public_encrypt($symKey, $encSymKey, self::getPubKey(), OPENSSL_PKCS1_OAEP_PADDING); //The default OPENSSL_PKCS1_PADDING is deprecated.
 		return base64_encode($encSymKey);
 	}
 }

@@ -409,11 +409,17 @@ SQL
 	}
 
 	/**
-	 * Remove entries older than a week in the IP log.
+	 * Remove entries older than a month in the IP log.
 	 */
 	public function rotateIPLog() {
 		$this->db->query(<<<SQL
 DELETE FROM {$this->db->base_prefix}wfBlockedIPLog
+WHERE unixday < FLOOR(UNIX_TIMESTAMP(DATE_SUB(NOW(), interval 1 month)) / 86400)
+SQL
+		);
+		
+		$this->db->query(<<<SQL
+DELETE FROM {$this->db->base_prefix}wfBlockedCommentLog
 WHERE unixday < FLOOR(UNIX_TIMESTAMP(DATE_SUB(NOW(), interval 1 month)) / 86400)
 SQL
 		);
@@ -452,6 +458,41 @@ SQL
 		$wpdb->query($wpdb->prepare(<<<SQL
 INSERT INTO $blocked_table (IP, countryCode, blockCount, unixday, blockType)
 VALUES (%s, %s, 1, $unixday_insert, %s)
+ON DUPLICATE KEY UPDATE blockCount = blockCount + 1
+SQL
+			, $ip_bin, $country, $type));
+	}
+	
+	/**
+	 * @param mixed $ip_address
+	 * @param int|null $unixday
+	 */
+	public static function logBlockedComment($ip_address, $type, $unixday = null) {
+		/** @var wpdb $wpdb */
+		global $wpdb;
+		
+		//Possible values for $type: anon, gsb, reputation
+		
+		if (wfUtils::isValidIP($ip_address)) {
+			$ip_bin = wfUtils::inet_pton($ip_address);
+		}
+		else {
+			$ip_bin = $ip_address;
+			$ip_address = wfUtils::inet_ntop($ip_bin);
+		}
+		
+		$blocked_table = "{$wpdb->base_prefix}wfBlockedCommentLog";
+		
+		$unixday_insert = 'FLOOR(UNIX_TIMESTAMP() / 86400)';
+		if (is_int($unixday)) {
+			$unixday_insert = absint($unixday);
+		}
+		
+		$country = wfUtils::IP2Country($ip_address);
+		
+		$wpdb->query($wpdb->prepare(<<<SQL
+INSERT INTO {$blocked_table} (IP, countryCode, blockCount, unixday, blockType)
+VALUES (%s, %s, 1, {$unixday_insert}, %s)
 ON DUPLICATE KEY UPDATE blockCount = blockCount + 1
 SQL
 			, $ip_bin, $country, $type));
@@ -634,7 +675,7 @@ class wfRecentlyModifiedFiles extends wfDirectoryIterator {
 	public function __construct($directory = ABSPATH, $max_files_per_directory = 20000, $max_iterations = 250000, $time_range = 604800) {
 		parent::__construct($directory, $max_files_per_directory, $max_iterations);
 		$this->time_range = $time_range;
-		$excluded_directories = explode(',', (string) wfConfig::get('email_summary_excluded_directories'));
+		$excluded_directories = explode("\n", wfUtils::cleanupOneEntryPerLine(wfConfig::get('email_summary_excluded_directories', '')));
 		$this->excluded_directories = array();
 		foreach ($excluded_directories  as $index => $path) {
 			if (($dir = realpath(ABSPATH . $path)) !== false) {
@@ -724,14 +765,14 @@ class wfActivityReportView extends wfView {
 		if ($unix_time === null) {
 			$unix_time = time();
 		}
-		return date_i18n('F j, Y g:ia', $unix_time);
+		return wfUtils::formatLocalTime('F j, Y g:ia', $unix_time);
 	}
 	
 	public function attackTime($unix_time = null) {
 		if ($unix_time === null) {
 			$unix_time = time();
 		}
-		return date_i18n('F j, Y', $unix_time) . "<br>" . date_i18n('g:ia', $unix_time);
+		return wfUtils::formatLocalTime('F j, Y', $unix_time) . "<br>" . wfUtils::formatLocalTime('g:ia', $unix_time);
 	}
 	
 	public function displayIP($binaryIP) {

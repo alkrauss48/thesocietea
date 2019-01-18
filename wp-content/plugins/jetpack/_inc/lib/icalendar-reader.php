@@ -93,11 +93,12 @@ class iCalendarReader {
 		$timezone_name = get_option( 'timezone_string' );
 		if ( $timezone_name ) {
 			$timezone = new DateTimeZone( $timezone_name );
+			$timezone_offset_interval = false;
 		} else {
 			// If the timezone isn't set then the GMT offset must be set.
 			// generate a DateInterval object from the timezone offset
-			$gmt_offset = get_option( 'gmt_offset' ) * HOUR_IN_MINUTES;
-			$timezone_offset_interval = date_interval_create_from_date_string( "{$gmt_offset} minutes" );
+			$gmt_offset = get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
+			$timezone_offset_interval = date_interval_create_from_date_string( "{$gmt_offset} seconds" );
 			$timezone = new DateTimeZone( 'UTC' );
 		}
 
@@ -113,7 +114,7 @@ class iCalendarReader {
 				$end_time = preg_replace( '/Z$/', '', $event['DTEND'] );
 				$end_time = new DateTime( $end_time, $this->timezone );
 				$end_time->setTimeZone( $timezone );
-				
+
 				if ( $timezone_offset_interval ) {
 					$start_time->add( $timezone_offset_interval );
 					$end_time->add( $timezone_offset_interval );
@@ -137,7 +138,7 @@ class iCalendarReader {
 		 * This filter allows any time to be passed in for testing or changing timezones, etc...
 		 *
 		 * @module widgets
-		 * 
+		 *
 		 * @since 3.4.0
 		 *
 		 * @param object time() A time object.
@@ -834,9 +835,9 @@ class iCalendarReader {
 		}
 		$single_day = $end ? ( $end - $start ) <= DAY_IN_SECONDS : true;
 
-		/* Translators: Date and time */
+		/* translators: Date and time */
 		$date_with_time = __( '%1$s at %2$s' , 'jetpack' );
-		/* Translators: Two dates with a separator */
+		/* translators: Two dates with a separator */
 		$two_dates = __( '%1$s &ndash; %2$s' , 'jetpack' );
 
 		// we'll always have the start date. Maybe with time

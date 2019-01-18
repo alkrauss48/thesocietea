@@ -5,33 +5,18 @@ Plugin URI: http://www.nsp-code.com
 Description: Posts Order and Post Types Objects Order using a Drag and Drop Sortable javascript capability
 Author: Nsp Code
 Author URI: http://www.nsp-code.com 
-Version: 1.9.3
+Version: 1.9.3.5
 Text Domain: post-types-order
 Domain Path: /languages/
 */
 
     define('CPTPATH',   plugin_dir_path(__FILE__));
     define('CPTURL',    plugins_url('', __FILE__));
-
-
-    register_deactivation_hook(__FILE__, 'CPTO_deactivated');
-    register_activation_hook(__FILE__, 'CPTO_activated');
-
-    function CPTO_activated() 
-        {
-
-        }
-
-    function CPTO_deactivated() 
-        {
-            
-        }
     
     include_once(CPTPATH . '/include/class.cpto.php');
     include_once(CPTPATH . '/include/class.functions.php');
-    
-
-    
+  
+   
     add_action( 'plugins_loaded', 'cpto_class_load');     
     function cpto_class_load()
         {

@@ -13,8 +13,10 @@ if (version_compare(PHP_VERSION, '5.2.4', '>=')) {
 			}
 		}
 	} else {
-		require_once(UPDRAFTPLUS_DIR.'/methods/addon-not-yet-present.php');
-		// N.B. UpdraftPlus_BackupModule_AddonNotYetPresent extends UpdraftPlus_BackupModule
+		include_once(UPDRAFTPLUS_DIR.'/methods/addon-not-yet-present.php');
+		/**
+		 * N.B. UpdraftPlus_BackupModule_AddonNotYetPresent extends UpdraftPlus_BackupModule
+		 */
 		class UpdraftPlus_BackupModule_googlecloud extends UpdraftPlus_BackupModule_AddonNotYetPresent {
 			public function __construct() {
 				parent::__construct('googlecloud', 'Google Cloud', '5.2.4', 'googlecloud.png');
@@ -22,7 +24,7 @@ if (version_compare(PHP_VERSION, '5.2.4', '>=')) {
 		}
 	}
 } else {
-	require_once(UPDRAFTPLUS_DIR.'/methods/insufficient.php');
+	include_once(UPDRAFTPLUS_DIR.'/methods/insufficient.php');
 	class UpdraftPlus_BackupModule_googlecloud extends UpdraftPlus_BackupModule_insufficientphp {
 		public function __construct() {
 			parent::__construct('googlecloud', 'Google Cloud', '5.2.4', 'googlecloud.png');

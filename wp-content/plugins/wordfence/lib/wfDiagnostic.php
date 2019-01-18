@@ -51,6 +51,8 @@ class wfDiagnostic
 		'Filesystem' => array(
 			'isTmpReadable' => 'Checking if web server can read from <code>~/plugins/wordfence/tmp</code>',
 			'isTmpWritable' => 'Checking if web server can write to <code>~/plugins/wordfence/tmp</code>',
+			'isWAFReadable' => 'Checking if web server can read from <code>~/wp-content/wflogs</code>',
+			'isWAFWritable' => 'Checking if web server can write to <code>~/wp-content/wflogs</code>',
 		),
 		'Config' => array(
 			'configWritableSet' => 'Checking basic config reading/writing',
@@ -67,7 +69,7 @@ class wfDiagnostic
 			'userCanTruncate'   => 'Checking if MySQL user has <code>TRUNCATE</code> privilege',
 		),
 		'PHP' => array(
-			'phpVersion' => 'PHP version >= PHP 5.2.4<br><em> (<a href="https://wordpress.org/about/requirements/" target="_blank">Minimum version required by WordPress</a>)</em>',
+			'phpVersion' => 'PHP version >= PHP 5.2.4<br><em> (<a href="https://wordpress.org/about/requirements/" target="_blank" rel="noopener noreferrer">Minimum version required by WordPress</a>)</em>',
 			'processOwner' => 'Process Owner',
 			'hasOpenSSL' => 'Checking for OpenSSL support',
 			'hasCurl'    => 'Checking for cURL support',
@@ -75,6 +77,7 @@ class wfDiagnostic
 		'Connectivity' => array(
 			'connectToServer1' => 'Connecting to Wordfence servers (http)',
 			'connectToServer2' => 'Connecting to Wordfence servers (https)',
+			'connectToSelf' => 'Connecting back to this site',
 		),
 //		'Configuration' => array(
 //			'howGetIPs' => 'How does get IPs',
@@ -115,6 +118,64 @@ class wfDiagnostic
 
 	public function isTmpWritable() {
 		return is_writable(WORDFENCE_PATH . 'tmp');
+	}
+	
+	public function isWAFReadable() {
+		if (!is_readable(WFWAF_LOG_PATH)) {
+			return array('test' => false, 'message' => 'No files readable');
+		}
+		
+		$files = array(
+			WFWAF_LOG_PATH . 'attack-data.php', 
+			WFWAF_LOG_PATH . 'ips.php', 
+			WFWAF_LOG_PATH . 'config.php',
+			WFWAF_LOG_PATH . 'rules.php',
+			WFWAF_LOG_PATH . 'wafRules.rules',
+		);
+		$unreadable = array();
+		foreach ($files as $f) {
+			if (!file_exists($f)) {
+				$unreadable[] = 'File "' . basename($f) . '" does not exist';
+			}
+			else if (!is_readable($f)) {
+				$unreadable[] = 'File "' . basename($f) . '" is unreadable';
+			}
+		}
+		
+		if (count($unreadable) > 0) {
+			return array('test' => false, 'message' => implode(', ', $unreadable));
+		}
+		
+		return true;
+	}
+	
+	public function isWAFWritable() {
+		if (!is_writable(WFWAF_LOG_PATH)) {
+			return array('test' => false, 'message' => 'No files writable');
+		}
+		
+		$files = array(
+			WFWAF_LOG_PATH . 'attack-data.php',
+			WFWAF_LOG_PATH . 'ips.php',
+			WFWAF_LOG_PATH . 'config.php',
+			WFWAF_LOG_PATH . 'rules.php',
+			WFWAF_LOG_PATH . 'wafRules.rules',
+		);
+		$unwritable = array();
+		foreach ($files as $f) {
+			if (!file_exists($f)) {
+				$unwritable[] = 'File "' . basename($f) . '" does not exist';
+			}
+			else if (!is_writable($f)) {
+				$unwritable[] = 'File "' . basename($f) . '" is unwritable';
+			}
+		}
+		
+		if (count($unwritable) > 0) {
+			return array('test' => false, 'message' => implode(', ', $unwritable));
+		}
+		
+		return true;
 	}
 
 	public function userCanInsert() {
@@ -283,6 +344,42 @@ class wfDiagnostic
 			}
 		}
 
+		return array(
+			'test' => false,
+			'message' => ob_get_clean()
+		);
+	}
+	
+	public function connectToSelf() {
+		$adminAJAX = admin_url('admin-ajax.php?action=wordfence_testAjax');
+		$result = wp_remote_post($adminAJAX, array(
+			'timeout' => 10, //Must be less than max execution time or more than 2 HTTP children will be occupied by scan
+			'blocking' => true, //Non-blocking seems to block anyway, so we use blocking
+			'headers' => array()
+		));
+		
+		if ((!is_wp_error($result)) && $result['response']['code'] == 200 && strpos($result['body'], "WFSCANTESTOK") !== false) {
+			$host = parse_url($adminAJAX, PHP_URL_HOST);
+			if ($host !== null) {
+				$ips = wfUtils::resolveDomainName($host);
+				$ips = implode(', ', $ips);
+				return array('test' => true, 'message' => 'OK - ' . $ips);
+			}
+			return true;
+		}
+		
+		ob_start();
+		if (is_wp_error($result)) {
+			echo "wp_remote_post() test back to this server failed! Response was: " . $result->get_error_message() . "<br />\n";
+		}
+		else {
+			echo "wp_remote_post() test back to this server failed! Response was: " . $result['response']['code'] . " " . $result['response']['message'] . "<br />\n";
+			echo "This additional info may help you diagnose the issue. The response headers we received were:<br />\n";
+			foreach($result['headers'] as $key => $value){
+				echo "$key => $value<br />\n";
+			}
+		}
+		
 		return array(
 			'test' => false,
 			'message' => ob_get_clean()

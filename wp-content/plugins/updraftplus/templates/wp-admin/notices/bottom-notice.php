@@ -9,33 +9,31 @@
 			?>
 		</h4>
 		<p>
-			<?php 
+			<?php
 				echo $text;
 
 				if (isset($discount_code)) echo ' <b>' . $discount_code . '</b>';
-
-// 				if (isset($text2)) {
-// 					echo '</p><p>' . $text2 . '</p><p>';
-// 				}
 				
 				if (!empty($button_link) && !empty($button_meta)) {
 			?>
-			<a class="updraft_notice_link" href="<?php esc_attr_e(apply_filters('updraftplus_com_link',$button_link));?>"><?php 
-					if ($button_meta == 'updraftcentral') {
+			<a class="updraft_notice_link" href="<?php esc_attr_e(apply_filters('updraftplus_com_link', $button_link));?>"><?php
+					if ('updraftcentral' == $button_meta) {
 						_e('Get UpdraftCentral', 'updraftplus');
-					} elseif ($button_meta == 'review') {
+					} elseif ('review' == $button_meta) {
 						_e('Review UpdraftPlus', 'updraftplus');
-					} elseif ($button_meta == 'updraftplus') {
+					} elseif ('updraftplus' == $button_meta) {
 						_e('Get Premium', 'updraftplus');
-					} elseif ($button_meta == 'signup') {
+					} elseif ('signup' == $button_meta) {
 						_e('Sign up', 'updraftplus');
-					} elseif ($button_meta == 'go_there') {
+					} elseif ('go_there' == $button_meta) {
 						_e('Go there', 'updraftplus');
 					} else {
 						_e('Read more', 'updraftplus');
 					}
 				?></a>
-			<?php } ?>
+			<?php
+				}
+			?>
 		</p>
 	</div>
 	<div class="clear"></div>

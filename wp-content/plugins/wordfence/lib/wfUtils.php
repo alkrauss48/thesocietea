@@ -15,22 +15,54 @@ class wfUtils {
 		if($secs < 1){
 			return "a moment";
 		}
-		$months = floor($secs / (86400 * 30));
-		$days = floor($secs / 86400);
-		$hours = floor($secs / 3600);
-		$minutes = floor($secs / 60);
-		if($months) {
-			$days -= $months * 30;
+		
+		if (function_exists('date_diff')) {
+			$now = new DateTime();
+			$utc = new DateTimeZone('UTC');
+			$dtStr = gmdate("c", (int) ($now->getTimestamp() + $secs)); //Have to do it this way because of PHP 5.2
+			$then = new DateTime($dtStr, $utc);
+			
+			$diff = $then->diff($now);
+			$years = $diff->y;
+			$months = $diff->m;
+			$days = $diff->d;
+			$hours = $diff->h;
+			$minutes = $diff->i;
+		}
+		else {
+			$years = 0;
+			$months = floor($secs / (86400 * 30));
+			$days = floor($secs / 86400);
+			$hours = floor($secs / 3600);
+			$minutes = floor($secs / 60);
+			
+			if ($months) {
+				$days -= $months * 30;
+			}
+			else if ($days) {
+				$hours -= $days * 24;
+			}
+			else if ($hours) {
+				$minutes -= $hours * 60;
+			}
+		}
+		
+		if ($years) {
+			return self::pluralize($years, 'year', $months, 'month');
+		}
+		else if ($months) {
 			return self::pluralize($months, 'month', $days, 'day');
-		} else if($days) {
-			$hours -= $days * 24;
+		}
+		else if ($days) {
 			return self::pluralize($days, 'day', $hours, 'hour');
-		} else if($hours) {
-			$minutes -= $hours * 60;
+		}
+		else if ($hours) {
 			return self::pluralize($hours, 'hour', $minutes, 'min');
-		} else if($minutes) {
+		}
+		else if ($minutes) {
 			return self::pluralize($minutes, 'min');
-		} else {
+		}
+		else {
 			if($noSeconds){
 				return "less than a minute";
 			} else {
@@ -69,6 +101,10 @@ class wfUtils {
 		}
 		if ($secs) {
 			$components[] = self::pluralize($secs, 'second');
+		}
+		
+		if (empty($components)) {
+			$components[] = 'less than 1 second';
 		}
 		
 		return implode(' ', $components);
@@ -135,8 +171,8 @@ class wfUtils {
 			}
 		}
 		
-		$bin_network = substr(self::inet_pton($network), 0, ceil($prefix / 8));
-		$bin_ip = substr(self::inet_pton($ip), 0, ceil($prefix / 8));
+		$bin_network = wfUtils::substr(self::inet_pton($network), 0, ceil($prefix / 8));
+		$bin_ip = wfUtils::substr(self::inet_pton($ip), 0, ceil($prefix / 8));
 		if ($prefix % 8 != 0) { //Adjust the last relevant character to fit the mask length since the character's bits are split over it
 			$pos = intval($prefix / 8);
 			$adjustment = chr(((0xff << (8 - ($prefix % 8))) & 0xff));
@@ -761,7 +797,7 @@ class wfUtils {
 			return null;
 		}
 		$prefix = 'http';
-		if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) {
+		if (is_ssl()) {
 			$prefix = 'https';
 		}
 		return $prefix . '://' . $host . $_SERVER['REQUEST_URI'];
@@ -809,7 +845,12 @@ class wfUtils {
 		$c2 = array_shift($trace);
 		error_log("Caller for " . $caller['file'] . " line " . $caller['line'] . " is " . $c2['file'] . ' line ' . $c2['line']);
 	}
-	public static function getWPVersion(){
+	public static function getWPVersion($forceRecheck = false){
+		if ($forceRecheck) {
+			require(ABSPATH . 'wp-includes/version.php'); //defines $wp_version
+			return $wp_version;
+		}
+		
 		if(wordfence::$wordfence_wp_version){
 			return wordfence::$wordfence_wp_version;
 		} else {
@@ -957,6 +998,7 @@ class wfUtils {
 		$wfdb->truncate($wpdb->base_prefix . 'wfHoover');
 
 		wfConfig::set('wf_scanRunning', '');
+		wfIssues::updateScanStillRunning(false);
 	}
 	public static function isScanRunning(){
 		$scanRunning = wfConfig::get('wf_scanRunning');
@@ -1464,7 +1506,7 @@ class wfUtils {
 	 * @param bool $inline
 	 * @return string
 	 */
-	public static function potentialBinaryStringToHTML($string, $inline = false) {
+	public static function potentialBinaryStringToHTML($string, $inline = false, $allowmb4 = false) {
 		$output = '';
 		
 		if (!defined('ENT_SUBSTITUTE')) {
@@ -1483,7 +1525,7 @@ class wfUtils {
 				$output .= $span . '\x' . str_pad(dechex($b), 2, '0', STR_PAD_LEFT) . '</span>';
 			}
 			else if ($b < 0x80) {
-				$output .= htmlspecialchars($c, ENT_QUOTES, 'UTF-8');
+				$output .= htmlspecialchars($c, ENT_QUOTES, 'ISO-8859-1');
 			}
 			else { //Assume multi-byte UTF-8
 				$bytes = 0;
@@ -1507,6 +1549,37 @@ class wfUtils {
 					}
 				}
 				
+				if (!$brokenUTF8) { //Ensure the byte sequences are within the accepted ranges: https://tools.ietf.org/html/rfc3629
+					/*
+					 * UTF8-octets = *( UTF8-char )
+   					 * UTF8-char   = UTF8-1 / UTF8-2 / UTF8-3 / UTF8-4
+   					 * UTF8-1      = %x00-7F
+   					 * UTF8-2      = %xC2-DF UTF8-tail
+   					 * UTF8-3      = %xE0 %xA0-BF UTF8-tail / %xE1-EC 2( UTF8-tail ) /
+   					 *               %xED %x80-9F UTF8-tail / %xEE-EF 2( UTF8-tail )
+   					 * UTF8-4      = %xF0 %x90-BF 2( UTF8-tail ) / %xF1-F3 3( UTF8-tail ) /
+   					 *               %xF4 %x80-8F 2( UTF8-tail )
+   					 * UTF8-tail   = %x80-BF
+					 */
+					
+					$testString = wfUtils::substr($string, $i, $bytes);
+					$regex = '/^(?:' .
+						'[\xc2-\xdf][\x80-\xbf]' . //UTF8-2
+						'|' . '\xe0[\xa0-\xbf][\x80-\xbf]' . //UTF8-3
+						'|' . '[\xe1-\xec][\x80-\xbf]{2}' .
+						'|' . '\xed[\x80-\x9f][\x80-\xbf]' .
+						'|' . '[\xee-\xef][\x80-\xbf]{2}';
+					if ($allowmb4) {
+						$regex .= '|' . '\xf0[\x90-\xbf][\x80-\xbf]{2}' . //UTF8-4
+							'|' . '[\xf1-\xf3][\x80-\xbf]{3}' .
+							'|' . '\xf4[\x80-\x8f][\x80-\xbf]{2}';
+					}
+					$regex  .= ')$/';
+					if (!preg_match($regex, $testString)) {
+						$brokenUTF8 = true;
+					}
+				}
+				
 				if ($brokenUTF8) {
 					$bytes = min($bytes, strlen($string) - $i);
 					for ($n = 0; $n < $bytes; $n++) {
@@ -1517,7 +1590,7 @@ class wfUtils {
 					$i += ($bytes - 1);
 				}
 				else {
-					$output .= htmlspecialchars(substr($string, $i, $bytes), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+					$output .= htmlspecialchars(wfUtils::substr($string, $i, $bytes), ENT_QUOTES | ENT_SUBSTITUTE, 'ISO-8859-1');
 					$i += ($bytes - 1);
 				}
 			}
@@ -1542,7 +1615,7 @@ class wfUtils {
 			if ($waf->getStorageEngine()->getConfig('attackDataKey', false) === false) {
 				$waf->getStorageEngine()->setConfig('attackDataKey', mt_rand(0, 0xfff));
 			}
-			$response = wp_remote_get(sprintf(WFWAF_API_URL_SEC . "proxy-check/%d.txt", $waf->getStorageEngine()->getConfig('attackDataKey')));
+			$response = wp_remote_get(sprintf(WFWAF_API_URL_SEC . "proxy-check/%d.txt", $waf->getStorageEngine()->getConfig('attackDataKey')), array('headers' => array('Referer' => false)));
 			
 			if (!is_wp_error($response)) {
 				$okToSendBody = wp_remote_retrieve_body($response);
@@ -1597,6 +1670,7 @@ class wfUtils {
 				'body'    => json_encode($payload),
 				'headers' => array(
 					'Content-Type' => 'application/json',
+					'Referer' => false,
 				),
 				'timeout' => $timeout,
 				'blocking' => $blocking,
@@ -1722,27 +1796,152 @@ class wfUtils {
 		return $encodedString;
 	}
 	
-	public static function wpHomeURL($path = '', $scheme = null) {
-		$homeurl = wfConfig::get('wp_home_url', '');
-		if (function_exists('get_bloginfo')) {
+	private static function _home_url_nofilter($path = '', $scheme = null) { //A version of the native get_home_url and get_option without the filter calls
+		global $pagenow, $wpdb, $blog_id;
+		
+		static $cached_url = null;
+		if ($cached_url !== null) {
+			return $cached_url;
+		}
+		
+		if (defined('WP_HOME') && WORDFENCE_PREFER_WP_HOME_FOR_WPML) {
+			$cached_url = WP_HOME;
+			return $cached_url;
+		}
+		
+		if ( empty( $blog_id ) || !is_multisite() ) {
+			$url = $wpdb->get_var("SELECT option_value FROM {$wpdb->options} WHERE option_name = 'home' LIMIT 1");
+			if (empty($url)) { //get_option uses siteurl instead if home is empty
+				$url = $wpdb->get_var("SELECT option_value FROM {$wpdb->options} WHERE option_name = 'siteurl' LIMIT 1");
+			}
+		}
+		else if (is_multisite()) {
+			$current_network = get_network();
+			if ( 'relative' == $scheme )
+				$url = $current_network->path;
+			else
+				$url = 'http://' . $current_network->domain . $current_network->path;
+		}
+		
+		if ( ! in_array( $scheme, array( 'http', 'https', 'relative' ) ) ) {
+			if ( is_ssl() && ! is_admin() && 'wp-login.php' !== $pagenow )
+				$scheme = 'https';
+			else
+				$scheme = parse_url( $url, PHP_URL_SCHEME );
+		}
+		
+		$url = set_url_scheme( $url, $scheme );
+		
+		if ( $path && is_string( $path ) )
+			$url .= '/' . ltrim( $path, '/' );
+		
+		$cached_url = $url;
+		return $url;
+	}
+	
+	public static function refreshCachedHomeURL() {
+		$pullDirectly = class_exists('WPML_URL_Filters');
+		$homeurl = '';
+		if ($pullDirectly) {
+			//A version of the native get_home_url without the filter call
+			$homeurl = self::_home_url_nofilter();
+		}
+		
+		if (function_exists('get_bloginfo') && empty($homeurl)) {
 			if (is_multisite()) {
-				if (empty($homeurl)) {
-					$homeurl = network_home_url($path, $scheme);
-					$homeurl = rtrim($homeurl, '/'); //Because previously we used get_bloginfo and it returns http://example.com without a '/' char.
-				}
+				$homeurl = network_home_url();
+				$homeurl = rtrim($homeurl, '/'); //Because previously we used get_bloginfo and it returns http://example.com without a '/' char.
 			}
 			else {
-				if (empty($homeurl)) {
-					$homeurl = home_url($path, $scheme);
-				}
+				$homeurl = home_url();
+			}
+		}
+		
+		if (wfConfig::get('wp_home_url') !== $homeurl) {
+			wfConfig::set('wp_home_url', $homeurl);
+		}
+	}
+	
+	public static function wpHomeURL($path = '', $scheme = null) {
+		$homeurl = wfConfig::get('wp_home_url', '');
+		if (function_exists('get_bloginfo') && empty($homeurl)) {
+			if (is_multisite()) {
+				$homeurl = network_home_url($path, $scheme);
+				$homeurl = rtrim($homeurl, '/'); //Because previously we used get_bloginfo and it returns http://example.com without a '/' char.
+			}
+			else {
+				$homeurl = home_url($path, $scheme);
 			}
 		}
 		return $homeurl;
 	}
 	
-	public static function wpSiteURL($path = '', $scheme = null) {
+	private static function _site_url_nofilter($path = '', $scheme = null) { //A version of the native get_site_url and get_option without the filter calls
+		global $pagenow, $wpdb, $blog_id;
+		
+		static $cached_url = null;
+		if ($cached_url !== null) {
+			return $cached_url;
+		}
+		
+		if (defined('WP_SITEURL') && WORDFENCE_PREFER_WP_HOME_FOR_WPML) {
+			$cached_url = WP_SITEURL;
+			return $cached_url;
+		}
+		
+		if ( empty( $blog_id ) || !is_multisite() ) {
+			$url = $wpdb->get_var("SELECT option_value FROM {$wpdb->options} WHERE option_name = 'siteurl' LIMIT 1");
+		}
+		else if (is_multisite()) {
+			$current_network = get_network();
+			if ( 'relative' == $scheme )
+				$url = $current_network->path;
+			else
+				$url = 'http://' . $current_network->domain . $current_network->path;
+		}
+		
+		if ( ! in_array( $scheme, array( 'http', 'https', 'relative' ) ) ) {
+			if ( is_ssl() && ! is_admin() && 'wp-login.php' !== $pagenow )
+				$scheme = 'https';
+			else
+				$scheme = parse_url( $url, PHP_URL_SCHEME );
+		}
+		
+		$url = set_url_scheme( $url, $scheme );
+		
+		if ( $path && is_string( $path ) )
+			$url .= '/' . ltrim( $path, '/' );
+		
+		$cached_url = $url;
+		return $url;
+	}
+	
+	public static function refreshCachedSiteURL() {
+		$pullDirectly = class_exists('WPML_URL_Filters');
 		$siteurl = '';
-		if (function_exists('get_bloginfo')) {
+		if ($pullDirectly) {
+			//A version of the native get_home_url without the filter call
+			$siteurl = self::_site_url_nofilter();
+		}
+		
+		if (function_exists('get_bloginfo') && empty($siteurl)) {
+			if (is_multisite()) {
+				$siteurl = network_site_url();
+				$siteurl = rtrim($siteurl, '/'); //Because previously we used get_bloginfo and it returns http://example.com without a '/' char.
+			}
+			else {
+				$siteurl = site_url();
+			}
+		}
+		
+		if (wfConfig::get('wp_site_url') !== $siteurl) {
+			wfConfig::set('wp_site_url', $siteurl);
+		}
+	}
+	
+	public static function wpSiteURL($path = '', $scheme = null) {
+		$siteurl = wfConfig::get('wp_site_url', '');
+		if (function_exists('get_bloginfo') && empty($siteurl)) {
 			if (is_multisite()) {
 				$siteurl = network_site_url($path, $scheme);
 			}
@@ -1779,7 +1978,16 @@ class wfUtils {
 		if (!is_string($string)) { return false; }
 		if (strlen($string) % 2 == 1) { return false; }
 		return pack('H*', $string);
-  }
+	}
+	
+	/**
+	 * Returns whether or not the site should be treated as if it's full-time SSL.
+	 * 
+	 * @return bool
+	 */
+	public static function isFullSSL() {
+		return is_ssl() && parse_url(self::wpHomeURL(), PHP_URL_SCHEME) === 'https'; //It's possible for only wp-admin to be SSL so we check the home URL too
+	}
 
 	/**
 	 * Identical to the same functions in wfWAFUtils.
@@ -1888,8 +2096,10 @@ class wfUtils {
 	 * @return mixed
 	 */
 	public static function substr($string, $start, $length = null) {
-		$args = func_get_args();
-		return self::callMBSafeStrFunction('substr', $args);
+		if ($length === null) { $length = self::strlen($string); }
+		return self::callMBSafeStrFunction('substr', array(
+			$string, $start, $length
+		));
 	}
 	
 	/**
@@ -1911,9 +2121,9 @@ class wfUtils {
 	 * @return mixed
 	 */
 	public static function substr_count($haystack, $needle, $offset = 0, $length = null) {
-		$haystack = self::substr($haystack, $offset, $length);
+		if ($length === null) { $length = self::strlen($haystack); }
 		return self::callMBSafeStrFunction('substr_count', array(
-			$haystack, $needle,
+			$haystack, $needle, $offset, $length
 		));
 	}
 	
@@ -1961,13 +2171,70 @@ class wfUtils {
 	 *
 	 * @return int
 	 */
-	public static function normalizedTime() {
+	public static function normalizedTime($base = false) {
+		if ($base === false) {
+			$base = time();
+		}
+		
 		$offset = wfConfig::get('timeoffset_ntp', false);
 		if ($offset === false) {
 			$offset = wfConfig::get('timeoffset_wf', false);
 			if ($offset === false) { $offset = 0; }
 		}
-		return time() + $offset;
+		return $base + $offset;
+	}
+	
+	/**
+	 * Returns what we consider a true timestamp, adjusted as needed to match the local server's drift. We use this
+	 * because a significant number of servers are using a drastically incorrect time.
+	 *
+	 * @return int
+	 */
+	public static function denormalizedTime($base) {
+		$offset = wfConfig::get('timeoffset_ntp', false);
+		if ($offset === false) {
+			$offset = wfConfig::get('timeoffset_wf', false);
+			if ($offset === false) { $offset = 0; }
+		}
+		return $base - $offset;
+	}
+	
+	/**
+	 * Formats and returns the given timestamp using the time zone set for the WordPress installation.
+	 * 
+	 * @param string $format See the PHP docs on DateTime for the format options. 
+	 * @param int|bool $timestamp Assumed to be in UTC. If false, defaults to the current timestamp.
+	 * @return string
+	 */
+	public static function formatLocalTime($format, $timestamp = false) {
+		if ($timestamp === false) {
+			$timestamp = time();
+		}
+		
+		$utc = new DateTimeZone('UTC');
+		$dtStr = gmdate("c", (int) $timestamp); //Have to do it this way because of PHP 5.2
+		$dt = new DateTime($dtStr, $utc);
+		$tz = get_option('timezone_string');
+		if (!empty($tz)) {
+			$dt->setTimezone(new DateTimeZone($tz));
+		}
+		else {
+			$gmt = get_option('gmt_offset');
+			if (!empty($gmt)) {
+				if (PHP_VERSION_ID < 50510) {
+					$dtStr = gmdate("c", (int) ($timestamp + $gmt * 3600)); //Have to do it this way because of < PHP 5.5.10
+					$dt = new DateTime($dtStr, $utc);
+				}
+				else {
+					$direction = ($gmt > 0 ? '+' : '-');
+					$gmt = abs($gmt);
+					$h = (int) $gmt;
+					$m = ($gmt - $h) * 60;
+					$dt->setTimezone(new DateTimeZone($direction . str_pad($h, 2, '0', STR_PAD_LEFT) . str_pad($m, 2, '0', STR_PAD_LEFT)));
+				}
+			}
+		}
+		return $dt->format($format);
 	}
 }
 
@@ -2000,11 +2267,12 @@ class wfWebServerInfo {
 	 */
 	public static function createFromEnvironment() {
 		$serverInfo = new self;
+		$sapi = php_sapi_name();
 		if (stripos($_SERVER['SERVER_SOFTWARE'], 'apache') !== false) {
 			$serverInfo->setSoftware(self::APACHE);
 			$serverInfo->setSoftwareName('apache');
 		}
-		if (stripos($_SERVER['SERVER_SOFTWARE'], 'litespeed') !== false) {
+		if (stripos($_SERVER['SERVER_SOFTWARE'], 'litespeed') !== false || $sapi == 'litespeed') {
 			$serverInfo->setSoftware(self::LITESPEED);
 			$serverInfo->setSoftwareName('litespeed');
 		}
@@ -2017,7 +2285,7 @@ class wfWebServerInfo {
 			$serverInfo->setSoftwareName('iis');
 		}
 
-		$serverInfo->setHandler(php_sapi_name());
+		$serverInfo->setHandler($sapi);
 
 		return $serverInfo;
 	}

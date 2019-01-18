@@ -127,7 +127,7 @@ class VideoPress_Shortcode {
 		$options = apply_filters( 'videopress_shortcode_options', array(
 			'at'              => (int) $attr['at'],
 			'hd'              => $attr['hd'],
-			'loop'            => $attr['autoplay'] || $attr['loop'],
+			'loop'            => $attr['loop'],
 			'freedom'         => $attr['freedom'],
 			'autoplay'        => $attr['autoplay'],
 			'permalink'       => $attr['permalink'],
@@ -182,6 +182,11 @@ class VideoPress_Shortcode {
 
 					if ( preg_match( '@videos.(videopress\.com|files\.wordpress\.com)/([a-z0-9]{8})/@i', $url, $matches ) ) {
 						$videopress_guid = $matches[2];
+					}
+
+					// Also test for videopress oembed url, which is used by the Video Media Widget.
+					if ( ! $videopress_guid && preg_match( '@https://videopress.com/v/([a-z0-9]{8})@i', $url, $matches ) ) {
+						$videopress_guid = $matches[1];
 					}
 
 					break;

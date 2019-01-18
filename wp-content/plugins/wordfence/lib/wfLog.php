@@ -1059,7 +1059,7 @@ class wfLog {
 		return $val;
 	}
 	public function setCBLCookieBypass(){
-		wfUtils::setcookie('wfCBLBypass', self::getCBLCookieVal(), time() + (86400 * 365), '/', null, null, true);
+		wfUtils::setcookie('wfCBLBypass', self::getCBLCookieVal(), time() + (86400 * 365), '/', null, wfUtils::isFullSSL(), true);
 	}
 	public function isCBLBypassCookieSet(){
 		if(isset($_COOKIE['wfCBLBypass']) && $_COOKIE['wfCBLBypass'] == wfConfig::get('cbl_cookieVal')){
@@ -1307,6 +1307,10 @@ class wfUserIPRange {
 				$IPparts = explode('.', $ip);
 				$whiteParts = explode('.', $ip_string);
 				$mismatch = false;
+				if (count($whiteParts) != 4 || count($IPparts) != 4) {
+					return false;
+				}
+				
 				for ($i = 0; $i <= 3; $i++) {
 					if (preg_match('/^\[(\d+)\-(\d+)\]$/', $whiteParts[$i], $m)) {
 						if ($IPparts[$i] < $m[1] || $IPparts[$i] > $m[2]) {
@@ -1331,6 +1335,10 @@ class wfUserIPRange {
 				$IPparts = explode(':', $ip);
 				$whiteParts = explode(':', $ip_string);
 				$mismatch = false;
+				if (count($whiteParts) != 8 || count($IPparts) != 8) {
+					return false;
+				}
+				
 				for ($i = 0; $i <= 7; $i++) {
 					if (preg_match('/^\[([a-f0-9]+)\-([a-f0-9]+)\]$/i', $whiteParts[$i], $m)) {
 						$ip_group = hexdec($IPparts[$i]);
@@ -1877,17 +1885,24 @@ class wfLiveTrafficQuery {
 				$wheres[] = $filtersSQL;
 			}
 		}
-		$where = join(' AND ', $wheres);
 
 		$orderBy = 'ORDER BY h.ctime DESC';
-		$select = '';
+		$select = ', l.username';
 		$groupBySQL = '';
 		if ($groupBy && $groupBy->validate()) {
 			$groupBySQL = "GROUP BY {$groupBy->getParam()}";
 			$orderBy = 'ORDER BY hitCount DESC';
-			$select .= ', COUNT(h.id) as hitCount';
+			$select .= ', COUNT(h.id) as hitCount, MAX(h.ctime) AS lastHit, u.user_login AS username';
+			
+			if ($groupBy->getParam() == 'user_login') {
+				$wheres[] = 'user_login IS NOT NULL';
+			}
+			else if ($groupBy->getParam() == 'action') {
+				$wheres[] = '(statusCode = 403 OR statusCode = 503)';
+			}
 		}
-
+		
+		$where = join(' AND ', $wheres);
 		if ($where) {
 			$where = 'WHERE ' . $where;
 		}
@@ -1897,7 +1912,7 @@ class wfLiveTrafficQuery {
 		$limitSQL = $wpdb->prepare('LIMIT %d, %d', $offset, $limit);
 
 		$sql = <<<SQL
-SELECT h.*, u.display_name, l.username{$select} FROM {$this->getTableName()} h
+SELECT h.*, u.display_name{$select} FROM {$this->getTableName()} h
 LEFT JOIN {$wpdb->users} u on h.userID = u.ID
 LEFT JOIN {$wpdb->base_prefix}wfLogins l on h.id = l.hitID
 $where
@@ -2119,6 +2134,8 @@ class wfLiveTrafficQueryFilter {
 		'!=',
 		'contains',
 		'match',
+		'hregexp',
+		'hnotregexp',
 	);
 
 	/**
@@ -2163,6 +2180,14 @@ class wfLiveTrafficQueryFilter {
 
 				case 'match':
 					$sql = $wpdb->prepare("$param LIKE %s", $value);
+					break;
+				
+				case 'hregexp':
+					$sql = $wpdb->prepare("HEX($param) REGEXP %s", $value);
+					break;
+				
+				case 'hnotregexp':
+					$sql = $wpdb->prepare("HEX($param) NOT REGEXP %s", $value);
 					break;
 
 				default:

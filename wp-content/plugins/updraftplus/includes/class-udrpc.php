@@ -1,5 +1,5 @@
 <?php
-
+// @codingStandardsIgnoreStart
 /*
 This class provides methods for encrypting, sending, receiving and decrypting messages of arbitrary length, using standard encryption methods and including protection against replay attacks.
 
@@ -54,16 +54,19 @@ if ($ud_rpc->get_key_local()) {
 // Instead of using activate_replay_protection(), you can use activate_sequence_protection() (receiving side) and set_next_send_sequence_id(). They are very similar; but, the sequence number code isn't tested, and is problematic if you may have multiple clients that don't share storage (you can use the current time as a sequence number, but if two clients send at the same millisecond (or whatever granularity you use), you may have problems); whereas the replay protection code relies on database storage on the sending side (not just the receiving).
 
 */
-
-if (!class_exists('UpdraftPlus_Remote_Communications')):
+// @codingStandardsIgnoreEnd
+if (!class_exists('UpdraftPlus_Remote_Communications')) :
 class UpdraftPlus_Remote_Communications {
+
 	// Version numbers relate to versions of this PHP library only (i.e. it's not a protocol support number, and version numbers of other compatible libraries (e.g. JavaScript) are not comparable)
-	public $version = '1.4.12';
+	public $version = '1.4.14';
 
 	private $key_name_indicator;
 
 	private $key_option_name = false;
+
 	private $key_remote = false;
+
 	private $key_local = false;
 
 	private $can_generate = false;
@@ -71,11 +74,15 @@ class UpdraftPlus_Remote_Communications {
 	private $destination_url = false;
 
 	private $maximum_replay_time_difference = 300;
+
 	private $extra_replay_protection = false;
 
 	private $sequence_protection_tolerance;
+
 	private $sequence_protection_table;
+
 	private $sequence_protection_column;
+
 	private $sequence_protection_where_sql;
 
 	// Debug may log confidential data using $this->log() - so only use when you are in a secure environment
@@ -96,6 +103,8 @@ class UpdraftPlus_Remote_Communications {
 	private $incoming_message = null;
 
 	private $message_random_number = null;
+	
+	private $require_message_to_be_understood = false;
 
 	public function __construct($key_name_indicator = 'default', $can_generate = false) {
 		$this->set_key_name_indicator($key_name_indicator);
@@ -109,7 +118,11 @@ class UpdraftPlus_Remote_Communications {
 		$this->can_generate = $can_generate;
 	}
 
-	// Which sites to allow CORS requests from
+	/**
+	 * Which sites to allow CORS requests from
+	 *
+	 * @param string $allow_cors_from
+	 */
 	public function set_allow_cors_from($allow_cors_from) {
 		$this->allow_cors_from = $allow_cors_from;
 	}
@@ -118,19 +131,34 @@ class UpdraftPlus_Remote_Communications {
 		$this->maximum_replay_time_difference = (int) $replay_time_difference;
 	}
 
-	// This will cause more things to be sent to $this->log()
+	/**
+	 * This will cause more things to be sent to $this->log()
+	 *
+	 * @param boolean $debug
+	 */
 	public function set_debug($debug = true) {
 		$this->debug = (bool) $debug;
 	}
 
-	// Supported values: a Guzzle object, or, if not, then WP's HTTP API function siwll be used
+	/**
+	 * Supported values: a Guzzle object, or, if not, then WP's HTTP API function siwll be used
+	 *
+	 * @param string $transport
+	 */
 	public function set_http_transport($transport) {
 		$this->http_transport = $transport;
 	}
 
-	// Sequence protection and replay protection perform similar functions, and using both is often over-kill; the distinction is that sequence protection can be used without needing to do database writes on the sending side (e.g. use the value of time() as the sequence number).
-	// The only rule of sequences is that the receiving side will reject any sequence number that is less than the last previously seen one, within the bounds of the tolerance (but it may also reject those if they are repeats).
-	// The given table/column will record a comma-separated list of recently seen sequences numbers within the tolerance threshold.
+	/**
+	 * Sequence protection and replay protection perform similar functions, and using both is often over-kill; the distinction is that sequence protection can be used without needing to do database writes on the sending side (e.g. use the value of time() as the sequence number).
+	 * The only rule of sequences is that the receiving side will reject any sequence number that is less than the last previously seen one, within the bounds of the tolerance (but it may also reject those if they are repeats).
+	 * The given table/column will record a comma-separated list of recently seen sequences numbers within the tolerance threshold.
+	 *
+	 * @param  string  $table
+	 * @param  string  $column
+	 * @param  string  $where_sql
+	 * @param  integer $tolerance
+	 */
 	public function activate_sequence_protection($table, $column, $where_sql, $tolerance = 5) {
 		$this->sequence_protection_tolerance = (int) $tolerance;
 		$this->sequence_protection_table = (string) $table;
@@ -145,27 +173,31 @@ class UpdraftPlus_Remote_Communications {
 			$this->no_deprecation_warnings_on_php7();
 			if (is_a($updraftplus, 'UpdraftPlus')) {
 				$updraftplus->ensure_phpseclib(array('Crypt_Rijndael', 'Crypt_RSA', 'Crypt_Hash'), array('Crypt/Rijndael', 'Crypt/RSA', 'Crypt/Hash'));
-			} elseif (defined('UPDRAFTPLUS_DIR') && file_exists(UPDRAFTPLUS_DIR.'/includes/phpseclib')) {
-				if (false === strpos(get_include_path(), UPDRAFTPLUS_DIR.'/includes/phpseclib')) set_include_path(UPDRAFTPLUS_DIR.'/includes/phpseclib'.PATH_SEPARATOR.get_include_path());
-				if (!class_exists('Crypt_Rijndael')) require_once 'Crypt/Rijndael.php';
-				if (!class_exists('Crypt_RSA')) require_once 'Crypt/RSA.php';
-				if (!class_exists('Crypt_Hash')) require_once 'Crypt/Hash.php';
+			} elseif (defined('UPDRAFTPLUS_DIR') && file_exists(UPDRAFTPLUS_DIR.'/vendor/phpseclib/phpseclib/phpseclib')) {
+				$pdir = UPDRAFTPLUS_DIR.'/vendor/phpseclib/phpseclib/phpseclib';
+				if (false === strpos(get_include_path(), $pdir)) set_include_path($pdir.PATH_SEPARATOR.get_include_path());
+				if (!class_exists('Crypt_Rijndael')) include_once 'Crypt/Rijndael.php';
+				if (!class_exists('Crypt_RSA')) include_once 'Crypt/RSA.php';
+				if (!class_exists('Crypt_Hash')) include_once 'Crypt/Hash.php';
 			} elseif (file_exists(dirname(dirname(__FILE__)).'/vendor/phpseclib/phpseclib/phpseclib')) {
 				$pdir = dirname(dirname(__FILE__)).'/vendor/phpseclib/phpseclib/phpseclib';
 				if (false === strpos(get_include_path(), $pdir)) set_include_path($pdir.PATH_SEPARATOR.get_include_path());
-				if (!class_exists('Crypt_Rijndael')) require_once 'Crypt/Rijndael.php';
-				if (!class_exists('Crypt_RSA')) require_once 'Crypt/RSA.php';
-				if (!class_exists('Crypt_Hash')) require_once 'Crypt/Hash.php';
+				if (!class_exists('Crypt_Rijndael')) include_once 'Crypt/Rijndael.php';
+				if (!class_exists('Crypt_RSA')) include_once 'Crypt/RSA.php';
+				if (!class_exists('Crypt_Hash')) include_once 'Crypt/Hash.php';
 			}
 		}
 	}
 
-	// Ugly, but necessary to prevent debug output breaking the conversation when the user has debug turned on
+	/**
+	 * Ugly, but necessary to prevent debug output breaking the conversation when the user has debug turned on
+	 */
 	private function no_deprecation_warnings_on_php7() {
 		// PHP_MAJOR_VERSION is defined in PHP 5.2.7+
 		// We don't test for PHP > 7 because the specific deprecated element will be removed in PHP 8 - and so no warning should come anyway (and we shouldn't suppress other stuff until we know we need to).
 		if (defined('PHP_MAJOR_VERSION') && PHP_MAJOR_VERSION == 7) {
 			$old_level = error_reporting();
+			// @codingStandardsIgnoreLine
 			$new_level = $old_level & ~E_DEPRECATED;
 			if ($old_level != $new_level) error_reporting($new_level);
 		}
@@ -183,7 +215,11 @@ class UpdraftPlus_Remote_Communications {
 		$this->key_option_name = $key_option_name;
 	}
 
-	// Method to get the remote key
+	/**
+	 * Method to get the remote key
+	 *
+	 * @return array
+	 */
 	public function get_key_remote() {
 		if (empty($this->key_remote) && $this->can_generate) {
 			$this->generate_new_keypair();
@@ -192,17 +228,29 @@ class UpdraftPlus_Remote_Communications {
 		return empty($this->key_remote) ? false : $this->key_remote;
 	}
 
-	// Set the remote key
+	/**
+	 * Set the remote key
+	 *
+	 * @param string $key_remote
+	 */
 	public function set_key_remote($key_remote) {
 		$this->key_remote = $key_remote;
 	}
 
-	// Used for sending - when receiving, the format is part of the message
+	/**
+	 * Used for sending - when receiving, the format is part of the message
+	 *
+	 * @param integer $format
+	 */
 	public function set_message_format($format = 2) {
 		$this->format = $format;
 	}
 
-	// Method to get the local key
+	/**
+	 * Method to get the local key
+	 *
+	 * @return array
+	 */
 	public function get_key_local() {
 		if (empty($this->key_local)) {
 			if ($this->key_option_name) {
@@ -219,11 +267,13 @@ class UpdraftPlus_Remote_Communications {
 		return empty($this->key_local) ? false : $this->key_local;
 	}
 
-	// Tests whether a supplied string (after trimming) is a valid portable bundle
-	// Valid formats: same as get_portable_bundle()
-	// Returns: (array)an array (which the consumer is free to use - e.g. convert into internationalised string), with keys 'code' and (perhaps) 'data'
-	// Error codes: 'invalid_wrong_length'|'invalid_corrupt'
-	// Success codes: 'success' - then has further keys 'key', 'name_indicator' and 'url' (and anything else that was in the bundle)
+	/**
+	 * Tests whether a supplied string (after trimming) is a valid portable bundle
+	 *
+	 * @param  string $bundle [description]
+	 * @param  string $format same as get_portable_bundle()
+	 * @return array (which the consumer is free to use - e.g. convert into internationalised string), with keys 'code' and (perhaps) 'data'
+	 */
 	public function decode_portable_bundle($bundle, $format = 'raw') {
 		$bundle = trim($bundle);
 		if ('base64_with_count' == $format) {
@@ -242,9 +292,14 @@ class UpdraftPlus_Remote_Communications {
 		return $bundle;
 	}
 
-	// Method to get a portable bundle sufficient to contact this site (i.e. remote site - so you need to have generated a key-pair, or stored the remote key somewhere and restored it)
-	// Supported formats: base64_with_count | (default)raw
-	// $extra_info needs to be JSON-serialisable, so be careful about what you put into it.
+	/**
+	 * Method to get a portable bundle sufficient to contact this site (i.e. remote site - so you need to have generated a key-pair, or stored the remote key somewhere and restored it)
+	 *
+	 * @param  string $format     Supported formats: base64_with_count and default)raw
+	 * @param  array  $extra_info needs to be JSON-serialisable, so be careful about what you put into it.
+	 * @param  array  $options    [description]
+	 * @return array
+	 */
 	public function get_portable_bundle($format = 'raw', $extra_info = array(), $options = array()) {
 
 		$bundle = array_merge($extra_info, array(
@@ -297,7 +352,13 @@ class UpdraftPlus_Remote_Communications {
 		return empty($keys['publickey']) ? false : true;
 	}
 
-	// A base-64 encoded RSA hash (PKCS_1) of the message digest
+	/**
+	 * A base-64 encoded RSA hash (PKCS_1) of the message digest
+	 *
+	 * @param  string  $message
+	 * @param  boolean $use_key
+	 * @return array
+	 */
 	public function signature_for_message($message, $use_key = false) {
 
 		$hash_algorithm = 'sha256';
@@ -316,10 +377,10 @@ class UpdraftPlus_Remote_Communications {
 		$rsa->setSignatureMode(CRYPT_RSA_SIGNATURE_PKCS1);
 
 		// Don't do this: Crypt_RSA::sign() already calculates the digest of the hash
-// 		$hash = new Crypt_Hash($hash_algorithm);		
-// 		$hashed = $hash->hash($message);
+		// $hash = new Crypt_Hash($hash_algorithm);
+		// $hashed = $hash->hash($message);
 		
-// 		if ($this->debug) $this->log("Message hash (hash=$hash_algorithm) (hex): ".bin2hex($hashed));
+		// if ($this->debug) $this->log("Message hash (hash=$hash_algorithm) (hex): ".bin2hex($hashed));
 
 		// phpseclib defaults to SHA1
 		$rsa->setHash($hash_algorithm);
@@ -334,18 +395,30 @@ class UpdraftPlus_Remote_Communications {
 		return $signature;
 	}
 
-	// $level is not yet used much
+	/**
+	 * Log description
+	 *
+	 * @param  string $message
+	 * @param  string $level   $level is not yet used much
+	 */
 	private function log($message, $level = 'notice') {
 		// Allow other plugins to do something with the message
 		do_action('udrpc_log', $message, $level, $this->key_name_indicator, $this->debug, $this);
-		if ($level != 'info') error_log('UDRPC ('.$this->key_name_indicator.", $level): $message");
+		if ('info' != $level) error_log('UDRPC ('.$this->key_name_indicator.", $level): $message");
 	}
 
-	// Encrypt the message, using the local key (which needs to exist)
+	/**
+	 * Encrypt the message, using the local key (which needs to exist)
+	 *
+	 * @param  string  $plaintext
+	 * @param  boolean $use_key
+	 * @param  integer $key_length
+	 * @return array
+	 */
 	public function encrypt_message($plaintext, $use_key = false, $key_length = 32) {
 
 		if (!$use_key) {
-			if ($this->format == 1) {
+			if (1 == $this->format) {
 				if (!$this->key_local) throw new Exception('No encryption key has been set');
 				$use_key = $this->key_local;
 			} else {
@@ -360,22 +433,22 @@ class UpdraftPlus_Remote_Communications {
 
 		if (defined('UDRPC_PHPSECLIB_ENCRYPTION_MODE')) $rsa->setEncryptionMode(UDRPC_PHPSECLIB_ENCRYPTION_MODE);
 
-		$rij = new Crypt_Rijndael(); 
+		$rij = new Crypt_Rijndael();
 
 		// Generate Random Symmetric Key
 		$sym_key = crypt_random_string($key_length);
 
 		if ($this->debug) $this->log('Unencrypted symmetric key (hex): '.bin2hex($sym_key));
 
-		// Encrypt Message with new Symmetric Key                  
+		// Encrypt Message with new Symmetric Key
 		$rij->setKey($sym_key);
 		$ciphertext = $rij->encrypt($plaintext);
 
 		if ($this->debug) $this->log('Encrypted ciphertext (hex): '.bin2hex($ciphertext));
 
-		$ciphertext = base64_encode($ciphertext); 
+		$ciphertext = base64_encode($ciphertext);
 
-		// Encrypt the Symmetric Key with the Asymmetric Key            
+		// Encrypt the Symmetric Key with the Asymmetric Key
 		$rsa->loadKey($use_key);
 		$sym_key = $rsa->encrypt($sym_key);
 
@@ -396,7 +469,12 @@ class UpdraftPlus_Remote_Communications {
 
 	}
 
-	// Decrypt the message, using the local key (which needs to exist)
+	/**
+	 * Decrypt the message, using the local key (which needs to exist)
+	 *
+	 * @param  string $message
+	 * @return array
+	 */
 	public function decrypt_message($message) {
 
 		if (!$this->key_local) throw new Exception('No decryption key has been set');
@@ -414,13 +492,13 @@ class UpdraftPlus_Remote_Communications {
 		$sym_key = substr($message, 3, $len);
 
 		// Extract the encrypted message
-		$cipherlen = substr($message, $len + 3, 16);
+		$cipherlen = substr($message, ($len + 3), 16);
 		$cipherlen = hexdec($cipherlen);
 
-		$ciphertext = substr($message, $len + 19, $cipherlen);
+		$ciphertext = substr($message, ($len + 19), $cipherlen);
 		$ciphertext = base64_decode($ciphertext);
 
-		// Decrypt the encrypted symmetric key 
+		// Decrypt the encrypted symmetric key
 		$rsa->loadKey($this->key_local);
 		$sym_key = base64_decode($sym_key);
 		$sym_key = $rsa->decrypt($sym_key);
@@ -432,7 +510,16 @@ class UpdraftPlus_Remote_Communications {
 
 	}
 
-	// Returns an array - which the caller will then format as required (e.g. use as body in post, or JSON-encode, etc.)
+	/**
+	 * Creates a message
+	 *
+	 * @param  string  $command
+	 * @param  string  $data
+	 * @param  boolean $is_response
+	 * @param  boolean $use_key_remote
+	 * @param  boolean $use_key_local
+	 * @return array which the caller will then format as required (e.g. use as body in post, or JSON-encode, etc.)                 [description]
+	 */
 	public function create_message($command, $data = null, $is_response = false, $use_key_remote = false, $use_key_local = false) {
 
 		if ($is_response) {
@@ -477,8 +564,12 @@ class UpdraftPlus_Remote_Communications {
 
 	}
 
-	// N.B. There's already some time-based replay protection. This can be turned on to beef it up.
-	// This is only for listeners. Replays can only be detection if transients are working on the WP site (which by default only means that the option table is working).
+	/**
+	 * N.B. There's already some time-based replay protection. This can be turned on to beef it up.
+	 * This is only for listeners. Replays can only be detection if transients are working on the WP site (which by default only means that the option table is working).
+	 *
+	 * @param  boolean $activate
+	 */
 	public function activate_replay_protection($activate = true) {
 		$this->extra_replay_protection = (bool) $activate;
 	}
@@ -487,16 +578,25 @@ class UpdraftPlus_Remote_Communications {
 		$this->next_send_sequence_id = $id;
 	}
 
-	// $credentials should be an array with entries for 'username' and 'password'
+	/**
+	 * Set_http_credentials
+	 *
+	 * @param string $credentials should be an array with entries for 'username' and 'password'
+	 */
 	public function set_http_credentials($credentials) {
 		$this->http_credentials = $credentials;
 	}
 
-	// This needs only to return an array with keys body and response - where response is also an array, with key 'code' (the HTTP status code)
-	// The $post_options array support these keys: timeout, body,
-	// Public, to allow short-circuiting of the library's own encoding/decoding (e.g. for acting as a proxy for a message already encrypted elsewhere)
+	/**
+	 * This needs only to return an array with keys body and response - where response is also an array, with key 'code' (the HTTP status code)
+	 * The $post_options array support these keys: timeout, body,
+	 * Public, to allow short-circuiting of the library's own encoding/decoding (e.g. for acting as a proxy for a message already encrypted elsewhere)
+	 *
+	 * @param  array $post_options
+	 * @return array
+	 */
 	public function http_post($post_options) {
-
+		// @codingStandardsIgnoreLine
 		@include ABSPATH.WPINC.'/version.php';
 		$http_credentials = $this->http_credentials;
 
@@ -515,7 +615,7 @@ class UpdraftPlus_Remote_Communications {
 				'timeout' => $post_options['timeout'],
 			);
 
-			if (!class_exists('WP_HTTP_Proxy')) require_once ABSPATH.WPINC.'/class-http.php';
+			if (!class_exists('WP_HTTP_Proxy')) include_once ABSPATH.WPINC.'/class-http.php';
 			$proxy = new WP_HTTP_Proxy();
 			if ($proxy->is_enabled()) {
 				$user = $proxy->username();
@@ -677,10 +777,11 @@ class UpdraftPlus_Remote_Communications {
 			}
 		}
 
-		$time_difference = absint(time() - $json_decoded['time']);
+		$time_difference = absint((time() - $json_decoded['time']));
 		if ($time_difference > $this->maximum_replay_time_difference) return new WP_Error('window_error', 'Message refused: maxium replay time difference exceeded', $time_difference);
 
 		if (isset($json_decoded['incoming_rand']) && !empty($this->message_random_number) && $json_decoded['incoming_rand'] != $this->message_random_number) {
+			// @codingStandardsIgnoreLine
 			$this->log('UDRPC: Message mismatch (possibly MITM) (sent_rand=' + $this->message_random_number + ', returned_rand='.$json_decoded['incoming_rand'].'): dropping', 'error');
 
 			return new WP_Error('message_mismatch_error', 'Message refused: message mismatch (possible MITM)');
@@ -692,7 +793,11 @@ class UpdraftPlus_Remote_Communications {
 
 	}
 
-	// Returns a boolean indicating whether a listener was created - which depends on whether one was needed (so, false does not necessarily indicate an error condition)
+	/**
+	 * Returns a boolean indicating whether a listener was created - which depends on whether one was needed (so, false does not necessarily indicate an error condition)
+	 *
+	 * @return boolean
+	 */
 	public function create_listener() {
 
 		$http_origin = function_exists('get_http_origin') ? get_http_origin() : (empty($_SERVER['HTTP_ORIGIN']) ? '' : $_SERVER['HTTP_ORIGIN']);
@@ -701,14 +806,14 @@ class UpdraftPlus_Remote_Communications {
 		if ((!empty($_POST) && !empty($_POST['udrpc_message']) && !empty($_POST['format'])) || (!empty($_SERVER['REQUEST_METHOD']) && 'OPTIONS' == $_SERVER['REQUEST_METHOD'] && $http_origin)) {
 			add_action('wp_loaded', array($this, 'wp_loaded'));
 			add_action('wp_loaded', array($this, 'wp_loaded_final'), 10000);
-
 			return true;
 		}
 
 		return false;
 	}
 
-	public function wp_loaded_final() {	
+	public function wp_loaded_final() {
+		if (empty($this->require_message_to_be_understood)) return;
 		$message_for = empty($_POST['key_name']) ? '' : (string) $_POST['key_name'];
 		$this->log("Message was received, but not understood by local site (for: $message_for)");
 		die;
@@ -729,6 +834,7 @@ class UpdraftPlus_Remote_Communications {
 		$http_origin = function_exists('get_http_origin') ? get_http_origin() : (empty($_SERVER['HTTP_ORIGIN']) ? '' : $_SERVER['HTTP_ORIGIN']);
 		if (!empty($_SERVER['REQUEST_METHOD']) && 'OPTIONS' == $_SERVER['REQUEST_METHOD'] && $http_origin) {
 			if (in_array($http_origin, $this->allow_cors_from)) {
+				// @codingStandardsIgnoreLine
 				if (!@constant('UDRPC_DO_NOT_SEND_CORS_HEADERS')) {
 					header("Access-Control-Allow-Origin: $http_origin");
 					header('Access-Control-Allow-Credentials: true');
@@ -746,10 +852,11 @@ class UpdraftPlus_Remote_Communications {
 		// Silently return, rather than dying, in case another instance is able to handle this
 		if (empty($_POST['format']) || (1 != $_POST['format'] && 2 != $_POST['format'])) return;
 
+		$this->require_message_to_be_understood = true;
+		
 		$format = $_POST['format'];
 
 		/*
-		
 		In format 1 (legacy/obsolete), the one encrypts (the shared AES key) using one half of the key-pair, and decrypts with the other; whereas the other side of the conversation does the reverse when replying (and uses a different shared AES key). Though this is possible in RSA, this is the wrong thing to do - see https://crypto.stackexchange.com/questions/2123/rsa-encryption-with-private-key-and-decryption-with-a-public-key
 		
 		In format 2, both sides have their own private and public key. The sender encrypts using the other side's public key, and decrypts using its own private key. Messages are signed (the message digest is SHA-256).
@@ -762,7 +869,7 @@ class UpdraftPlus_Remote_Communications {
 		}
 
 		// wp_unslash() does not exist until after WP 3.5
-// 		$udrpc_message = function_exists('wp_unslash') ? wp_unslash($_POST['udrpc_message']) : stripslashes_deep($_POST['udrpc_message']);
+		// $udrpc_message = function_exists('wp_unslash') ? wp_unslash($_POST['udrpc_message']) : stripslashes_deep($_POST['udrpc_message']);
 		
 		// Data should not have any slashes - it is base64-encoded
 		$udrpc_message = (string) $_POST['udrpc_message'];
@@ -823,7 +930,7 @@ class UpdraftPlus_Remote_Communications {
 		}
 
 		// Do this after the extra replay protection, as that checks hashes within the maximum time window - so don't check the maximum time window until afterwards, to avoid a tiny window (race) in between.
-		$time_difference = absint($udrpc_message['time'] - time());
+		$time_difference = absint(($udrpc_message['time'] - time()));
 		if ($time_difference > $this->maximum_replay_time_difference) {
 			$this->log("Time in incoming message is outside of allowed window ($time_difference > ".$this->maximum_replay_time_difference.')', 'error');
 			die;
@@ -860,7 +967,7 @@ class UpdraftPlus_Remote_Communications {
 				if ($this->debug) $this->log("Sequence id ($message_sequence_id) is greater than any previous (".max($recently_seen_sequences_ids).') - message is thus OK');
 				// All is well
 				$recently_seen_sequences_ids_as_array[] = $message_sequence_id;
-			} elseif (max($recently_seen_sequences_ids) - $message_sequence_id <= $this->sequence_protection_tolerance) {
+			} elseif ((max($recently_seen_sequences_ids) - $message_sequence_id) <= $this->sequence_protection_tolerance) {
 				// All is well - was one of those 'missing' in the sequence
 				if ($this->debug) $this->log("Sequence id ($message_sequence_id) is within tolerance range of previous maximum (".max($recently_seen_sequences_ids).') - message is thus OK');
 				$recently_seen_sequences_ids_as_array[] = $message_sequence_id;
@@ -895,6 +1002,7 @@ class UpdraftPlus_Remote_Communications {
 		$command = (string) $udrpc_message['command'];
 		$data = empty($udrpc_message['data']) ? null : $udrpc_message['data'];
 
+		// @codingStandardsIgnoreLine
 		if ($http_origin && !empty($udrpc_message['cors_headers_wanted']) && !@constant('UDRPC_DO_NOT_SEND_CORS_HEADERS')) {
 			header("Access-Control-Allow-Origin: $http_origin");
 			header('Access-Control-Allow-Credentials: true');
@@ -930,20 +1038,27 @@ class UpdraftPlus_Remote_Communications {
 
 	}
 
-	// The hash needs to be in a format that phpseclib likes. phpseclib uses lower case.
-	// Pass in a base64-encoded signature (i.e. just as signature_for_message creates)
-	// Returns a boolean
+	/**
+	 * The hash needs to be in a format that phpseclib likes. phpseclib uses lower case.
+	 * Pass in a base64-encoded signature (i.e. just as signature_for_message creates)
+	 *
+	 * @param  string $message
+	 * @param  string $signature
+	 * @param  string $key
+	 * @param  string $hash_algorithm
+	 * @return boolean
+	 */
 	public function verify_signature($message, $signature, $key, $hash_algorithm = 'sha256') {
 		$this->ensure_crypto_loaded();
-		$rsa = new Crypt_RSA(); 
-		$rsa->setHash(strtolower($hash_algorithm)); 
+		$rsa = new Crypt_RSA();
+		$rsa->setHash(strtolower($hash_algorithm));
 		// This is not the default, but is what we use
-		$rsa->setSignatureMode(CRYPT_RSA_SIGNATURE_PKCS1); 
-		$rsa->loadKey($key); 
+		$rsa->setSignatureMode(CRYPT_RSA_SIGNATURE_PKCS1);
+		$rsa->loadKey($key);
 
 		// Don't hash it - Crypt_RSA::verify() already does that
-// 		$hash = new Crypt_Hash($hash_algorithm);		
-// 		$hashed = $hash->hash($message);
+		// $hash = new Crypt_Hash($hash_algorithm);
+		// $hashed = $hash->hash($message);
 		
 		$verified = $rsa->verify($message, base64_decode($signature));
 
@@ -962,11 +1077,11 @@ class UpdraftPlus_Remote_Communications {
 		$seen_hashes = get_transient($transient_name);
 		if (!is_array($seen_hashes)) $seen_hashes = array();
 		$time_now = time();
-// 		$any_changes = false;
+		// $any_changes = false;
 		// Prune the old hashes
 		foreach ($seen_hashes as $hash => $last_seen) {
-			if ($last_seen < $time_now - $this->maximum_replay_time_difference) {
-// 				$any_changes = true;
+			if ($last_seen < ($time_now - $this->maximum_replay_time_difference)) {
+		// $any_changes = true;
 				unset($seen_hashes[$hash]);
 			}
 		}
@@ -978,6 +1093,6 @@ class UpdraftPlus_Remote_Communications {
 
 		return false;
 	}
-
 }
+
 endif;

@@ -1,5 +1,5 @@
 <?php
-	if (!defined ('UPDRAFTPLUS_DIR')) die('No direct access allowed');
+	if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed');
 ?>
 <div class="advanced_tools export_settings">
 	<h3><?php _e('Export / import settings', 'updraftplus');?></h3>

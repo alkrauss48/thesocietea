@@ -196,6 +196,11 @@ input.labelauty.azure + label > span.labelauty-unchecked-image {
 	background-image: url( ../../images/icons/azure.png );
 }
 
+input.labelauty.backblaze + label > span.labelauty-checked-image,
+input.labelauty.backblaze + label > span.labelauty-unchecked-image {
+	background-image: url( ../../images/icons/backblaze.png );
+}
+
 input.labelauty.openstack + label > span.labelauty-checked-image,
 input.labelauty.openstack + label > span.labelauty-unchecked-image {
 	background-image: url( ../../images/icons/openstack.png );

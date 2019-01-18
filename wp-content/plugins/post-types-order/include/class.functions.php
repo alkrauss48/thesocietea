@@ -1,6 +1,7 @@
 <?php
 
-
+    if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+    
     class CptoFunctions
         {
             
@@ -43,8 +44,9 @@
                                             'show_reorder_interfaces'   =>  array(),
                                             'autosort'                  =>  1,
                                             'adminsort'                 =>  1,
+                                            'use_query_ASC_DESC'        =>  '',
                                             'archive_drag_drop'         =>  1,
-                                            'capability'                =>  'install_plugins',
+                                            'capability'                =>  'manage_options',
                                             'navigation_sort_apply'     =>  1,
                                             
                                         );

@@ -35,7 +35,7 @@ class Dropbox_Curl extends Dropbox_ConsumerAbstract
      * @param \Dropbox\OAuth\Consumer\StorageInterface $storage
      * @param string $callback
      */
-    public function __construct($key, $oauth2_id, $secret, Dropbox_StorageInterface $storage, $callback = null, $callbackhome = null, $deauthenticate = false)
+    public function __construct($key, $oauth2_id, $secret, Dropbox_StorageInterface $storage, $callback = null, $callbackhome = null, $deauthenticate = false, $instance_id = '')
     {
         // Check the cURL extension is loaded
         if (!extension_loaded('curl')) {
@@ -48,6 +48,7 @@ class Dropbox_Curl extends Dropbox_ConsumerAbstract
         $this->storage = $storage;
         $this->callback = $callback;
         $this->callbackhome = $callbackhome;
+        $this->instance_id = $instance_id;
         
         if ($deauthenticate) {
 			$this->deauthenticate();

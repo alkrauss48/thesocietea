@@ -2,19 +2,33 @@
 
 if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed.');
 
-/* Adapted from http://www.solutionbot.com/2009/01/02/php-ftp-class/ */
+/**
+ * Adapted from http://www.solutionbot.com/2009/01/02/php-ftp-class/
+ */
 class UpdraftPlus_ftp_wrapper {
+
 	private $conn_id;
+
 	private $host;
+
 	private $username;
+
 	private $password;
+
 	private $port;
-	public  $timeout = 60;
-	public  $passive = true;
-	public  $system_type = '';
+
+	public $timeout = 60;
+
+	public $passive = true;
+
+	public $system_type = '';
+
 	public $ssl = false;
+
 	public $use_server_certs = false;
+
 	public $disable_verify = true;
+
 	public $login_type = 'non-encrypted';
  
 	public function __construct($host, $username, $password, $port = 21) {
@@ -33,7 +47,7 @@ class UpdraftPlus_ftp_wrapper {
  
 		if (!empty($result)) {
 			ftp_set_option($this->conn_id, FTP_TIMEOUT_SEC, $this->timeout);
- 			ftp_pasv($this->conn_id, $this->passive);
+			 ftp_pasv($this->conn_id, $this->passive);
 			$this->system_type = ftp_systype($this->conn_id);
 			return true;
 		}
@@ -59,7 +73,8 @@ class UpdraftPlus_ftp_wrapper {
 		if ($resume) {
 			$existing_size = ftp_size($this->conn_id, $remote_file_path);
 			if ($existing_size <=0) {
-				$resume = false; $existing_size = 0;
+				$resume = false;
+				$existing_size = 0;
 			} else {
 				if (is_a($updraftplus, 'UpdraftPlus')) $updraftplus->log("File already exists at remote site: size $existing_size. Will attempt resumption.");
 				if ($existing_size >= $file_size) {
@@ -79,7 +94,7 @@ class UpdraftPlus_ftp_wrapper {
 
 		// $existing_size can now be re-purposed
 
-		while ($ret == FTP_MOREDATA) {
+		while (FTP_MOREDATA == $ret) {
 			if (is_a($updraftplus, 'UpdraftPlus')) {
 				$new_size = ftell($fh);
 				$record_after = 524288;
@@ -88,7 +103,7 @@ class UpdraftPlus_ftp_wrapper {
 				}
 				if ($new_size - $existing_size > $record_after) {
 					$existing_size = $new_size;
-					$percent = round(100*$new_size/$file_size,1);
+					$percent = round(100*$new_size/$file_size, 1);
 					$updraftplus->record_uploaded_chunk($percent, '', $local_file_path);
 				}
 			}
@@ -98,7 +113,7 @@ class UpdraftPlus_ftp_wrapper {
 
 		fclose($fh);
 
-		if ($ret != FTP_FINISHED) {
+		if (FTP_FINISHED != $ret) {
 			if (is_a($updraftplus, 'UpdraftPlus')) $updraftplus->log("FTP upload: error ($ret)");
 			return false;
 		}
@@ -107,7 +122,7 @@ class UpdraftPlus_ftp_wrapper {
 
 	}
  
-	public function get($local_file_path, $remote_file_path, $mode = FTP_BINARY, $resume = false,  $updraftplus = false) {
+	public function get($local_file_path, $remote_file_path, $mode = FTP_BINARY, $resume = false, $updraftplus = false) {
 
 		$file_last_size = 0;
 
@@ -123,12 +138,12 @@ class UpdraftPlus_ftp_wrapper {
 
 		if (false == $ret) return false;
 
-		while ($ret == FTP_MOREDATA) {
+		while (FTP_MOREDATA == $ret) {
 
 			if ($updraftplus) {
 				$file_now_size = filesize($local_file_path);
 				if ($file_now_size - $file_last_size > 524288) {
-					$updraftplus->log("FTP fetch: file size is now: ".sprintf("%0.2f",filesize($local_file_path)/1048576)." Mb");
+					$updraftplus->log("FTP fetch: file size is now: ".sprintf("%0.2f", filesize($local_file_path)/1048576)." Mb");
 					$file_last_size = $file_now_size;
 				}
 				clearstatcache($local_file_path);
@@ -139,13 +154,13 @@ class UpdraftPlus_ftp_wrapper {
 
 		fclose($fh);
 
-		if ($ret == FTP_FINISHED) {
+		if (FTP_FINISHED == $ret) {
 			if ($updraftplus) $updraftplus->log("FTP fetch: fetch complete");
 			return true;
 		} else {
 			if ($updraftplus) $updraftplus->log("FTP fetch: fetch failed");
 			return false;
-		} 
+		}
 
 	}
 
@@ -183,23 +198,17 @@ class UpdraftPlus_ftp_wrapper {
 	}
  
 	public function rename($old_name, $new_name) {
-		if (ftp_rename($this->conn_id, $old_name, $new_name))
-		{
+		if (ftp_rename($this->conn_id, $old_name, $new_name)) {
 			return true;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
  
 	public function remove_dir($directory) {
-		if (ftp_rmdir($this->conn_id, $directory))
-		{
+		if (ftp_rmdir($this->conn_id, $directory)) {
 			return true;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
@@ -221,11 +230,10 @@ class UpdraftPlus_ftp_wrapper {
 	}
  
 	private function is_octal($i) {
-    	return decoct(octdec($i)) == $i;
+		return decoct(octdec($i)) == $i;
 	}
  
 	public function __destruct() {
 		if ($this->conn_id) ftp_close($this->conn_id);
 	}
 }
-?>

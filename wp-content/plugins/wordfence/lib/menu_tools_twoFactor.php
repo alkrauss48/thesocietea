@@ -1,4 +1,4 @@
-<div class="wordfenceHelpLink"><a href="<?php echo $helpLink; ?>" target="_blank" class="wfhelp"></a><a href="<?php echo $helpLink; ?>" target="_blank"><?php echo $helpLabel; ?></a></div>
+<div class="wordfenceHelpLink"><a href="<?php echo $helpLink; ?>" target="_blank" rel="noopener noreferrer" class="wfhelp"></a><a href="<?php echo $helpLink; ?>" target="_blank" rel="noopener noreferrer"><?php echo $helpLabel; ?></a></div>
 <div>
 	<div class="wordfenceModeElem" id="wordfenceMode_twoFactor"></div>
 	<?php if(! wfConfig::get('isPaid')){ ?>
@@ -19,7 +19,7 @@
 			<li>Discounts of up to 90% available for multiyear and multi-license purchases</li>
 		</ul>
 
-		<p class="center"><a class="wf-btn wf-btn-primary wf-btn-callout" href="https://www.wordfence.com/gnl1twoFac1/wordfence-signup/" target="_blank">Get Premium</a></p>
+		<p class="center"><a class="wf-btn wf-btn-primary wf-btn-callout" href="https://www.wordfence.com/gnl1twoFac1/wordfence-signup/" target="_blank" rel="noopener noreferrer">Get Premium</a></p>
 	</div>
 <?php } ?>
 	
@@ -74,7 +74,7 @@
 	<table class="wfConfigForm">
 		<tr>
 			<td><input type="checkbox" class="twoFactorOption" id="loginSec_requireAdminTwoFactor" name="loginSec_requireAdminTwoFactor"<?php echo wfConfig::get('loginSec_requireAdminTwoFactor') ? ' checked' : ''; ?>></td>
-			<th>Require Cellphone Sign-in for all Administrators<a href="<?php echo $helpLink; ?>" target="_blank" class="wfhelp"></a><br>
+			<th>Require Cellphone Sign-in for all Administrators<a href="<?php echo $helpLink; ?>" target="_blank" rel="noopener noreferrer" class="wfhelp"></a><br>
 				<em>This setting requires at least one administrator to have Cellphone Sign-in enabled. On multisite, this option applies only to super admins.</em></th>
 		</tr>
 		<tr>
@@ -82,7 +82,7 @@
 			$allowSeparatePrompt = ini_get('output_buffering') > 0;
 			?>
 			<td><input type="checkbox" class="twoFactorOption" id="loginSec_enableSeparateTwoFactor" name="loginSec_enableSeparateTwoFactor"<?php echo wfConfig::get('loginSec_enableSeparateTwoFactor') ? ' checked' : ''; echo ($allowSeparatePrompt ? '' : ' disabled'); ?>></td>
-			<th>Enable Separate Prompt for Two Factor Code<a href="<?php echo $helpLink; ?>" target="_blank" class="wfhelp"></a><br>
+			<th>Enable Separate Prompt for Two Factor Code<a href="<?php echo $helpLink; ?>" target="_blank" rel="noopener noreferrer" class="wfhelp"></a><br>
 				<em>This setting changes the behavior for obtaining the two factor authentication code from using the password field to showing a separate prompt. If your theme overrides the default login page, you may not be able to use this option.</em>
 			<?php echo ($allowSeparatePrompt ? '' : '<br><strong>This setting will be ignored because the PHP configuration option <code>output_buffering</code> is off.</strong>'); ?></th>
 		</tr>
@@ -170,7 +170,7 @@ if(wfConfig::get('isPaid')){
 } else {
 ?>
 	If you would like access to this premium feature, please 
-	<a href="https://www.wordfence.com/gnl1twoFac2/wordfence-signup/" target="_blank">upgrade to our premium version</a>.
+	<a href="https://www.wordfence.com/gnl1twoFac2/wordfence-signup/" target="_blank" rel="noopener noreferrer">upgrade to our premium version</a>.
 <?php
 }
 ?>

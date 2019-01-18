@@ -61,7 +61,7 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 	<table border="0" class="wfIssue" cellspacing="0" cellpadding="0">
 		<tr>
 			<th>URL:</th>
-			<td><a href="${data.url}" target="_blank">${data.url}</a></td>
+			<td><a href="${data.url}" target="_blank" rel="noopener noreferrer">${data.url}</a></td>
 		<tr>
 			<th>Severity:</th>
 			<td>{{if severity == '1'}}Critical{{else}}Warning{{/if}}</td>
@@ -81,7 +81,7 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 		<ul>
 			<li><h3>Tools:</h3></li>
 			{{if data.fileExists}}
-			<li><a target="_blank" href="${WFAD.makeViewFileLink(data.file)}">View the file</a></li>
+			<li><a target="_blank" rel="noopener noreferrer" href="${WFAD.makeViewFileLink(data.file)}">View the file</a></li>
 			{{/if}}
 			<li><a href="#" onclick="WFAD.hideFile('${id}', 'delete'); return false;">Hide this file in <em>.htaccess</em></a></li>
 			{{if data.canDelete}}
@@ -118,7 +118,7 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 			<table border="0" class="wfIssue" cellspacing="0" cellpadding="0">
 				<tr>
 					<th>URL:</th>
-					<td><a href="${data.url}" target="_blank">${data.url}</a></td>
+					<td><a href="${data.url}" target="_blank" rel="noopener noreferrer">${data.url}</a></td>
 				<tr>
 					<th>Severity:</th>
 					<td>{{if severity == '1'}}Critical{{else}}Warning{{/if}}</td>
@@ -138,7 +138,7 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 				<ul>
 					<li><h3>Tools:</h3></li>
 					{{if data.fileExists}}
-					<li><a target="_blank" href="${WFAD.makeViewFileLink(data.file)}">View the file</a></li>
+					<li><a target="_blank" rel="noopener noreferrer" href="${WFAD.makeViewFileLink(data.file)}">View the file</a></li>
 					{{/if}}
 					<li><a href="#" onclick="WFAD.hideFile('${id}', 'delete'); return false;">Hide this file in <em>.htaccess</em></a></li>
 					{{if data.canDelete}}
@@ -174,7 +174,7 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 	<h2>${shortMsg}</h2>
 	<p>
 		<table border="0" class="wfIssue" cellspacing="0" cellpadding="0">
-		<tr><th>URL:</th><td><a href="${data.url}" target="_blank">${data.url}</a></td>
+		<tr><th>URL:</th><td><a href="${data.url}" target="_blank" rel="noopener noreferrer">${data.url}</a></td>
 		<tr><th>Severity:</th><td>{{if severity == '1'}}Critical{{else}}Warning{{/if}}</td></tr>
 		<tr><th>Status</th><td>
 			{{if status == 'new' }}New{{/if}}
@@ -217,7 +217,7 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 	<h2>${shortMsg}</h2>
 	<p>
 		<table border="0" class="wfIssue" cellspacing="0" cellpadding="0">
-		<tr><th>URL:</th><td><a href="${data.url}" target="_blank">${data.url}</a></td>
+		<tr><th>URL:</th><td><a href="${data.url}" target="_blank" rel="noopener noreferrer">${data.url}</a></td>
 		<tr><th>Severity:</th><td>{{if severity == '1'}}Critical{{else}}Warning{{/if}}</td></tr>
 		<tr><th>Status</th><td>
 			{{if status == 'new' }}New{{/if}}
@@ -269,15 +269,16 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 		<tr><th><span class="wf-hidden-xs">Theme </span>Name:</th><td>${data.name}</td></tr>
 		<tr><th>Current <span class="wf-hidden-xs">Theme </span>Version:</th><td>${data.version}</td></tr>
 		<tr><th>New <span class="wf-hidden-xs">Theme </span>Version:</th><td>${data.newVersion}</td></tr>
-		<tr><th><span class="wf-hidden-xs">Theme </span>URL:</th><td><a href="${data.URL}" target="_blank"><span class="wf-hidden-xs wf-split-word">${data.URL}</span><span class="wf-visible-xs">View</span></a></td></tr>
+		<tr><th><span class="wf-hidden-xs">Theme </span>URL:</th><td><a href="${data.URL}" target="_blank" rel="noopener noreferrer"><span class="wf-hidden-xs wf-split-word">${data.URL}</span><span class="wf-visible-xs">View</span></a></td></tr>
 		<tr><th>Severity:</th><td>{{if severity == '1'}}Critical{{else}}Warning{{/if}}</td></tr>
+		{{if data.vulnerabilityLink}}<tr><th>Vulnerability <span class="wf-hidden-xs">Information</span>:</th><td><a href="${data.vulnerabilityLink}" target="_blank" rel="noopener noreferrer"><span class="wf-hidden-xs wf-split-word">${data.vulnerabilityLink}</span><span class="wf-visible-xs">View</span></a></td></tr>{{/if}}
 		<tr><th>Status</th><td>
 			{{if status == 'new' }}New{{/if}}
 			{{if status == 'ignoreP' || status == 'ignoreC' }}Ignored{{/if}}
 		</td></tr>
 		</table>
 	</p>
-	{{if data.vulnerabilityPatched}}<p><strong>Update includes security-related fixes.</strong></p>{{/if}}
+	{{if data.vulnerable}}<p><strong>Update includes security-related fixes.</strong></p>{{/if}}
 	<p>
 		{{html longMsg}}
 		<a href="<?php echo get_admin_url() . 'update-core.php'; ?>">Click here to update now</a>.
@@ -307,18 +308,19 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 	<p>
 		<table border="0" class="wfIssue" cellspacing="0" cellpadding="0">
 		<tr><th><span class="wf-hidden-xs">Plugin </span>Name:</th><td>${data.Name}</td></tr>
-		{{if data.PluginURI}}<tr><th><span class="wf-hidden-xs">Plugin </span>Website:</th><td><a href="${data.PluginURI}" target="_blank"><span class="wf-hidden-xs wf-split-word">${data.PluginURI}</span><span class="wf-visible-xs">View</span></a></td></tr>{{/if}}
-		<tr><th>Changelog:</th><td><a href="${data.wpURL}/changelog" target="_blank"><span class="wf-hidden-xs wf-split-word">${data.wpURL}/changelog</span><span class="wf-visible-xs">View</span></a></td></tr>
+		{{if data.PluginURI}}<tr><th><span class="wf-hidden-xs">Plugin </span>Website:</th><td><a href="${data.PluginURI}" target="_blank" rel="noopener noreferrer"><span class="wf-hidden-xs wf-split-word">${data.PluginURI}</span><span class="wf-visible-xs">View</span></a></td></tr>{{/if}}
+		{{if data.wpURL}}<tr><th>Changelog:</th><td><a href="${data.wpURL}/#developers" target="_blank" rel="noopener noreferrer"><span class="wf-hidden-xs wf-split-word">${data.wpURL}/#developers</span><span class="wf-visible-xs">View</span></a></td></tr>{{/if}}
 		<tr><th>Current <span class="wf-hidden-xs">Plugin </span>Version:</th><td>${data.Version}</td></tr>
 		<tr><th>New <span class="wf-hidden-xs">Plugin </span>Version:</th><td>${data.newVersion}</td></tr>
 		<tr><th>Severity:</th><td>{{if severity == '1'}}Critical{{else}}Warning{{/if}}</td></tr>
+		{{if data.vulnerabilityLink}}<tr><th>Vulnerability <span class="wf-hidden-xs">Information</span>:</th><td><a href="${data.vulnerabilityLink}" target="_blank" rel="noopener noreferrer"><span class="wf-hidden-xs wf-split-word">${data.vulnerabilityLink}</span><span class="wf-visible-xs">View</span></a></td></tr>{{/if}}
 		<tr><th>Status</th><td>
 			{{if status == 'new' }}New{{/if}}
 			{{if status == 'ignoreP' || status == 'ignoreC' }}Ignored{{/if}}
 		</td></tr>
 		</table>
 	</p>
-	{{if data.vulnerabilityPatched}}<p><strong>Update includes security-related fixes.</strong></p>{{/if}}
+	{{if data.vulnerable}}<p><strong>Update includes security-related fixes.</strong></p>{{/if}}
 	<p>
 		{{html longMsg}}
 		<a href="<?php echo get_admin_url() . 'update-core.php'; ?>">Click here to update now</a>.
@@ -341,6 +343,124 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 </div>
 </script>
 
+<script type="text/x-jquery-template" id="issueTmpl_wfPluginRemoved">
+	<div>
+		<div class="wfIssue">
+			<h2>${shortMsg}</h2>
+			<p>
+			<table border="0" class="wfIssue" cellspacing="0" cellpadding="0">
+				<tr><th><span class="wf-hidden-xs">Plugin </span>Name:</th><td>${data.Name}</td></tr>
+				{{if data.PluginURI}}<tr><th><span class="wf-hidden-xs">Plugin </span>Website:</th><td><a href="${data.PluginURI}" target="_blank" rel="noopener noreferrer"><span class="wf-hidden-xs wf-split-word">${data.PluginURI}</span><span class="wf-visible-xs">View</span></a></td></tr>{{/if}}
+				<tr><th>Current <span class="wf-hidden-xs">Plugin </span>Version:</th><td>${data.Version}</td></tr>
+				<tr><th>Severity:</th><td>{{if severity == '1'}}Critical{{else}}Warning{{/if}}</td></tr>
+				{{if data.vulnerabilityLink}}<tr><th>Vulnerability <span class="wf-hidden-xs">Information</span>:</th><td><a href="${data.vulnerabilityLink}" target="_blank" rel="noopener noreferrer"><span class="wf-hidden-xs wf-split-word">${data.vulnerabilityLink}</span><span class="wf-visible-xs">View</span></a></td></tr>{{/if}}
+				<tr><th>Status</th><td>
+						{{if status == 'new' }}New{{/if}}
+						{{if status == 'ignoreP' || status == 'ignoreC' }}Ignored{{/if}}
+					</td></tr>
+			</table>
+			</p>
+			<p>
+				{{html longMsg}}
+			</p>
+			<div class="wfIssueOptions">
+				{{if status == 'new'}}
+				<ul>
+					<li><h3>Resolve:</h3></li>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this issue</a></li>
+				</ul>
+				{{/if}}
+				{{if status == 'ignoreC' || status == 'ignoreP'}}
+				<ul>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
+				</ul>
+				{{/if}}
+			</div>
+		</div>
+	</div>
+</script>
+
+<script type="text/x-jquery-template" id="issueTmpl_wfPluginAbandoned">
+	<div>
+		<div class="wfIssue">
+			<h2>${shortMsg}</h2>
+			<p>
+			<table border="0" class="wfIssue" cellspacing="0" cellpadding="0">
+				<tr><th><span class="wf-hidden-xs">Plugin </span>Name:</th><td>${data.name}</td></tr>
+				{{if data.homepage}}<tr><th><span class="wf-hidden-xs">Plugin </span>Website:</th><td><a href="${data.homepage}" target="_blank" rel="noopener noreferrer"><span class="wf-hidden-xs wf-split-word">${data.homepage}</span><span class="wf-visible-xs">View</span></a></td></tr>{{/if}}
+				{{if data.wpURL}}<tr><th>Repository<span class="wf-hidden-xs"> Link</span>:</th><td><a href="${data.wpURL}" target="_blank" rel="noopener noreferrer"><span class="wf-hidden-xs wf-split-word">${data.wpURL}</span><span class="wf-visible-xs">View</span></a></td></tr>{{/if}}
+				<tr><th>Current <span class="wf-hidden-xs">Plugin </span>Version:</th><td>${data.version}</td></tr>
+				<tr><th>Last Updated:</th><td>${data.dateUpdated}</td></tr>
+				<tr><th>Severity:</th><td>{{if severity == '1'}}Critical{{else}}Warning{{/if}}</td></tr>
+				{{if data.vulnerabilityLink}}<tr><th>Vulnerability <span class="wf-hidden-xs">Information</span>:</th><td><a href="${data.vulnerabilityLink}" target="_blank" rel="noopener noreferrer"><span class="wf-hidden-xs wf-split-word">${data.vulnerabilityLink}</span><span class="wf-visible-xs">View</span></a></td></tr>{{/if}}
+				<tr><th>Status</th><td>
+						{{if status == 'new' }}New{{/if}}
+						{{if status == 'ignoreP' || status == 'ignoreC' }}Ignored{{/if}}
+					</td></tr>
+			</table>
+			</p>
+			{{if data.vulnerable}}<p><strong>Plugin has unpatched security issues.</strong></p>{{/if}}
+			<p>
+				{{html longMsg}}
+			</p>
+			<div class="wfIssueOptions">
+				{{if status == 'new'}}
+				<ul>
+					<li><h3>Resolve:</h3></li>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this issue</a></li>
+				</ul>
+				{{/if}}
+				{{if status == 'ignoreC' || status == 'ignoreP'}}
+				<ul>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
+				</ul>
+				{{/if}}
+			</div>
+		</div>
+	</div>
+</script>
+
+<script type="text/x-jquery-template" id="issueTmpl_wfPluginVulnerable">
+	<div>
+		<div class="wfIssue">
+			<h2>${shortMsg}</h2>
+			<p>
+			<table border="0" class="wfIssue" cellspacing="0" cellpadding="0">
+				<tr><th><span class="wf-hidden-xs">Plugin </span>Name:</th><td>${data.Name}</td></tr>
+				{{if data.PluginURI}}<tr><th><span class="wf-hidden-xs">Plugin </span>Website:</th><td><a href="${data.PluginURI}" target="_blank" rel="noopener noreferrer"><span class="wf-hidden-xs wf-split-word">${data.PluginURI}</span><span class="wf-visible-xs">View</span></a></td></tr>{{/if}}
+				{{if data.wpURL}}<tr><th>Repository<span class="wf-hidden-xs"> Link</span>:</th><td><a href="${data.wpURL}" target="_blank" rel="noopener noreferrer"><span class="wf-hidden-xs wf-split-word">${data.wpURL}</span><span class="wf-visible-xs">View</span></a></td></tr>{{/if}}
+				<tr><th>Current <span class="wf-hidden-xs">Plugin </span>Version:</th><td>${data.Version}</td></tr>
+				<tr><th>Severity:</th><td>{{if severity == '1'}}Critical{{else}}Warning{{/if}}</td></tr>
+				{{if data.vulnerabilityLink}}<tr><th>Vulnerability <span class="wf-hidden-xs">Information</span>:</th><td><a href="${data.vulnerabilityLink}" target="_blank" rel="noopener noreferrer"><span class="wf-hidden-xs wf-split-word">${data.vulnerabilityLink}</span><span class="wf-visible-xs">View</span></a></td></tr>{{/if}}
+				<tr><th>Status</th><td>
+						{{if status == 'new' }}New{{/if}}
+						{{if status == 'ignoreP' || status == 'ignoreC' }}Ignored{{/if}}
+					</td></tr>
+			</table>
+			</p>
+			<p>
+				{{html longMsg}}
+			</p>
+			<div class="wfIssueOptions">
+				{{if status == 'new'}}
+				<ul>
+					<li><h3>Resolve:</h3></li>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this issue</a></li>
+				</ul>
+				{{/if}}
+				{{if status == 'ignoreC' || status == 'ignoreP'}}
+				<ul>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
+				</ul>
+				{{/if}}
+			</div>
+		</div>
+	</div>
+</script>
+
 <script type="text/x-jquery-template" id="issueTmpl_wfUpgrade">
 <div>
 <div class="wfIssue">
@@ -350,6 +470,7 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 		<tr><th>Current <span class="wf-hidden-xs">WordPress </span>Version:</th><td>${data.currentVersion}</td></tr>
 		<tr><th>New <span class="wf-hidden-xs">WordPress </span>Version:</th><td>${data.newVersion}</td></tr>
 		<tr><th>Severity:</th><td>{{if severity == '1'}}Critical{{else}}Warning{{/if}}</td></tr>
+		{{if data.vulnerabilityLink}}<tr><th>Vulnerability <span class="wf-hidden-xs">Information</span>:</th><td><a href="${data.vulnerabilityLink}" target="_blank" rel="noopener noreferrer"><span class="wf-hidden-xs wf-split-word">${data.vulnerabilityLink}</span><span class="wf-visible-xs">View</span></a></td></tr>{{/if}}
 		<tr><th>Status</th><td>
 			{{if status == 'new' }}New{{/if}}
 			{{if status == 'ignoreP' || status == 'ignoreC' }}Ignored{{/if}}
@@ -464,7 +585,7 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 	<div class="wfIssueOptions">
 		<ul>
 			<li><h3>Tools:</h3></li>
-			<li><a target="_blank" href="${data.editUserLink}">Edit this user</a></li>
+			<li><a target="_blank" rel="noopener noreferrer" href="${data.editUserLink}">Edit this user</a></li>
 		</ul>
 	</div>
 	<div class="wfIssueOptions">
@@ -513,7 +634,7 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 	<div class="WfIssueOptions">
 		<ul>
 			<li><h3>Tools:</h3></li>
-			<li><a target="_blank" href="${data.editCommentLink}">Edit this ${data.type}</a></li>
+			<li><a target="_blank" rel="noopener noreferrer" href="${data.editCommentLink}">Edit this ${data.type}</a></li>
 		</ul>
 	</div>
 	<div class="wfIssueOptions">
@@ -559,7 +680,7 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 	<div class="wfIssueOptions">
 		<ul>
 			<li><h3>Tools:</h3></li> 
-			<li><a target="_blank" href="${data.editPostLink}">Edit this ${data.type}</a></li>
+			<li><a target="_blank" rel="noopener noreferrer" href="${data.editPostLink}">Edit this ${data.type}</a></li>
 		</ul>
 	</div>
 	<div class="wfIssueOptions">
@@ -588,9 +709,9 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 	<p>
 		<table border="0" class="wfIssue" cellspacing="0" cellpadding="0">
 		{{if data.isMultisite}}
-		<tr><th>Title:</th><td><a href="${data.permalink}" target="_blank">${data.postTitle}</a></td></tr>
+		<tr><th>Title:</th><td><a href="${data.permalink}" target="_blank" rel="noopener noreferrer">${data.postTitle}</a></td></tr>
 		{{else}}
-		<tr><th>Title:</th><td><a href="${data.permalink}" target="_blank">${data.postTitle}</a></td></tr>
+		<tr><th>Title:</th><td><a href="${data.permalink}" target="_blank" rel="noopener noreferrer">${data.postTitle}</a></td></tr>
 		{{/if}}
 		<tr><th>Bad URL:</th><td><strong class="wfWarn wf-split-word">${data.badURL}</strong></td></tr>
 		<tr><th>Posted on:</th><td>${data.postDate}</td></tr>
@@ -613,7 +734,7 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 	<div class="wfIssueOptions">
 		<ul>
 			<li><h3>Tools:</h3></li> 
-			<li><a target="_blank" href="${data.editPostLink}">Edit this ${data.type}</a></li>
+			<li><a target="_blank" rel="noopener noreferrer" href="${data.editPostLink}">Edit this ${data.type}</a></li>
 		</ul>
 	</div>
 	<div class="wfIssueOptions">
@@ -633,6 +754,49 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 	</div>
 </div>
 </div>
+</script>
+
+<script type="text/x-jquery-template" id="issueTmpl_optionBadURL">
+	<div>
+		<div class="wfIssue">
+			<h2>${shortMsg}</h2>
+			<p>
+			<table border="0" class="wfIssue" cellspacing="0" cellpadding="0">
+				<tr><th>Option Name:</th><td><strong>${data.optionKey}</strong></td></tr>
+				<tr><th>Bad URL:</th><td><strong class="wfWarn wf-split-word">${data.badURL}</strong></td></tr>
+				{{if data.isMultisite}}
+				<tr><th>Multisite Blog ID:</th><td>${data.blog_id}</td></tr>
+				<tr><th>Multisite Blog Domain:</th><td>${data.domain}</td></tr>
+				<tr><th>Multisite Blog Path:</th><td>${data.path}</td></tr>
+				{{/if}}
+				<tr><th>Severity:</th><td>Critical</td></tr>
+				<tr><th>Status</th><td>
+						{{if status == 'new' }}New{{/if}}
+						{{if status == 'ignoreC' }}This bad URL will be ignored in this ${data.type}.{{/if}}
+						{{if status == 'ignoreP' }}This post won't be scanned for bad URL's.{{/if}}
+					</td></tr>
+			</table>
+			</p>
+			<p>
+				{{html longMsg}}
+			</p>
+			<div class="wfIssueOptions">
+				{{if status == 'new'}}
+				<ul>
+					<li><h3>Resolve:</h3></li>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">I have fixed this issue</a></li>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore this bad URL in this option</a></li>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Ignore all bad URLs in this option</a></li>
+				</ul>
+				{{/if}}
+				{{if status == 'ignoreC' || status == 'ignoreP'}}
+				<ul>
+					<li><a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue</a></li>
+				</ul>
+				{{/if}}
+			</div>
+		</div>
+	</div>
 </script>
 
 
@@ -665,7 +829,7 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 		<ul>
 			<li><h3>Tools:</h3></li>
 			{{if data.fileExists}}
-			<li><a target="_blank" href="${WFAD.makeViewFileLink(data.file)}">View the file.</a></li>
+			<li><a target="_blank" rel="noopener noreferrer" href="${WFAD.makeViewFileLink(data.file)}">View the file.</a></li>
 			{{/if}}
 			{{if data.canFix}}
 			<li><a href="#" onclick="WFAD.restoreFile('${id}'); return false;">Restore the original version of this file.</a></li>
@@ -674,7 +838,7 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 			<li><a href="#" onclick="WFAD.deleteFile('${id}'); return false;">Delete this file (can't be undone)</a></li>
 			{{/if}}
 			{{if data.canDiff}}
-			<li><a href="${WFAD.makeDiffLink(data)}" target="_blank">See how the file has changed.</a></li>
+			<li><a href="${WFAD.makeDiffLink(data)}" target="_blank" rel="noopener noreferrer">See how the file has changed.</a></li>
 			{{/if}}
 		</ul>
 		{{if data.canFix}}
@@ -770,7 +934,7 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 		<ul>
 			<li><h3>Tools:</h3></li>
 			{{if data.optionExists}}
-			<li><a target="_blank" href="${WFAD.makeViewOptionLink(data.option_name, data.site_id)}">View this option.</a></li>
+			<li><a target="_blank" rel="noopener noreferrer" href="${WFAD.makeViewOptionLink(data.option_name, data.site_id)}">View this option.</a></li>
 			{{/if}}
 			{{if data.canDelete}}
 			<li><a href="#" onclick="WFAD.deleteDatabaseOption('${id}'); return false;">Delete this option from the database (can't be undone)</a></li>

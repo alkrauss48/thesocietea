@@ -10,12 +10,12 @@
 				</div>
 			</div>
 			<div class="wf-dashboard-item-extra">
-				<ul class="wf-dashboard-item-list">
+				<ul class="wf-dashboard-item-list wf-dashboard-item-list-striped">
 					<?php foreach ($d->notifications as $n): ?>
-						<li class="wf-notification" data-notification="<?php echo esc_html($n->id); ?>">
+						<li class="wf-notification<?php if ($n->priority % 10 == 1) { echo ' wf-notification-critical'; } else if ($n->priority % 10 == 2) { echo ' wf-notification-warning'; } ?>" data-notification="<?php echo esc_html($n->id); ?>">
 							<div class="wf-dashboard-item-list-title"><?php echo $n->html; ?></div>
 							<?php foreach ($n->links as $l): ?>
-								<div class="wf-dashboard-item-list-action"><a href="<?php echo esc_html($l['link']); ?>"<?php if (preg_match('/^https?:\/\//i', $l['link'])) { echo ' target="_blank"'; } ?>><?php echo esc_html($l['label']); ?></a></div>
+								<div class="wf-dashboard-item-list-action"><a href="<?php echo esc_html($l['link']); ?>"<?php if (preg_match('/^https?:\/\//i', $l['link'])) { echo ' target="_blank" rel="noopener noreferrer"'; } ?>><?php echo esc_html($l['label']); ?></a></div>
 							<?php endforeach; ?>
 							<div class="wf-dashboard-item-list-dismiss"><a href="#" class="wf-dismiss-notification"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
 						</li>

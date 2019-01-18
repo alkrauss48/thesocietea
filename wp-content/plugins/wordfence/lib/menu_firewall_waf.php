@@ -5,7 +5,7 @@ $wafConfigURL = network_admin_url('admin.php?page=WordfenceWAF&wafAction=configu
 $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&wafAction=removeAutoPrepend');
 /** @var array $wafData */
 ?>
-<div class="wordfenceHelpLink"><a href="<?php echo $helpLink; ?>" target="_blank" class="wfhelp"></a><a href="<?php echo $helpLink; ?>" target="_blank"><?php echo $helpLabel; ?></a></div>
+<div class="wordfenceHelpLink"><a href="<?php echo $helpLink; ?>" target="_blank" rel="noopener noreferrer" class="wfhelp"></a><a href="<?php echo $helpLink; ?>" target="_blank" rel="noopener noreferrer"><?php echo $helpLabel; ?></a></div>
 <div>
 	<div class="wordfenceModeElem" id="wordfenceMode_waf"></div>
 	<?php
@@ -45,13 +45,13 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&wafAction=removeA
 			<!-- end wafActionContent -->
 
 		<?php if (!empty($_REQUEST['wafAction']) && $_REQUEST['wafAction'] == 'removeAutoPrepend') { ?>
-			<p class="wf-notice"><em>If you cannot complete the uninstallation process, <a target="_blank" href="https://docs.wordfence.com/en/Web_Application_Firewall_FAQ#How_can_I_remove_the_firewall_setup_manually.3F">click here for help</a>.</em></p>
+			<p class="wf-notice"><em>If you cannot complete the uninstallation process, <a target="_blank" rel="noopener noreferrer" href="https://docs.wordfence.com/en/Web_Application_Firewall_FAQ#How_can_I_remove_the_firewall_setup_manually.3F">click here for help</a>.</em></p>
 		<?php }
 		else if (!empty($_REQUEST['wafAction']) && $_REQUEST['wafAction'] == 'updateSuPHPConfig') {
 			//Do nothing
 		}
 		else { ?>
-			<p class="wf-notice"><em>If you cannot complete the setup process, <a target="_blank" href="https://docs.wordfence.com/en/Web_Application_Firewall_Setup">click here for help</a>.</em></p>
+			<p class="wf-notice"><em>If you cannot complete the setup process, <a target="_blank" rel="noopener noreferrer" href="https://docs.wordfence.com/en/Web_Application_Firewall_Setup">click here for help</a>.</em></p>
 		<?php } ?>
 		</div>
 	<?php else: ?>
@@ -84,12 +84,12 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&wafAction=removeA
 				<?php if (wfConfig::get('isPaid')) { ?>
 					<div class="wf-success" style="max-width: 881px;"> 
 						You are running the Premium version of the Threat Defense Feed which is updated in real-time as new
-						threats emerge. <a href="https://www.wordfence.com/zz14/sign-in/" target="_blank">Protect additional sites.</a>
+						threats emerge. <a href="https://www.wordfence.com/zz14/sign-in/" target="_blank" rel="noopener noreferrer">Protect additional sites.</a>
 					</div>
 				<?php } ?>
 				<form action="javascript:void(0)" id="waf-config-form" class="wf-form-horizontal">
 					<div class="wf-form-group">
-						<label for="wf-waf-protection-mode" class="wf-col-sm-5 wf-col-md-3 wf-control-label waf-config-label">Protection Level <a href="http://docs.wordfence.com/en/WAF#Protection_Level" target="_blank" class="wfhelp"></a></label>
+						<label for="wf-waf-protection-mode" class="wf-col-sm-5 wf-col-md-3 wf-control-label waf-config-label">Protection Level <a href="http://docs.wordfence.com/en/WAF#Protection_Level" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 						<div class="wf-col-sm-7 wf-col-md-5">
 						<?php if (!WFWAF_AUTO_PREPEND): ?>
 							<p class="wf-form-control-static wf-notice-text">Basic WordPress Protection</p>
@@ -100,7 +100,7 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&wafAction=removeA
 						</div>
 					</div>
 					<div class="wf-form-group">
-						<label for="input-wafStatus" class="wf-col-sm-5 wf-col-md-3 wf-control-label waf-config-label">Firewall Status <a href="http://docs.wordfence.com/en/WAF#Firewall_Status" target="_blank" class="wfhelp"></a></label>
+						<label for="input-wafStatus" class="wf-col-sm-5 wf-col-md-3 wf-control-label waf-config-label">Firewall Status <a href="http://docs.wordfence.com/en/WAF#Firewall_Status" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 						<?php $wafStatus = (!WFWAF_ENABLED ? 'disabled' : $config->getConfig('wafStatus')); ?>
 						<div class="wf-col-sm-7 wf-col-md-5">
 							<select id="input-wafStatus" name="wafStatus" class="wf-form-control"<?php echo !WFWAF_ENABLED ? ' disabled' : '' ?>>
@@ -162,7 +162,7 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&wafAction=removeA
 
 					<br>
 
-					<h2>Rules <a href="http://docs.wordfence.com/en/WAF#Rules" target="_blank" class="wfhelp"></a></h2>
+					<h2>Rules <a href="http://docs.wordfence.com/en/WAF#Rules" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></h2>
 
 					<div id="waf-rules-wrapper"></div>
 
@@ -179,7 +179,7 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&wafAction=removeA
 
 				<br>
 
-				<h2>Whitelisted URLs <a href="http://docs.wordfence.com/en/WAF#Whitelisted_URLs" target="_blank" class="wfhelp"></a></h2>
+				<h2>Whitelisted URLs <a href="http://docs.wordfence.com/en/WAF#Whitelisted_URLs" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></h2>
 
 				<p><em>The URL/parameters in this table will not be tested by the firewall. They are typically added
 						while the firewall is in Learning Mode or by an admin who identifies a particular action/request
@@ -215,7 +215,7 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&wafAction=removeA
 				<div id="whitelist-monitor" class="wf-form-horizontal">
 					<div class="wf-form-group">
 						<div class="wf-col-xs-12">
-							<p class="wf-form-control-static"><strong>Monitor Background Requests for False Positives</strong> <a href="https://docs.wordfence.com/en/WAF#Whitelisted_URLs" target="_blank" class="wfhelp"></a></p>
+							<p class="wf-form-control-static"><strong>Monitor Background Requests for False Positives</strong> <a href="https://docs.wordfence.com/en/WAF#Whitelisted_URLs" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></p>
 						</div>
 						<div class="wf-col-xs-12">
 							<label class="wf-checkbox-inline"><input type="checkbox" id="monitor-front" name="monitor-front" value="1"<?php echo wfConfig::get('ajaxWatcherDisabled_front') ? '' : ' checked'; ?>>Front</label>
@@ -233,10 +233,10 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&wafAction=removeA
 							<p class="wf-form-control-static"><strong>Other Options</strong></p>
 						</div>
 						<div class="wf-col-xs-12">
-							<label class="wf-checkbox-inline"><input type="checkbox" id="waf-disable-ip-blocking" name="waf-disable-ip-blocking" value="1"<?php echo $config->getConfig('disableWAFIPBlocking') ? ' checked' : ''; ?>>Delay IP and Country blocking until after WordPress and plugins have loaded (only process firewall rules early) <a href="https://docs.wordfence.com/en/WAF#Advanced_Configuration" target="_blank" class="wfhelp"></a></label>
+							<label class="wf-checkbox-inline"><input type="checkbox" id="waf-disable-ip-blocking" name="waf-disable-ip-blocking" value="1"<?php echo $config->getConfig('disableWAFIPBlocking') ? ' checked' : ''; ?>>Delay IP and Country blocking until after WordPress and plugins have loaded (only process firewall rules early) <a href="https://docs.wordfence.com/en/WAF#Advanced_Configuration" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label>
 						</div>
 						<div class="wf-col-xs-12">
-							<label class="wf-checkbox-inline<?php echo (wfConfig::p() ? '' : ' wf-disabled'); ?>"><input type="checkbox" id="waf-disable-blacklist-blocking" name="waf-disable-blacklist-blocking" value="1"<?php echo !$config->getConfig('disableWAFBlacklistBlocking') ? ' checked' : ''; echo (wfConfig::p() ? '' : ' disabled'); ?>>Preemptively block malicious IP addresses <span style="color: #F00;">Premium Feature</span> <a href="https://docs.wordfence.com/en/WAF#Advanced_Configuration" target="_blank" class="wfhelp"></a></label> 
+							<label class="wf-checkbox-inline<?php echo (wfConfig::p() ? '' : ' wf-disabled'); ?>"><input type="checkbox" id="waf-disable-blacklist-blocking" name="waf-disable-blacklist-blocking" value="1"<?php echo !$config->getConfig('disableWAFBlacklistBlocking') ? ' checked' : ''; echo (wfConfig::p() ? '' : ' disabled'); ?>>Preemptively block malicious IP addresses <span style="color: #F00;">Premium Feature</span> <a href="https://docs.wordfence.com/en/WAF#Advanced_Configuration" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></label> 
 						</div>
 					</div>
 				</div>
@@ -245,10 +245,10 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&wafAction=removeA
 				<div class="wf-form-horizontal">
 					<div class="wf-form-group">
 						<div class="wf-col-xs-12">
-							<p class="wf-form-control-static"><strong>Remove Extended Protection <a href="https://docs.wordfence.com/en/Web_Application_Firewall_FAQ#How_can_I_remove_the_firewall_setup_manually.3F" target="_blank" class="wfhelp"></a></strong></p>
+							<p class="wf-form-control-static"><strong>Remove Extended Protection <a href="https://docs.wordfence.com/en/Web_Application_Firewall_FAQ#How_can_I_remove_the_firewall_setup_manually.3F" target="_blank" rel="noopener noreferrer" class="wfhelp"></a></strong></p>
 						</div>
 						<div class="wf-col-xs-12">
-							<p class="wf-form-control-static"><em>If you're moving to a new host or a new installation location, you may need to temporarily disable extended protection to avoid any file not found errors. Use this action to remove the configuration changes that enable extended protection mode or you can <a href="https://docs.wordfence.com/en/Web_Application_Firewall_FAQ#How_can_I_remove_the_firewall_setup_manually.3F" target="_blank">remove them manually</a>.</em></p>
+							<p class="wf-form-control-static"><em>If you're moving to a new host or a new installation location, you may need to temporarily disable extended protection to avoid any file not found errors. Use this action to remove the configuration changes that enable extended protection mode or you can <a href="https://docs.wordfence.com/en/Web_Application_Firewall_FAQ#How_can_I_remove_the_firewall_setup_manually.3F" target="_blank" rel="noopener noreferrer">remove them manually</a>.</em></p>
 						</div>
 					</div>
 					<div class="wf-form-group">

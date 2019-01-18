@@ -1,5 +1,5 @@
 <?php
-	if (!defined ('UPDRAFTPLUS_DIR')) die('No direct access allowed');
+	if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed');
 ?>
 <div class="expertmode">
 	<p>

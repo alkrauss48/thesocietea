@@ -1,5 +1,5 @@
 <?php
-	if (!defined ('UPDRAFTPLUS_DIR')) die('No direct access allowed');
+	if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed');
 ?>
 <div class="advanced_tools_button active" id="site_info">
 	<span class="advanced_tools_text dashicons dashicons-info"></span> 

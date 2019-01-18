@@ -5,26 +5,27 @@ if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed.');
 abstract class UpdraftPlus_BackupModule {
 
 	private $_options;
+
 	private $_instance_id;
+
+	private $_storage;
 	
 	/**
 	 * Store options (within this class) for this remote storage module. There is also a parameter for saving to the permanent storage (i.e. database).
-	 * 
-	 * @param $options Array - array of options to store
-	 * @param $save Boolean - whether or not to also save the options to the database
-	 * @param $instance_id null|String - optionally set the instance ID for this instance at the same time. This is required if you have not already set an instance ID with set_instance_id()
-	 * 
-	 * @throws Exception (via save_options) if trying to save options without indicating an instance_id, or if the remote storage module does not have the multi-option capability
-	 * 
-	 * @uses save_options()
-	 * 
-	 * @returns void|Boolean If saving to DB, then the result of the DB save operation is returned.
+	 *
+	 * @param  array       $options     array of options to store
+	 * @param  boolean     $save        whether or not to also save the options to the database
+	 * @param  null|String $instance_id optionally set the instance ID for this instance at the same time. This is required if you have not already set an instance ID with set_instance_id()
+	 * @return void|Boolean If saving to DB, then the result of the DB save operation is returned.
 	 */
 	public function set_options($options, $save = false, $instance_id = null) {
 	
 		$this->_options = $options;
 		
-		if (null !== $instance_id) $this->set_instance_id($instance_id);
+		// Remove any previously-stored storage object, because this is usually tied to the options
+		if (!empty($this->_storage)) unset($this->_storage);
+
+		if ($instance_id) $this->set_instance_id($instance_id);
 		
 		if ($save) return $this->save_options();
 
@@ -32,17 +33,17 @@ abstract class UpdraftPlus_BackupModule {
 	
 	/**
 	 * Saves the current options to the database. This is a private function; external callers should use set_options().
-	 * 
+	 *
 	 * @throws Exception if trying to save options without indicating an instance_id, or if the remote storage module does not have the multi-option capability
 	 */
 	private function save_options() {
 	
 		if (!$this->supports_feature('multi_options')) {
-			throw new Exception('set_options() can only be called on a storage method which supports multi_options (this module, '.$this->get_id().', does not)');
+			throw new Exception('save_options() can only be called on a storage method which supports multi_options (this module, '.$this->get_id().', does not)');
 		}
 	
 		if (!$this->_instance_id) {
-			throw new Exception('set_options() requires an instance ID, but was called without setting one (either directly or via set_instance_id())');
+			throw new Exception('save_options() requires an instance ID, but was called without setting one (either directly or via set_instance_id())');
 		}
 		
 		global $updraftplus;
@@ -50,7 +51,7 @@ abstract class UpdraftPlus_BackupModule {
 		$current_db_options = $updraftplus->update_remote_storage_options_format($this->get_id());
 
 		if (is_wp_error($current_db_options)) {
-			throw new Exception('set_options(): options fetch/update failed ('.$current_db_options->get_error_code().': '.$current_db_options->get_error_message().')');
+			throw new Exception('save_options(): options fetch/update failed ('.$current_db_options->get_error_code().': '.$current_db_options->get_error_message().')');
 		}
 
 		$current_db_options['settings'][$this->_instance_id] = $this->_options;
@@ -62,7 +63,7 @@ abstract class UpdraftPlus_BackupModule {
 	/**
 	 * Retrieve default options for this remote storage module.
 	 * This method would normally be over-ridden by the child.
-	 * 
+	 *
 	 * @return Array - an array of options
 	 */
 	public function get_default_options() {
@@ -73,22 +74,26 @@ abstract class UpdraftPlus_BackupModule {
 	 * Retrieve a list of supported features for this storage method
 	 * This method should be over-ridden by methods supporting new
 	 * features.
-	 * 
+	 *
 	 * Keys are strings, and values are booleans.
-	 * 
+	 *
 	 * Currently known features:
-	 * 
+	 *
 	 * - multi_options : indicates that the remote storage module
 	 * can handle its options being in the Feb-2017 multi-options
 	 * format. N.B. This only indicates options handling, not any
 	 * other multi-destination options.
-	 * 
+	 *
 	 * - multi_servers : not implemented yet: indicates that the
 	 * remote storage module can handle multiple servers at backup
 	 * time. This should not be specified without multi_options.
 	 * multi_options without multi_servers is fine - it will just
 	 * cause only the first entry in the options array to be used.
-	 * 
+	 *
+	 * - config_templates : not implemented yet: indicates that
+	 * the remote storage module can output its configuration in
+	 * Handlebars format via the get_configuration_template() method.
+	 *
 	 * @return Array - an array of supported features (any features not
 	 * mentioned are assumed to not be supported)
 	 */
@@ -97,18 +102,46 @@ abstract class UpdraftPlus_BackupModule {
 	}
 
 	/**
+	 * This method should only be called if the feature 'config templates' is supported. In that case, it returns a template with appropriate placeholders for specific settings. The code below is a placeholder, and methods supporting the feature should always over-ride it.
+	 *
+	 * @return String - HTML template
+	 */
+	public function get_configuration_template() {
+		return $this->get_id().": called, but not implemented in the child class (coding error)";
+	}
+
+	/**
+	 * This method will set the stored storage object to that indicated
+	 *
+	 * @param Object $storage - the storage client
+	 */
+	public function set_storage($storage) {
+		$this->_storage = $storage;
+	}
+
+	/**
+	 * This method will return the stored storage client
+	 *
+	 * @return Object - the stored remote storage client
+	 */
+	public function get_storage() {
+		return $this->_storage;
+	}
+	
+	/**
 	 * Outputs id and name fields, as if currently within an input tag
-	 * 
+	 *
 	 * This assumes standardised options handling (i.e. that the options array is updraft_(method-id))
-	 * 
-	 * @param Array|String $field - the field identifiers
-	 * @param Boolean $return_instead_of_echo - tells the method if it should return the output or echo it to page
-	 * 
+	 *
+	 * @param Array|String $field                  - the field identifiers
+	 * @param Boolean      $return_instead_of_echo - tells the method if it should return the output or echo it to page
 	 */
 	public function output_settings_field_name_and_id($field, $return_instead_of_echo = false) {
 	
 		$method_id = $this->get_id();
-		$instance_id = $this->_instance_id;
+		
+		$instance_id = $this->supports_feature('config_templates') ? '{{instance_id}}' : $this->_instance_id;
+		
 		$id = '';
 		$name = '';
 
@@ -132,21 +165,70 @@ abstract class UpdraftPlus_BackupModule {
 	}
 	
 	/**
-	 * Prints out the configuration section.
-	 * This deals with any boiler-plate, prior to calling config_print()
-	 * 
-	 * @uses self::config_print()
+	 * Get the CSS ID
+	 *
+	 * @param String $field - the field identifier to return a CSS ID for
+	 *
+	 * @return String
 	 */
-	public function print_configuration() {
+	public function get_css_id($field) {
+		$method_id = $this->get_id();
+		$instance_id = $this->supports_feature('config_templates') ? '{{instance_id}}' : $this->_instance_id;
+		return "updraft_${method_id}_${field}_${instance_id}";
+	}
+	
+	/**
+	 * Get handlebarsjs template
+	 * This deals with any boiler-plate, prior to calling config_print()
+	 *
+	 * @uses self::config_print()
+	 * @uses self::get_configuration_template()
+	 *
+	 * return handlebarsjs template or html
+	 */
+	public function get_template() {
+		ob_start();
 		// Allow methods to not use this hidden field, if they do not output any settings (to prevent their saved settings being over-written by just this hidden field)
 		if ($this->print_shared_settings_fields()) {
 			?><input type="hidden" name="updraft_<?php echo $this->get_id();?>[version]" value="1"><?php
 		}
-		$this->config_print();
+		
+		if ($this->supports_feature('config_templates')) {
+			do_action('updraftplus_config_print_before_storage', $this->get_id(), $this);
+			$template = ob_get_clean();
+			$template .= $this->get_configuration_template();
+		} else {
+			do_action('updraftplus_config_print_before_storage', $this->get_id(), $this);
+			// N.B. These are mutually exclusive: config_print() is not used if config_templates is supported. So, even during transition, the UpdraftPlus_BackupModule instance only needs to support one of the two, not both.
+			$this->config_print();
+			$template = ob_get_clean();
+		}
+		return $template;
+	}
+	
+	/**
+	 * Modifies handerbar template options. Other child class can extend it.
+	 *
+	 * @param array $opts
+	 * @return array - Modified handerbar template options
+	 */
+	public function transform_options_for_template($opts) {
+		return $opts;
+	}
+	
+	/**
+	 * Gives settings keys which values should not passed to handlebarsjs context.
+	 * The settings stored in UD in the database sometimes also include internal information that it would be best not to send to the front-end (so that it can't be stolen by a man-in-the-middle attacker)
+	 *
+	 * @return array - Settings array keys which should be filtered
+	 */
+	public function filter_frontend_settings_keys() {
+		return array();
 	}
 
 	/**
 	 * Over-ride this to allow methods to not use the hidden version field, if they do not output any settings (to prevent their saved settings being over-written by just this hidden field
+	 *
 	 * @return [boolean] - return true to output the version field or false to not output the field
 	 */
 	public function print_shared_settings_fields() {
@@ -154,9 +236,11 @@ abstract class UpdraftPlus_BackupModule {
 	}
 
 	/**
-	 * Prints out the configuration section for a particular module
+	 * Prints out the configuration section for a particular module. This is now (Sep 2017) considered deprecated; things are being ported over to get_configuration_template(), indicated via the feature 'config_templates'.
 	 */
-	abstract function config_print();
+	public function config_print() {
+		echo $this->get_id().": module neither declares config_templates support, nor has a config_print() method (coding bug)";
+	}
 
 	/**
 	 * Supplies the list of keys for options to be saved in the backup job.
@@ -166,8 +250,6 @@ abstract class UpdraftPlus_BackupModule {
 		if (!$this->supports_feature('multi_servers')) $keys[] = 'updraft_'.$this->get_id();
 		return $keys;
 	}
-
-
 	
 	/**
 	 * Returns a space-separated list of CSS classes suitable for rows in the configuration section
@@ -176,25 +258,31 @@ abstract class UpdraftPlus_BackupModule {
 	 */
 	public function get_css_classes() {
 		$classes = 'updraftplusmethod '.$this->get_id();
-		if ('' != $this->_instance_id) $classes .= ' '.$this->get_id().'-'.$this->_instance_id;
+		if ($this->supports_feature('multi_options')) {
+			if ($this->supports_feature('config_templates')) {
+				$classes .= ' '.$this->get_id().'-{{instance_id}}';
+			} else {
+				$classes .= ' '.$this->get_id().'-'.$this->_instance_id;
+			}
+		}
 		return $classes;
 	}
 	
 	/**
 	 *
 	 * Returns HTML for a row for a test button
-	 * 
+	 *
 	 * @param String $title - The text to be used in the button
-	 * 
+	 *
 	 * @returns String - The HTML to be inserted into the settings page
-	 * 
 	 */
 	protected function get_test_button_html($title) {
 		ob_start();
+		$instance_id = $this->supports_feature('config_templates') ? '{{instance_id}}' : $this->_instance_id;
 		?>
 		<tr class="<?php echo $this->get_css_classes(); ?>">
 			<th></th>
-			<td><p><button id="updraft-<?php echo $this->get_id();?>-test-<?php echo $this->_instance_id;?>" type="button" class="button-primary updraft-test-button updraft-<?php echo $this->get_id();?>-test" data-instance_id="<?php echo $this->_instance_id;?>" data-method="<?php echo $this->get_id();?>" data-method_label="<?php echo esc_attr($title);?>"><?php printf(__('Test %s Settings', 'updraftplus'), $title);?></button></p></td>
+			<td><p><button id="updraft-<?php echo $this->get_id();?>-test-<?php echo $instance_id;?>" type="button" class="button-primary updraft-test-button updraft-<?php echo $this->get_id();?>-test" data-instance_id="<?php echo $instance_id;?>" data-method="<?php echo $this->get_id();?>" data-method_label="<?php echo esc_attr($title);?>"><?php printf(__('Test %s Settings', 'updraftplus'), $title);?></button></p></td>
 		</tr>
 		<?php
 		return ob_get_clean();
@@ -202,10 +290,10 @@ abstract class UpdraftPlus_BackupModule {
 	
 	/**
 	 * Get the backup method identifier for this class
-	 * 
+	 *
 	 * @return String - the identifier
 	 */
-	private function get_id() {
+	public function get_id() {
 		$class = get_class($this);
 		// UpdraftPlus_BackupModule_
 		return substr($class, 25);
@@ -231,9 +319,9 @@ abstract class UpdraftPlus_BackupModule {
 	
 	/**
 	 * Check whether this storage module supports a mentioned feature
-	 * 
+	 *
 	 * @param String $feature - the feature concerned
-	 * 
+	 *
 	 * @returns Boolean
 	 */
 	public function supports_feature($feature) {
@@ -241,8 +329,9 @@ abstract class UpdraftPlus_BackupModule {
 	}
 	
 	/**
-	 * Retrieve options for this remote storage module
-	 * 
+	 * Retrieve options for this remote storage module.
+	 * N.B. The option name instance_id is reserved and should not be used.
+	 *
 	 * @uses get_default_options
 	 *
 	 * @return Array - array of options. This will include default values for any options not set.
@@ -254,12 +343,10 @@ abstract class UpdraftPlus_BackupModule {
 		$supports_multi_options = $this->supports_feature('multi_options');
 
 		if (is_array($this->_options)) {
-		
 			// First, prioritise any options that were explicitly set. This is the eventual goal for all storage modules.
 			$options = $this->_options;
 			
 		} elseif (is_callable(array($this, 'get_opts'))) {
-		
 			// Next, get any options available via a legacy / over-ride method.
 		
 			if ($supports_multi_options) {
@@ -270,7 +357,7 @@ abstract class UpdraftPlus_BackupModule {
 			$options = $this->get_opts();
 			
 		} else {
-		
+
 			// Next, look for job options (which in turn, falls back to saved settings if no job options were set)
 	
 			$options = $updraftplus->get_job_option('updraft_'.$this->get_id());
@@ -313,5 +400,79 @@ abstract class UpdraftPlus_BackupModule {
 		return $options;
 		
 	}
+	
+	/**
+	 * Set job data that is local to this storage instance
+	 * (i.e. the key does not need to be unique across instances)
+	 *
+	 * @uses UpdraftPlus::jobdata_set()
+	 *
+	 * @param String $key	- the key for the job data
+	 * @param Mixed  $value - the data to be stored
+	 */
+	public function jobdata_set($key, $value) {
+	
+		$instance_key = $this->get_id().'-'.($this->_instance_id ? $this->_instance_id : 'no_instance');
+		
+		global $updraftplus;
+		
+		$instance_data = $updraftplus->jobdata_get($instance_key);
+		
+		if (!is_array($instance_data)) $instance_data = array();
+		
+		$instance_data[$key] = $value;
+		
+		$updraftplus->jobdata_set($instance_key, $instance_data);
+		
+	}
 
+	/**
+	 * Get job data that is local to this storage instance
+	 * (i.e. the key does not need to be unique across instances)
+	 *
+	 * @uses UpdraftPlus::jobdata_get()
+	 *
+	 * @param String	  $key		  - the key for the job data
+	 * @param Mixed		  $default	  - the default to return if nothing was set
+	 * @param String|Null $legacy_key - the previous name of the key, prior to instance-specific job data (so that upgrades across versions whilst a backup is in progress can still find its data). In future, support for this can be removed.
+	 */
+	public function jobdata_get($key, $default = null, $legacy_key = null) {
+	
+		$instance_key = $this->get_id().'-'.($this->_instance_id ? $this->_instance_id : 'no_instance');
+		
+		global $updraftplus;
+		
+		$instance_data = $updraftplus->jobdata_get($instance_key);
+		
+		if (is_array($instance_data) && isset($instance_data[$key])) return $instance_data[$key];
+		
+		return is_string($legacy_key) ? $updraftplus->jobdata_get($legacy_key, $default) : $default;
+		
+	}
+	
+	/**
+	 * Delete job data that is local to this storage instance
+	 * (i.e. the key does not need to be unique across instances)
+	 *
+	 * @uses UpdraftPlus::jobdata_set()
+	 *
+	 * @param String	  $key		  - the key for the job data
+	 * @param String|Null $legacy_key - the previous name of the key, prior to instance-specific job data (so that upgrades across versions whilst a backup is in progress can still find its data)
+	 */
+	public function jobdata_delete($key, $legacy_key = null) {
+	
+		$instance_key = $this->get_id().'-'.($this->_instance_id ? $this->_instance_id : 'no_instance');
+		
+		global $updraftplus;
+		
+		$instance_data = $updraftplus->jobdata_get($instance_key);
+		
+		if (is_array($instance_data) && isset($instance_data[$key])) {
+			unset($instance_data[$key]);
+			$updraftplus->jobdata_set($instance_key, $instance_data);
+		}
+		
+		if (is_string($legacy_key)) $updraftplus->jobdata_delete($legacy_key);
+		
+	}
 }

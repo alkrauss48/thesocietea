@@ -3,6 +3,8 @@ class wfNotification {
 	const PRIORITY_LOW = 1500;
 	const PRIORITY_DEFAULT = 1000;
 	const PRIORITY_HIGH = 500;
+	const PRIORITY_HIGH_CRITICAL = 501;
+	const PRIORITY_HIGH_WARNING = 502;
 	
 	protected $_id;
 	protected $_category;
