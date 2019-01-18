@@ -39,6 +39,7 @@ get_header(); ?>
               <h2 class="blog-filter__heading">Filter Posts</h2>
               <section class="blog-filter__list">
                 <a href="#" data-filter="*" class="blog-filter__list-item blog-filter__list-item--view-all">View All</a>
+                <a href="#" data-filter=".category-talks" class="blog-filter__list-item blog-filter__list-item--talks">Talks/Videos</a>
                 <a href="#" data-filter=".category-front-end" class="blog-filter__list-item blog-filter__list-item--front-end">Front End</a>
                 <a href="#" data-filter=".category-programming-concepts" class="blog-filter__list-item blog-filter__list-item--programming-concepts">Programming Concepts</a>
                 <a href="#" data-filter=".category-javascript" class="blog-filter__list-item blog-filter__list-item--javascript">Javascript</a>

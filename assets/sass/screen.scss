@@ -25,6 +25,7 @@ $opaque-orange: rgba(255, 95, 0, .8);
 // blog Item colorscheme
 
 $blog-programming-concepts: #4cd964;
+$blog-talks: #ff00b7;
 $blog-front-end: #ff3b30;
 $blog-ruby: #ff2d55;
 $blog-javascript: #ffcc00;
@@ -1554,6 +1555,9 @@ h2.home-projects-title {
     }
   }
 
+  &.category-talks {
+    background-color: darken($blog-talks, $blog-darken-ratio);
+  }
   &.category-front-end {
     background-color: darken($blog-front-end, $blog-darken-ratio);
   }
@@ -1668,6 +1672,12 @@ h2.home-projects-title {
   background-color: black;
 }
 
+.blog-filter__list-item--talks {
+  background-color: darken($blog-talks, $blog-darken-ratio);
+  &:hover, &:focus {
+    background-color: darken($blog-talks, 10%);
+  }
+}
 .blog-filter__list-item--front-end {
   background-color: darken($blog-front-end, $blog-darken-ratio);
   &:hover, &:focus {
