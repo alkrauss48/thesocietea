@@ -55,6 +55,15 @@
     <!--[if lt IE 9]>
       <script src="/assets/js/ie/selectivizr-min.js"></script>
     <![endif]-->
+
+    <!-- AdSense Config -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-7795354071174101",
+        enable_page_level_ads: true
+      });
+    </script>
   </head>
   <body <?php body_class('m-scene'); ?>>
     <!--[if lt IE 8]>
