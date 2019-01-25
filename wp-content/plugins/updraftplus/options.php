@@ -6,6 +6,11 @@ if (!defined('ABSPATH')) die('No direct access allowed');
 
 class UpdraftPlus_Options {
 
+	/**
+	 * Whether or not the current user has permission to manage UpdraftPlus
+	 *
+	 * @return Boolean
+	 */
 	public static function user_can_manage() {
 		$user_can_manage = current_user_can(apply_filters('option_page_capability_updraft-options-group', 'manage_options'));
 		// false: allows the filter to know that the request is not coming from the multisite add-on
@@ -24,6 +29,15 @@ class UpdraftPlus_Options {
 		return 'options-general.php';
 	}
 
+	/**
+	 * Extracts the last logged message from updraftplus last process
+	 *
+	 * @return Mixed - Value set for the option or the default message
+	 */
+	public static function get_updraft_lastmessage() {
+		return UpdraftPlus_Options::get_updraft_option('updraft_lastmessage', __('(Nothing has been logged yet)', 'updraftplus'));
+	}
+
 	public static function get_updraft_option($option, $default = null) {
 		$ret = get_option($option, $default);
 		return apply_filters('updraftplus_get_option', $ret, $option, $default);
@@ -32,28 +46,40 @@ class UpdraftPlus_Options {
 	/**
 	 * The apparently unused parameter is used in the alternative class in the Multisite add-on
 	 *
-	 * @param  String  $option    specify option name
-	 * @param  String  $value     specify option value
-	 * @param  Boolean $use_cache whether or not to use the WP options cache
+	 * @param String  $option	 specify option name
+	 * @param String  $value	 specify option value
+	 * @param Boolean $use_cache whether or not to use the WP options cache
+	 * @param String  $autoload	 whether to autoload (only takes effect on a change of value)
+	 *
 	 * @return Boolean - as from update_option()
 	 */
-	public static function update_updraft_option($option, $value, $use_cache = true) {
-		return update_option($option, apply_filters('updraftplus_update_option', $value, $option, $use_cache));
+	public static function update_updraft_option($option, $value, $use_cache = true, $autoload = 'yes') {
+		return update_option($option, apply_filters('updraftplus_update_option', $value, $option, $use_cache), $autoload);
 	}
 
+	/**
+	 * Delete an option
+	 *
+	 * @param String $option - the option name
+	 */
 	public static function delete_updraft_option($option) {
 		delete_option($option);
 	}
 
+	/**
+	 * Register the UpdraftPlus admin menu entry
+	 */
 	public static function add_admin_pages() {
 		global $updraftplus_admin;
-		add_submenu_page('options-general.php', 'UpdraftPlus', __('UpdraftPlus Backups', 'updraftplus'), apply_filters('option_page_capability_updraft-options-group', 'manage_options'), "updraftplus", array($updraftplus_admin, "settings_output"));
+		add_submenu_page('options-general.php', 'UpdraftPlus', __('UpdraftPlus Backups', 'updraftplus'), apply_filters('option_page_capability_updraft-options-group', 'manage_options'), 'updraftplus', array($updraftplus_admin, 'settings_output'));
 	}
 
-	public static function options_form_begin($settings_fields = 'updraft-options-group', $allow_autocomplete = true, $get_params = array()) {
+	public static function options_form_begin($settings_fields = 'updraft-options-group', $allow_autocomplete = true, $get_params = array(), $classes = '') {
 		global $pagenow;
 		echo '<form method="post"';
-
+		
+		if ('' != $classes) echo ' class="'.$classes.'"';
+		
 		$page = '';
 		if ('options-general.php' == $pagenow) $page = "options.php";
 
@@ -81,13 +107,8 @@ class UpdraftPlus_Options {
 			wp_nonce_field("updraft-options-group-options", '_wpnonce', false);
 
 			$remove_query_args = array('state', 'action', 'oauth_verifier');
-
-			// wp_unslash() does not exist until after WP 3.5
-			if (function_exists('wp_unslash')) {
-				$referer = wp_unslash(remove_query_arg($remove_query_args, $_SERVER['REQUEST_URI']));
-			} else {
-				$referer = stripslashes_deep(remove_query_arg($remove_query_args, $_SERVER['REQUEST_URI']));
-			}
+			
+			$referer = UpdraftPlus_Manipulation_Functions::wp_unslash(remove_query_arg($remove_query_args, $_SERVER['REQUEST_URI']));
 
 			// Add back the page parameter if it looks like we were on the settings page via an OAuth callback that has now had all parameters removed. This is likely unnecessarily conservative, but there's nothing requiring more than this at the current time.
 			if (substr($referer, -19, 19) == 'options-general.php' && false !== strpos($_SERVER['REQUEST_URI'], '?')) $referer .= '?page=updraftplus';
@@ -97,6 +118,9 @@ class UpdraftPlus_Options {
 		}
 	}
 
+	/**
+	 * Runs upon the WordPress action admin_init
+	 */
 	public static function admin_init() {
 
 		static $already_inited = false;
@@ -110,30 +134,22 @@ class UpdraftPlus_Options {
 		global $updraftplus, $updraftplus_admin;
 		register_setting('updraft-options-group', 'updraft_interval', array($updraftplus, 'schedule_backup'));
 		register_setting('updraft-options-group', 'updraft_interval_database', array($updraftplus, 'schedule_backup_database'));
-		register_setting('updraft-options-group', 'updraft_interval_increments');
-		register_setting('updraft-options-group', 'updraft_retain', array($updraftplus, 'retain_range'));
-		register_setting('updraft-options-group', 'updraft_retain_db', array($updraftplus, 'retain_range'));
+		register_setting('updraft-options-group', 'updraft_interval_increments', array($updraftplus, 'schedule_backup_increments'));
+		register_setting('updraft-options-group', 'updraft_retain', array('UpdraftPlus_Manipulation_Functions', 'retain_range'));
+		register_setting('updraft-options-group', 'updraft_retain_db', array('UpdraftPlus_Manipulation_Functions', 'retain_range'));
 		register_setting('updraft-options-group', 'updraft_retain_extrarules');
 
 		register_setting('updraft-options-group', 'updraft_encryptionphrase');
 		register_setting('updraft-options-group', 'updraft_service', array($updraftplus, 'just_one'));
 
-		register_setting('updraft-options-group', 'updraft_s3', array($updraftplus, 's3_sanitise'));
-		register_setting('updraft-options-group', 'updraft_ftp', array($updraftplus, 'ftp_sanitise'));
-		register_setting('updraft-options-group', 'updraft_dreamobjects');
-		register_setting('updraft-options-group', 'updraft_s3generic');
-		register_setting('updraft-options-group', 'updraft_cloudfiles');
-		register_setting('updraft-options-group', 'updraft_openstack');
-		register_setting('updraft-options-group', 'updraft_dropbox', array($updraftplus, 'dropbox_checkchange'));
-		register_setting('updraft-options-group', 'updraft_googledrive', array($updraftplus, 'googledrive_checkchange'));
-		register_setting('updraft-options-group', 'updraft_onedrive', array($updraftplus, 'onedrive_checkchange'));
-		register_setting('updraft-options-group', 'updraft_azure', array($updraftplus, 'azure_checkchange'));
-		register_setting('updraft-options-group', 'updraft_googlecloud', array($updraftplus, 'googlecloud_checkchange'));
-
-		register_setting('updraft-options-group', 'updraft_sftp');
-		register_setting('updraft-options-group', 'updraft_backblaze', array($updraftplus, 'backblaze_sanitise'));
-		register_setting('updraft-options-group', 'updraft_webdav', array($updraftplus, 'construct_webdav_url'));
-
+		$services_to_register = array_keys($updraftplus->backup_methods);
+		foreach ($services_to_register as $service) {
+			register_setting('updraft-options-group', 'updraft_'.$service);
+			// We have to add the filter manually in order to get the second parameter passed through (register_setting() only registers with one parameter)
+			add_filter('sanitize_option_updraft_'.$service, array($updraftplus, 'storage_options_filter'), 10, 2);
+		}
+		
+		register_setting('updraft-options-group', 'updraft_auto_updates', 'absint');
 		register_setting('updraft-options-group', 'updraft_ssl_nossl', 'absint');
 		register_setting('updraft-options-group', 'updraft_log_syslog', 'absint');
 		register_setting('updraft-options-group', 'updraft_ssl_useservercerts', 'absint');
@@ -141,11 +157,11 @@ class UpdraftPlus_Options {
 
 		register_setting('updraft-options-group', 'updraft_split_every', array($updraftplus_admin, 'optionfilter_split_every'));
 
-		register_setting('updraft-options-group', 'updraft_dir', array($updraftplus_admin, 'prune_updraft_dir_prefix'));
-		register_setting('updraft-options-group', 'updraft_email', array($updraftplus, 'just_one_email'));
+		register_setting('updraft-options-group', 'updraft_dir', array('UpdraftPlus_Manipulation_Functions', 'prune_updraft_dir_prefix'));
 
 		register_setting('updraft-options-group', 'updraft_report_warningsonly', array($updraftplus_admin, 'return_array'));
 		register_setting('updraft-options-group', 'updraft_report_wholebackup', array($updraftplus_admin, 'return_array'));
+		register_setting('updraft-options-group', 'updraft_report_dbbackup', array($updraftplus_admin, 'return_array'));
 
 		register_setting('updraft-options-group', 'updraft_autobackup_default', 'absint');
 		register_setting('updraft-options-group', 'updraft_delete_local', 'absint');
@@ -158,11 +174,11 @@ class UpdraftPlus_Options {
 		register_setting('updraft-options-group', 'updraft_include_uploads', 'absint');
 		register_setting('updraft-options-group', 'updraft_include_others', 'absint');
 		register_setting('updraft-options-group', 'updraft_include_wpcore', 'absint');
-		register_setting('updraft-options-group', 'updraft_include_wpcore_exclude', array($updraftplus, 'strip_dirslash'));
+		register_setting('updraft-options-group', 'updraft_include_wpcore_exclude', array('UpdraftPlus_Manipulation_Functions', 'strip_dirslash'));
 		register_setting('updraft-options-group', 'updraft_include_more', 'absint');
-		register_setting('updraft-options-group', 'updraft_include_more_path', array($updraftplus, 'remove_empties'));
-		register_setting('updraft-options-group', 'updraft_include_uploads_exclude', array($updraftplus, 'strip_dirslash'));
-		register_setting('updraft-options-group', 'updraft_include_others_exclude', array($updraftplus, 'strip_dirslash'));
+		register_setting('updraft-options-group', 'updraft_include_more_path', array('UpdraftPlus_Manipulation_Functions', 'remove_empties'));
+		register_setting('updraft-options-group', 'updraft_include_uploads_exclude', array('UpdraftPlus_Manipulation_Functions', 'strip_dirslash'));
+		register_setting('updraft-options-group', 'updraft_include_others_exclude', array('UpdraftPlus_Manipulation_Functions', 'strip_dirslash'));
 
 		register_setting('updraft-options-group', 'updraft_starttime_files', array('UpdraftPlus_Options', 'hourminute'));
 		register_setting('updraft-options-group', 'updraft_starttime_db', array('UpdraftPlus_Options', 'hourminute'));
@@ -189,7 +205,7 @@ class UpdraftPlus_Options {
 
 	public static function show_admin_warning_multisite() {
 		global $updraftplus_admin;
-		$updraftplus_admin->show_admin_warning('<strong>'.__('UpdraftPlus warning:', 'updraftplus').'</strong> '.__('This is a WordPress multi-site (a.k.a. network) installation.', 'updraftplus').' <a href="https://updraftplus.com/shop/">'.__('WordPress Multisite is supported, with extra features, by UpdraftPlus Premium, or the Multisite add-on.', 'updraftplus').'</a> '.__('Without upgrading, UpdraftPlus allows <strong>every</strong> blog admin who can modify plugin settings to back up (and hence access the data, including passwords, from) and restore (including with customised modifications, e.g. changed passwords) <strong>the entire network</strong>.', 'updraftplus').' '.__('(This applies to all WordPress backup plugins unless they have been explicitly coded for multisite compatibility).', 'updraftplus'), 'error');
+		$updraftplus_admin->show_admin_warning('<strong>'.__('UpdraftPlus warning:', 'updraftplus').'</strong> '.__('This is a WordPress multi-site (a.k.a. network) installation.', 'updraftplus').' <a href="https://updraftplus.com/shop/" target="_blank">'.__('WordPress Multisite is supported, with extra features, by UpdraftPlus Premium, or the Multisite add-on.', 'updraftplus').'</a> '.__('Without upgrading, UpdraftPlus allows <strong>every</strong> blog admin who can modify plugin settings to backup (and hence access the data, including passwords, from) and restore (including with customized modifications, e.g. changed passwords) <strong>the entire network</strong>.', 'updraftplus').' '.__('(This applies to all WordPress backup plugins unless they have been explicitly coded for multisite compatibility).', 'updraftplus'), 'error');
 	}
 }
 

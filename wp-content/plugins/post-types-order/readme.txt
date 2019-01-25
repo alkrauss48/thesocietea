@@ -3,26 +3,26 @@ Contributors: nsp-code, tdgu
 Donate link: http://www.nsp-code.com/donate.php
 Tags: post order, posts order, sort, post sort, posts sort, post type order, custom order, admin posts order
 Requires at least: 2.8
-Tested up to: 4.8.1
-Stable tag: 1.9.3.5
+Tested up to: 5.0
+Stable tag: 1.9.3.9
 
 Post Order and custom Post Type Objects (custom post types) using a Drag and Drop Sortable JavaScript AJAX interface or default WordPress dashboard. 
 
 == Description ==
 
-<strong>Over 2.5 MILLIONS DOWNLOADS and near PERFECT rating out of 200 REVIEWS</strong>. <br />
+<strong>Over 3.2 MILLIONS DOWNLOADS and near PERFECT rating out of 200 REVIEWS</strong>. <br />
 A powerful plugin, Order Posts and Post Types Objects using a Drag and Drop Sortable JavaScript capability. 
 
 The order can be customized within **default WordPress post type archive list page** or **a separate Re-Order interface** which display all objects.
-It allow to reorder the posts for any custom post types you defined, including the default Posts. Also you can display the posts within admin interface sorted per your new sort. Post Order has never been easier.
+It allows to reorder the posts for any custom post types you defined, including the default Posts. Also you can display the posts within admin interface sorted per your new sort. Post Order has never been easier.
 
 = Usage =
-This was built considering for everyone to be able to use no matter the WordPress experience, so it's very easy:
+This was built considering everyone to be able to use the sorting, no matter the WordPress experience:
 
 * Install the plugin through the Install Plugins interface or by uploading the `post-types-order` folder to your `/wp-content/plugins/` directory.
 * Activate the Post Order plugin.
 * A new setting page will be created within Settings > Post Types Order, you should check with that, and make a first options save. 
-* Using the AutoSort option as ON you don't need to worry about any code changes, the plugin will do the post order update on fly. 
+* Using the <strong>AutoSort option as ON</strong> you don't need to worry about any code changes, the <strong>plugin will apply the customized post order</strong> on fly. 
 * Use the Re-Order interface which appear to every custom post type (non-hierarchical) to change the post order to a new one.
 * If prefer sort apply through the code, include 'orderby' =>'menu_order' within custom query arguments, more details at http://www.nsp-code.com/sample-code-on-how-to-apply-the-sort-for-post-types-order-plugin/
 
@@ -93,6 +93,16 @@ Consider upgrading to our advanced version of this plugin at a very resonable pr
 
 
 == Change Log ==
+
+= 1.9.3.9 =
+  - Ignore sorting when doing Search and there's a search key-phrase specified.
+  - Ignore sorting when doing Search within admin dashboard
+  - Removed Google Social as it produced some JavaScript errors
+  - WordPress 4.9.7 tag update 
+
+= 1.9.3.6 =
+  - Clear LiteSpeed Cache on order update to reflect on front side
+  - WordPress 4.9.1 tag update 
 
 = 1.9.3.5 =
   - Fix: updated capability from switch_theme to manage_options within 'Minimum Level to use this plugin' option

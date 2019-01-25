@@ -8,6 +8,7 @@
  */
 
 /* Prevent text and blocks selection */
+input.labelauty + label ::-moz-selection { background-color: rgba(255, 255, 255, 0); }
 input.labelauty + label ::selection { background-color: rgba(255, 255, 255, 0); }
 input.labelauty + label ::-moz-selection { background-color: rgba(255, 255, 255, 0); }
 
@@ -227,9 +228,40 @@ input.labelauty.googlecloud + label > span.labelauty-unchecked-image {
 }
 
 #remote-storage-container {
-    -moz-column-count: 3;
-    -webkit-column-count: 3;
-    column-count: 3;
     height: auto;
     width: auto;
+	column-count: 2;
+}
+
+@media only screen and (min-width: 480px) {
+
+	#remote-storage-container {
+		height: auto;
+		width: auto;
+	}
+
+}
+
+@media only screen and (min-width: 1000px) {
+
+	#remote-storage-container {
+		column-count: 3;
+		height: auto;
+		width: auto;
+	}
+
+}
+
+@media only screen and (max-width: 480px) {
+
+	input.labelauty + label {
+		text-align: center;
+	}
+
+	input.labelauty + label > span.labelauty-unchecked-image, input.labelauty + label > span.labelauty-checked-image {
+		display: block;
+		margin: 0 auto;
+		margin-bottom: 4px;
+	}
+
 }

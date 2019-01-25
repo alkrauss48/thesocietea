@@ -16,19 +16,193 @@ class UpdraftPlus_Backup_History {
 	 * @return Array - either the particular backup indicated, or the full list.
 	 */
 	public static function get_history($timestamp = false) {
-	
+
 		$backup_history = UpdraftPlus_Options::get_updraft_option('updraft_backup_history');
 		// N.B. Doing a direct wpdb->get_var() here actually *introduces* a race condition
 		
 		if (!is_array($backup_history)) $backup_history = array();
+
+		$backup_history = self::build_incremental_sets($backup_history);
+
+		if ($timestamp) return isset($backup_history[$timestamp]) ? $backup_history[$timestamp] : array();
+
 		// The most recent backup will be first. Then we can array_pop().
 		krsort($backup_history);
 
-		if (!$timestamp) return $backup_history;
-		
-		return isset($backup_history[$timestamp]) ? $backup_history[$timestamp] : array();
+		return $backup_history;
+
 	}
 	
+	/**
+	 * Add jobdata to all entries in an array of history items which do not already have it (key: 'jobdata'). If none is found, it will still be set, but empty.
+	 *
+	 * @param Array $backup_history - the list of history items
+	 *
+	 * @return Array
+	 */
+	public static function add_jobdata($backup_history) {
+	
+		global $wpdb;
+		$table = is_multisite() ? $wpdb->sitemeta : $wpdb->options;
+		$key_column = is_multisite() ? 'meta_key' : 'option_name';
+		$value_column = is_multisite() ? 'meta_value' : 'option_value';
+
+		$any_more = true;
+		
+		while ($any_more) {
+		
+			$any_more = false;
+			$columns = array();
+			$nonces_map = array();
+		
+			foreach ($backup_history as $timestamp => $backup) {
+				if (isset($backup['jobdata'])) continue;
+				$nonce = $backup['nonce'];
+				$nonces_map[$nonce] = $timestamp;
+				$columns[] = $nonce;
+				// Approx. 2.5MB of data would be expected if they all had 5KB each (though in reality we expect very few of them to have any)
+				if (count($columns) >= 500) {
+					$any_more = true;
+					break;
+				}
+			}
+			
+			if (empty($columns)) break;
+			
+			$columns_sql = '';
+			foreach ($columns as $nonce) {
+				if ($columns_sql) $columns_sql .= ',';
+				$columns_sql .= "'updraft_jobdata_".esc_sql($nonce)."'";
+			}
+			
+			$sql = 'SELECT '.$key_column.', '.$value_column.' FROM '.$table.' WHERE '.$key_column.' IN ('.$columns_sql.')';
+			$all_jobdata = $wpdb->get_results($sql);
+
+			foreach ($all_jobdata as $values) {
+				// The 16 here is the length of 'updraft_jobdata_'
+				$nonce = substr($values->$key_column, 16);
+				if (empty($nonces_map[$nonce]) || empty($values->$value_column)) continue;
+				$jobdata = maybe_unserialize($values->$value_column);
+				$backup_history[$nonces_map[$nonce]]['jobdata'] = empty($jobdata) ? array() : $jobdata;
+			}
+			foreach ($columns as $nonce) {
+				if (!empty($nonces_map[$nonce]) && !isset($backup_history[$nonces_map[$nonce]]['jobdata'])) $backup_history[$nonces_map[$nonce]]['jobdata'] = array();
+			}
+		}
+		
+		return $backup_history;
+	}
+	
+	/**
+	 * Get the backup history for an indicated nonce
+	 *
+	 * @param String $nonce - Backup nonce to get a particular backup job
+	 *
+	 * @return Array|Boolean - either the particular backup indicated, or false
+	 */
+	public static function get_backup_set_by_nonce($nonce) {
+		if (empty($nonce)) return false;
+		$backup_history = self::get_history();
+		foreach ($backup_history as $timestamp => $backup_info) {
+			if ($nonce == $backup_info['nonce']) {
+				$backup_info['timestamp'] = $timestamp;
+				return $backup_info;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Get the HTML for the table of existing backups
+	 *
+	 * @param Array|Boolean $backup_history - a list of backups to use, or false to get the current list from the database
+	 *
+	 * @uses UpdraftPlus_Admin::include_template()
+	 *
+	 * @return String - HTML for the table
+	 */
+	public static function existing_backup_table($backup_history = false) {
+
+		global $updraftplus, $updraftplus_admin;
+
+		if (false === $backup_history) $backup_history = self::get_history();
+		
+		if (!is_array($backup_history) || empty($backup_history)) return '<div class="postbox"><p class="updraft-no-backups-msg"><em>'.__('You have not yet made any backups.', 'updraftplus').'</em></p></div>';
+
+		// Reverse date sort - i.e. most recent first
+		krsort($backup_history);
+		
+		$pass_values = array(
+			'backup_history' => self::add_jobdata($backup_history),
+			'updraft_dir' => $updraftplus->backups_dir_location(),
+			'backupable_entities' => $updraftplus->get_backupable_file_entities(true, true)
+		);
+		
+		return $updraftplus_admin->include_template('wp-admin/settings/existing-backups-table.php', true, $pass_values);
+	
+	}
+	
+	/**
+	 * This function will scan the backup history and split the files up in to incremental sets, foreign backup sets will only have one incremental set.
+	 *
+	 * @param Array $backup_history - the saved backup history
+	 *
+	 * @return Array - returns the backup history but also includes the incremental sets
+	 */
+	public static function build_incremental_sets($backup_history) {
+
+		global $updraftplus;
+
+		$backupable_entities = array_keys($updraftplus->get_backupable_file_entities(true, false));
+
+		$accept = apply_filters('updraftplus_accept_archivename', array());
+
+		foreach ($backup_history as $btime => $bdata) {
+
+			$incremental_sets = array();
+
+			foreach ($backupable_entities as $entity) {
+
+				if (empty($bdata[$entity]) || !is_array($bdata[$entity])) continue;
+
+				foreach ($bdata[$entity] as $key => $filename) {
+
+					if (preg_match('/^backup_([\-0-9]{15})_.*_([0-9a-f]{12})-[\-a-z]+([0-9]+)?+(\.(zip|gz|gz\.crypt))?$/i', $filename, $matches)) {
+
+						$timestamp = strtotime($matches[1]);
+						
+						if (!isset($incremental_sets[$timestamp])) $incremental_sets[$timestamp] = array();
+
+						if (!isset($incremental_sets[$timestamp][$entity])) $incremental_sets[$timestamp][$entity] = array();
+
+						$incremental_sets[$timestamp][$entity][$key] = $filename;
+					} else {
+						$accepted = false;
+						
+						foreach ($accept as $fkey => $acc) {
+							if (preg_match('/'.$acc['pattern'].'/i', $filename)) $accepted = $fkey;
+						}
+						
+						if (!empty($accepted) && (false != ($btime = apply_filters('updraftplus_foreign_gettime', false, $accepted, $filename))) && $btime > 0) {
+							
+							$timestamp = $btime;
+							
+							if (!isset($incremental_sets[$timestamp])) $incremental_sets[$timestamp] = array();
+
+							if (!isset($incremental_sets[$timestamp][$entity])) $incremental_sets[$timestamp][$entity] = array();
+							
+							$incremental_sets[$timestamp][$entity][] = $filename;
+						}
+					}
+				}
+			}
+			ksort($incremental_sets);
+			$backup_history[$btime]["incremental_sets"] = $incremental_sets;
+		}
+		
+		return $backup_history;
+	}
+
 	/**
 	 * Save the backup history. An abstraction function to make future changes easier.
 	 *
@@ -36,7 +210,38 @@ class UpdraftPlus_Backup_History {
 	 * @param Boolean $use_cache	  - whether or not to use the WP options cache
 	 */
 	public static function save_history($backup_history, $use_cache = true) {
-		UpdraftPlus_Options::update_updraft_option('updraft_backup_history', $backup_history, $use_cache);
+		
+		global $updraftplus;
+
+		// This data is constructed at run-time from the other keys; we do not wish to save redundant data
+		foreach ($backup_history as $btime => $bdata) {
+			unset($backup_history[$btime]['incremental_sets']);
+		}
+		
+		// Explicitly set autoload to 'no', as the backup history can get quite big.
+		$changed = UpdraftPlus_Options::update_updraft_option('updraft_backup_history', $backup_history, $use_cache, 'no');
+
+		if (!$changed) {
+		
+			$max_packet_size = $updraftplus->max_packet_size(false, false);
+			$serialization_size = strlen(addslashes(serialize($backup_history)));
+			
+			// Take off the *approximate* over-head of UPDATE wp_options SET option_value='' WHERE option_name='updraft_backup_history'; (no need to be exact)
+			if ($max_packet_size < ($serialization_size + 100)) {
+			
+				$max_packet_size = $updraftplus->max_packet_size();
+				
+				$changed = UpdraftPlus_Options::update_updraft_option('updraft_backup_history', $backup_history, $use_cache, 'no');
+				
+				if (!$changed) {
+		
+					$updraftplus->log('The attempt to write the backup history to the WP database returned a negative code and the max packet size looked small. However, WP does not distinguish between a failure and no change from a previous update, so, this code is not conclusive and if no other symptoms are observed then there is no reason to infer any problem. Info: The updated database packet size is '.$max_packet_size.'; the serialization size is '.$serialization_size);
+			
+				}
+				
+			}
+			
+		}
 	}
 	
 	/**
@@ -45,7 +250,7 @@ class UpdraftPlus_Backup_History {
 	 * @param  String $v - ignored
 	 * @return Mixed - the database option
 	 */
-	public static function filter_updraft_backup_history($v) {
+	public static function filter_updraft_backup_history($v) {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Filter use
 		global $wpdb;
 		$row = $wpdb->get_row($wpdb->prepare("SELECT option_value FROM $wpdb->options WHERE option_name = %s LIMIT 1", 'updraft_backup_history'));
 		if (is_object($row)) return maybe_unserialize($row->option_value);
@@ -65,10 +270,12 @@ class UpdraftPlus_Backup_History {
 	 * N.B. The logic is a bit more subtle than it needs to be, because of backups being keyed by backup time, instead of backup nonce, and the subsequent introduction of the possibility of incremental backup sets taken at different times. This could be cleaned up to reduce the amount of code and make it simpler in places.
 	 *
 	 * @param Boolean	   $remote_scan		   - scan not only local, but also remote storage
-	 * @param Array|String $only_add_this_file - if set to an array (with keys 'name' and (optionally) 'label'), then a file will only be taken notice of if the filename matches the 'name' key (and the label will be associated with the backup set)
-	 * @return Array - an array of messages which the caller may wish to display to the user
+	 * @param Array|String $only_add_this_file - if set to an array (with keys 'file' and (optionally) 'label'), then a file will only be taken notice of if the filename matches the 'file' key (and the label will be associated with the backup set)
+	 * @param Boolean	   $debug			   - include debugging messages. These will be keyed with keys beginning 'debug-' so that they can be distinguished.
+	 *
+	 * @return Array - an array of messages which the caller may wish to display to the user. N.B. Messages are not necessarily just strings.
 	 */
-	public static function rebuild($remote_scan = false, $only_add_this_file = false) {
+	public static function rebuild($remote_scan = false, $only_add_this_file = false, $debug = false) {
 
 		global $updraftplus;
 	
@@ -153,7 +360,7 @@ class UpdraftPlus_Backup_History {
 		
 			$updraftplus->register_wp_http_option_hooks(true);
 			
-			$storage_objects_and_ids = $updraftplus->get_storage_objects_and_ids(array_keys($updraftplus->backup_methods));
+			$storage_objects_and_ids = UpdraftPlus_Storage_Methods_Interface::get_storage_objects_and_ids(array_keys($updraftplus->backup_methods));
 
 			foreach ($storage_objects_and_ids as $method => $method_information) {
 				
@@ -173,7 +380,20 @@ class UpdraftPlus_Backup_History {
 					
 					$files = $object->listfiles('backup_');
 					
+					$method_description = $object->get_description();
+					
 					if (is_array($files)) {
+
+						if ($debug) {
+							$messages[] = array(
+								'method' => $method,
+								'desc' => $method_description,
+								'code' => 'file-listing',
+								'message' => '',
+								'data' => $files,
+								'service_instance_id' => $instance_id,
+							);
+						}
 						
 						foreach ($files as $entry) {
 							$filename = $entry['name'];
@@ -225,7 +445,7 @@ class UpdraftPlus_Backup_History {
 					} elseif (is_wp_error($files)) {
 						foreach ($files->get_error_codes() as $code) {
 							// Skip various codes which are not conditions to show to the user
-							if ('no_settings' == $code || 'no_addon' == $code || 'insufficient_php' == $code || 'no_listing' == $code) continue;
+							if (in_array($code, array('no_settings', 'no_addon', 'insufficient_php', 'no_listing'))) continue;
 							$messages[] = array(
 								'method' => $method,
 								'desc' => $method_description,
@@ -283,7 +503,7 @@ class UpdraftPlus_Backup_History {
 					'code' => 'possibleforeign_'.md5($entry),
 					'desc' => $entry,
 					'method' => '',
-					'message' => __('This file does not appear to be an UpdraftPlus backup archive (such files are .zip or .gz files which have a name like: backup_(time)_(site name)_(code)_(type).(zip|gz)).', 'updraftplus').' <a href="https://updraftplus.com/shop/updraftplus-premium/">'.__('If this is a backup created by a different backup plugin, then UpdraftPlus Premium may be able to help you.', 'updraftplus').'</a>'
+					'message' => __('This file does not appear to be an UpdraftPlus backup archive (such files are .zip or .gz files which have a name like: backup_(time)_(site name)_(code)_(type).(zip|gz)).', 'updraftplus').' <a href="https://updraftplus.com/shop/updraftplus-premium/" target="_blank">'.__('If this is a backup created by a different backup plugin, then UpdraftPlus Premium may be able to help you.', 'updraftplus').'</a>'
 				);
 				$messages[$potmessage['code']] = $potmessage;
 				continue;
@@ -422,7 +642,8 @@ class UpdraftPlus_Backup_History {
 			if ($btime <= 100) continue;
 
 			// Remember that at this point, we already know that the file is not stored locally (else it would have been pruned earlier from $remote_files)
-			if (isset($backup_history[$btime])) {
+			// The check for a new set needs to take into account that $backup_history[$btime]['service_instance_ids'] may have been created further up this method
+			if (isset($backup_history[$btime]) && array('service_instance_ids') !== array_keys($backup_history[$btime])) {
 				if (!isset($backup_history[$btime]['service']) || (is_array($backup_history[$btime]['service']) && $backup_history[$btime]['service'] !== $services) || (is_string($backup_history[$btime]['service']) && (1 != count($services) || $services[0] !== $backup_history[$btime]['service']))) {
 					$changes = true;
 					if (isset($backup_history[$btime]['service'])) {
@@ -471,11 +692,115 @@ class UpdraftPlus_Backup_History {
 				}
 			}
 		}
-			
+
+		$more_backup_history = apply_filters('updraftplus_more_rebuild', $backup_history);
+		
+		if ($more_backup_history) {
+			$backup_history = $more_backup_history;
+			$changes = true;
+		}
+
 		if ($changes) self::save_history($backup_history);
 
 		return $messages;
 
+	}
+	
+	/**
+	 * This function will look through the backup history and return the nonce of the latest full backup that has everything that is set in the UpdraftPlus settings to be backed up (this will exclude full backups sent to another site, e.g. for a migration or clone)
+	 *
+	 * @return String - the backup nonce of a full backup or an empty string if none are found
+	 */
+	public static function get_latest_full_backup() {
+		
+		$backup_history = self::get_history();
+
+		global $updraftplus;
+		
+		$backupable_entities = $updraftplus->get_backupable_file_entities(true, true);
+
+		foreach ($backupable_entities as $key => $info) {
+			if (!UpdraftPlus_Options::get_updraft_option("updraft_include_$key", false)) {
+				unset($backupable_entities[$key]);
+			}
+		}
+		
+		foreach ($backup_history as $key => $backup) {
+			
+			$remote_sent = !empty($backup['service']) && ((is_array($backup['service']) && in_array('remotesend', $backup['service'])) || 'remotesend' === $backup['service']);
+			if ($remote_sent) continue;
+			
+			foreach ($backupable_entities as $key => $info) {
+				if (!isset($backup[$key])) continue 2;
+			}
+			
+			return $backup['nonce'];
+
+		}
+
+		return '';
+	}
+
+	/**
+	 * This function will look through the backup history and return the nonce of the latest backup that can be used for an incremental backup (this will exclude full backups sent to another site, e.g. for a migration or clone)
+	 *
+	 * @return String - the backup nonce of a full backup or an empty string if none are found
+	 */
+	/**
+	 * This function will look through the backup history and return the nonce of the latest backup that can be used for an incremental backup (this will exclude full backups sent to another site, e.g. for a migration or clone)
+	 *
+	 * @param array $entities - an array of file entities that are included in this job
+	 *
+	 * @return String         - the backup nonce of a full backup or an empty string if none are found
+	 */
+	public static function get_latest_backup($entities) {
+
+		if (empty($entities)) return '';
+
+		$backup_history = self::get_history();
+
+		foreach ($backup_history as $key => $backup) {
+
+			$remote_sent = !empty($backup['service']) && ((is_array($backup['service']) && in_array('remotesend', $backup['service'])) || 'remotesend' === $backup['service']);
+			if ($remote_sent) continue;
+
+			foreach ($entities as $type) {
+				if (!isset($backup[$type])) continue 2;
+			}
+
+			return $backup['nonce'];
+
+		}
+
+		return '';
+	}
+
+	/**
+	 * This function will look through the backup history and return an array of entity types found in the history
+	 *
+	 * @return array - an array of backup entities found in the history or an empty array if there are none
+	 */
+	public static function get_existing_backup_entities() {
+
+		$backup_history = self::get_history();
+
+		global $updraftplus;
+
+		$backupable_entities = $updraftplus->get_backupable_file_entities(true, true);
+
+		$entities = array();
+
+		foreach ($backup_history as $key => $backup) {
+
+			$remote_sent = !empty($backup['service']) && ((is_array($backup['service']) && in_array('remotesend', $backup['service'])) || 'remotesend' === $backup['service']);
+			if ($remote_sent) continue;
+
+			foreach ($backupable_entities as $key => $info) {
+				if (isset($backup[$key])) $entities[] = $key;
+			}
+		}
+
+		return $entities;
 	}
 	
 	/**
@@ -487,7 +812,9 @@ class UpdraftPlus_Backup_History {
 	public static function save_backup($backup_time, $backup_array) {
 		global $updraftplus;
 		$backup_history = self::get_history();
-		$backup_history[$backup_time] = $backup_array;
+
+		$backup_history[$backup_time] = isset($backup_history[$backup_time]) ? apply_filters('updraftplus_merge_backup_history', $backup_array, $backup_history[$backup_time]) : $backup_array;
+		
 		self::save_history($backup_history, false);
 	}
 }

@@ -46,14 +46,14 @@ class UpdraftCentral_Users_Commands extends UpdraftCentral_Commands {
 			'meta_query'=>array(
 				'relation' => 'OR',
 				array(
-						'key' => 'first_name',
-						'value' => $query["search"],
-						'compare' => 'LIKE'
+					'key' => 'first_name',
+					'value' => $query["search"],
+					'compare' => 'LIKE'
 				),
 				array(
-						'key' => 'last_name',
-						'value' => $query["search"],
-						'compare' => 'LIKE'
+					'key' => 'last_name',
+					'value' => $query["search"],
+					'compare' => 'LIKE'
 				),
 			)
 		));

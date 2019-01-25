@@ -1,3 +1,4 @@
+<?php if (!defined('WORDFENCE_VERSION')) { exit; } ?>
 <?php if(! wfUtils::isAdmin()){ exit(); } ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"  dir="ltr" lang="en-US">
 <head>
@@ -66,7 +67,7 @@ function doCurlTest($protocol){
 	curl_setopt ($curl, CURLOPT_WRITEFUNCTION, 'curlWrite');
 	curl_exec($curl);
 	$httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-	if(strpos($curlContent, 'Your site did not send an API key') !== false){
+	if(strpos($curlContent, 'Your site did not send a license key') !== false){
 		echo "Curl connectivity test passed.<br /><br />\n";
 	} else {
 		$curlErrorNo = curl_errno($curl);

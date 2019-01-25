@@ -59,7 +59,7 @@ if (!class_exists('UpdraftPlus_Remote_Communications')) :
 class UpdraftPlus_Remote_Communications {
 
 	// Version numbers relate to versions of this PHP library only (i.e. it's not a protocol support number, and version numbers of other compatible libraries (e.g. JavaScript) are not comparable)
-	public $version = '1.4.14';
+	public $version = '1.4.16';
 
 	private $key_name_indicator;
 
@@ -106,7 +106,7 @@ class UpdraftPlus_Remote_Communications {
 	
 	private $require_message_to_be_understood = false;
 
-	public function __construct($key_name_indicator = 'default', $can_generate = false) {
+	public function __construct($key_name_indicator = 'default') {
 		$this->set_key_name_indicator($key_name_indicator);
 	}
 
@@ -172,7 +172,8 @@ class UpdraftPlus_Remote_Communications {
 			// phpseclib 1.x uses deprecated PHP4-style constructors
 			$this->no_deprecation_warnings_on_php7();
 			if (is_a($updraftplus, 'UpdraftPlus')) {
-				$updraftplus->ensure_phpseclib(array('Crypt_Rijndael', 'Crypt_RSA', 'Crypt_Hash'), array('Crypt/Rijndael', 'Crypt/RSA', 'Crypt/Hash'));
+				$ensure_phpseclib = $updraftplus->ensure_phpseclib(array('Crypt_Rijndael', 'Crypt_RSA', 'Crypt_Hash'), array('Crypt/Rijndael', 'Crypt/RSA', 'Crypt/Hash'));
+				if (is_wp_error($ensure_phpseclib)) return $ensure_phpseclib;
 			} elseif (defined('UPDRAFTPLUS_DIR') && file_exists(UPDRAFTPLUS_DIR.'/vendor/phpseclib/phpseclib/phpseclib')) {
 				$pdir = UPDRAFTPLUS_DIR.'/vendor/phpseclib/phpseclib/phpseclib';
 				if (false === strpos(get_include_path(), $pdir)) set_include_path($pdir.PATH_SEPARATOR.get_include_path());
@@ -195,6 +196,7 @@ class UpdraftPlus_Remote_Communications {
 	private function no_deprecation_warnings_on_php7() {
 		// PHP_MAJOR_VERSION is defined in PHP 5.2.7+
 		// We don't test for PHP > 7 because the specific deprecated element will be removed in PHP 8 - and so no warning should come anyway (and we shouldn't suppress other stuff until we know we need to).
+		// @codingStandardsIgnoreLine
 		if (defined('PHP_MAJOR_VERSION') && PHP_MAJOR_VERSION == 7) {
 			$old_level = error_reporting();
 			// @codingStandardsIgnoreLine
@@ -858,9 +860,7 @@ class UpdraftPlus_Remote_Communications {
 
 		/*
 		In format 1 (legacy/obsolete), the one encrypts (the shared AES key) using one half of the key-pair, and decrypts with the other; whereas the other side of the conversation does the reverse when replying (and uses a different shared AES key). Though this is possible in RSA, this is the wrong thing to do - see https://crypto.stackexchange.com/questions/2123/rsa-encryption-with-private-key-and-decryption-with-a-public-key
-		
 		In format 2, both sides have their own private and public key. The sender encrypts using the other side's public key, and decrypts using its own private key. Messages are signed (the message digest is SHA-256).
-		
 		*/
 
 		// Is this for us?

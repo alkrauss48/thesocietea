@@ -1,4 +1,5 @@
 <?php
+return array();
 /**
  * Bootstrapping File for phpseclib
  *

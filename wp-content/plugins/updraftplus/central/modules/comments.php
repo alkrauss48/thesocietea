@@ -347,9 +347,9 @@ class UpdraftCentral_Comments_Commands extends UpdraftCentral_Commands {
 	public function get_comment_filters() {
 		// Options for comment_types field
 		$comment_types = apply_filters('admin_comment_types_dropdown', array(
-					'comment' => __('Comments'),
-					'pings' => __('Pings'),
-				));
+			'comment' => __('Comments'),
+			'pings' => __('Pings'),
+		));
 				
 		// Options for comment_status field
 		$comment_statuses = array(

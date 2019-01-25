@@ -332,7 +332,7 @@ class UpdraftPlus_BackupModule_openstack_base extends UpdraftPlus_BackupModule {
 		return true;
 	}
 
-	public function delete($files, $data = false, $sizeinfo = array()) {
+	public function delete($files, $data = false, $sizeinfo = array()) {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 
 		global $updraftplus;
 		if (is_string($files)) $files = array($files);
@@ -543,17 +543,19 @@ class UpdraftPlus_BackupModule_openstack_base extends UpdraftPlus_BackupModule {
 	}
 
 	/**
-	 * Get the configuration template
+	 * Get the pre configuration template
 	 *
-	 * @return String - the template, ready for substitutions to be carried out
+	 * @return String - the template
 	 */
-	public function get_configuration_template() {
-		ob_start();
-		$classes = $this->get_css_classes();
+	public function get_pre_configuration_template() {
+
+		global $updraftplus_admin;
+
+		$classes = $this->get_css_classes(false);
+		
 		?>
-		<tr class="<?php echo $classes; ?>">
-			<td></td>
-			<td>
+		<tr class="<?php echo $classes . ' ' . $this->method . '_pre_config_container';?>">
+			<td colspan="2">
 				<?php
 					if (!empty($this->img_url)) {
 					?>
@@ -561,11 +563,7 @@ class UpdraftPlus_BackupModule_openstack_base extends UpdraftPlus_BackupModule {
 					<?php
 					}
 					?>
-				<p><em><?php printf(__('%s is a great choice, because UpdraftPlus supports chunked uploads - no matter how big your site is, UpdraftPlus can upload it a little at a time, and not get thwarted by timeouts.', 'updraftplus'), $this->long_desc);?></em></p></td>
-		</tr>
-		<tr class="<?php echo $classes; ?>">
-			<th></th>
-			<td>
+				<br>
 			<?php
 			// Check requirements.
 			global $updraftplus_admin;
@@ -573,10 +571,23 @@ class UpdraftPlus_BackupModule_openstack_base extends UpdraftPlus_BackupModule {
 				$updraftplus_admin->show_double_warning('<strong>'.__('Warning', 'updraftplus').':</strong> '.sprintf(__('Your web server\'s PHP installation does not included a required module (%s). Please contact your web hosting provider\'s support.', 'updraftplus'), 'mbstring').' '.sprintf(__("UpdraftPlus's %s module <strong>requires</strong> %s. Please do not file any support requests; there is no alternative.", 'updraftplus'), $this->desc, 'mbstring'), $this->method);
 			}
 			$updraftplus_admin->curl_check($this->long_desc, false, $this->method);
+			echo '<br>';
+			$this->get_pre_configuration_middlesection_template();
 			?>
 			</td>
 		</tr>
+
 		<?php
+	}
+
+	/**
+	 * Get the configuration template
+	 *
+	 * @return String - the template, ready for substitutions to be carried out
+	 */
+	public function get_configuration_template() {
+		ob_start();
+		$classes = $this->get_css_classes();
 		$template_str = ob_get_clean();
 		$template_str .= $this->get_configuration_middlesection_template();
 		$template_str .= $this->get_test_button_html($this->desc);

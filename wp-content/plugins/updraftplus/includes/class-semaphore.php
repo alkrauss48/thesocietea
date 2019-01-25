@@ -79,11 +79,43 @@ class UpdraftPlus_Semaphore {
 		return true;
 	}
 
+	public static function ensure_semaphore_exists($semaphore) {
+		// Make sure the options for semaphores exist
+		global $wpdb, $updraftplus;
+		$results = $wpdb->get_results("
+			SELECT option_id
+				FROM $wpdb->options
+				WHERE option_name IN ('updraftplus_locked_$semaphore', 'updraftplus_unlocked_$semaphore', 'updraftplus_last_lock_time_$semaphore', 'updraftplus_semaphore_$semaphore')
+		");
+
+		if (!is_array($results) || count($results) < 3) {
+		
+			if (is_array($results) && count($results) > 0) {
+				$updraftplus->log("Semaphore ($semaphore, ".$wpdb->options.") in an impossible/broken state - fixing (".count($results).")");
+			} else {
+				$updraftplus->log("Semaphore ($semaphore, ".$wpdb->options.") being initialised");
+			}
+			
+			$wpdb->query("
+				DELETE FROM $wpdb->options
+				WHERE option_name IN ('updraftplus_locked_$semaphore', 'updraftplus_unlocked_$semaphore', 'updraftplus_last_lock_time_$semaphore', 'updraftplus_semaphore_$semaphore')
+			");
+			
+			$wpdb->query($wpdb->prepare("
+				INSERT INTO $wpdb->options (option_name, option_value, autoload)
+				VALUES
+				('updraftplus_unlocked_$semaphore', '1', 'no'),
+				('updraftplus_last_lock_time_$semaphore', '%s', 'no'),
+				('updraftplus_semaphore_$semaphore', '0', 'no')
+			", current_time('mysql', 1)));
+		}
+	}
+	
 	/**
 	 * Increment the semaphore.
 	 *
 	 * @param  array $filters
-	 * @return Social_Semaphore
+	 * @return Updraft_Semaphore
 	 */
 	public function increment(array $filters = array()) {
 		global $wpdb;

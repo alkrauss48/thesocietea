@@ -50,4 +50,27 @@ abstract class UpdraftCentral_Commands {
 			'rpcerror'
 		);
 	}
+
+	/**
+	 * Checks whether a backup and a security credentials is required for the given request
+	 *
+	 * @param array $dir The directory location to check
+	 * @return array
+	 */
+	final protected function _get_backup_credentials_settings($dir) {
+		// Do we need to ask the user for filesystem credentials? when installing and/or deleting items in the given directory
+		$filesystem_method = get_filesystem_method(array(), $dir);
+		ob_start();
+		$filesystem_credentials_are_stored = request_filesystem_credentials(site_url());
+		ob_end_clean();
+		$request_filesystem_credentials = ('direct' != $filesystem_method && !$filesystem_credentials_are_stored);
+
+		// Do we need to execute a backup process before installing/managing items
+		$automatic_backups = (class_exists('UpdraftPlus_Options') && class_exists('UpdraftPlus_Addon_Autobackup') && UpdraftPlus_Options::get_updraft_option('updraft_autobackup_default', true)) ? true : false;
+		
+		return array(
+			'request_filesystem_credentials' => $request_filesystem_credentials,
+			'automatic_backups' => $automatic_backups
+		);
+	}
 }

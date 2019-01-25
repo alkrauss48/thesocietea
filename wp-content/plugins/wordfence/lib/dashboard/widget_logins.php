@@ -1,3 +1,4 @@
+<?php if (!defined('WORDFENCE_VERSION')) { exit; } ?>
 <?php //$d is defined here as a wfDashboard instance ?>
 <div class="wf-row">
 	<div class="wf-col-xs-12">
@@ -73,7 +74,7 @@
 												$(self).closest('.wf-recent-logins').find('table').replaceWith(table);
 											}
 											else {
-												WFAD.colorbox('300px', 'An error occurred', 'We encountered an error trying load more data.');
+												WFAD.colorboxModal('300px', 'An error occurred', 'We encountered an error trying load more data.');
 												$(this).closest('.wf-dashboard-item-list-text').fadeIn();
 											}
 										});

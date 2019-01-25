@@ -1,3 +1,4 @@
+<?php if (!defined('WORDFENCE_VERSION')) { exit; } ?>
 <?php //$data is defined here as an array of login attempts: array('t' => timestamp, 'name' => username, 'ip' => IP address) ?>
 <table class="wf-table wf-table-hover">
 	<thead>
@@ -17,7 +18,7 @@
 					echo esc_html(wfUtils::makeTimeAgo(time() - $l['t']) . ' ago');
 				}
 				else {
-					echo esc_html(date_i18n(get_option('date_format') . ' ' . get_option('time_format'), (int) $l['t']));
+					echo esc_html(wfUtils::formatLocalTime(get_option('date_format') . ' ' . get_option('time_format'), (int) $l['t']));
 				}
 				?></td>
 		</tr>

@@ -365,9 +365,11 @@ abstract class Google_Logger_Abstract
     }
 
     if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+      // @codingStandardsIgnoreLine
       $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
 
       if ($this->allowNewLines) {
+        // @codingStandardsIgnoreLine
         $options |= JSON_PRETTY_PRINT;
       }
 

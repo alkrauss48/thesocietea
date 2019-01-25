@@ -87,7 +87,45 @@ class UpdraftPlus_UpdraftCentral_Listener {
 		}
 		
 		add_filter('udrpc_action', array($this, 'udrpc_action'), 10, 5);
+		add_filter('updraftcentral_get_command_info', array($this, 'updraftcentral_get_command_info'), 10, 2);
 
+	}
+
+	/**
+	 * Retrieves command class information and includes class file if class
+	 * is currently not available.
+	 *
+	 * @param  mixed  $response The default response to return if the submitted command does not exists
+	 * @param  string $command  The command to parse and check
+	 * @return array  Contains the following command information "command_php_class", "class_prefix" and "command"
+	 */
+	public function updraftcentral_get_command_info($response, $command) {
+		if (!preg_match('/^([a-z0-9]+)\.(.*)$/', $command, $matches)) return $response;
+		$class_prefix = $matches[1];
+		$command = $matches[2];
+		
+		// We only handle some commands - the others, we let something else deal with
+		if (!isset($this->command_classes[$class_prefix])) return $response;
+
+		$command_php_class = $this->command_classes[$class_prefix];
+		$command_base_class_at = apply_filters('updraftcentral_command_base_class_at', UPDRAFTCENTRAL_CLIENT_DIR.'/commands.php');
+		
+		if (!class_exists('UpdraftCentral_Commands')) include_once($command_base_class_at);
+		
+		// Second parameter has been passed since
+		do_action('updraftcentral_command_class_wanted', $command_php_class);
+		
+		if (!class_exists($command_php_class)) {
+			if (file_exists(UPDRAFTCENTRAL_CLIENT_DIR.'/modules/'.$class_prefix.'.php')) {
+				include_once(UPDRAFTCENTRAL_CLIENT_DIR.'/modules/'.$class_prefix.'.php');
+			}
+		}
+
+		return array(
+			'command_php_class' => $command_php_class,
+			'class_prefix' => $class_prefix,
+			'command' => $command
+		);
 	}
 	
 	/**
@@ -111,32 +149,32 @@ class UpdraftPlus_UpdraftCentral_Listener {
 		}
 	}
 	
+	/**
+	 * WP filter udrpc_action
+	 *
+	 * @param Array	 $response			 - the unfiltered response that will be returned
+	 * @param String $command			 - the command being called
+	 * @param Array	 $data				 - the parameters to the command
+	 * @param String $key_name_indicator - the UC key that is in use
+	 * @param Object $ud_rpc			 - the UDRP object
+	 *
+	 * @return Array - filtered response
+	 */
 	public function udrpc_action($response, $command, $data, $key_name_indicator, $ud_rpc) {
 
 		if (empty($this->receivers[$key_name_indicator])) return $response;
-		$this->initialise_listener_error_handling($key_name_indicator);
+		
+		// This can be used to detect an UpdraftCentral context
+		if (!defined('UPDRAFTCENTRAL_COMMAND')) define('UPDRAFTCENTRAL_COMMAND', $command);
+		
+		$this->initialise_listener_error_handling();
 
-		if (!preg_match('/^([a-z0-9]+)\.(.*)$/', $command, $matches)) return;
-		$class_prefix = $matches[1];
-		$command = $matches[2];
-		
-		// We only handle some commands - the others, we let something else deal with
-		if (!isset($this->command_classes[$class_prefix])) return $response;
+		$command_info = apply_filters('updraftcentral_get_command_info', false, $command);
+		if (!$command_info) return $response;
 
-		$command_php_class = $this->command_classes[$class_prefix];
-		
-		$command_base_class_at = apply_filters('updraftcentral_command_base_class_at', UPDRAFTCENTRAL_CLIENT_DIR.'/commands.php');
-		
-		if (!class_exists('UpdraftCentral_Commands')) include_once($command_base_class_at);
-		
-		// Second parameter has been passed since
-		do_action('updraftcentral_command_class_wanted', $command_php_class);
-		
-		if (!class_exists($command_php_class)) {
-			if (file_exists(UPDRAFTCENTRAL_CLIENT_DIR.'/modules/'.$class_prefix.'.php')) {
-				include_once(UPDRAFTCENTRAL_CLIENT_DIR.'/modules/'.$class_prefix.'.php');
-			}
-		}
+		$class_prefix = $command_info['class_prefix'];
+		$command = $command_info['command'];
+		$command_php_class = $command_info['command_php_class'];
 		
 		if (empty($this->commands[$class_prefix])) {
 			if (class_exists($command_php_class)) {
@@ -160,14 +198,16 @@ class UpdraftPlus_UpdraftCentral_Listener {
 		
 		do_action('updraftcentral_listener_pre_udrpc_action', $command, $command_class, $data, $extra_info);
 		
-		global $updraftplus;
-		if (is_a($updraftplus, 'UpdraftPlus')) $updraftplus->register_wp_http_option_hooks();
+		// Allow the command class to perform any boiler-plate actions.
+		if (is_callable(array($command_class, '_pre_action'))) call_user_func(array($command_class, '_pre_action'), $command, $data, $extra_info);
 		
 		// Despatch
 		$msg = apply_filters('updraftcentral_listener_udrpc_action', call_user_func(array($command_class, $command), $data, $extra_info), $command_class, $class_prefix, $command, $data, $extra_info);
 
-		if (is_a($updraftplus, 'UpdraftPlus')) $updraftplus->register_wp_http_option_hooks(false);
-		
+		if (is_callable(array($command_class, '_post_action'))) call_user_func(array($command_class, '_post_action'), $command, $data, $extra_info);
+
+		do_action('updraftcentral_listener_post_udrpc_action', $command, $command_class, $data, $extra_info);
+				
 		return $this->return_rpc_message($msg);
 	}
 	
@@ -175,7 +215,7 @@ class UpdraftPlus_UpdraftCentral_Listener {
 		return $this->current_udrpc;
 	}
 	
-	private function initialise_listener_error_handling($hash) {
+	private function initialise_listener_error_handling() {
 		$this->ud->error_reporting_stop_when_logged = true;
 		set_error_handler(array($this->ud, 'php_error'), E_ALL & ~E_STRICT);
 		$this->php_events = array();
@@ -184,7 +224,7 @@ class UpdraftPlus_UpdraftCentral_Listener {
 		if (!UpdraftPlus_Options::get_updraft_option('updraft_debug_mode')) return;
 	}
 	
-	public function updraftplus_logline($line, $nonce, $level, $uniq_id) {
+	public function updraftplus_logline($line, $nonce, $level, $uniq_id) {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		if ('notice' === $level && 'php_event' === $uniq_id) {
 			$this->php_events[] = $line;
 		}

@@ -1,12 +1,5 @@
 <?php if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed'); ?>
 
-<div id="ud_massactions" class="updraft-hidden" style="display:none;">
-	<strong><?php _e('Actions upon selected backups', 'updraftplus');?></strong> <br>
-	<div class="updraftplus-remove" style="float: left;"><a href="#" onclick="updraft_deleteallselected(); return false;"><?php _e('Delete', 'updraftplus');?></a></div>
-	<div class="updraft-viewlogdiv"><a href="#" onclick="jQuery('#updraft-navtab-backups-content .updraft_existing_backups .updraft_existing_backups_row').addClass('backuprowselected'); return false;"><?php _e('Select all', 'updraftplus');?></a></div>
-	<div class="updraft-viewlogdiv"><a href="#" onclick="jQuery('#updraft-navtab-backups-content .updraft_existing_backups .updraft_existing_backups_row').removeClass('backuprowselected'); jQuery('#ud_massactions').hide(); return false;"><?php _e('Deselect', 'updraftplus');?></a></div>
-</div>
-
 <div id="updraft-message-modal" title="UpdraftPlus">
 	<div id="updraft-message-modal-innards">
 	</div>
@@ -26,16 +19,15 @@
 			<input type="hidden" name="subaction" value="deleteset">
 			<input type="hidden" name="backup_timestamp" value="0" id="updraft_delete_timestamp">
 			<input type="hidden" name="backup_nonce" value="0" id="updraft_delete_nonce">
-			<div id="updraft-delete-remote-section"><input checked="checked" type="checkbox" name="delete_remote" id="updraft_delete_remote" value="1"> <label for="updraft_delete_remote"><?php _e('Also delete from remote storage', 'updraftplus');?></label><br>
-				<p id="updraft-delete-waitwarning" class="updraft-hidden" style="display:none;"><em><?php _e('Deleting... please allow time for the communications with the remote storage to complete.', 'updraftplus');?></em></p>
-				<p id="updraft-deleted-files-total"></p>
+			<div id="updraft-delete-remote-section">
+				<input checked="checked" type="checkbox" name="delete_remote" id="updraft_delete_remote" value="1"> <label for="updraft_delete_remote"><?php _e('Also delete from remote storage', 'updraftplus');?></label><br>
 			</div>
 		</fieldset>
 	</form>
 </div>
 
 <div id="updraft-restore-modal" title="UpdraftPlus - <?php _e('Restore backup', 'updraftplus');?>">
-	<p><strong><?php _e('Restore backup from', 'updraftplus');?>:</strong> <span class="updraft_restore_date"></span></p>
+	<p><strong><?php _e('Restore files from', 'updraftplus');?>:</strong> <span class="updraft_restore_date"></span></p>
 
 	<div id="updraft-restore-modal-stage2">
 
@@ -59,7 +51,7 @@
 
 				// The 'off' check is for badly configured setups - http://wordpress.org/support/topic/plugin-wp-super-cache-warning-php-safe-mode-enabled-but-safe-mode-is-off
 				if ($updraftplus->detect_safe_mode()) {
-					echo "<p><em>".__("Your web server has PHP's so-called safe_mode active.", 'updraftplus').' '.__('This makes time-outs much more likely. You are recommended to turn safe_mode off, or to restore only one entity at a time', 'updraftplus').' <a href="'.apply_filters('updraftplus_com_link', "https://updraftplus.com/faqs/i-want-to-restore-but-have-either-cannot-or-have-failed-to-do-so-from-the-wp-admin-console/").'">'.__('or to restore manually', 'updraftplus').'.</a></em></p><br>';
+					echo "<p><em>".__("Your web server has PHP's so-called safe_mode active.", 'updraftplus').' '.__('This makes time-outs much more likely. You are recommended to turn safe_mode off, or to restore only one entity at a time', 'updraftplus').' <a href="'.apply_filters('updraftplus_com_link', "https://updraftplus.com/faqs/i-want-to-restore-but-have-either-cannot-or-have-failed-to-do-so-from-the-wp-admin-console/").'" target="_blank">'.__('or to restore manually', 'updraftplus').'.</a></em></p><br>';
 				}
 
 					$backupable_entities = $updraftplus->get_backupable_file_entities(true, true);
@@ -80,6 +72,11 @@
 				?>
 				<div>
 					<input id="updraft_restore_db" type="checkbox" name="updraft_restore[]" value="db"> <label for="updraft_restore_db"><?php _e('Database', 'updraftplus'); ?></label>
+					<div id="updraft_restorer_dboptions" class="updraft-hidden" style="display:none;"><h4><?php echo sprintf(__('%s restoration options:', 'updraftplus'), __('Database', 'updraftplus')); ?></h4>
+						<?php
+						do_action("updraftplus_restore_form_db");
+						?>
+					</div>
 				</div>
 			</fieldset>
 		</form>

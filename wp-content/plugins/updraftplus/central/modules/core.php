@@ -11,6 +11,94 @@ if (!defined('UPDRAFTCENTRAL_CLIENT_DIR')) die('No access.');
 class UpdraftCentral_Core_Commands extends UpdraftCentral_Commands {
 
 	/**
+	 * Executes a list of submitted commands (multiplexer)
+	 *
+	 * @param Array $query An array containing the commands to execute and a flag to indicate how to handle command execution failure.
+	 * @return Array An array containing the results of the process.
+	 */
+	public function execute_commands($query) {
+
+		try {
+
+			$commands = $query['commands'];
+			$command_results = array();
+			$error_count = 0;
+
+			/**
+			 * Should be one of the following options:
+			 * 1 = Abort on first failure
+			 * 2 = Abort if any command fails
+			 * 3 = Abort if all command fails (default)
+			 */
+			$error_flag = isset($query['error_flag']) ? (int) $query['error_flag'] : 3;
+
+			
+			foreach ($commands as $command => $params) {
+				$command_info = apply_filters('updraftcentral_get_command_info', false, $command);
+				if (!$command_info) {
+					list($_prefix, $_command) = explode('.', $command);
+					$command_results[$_prefix][$_command] = array('response' => 'rpcerror', 'data' => array('code' => 'unknown_rpc_command', 'data' => $command));
+
+					$error_count++;
+					if (1 === $error_flag) break;
+				} else {
+
+					$class_prefix = $command_info['class_prefix'];
+					$action = $command_info['command'];
+					$command_php_class = $command_info['command_php_class'];
+
+					// Instantiate the command class and execute the needed action
+					if (class_exists($command_php_class)) {
+						$instance = new $command_php_class($this->rc);
+
+						if (method_exists($instance, $action)) {
+							$params = empty($params) ? array() : $params;
+							$call_result = call_user_func_array(array($instance, $action), $params);
+
+							$command_results[$command] = $call_result;
+							if ('rpcerror' === $call_result['response'] || (isset($call_result['data']['error']) && $call_result['data']['error'])) {
+								$error_count++;
+								if (1 === $error_flag) break;
+							}
+						}
+					}
+				}
+			}
+
+			if (0 !== $error_count) {
+				// N.B. These error messages should be defined in UpdraftCentral's translation file (dashboard-translations.php)
+				// before actually using this multiplexer function.
+				$message = 'general_command_execution_error';
+
+				switch ($error_flag) {
+					case 1:
+						$message = 'command_execution_aborted';
+						break;
+					case 2:
+						$message = 'failed_to_execute_some_commands';
+						break;
+					case 3:
+						if (count($commands) === $error_count) {
+							$message = 'failed_to_execute_all_commands';
+						}
+						break;
+					default:
+						break;
+				}
+
+				$result = array('error' => true, 'message' => $message, 'values' => $command_results);
+			} else {
+				$result = $command_results;
+			}
+
+		} catch (Exception $e) {
+			$result = array('error' => true, 'message' => $e->getMessage());
+		}
+
+		return $this->_response($result);
+	}
+
+	/**
 	 * Validates the credentials entered by the user
 	 *
 	 * @param  array $creds an array of filesystem credentials
@@ -276,7 +364,7 @@ class UpdraftCentral_Core_Commands extends UpdraftCentral_Commands {
 	/**
 	 * Get disk space used
 	 *
-	 * @uses UpdraftPlus_Admin::get_disk_space_used()
+	 * @uses UpdraftPlus_Filesystem_Functions::get_disk_space_used()
 	 *
 	 * @param String $entity - the entity to count (e.g. 'plugins', 'themes')
 	 *
@@ -284,9 +372,9 @@ class UpdraftCentral_Core_Commands extends UpdraftCentral_Commands {
 	 */
 	public function count($entity) {
 	
-		if (false === ($updraftplus_admin = $this->_load_ud_admin())) return $this->_generic_error_response('no_updraftplus');
+		if (!class_exists('UpdraftPlus_Filesystem_Functions')) return $this->_generic_error_response('no_updraftplus');
 
-		$response = $updraftplus_admin->get_disk_space_used($entity);
+		$response = UpdraftPlus_Filesystem_Functions::get_disk_space_used($entity);
 
 		return $this->_response($response);
 	}

@@ -9,18 +9,32 @@ class wfIssues {
 	const ISSUE_IGNOREC = 'ic';
 	
 	//Possible status message states
-	const STATUS_NONE = 'n';
+	const STATUS_NONE = 'n'; //Default state before running
 	
-	const STATUS_SKIPPED = 's';
-	const STATUS_IGNORED = 'i';
+	const STATUS_SKIPPED = 's'; //The scan job was skipped because it didn't need to run
+	const STATUS_IGNORED = 'i'; //The scan job found an issue, but it matched an entry in the ignore list
 	
-	const STATUS_PROBLEM = 'p';
-	const STATUS_SECURE = 'r';
+	const STATUS_PROBLEM = 'p'; //The scan job found an issue
+	const STATUS_SECURE = 'r'; //The scan job found no issues
 	
-	const STATUS_FAILED = 'f';
-	const STATUS_SUCCESS = 'c';
+	const STATUS_FAILED = 'f'; //The scan job failed
+	const STATUS_SUCCESS = 'c'; //The scan job succeeded
 	
 	const STATUS_PAIDONLY = 'x';
+	
+	//Possible scan failure types
+	const SCAN_FAILED_GENERAL = 'general';
+	const SCAN_FAILED_TIMEOUT = 'timeout';
+	const SCAN_FAILED_DURATION_REACHED = 'duration';
+	const SCAN_FAILED_VERSION_CHANGE = 'versionchange';
+	const SCAN_FAILED_FORK_FAILED = 'forkfailed';
+	const SCAN_FAILED_CALLBACK_TEST_FAILED = 'callbackfailed';
+	const SCAN_FAILED_START_TIMEOUT = 'starttimeout';
+	
+	const SCAN_FAILED_API_SSL_UNAVAILABLE = 'sslunavailable';
+	const SCAN_FAILED_API_CALL_FAILED = 'apifailed';
+	const SCAN_FAILED_API_INVALID_RESPONSE = 'apiinvalid';
+	const SCAN_FAILED_API_ERROR_RESPONSE = 'apierror';
 	
 	private $db = false;
 
@@ -34,6 +48,10 @@ class wfIssues {
 	public $totalCriticalIssues = 0;
 	public $totalWarningIssues = 0;
 	public $totalIgnoredIssues = 0;
+	
+	public static function validIssueTypes() {
+		return array('checkHowGetIPs', 'checkSpamIP', 'commentBadURL', 'configReadable', 'coreUnknown', 'database', 'diskSpace', 'dnsChange', 'easyPassword', 'file', 'geoipSupport', 'knownfile', 'optionBadURL', 'postBadTitle', 'postBadURL', 'publiclyAccessible', 'spamvertizeCheck', 'suspiciousAdminUsers', 'timelimit', 'wfPluginAbandoned', 'wfPluginRemoved', 'wfPluginUpgrade', 'wfPluginVulnerable', 'wfThemeUpgrade', 'wfUpgrade', 'wpscan_directoryList', 'wpscan_fullPathDiscl');
+	}
 	
 	public static function statusPrep(){
 		wfConfig::set_ser('wfStatusStartMsgs', array());
@@ -105,11 +123,47 @@ class wfIssues {
 	}
 	
 	/**
-	 * Returns false if the scan has not been detected as failing. If it has, it returns the timestamp of the last status update.
+	 * Returns false if the scan has not been detected as failed. If it has, returns a constant corresponding to the reason.
 	 * 
-	 * @return bool|int
+	 * @return bool|string
 	 */
 	public static function hasScanFailed() {
+		$lastStatusUpdate = self::lastScanStatusUpdate();
+		if ($lastStatusUpdate !== false && wfScanner::shared()->isRunning()) {
+			$threshold = WORDFENCE_SCAN_FAILURE_THRESHOLD;
+			if (time() - $lastStatusUpdate > $threshold) {
+				return self::SCAN_FAILED_TIMEOUT;
+			}
+		}
+		
+		$scanStartAttempt = wfConfig::get('scanStartAttempt', 0);
+		if ($scanStartAttempt && time() - $scanStartAttempt > WORDFENCE_SCAN_START_FAILURE_THRESHOLD) {
+			return self::SCAN_FAILED_START_TIMEOUT;
+		}
+		
+		$recordedFailure = wfConfig::get('lastScanFailureType');
+		switch ($recordedFailure) {
+			case self::SCAN_FAILED_GENERAL:
+			case self::SCAN_FAILED_DURATION_REACHED:
+			case self::SCAN_FAILED_VERSION_CHANGE:
+			case self::SCAN_FAILED_FORK_FAILED:
+			case self::SCAN_FAILED_CALLBACK_TEST_FAILED:
+			case self::SCAN_FAILED_API_SSL_UNAVAILABLE:
+			case self::SCAN_FAILED_API_CALL_FAILED:
+			case self::SCAN_FAILED_API_INVALID_RESPONSE:
+			case self::SCAN_FAILED_API_ERROR_RESPONSE:
+				return $recordedFailure;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Returns false if the scan has not been detected as timed out. If it has, it returns the timestamp of the last status update.
+	 *
+	 * @return bool|int
+	 */
+	public static function lastScanStatusUpdate() {
 		if (wfConfig::get('wf_scanLastStatusTime', 0) === 0) {
 			return false;
 		}
@@ -118,13 +172,25 @@ class wfIssues {
 		return (time() > wfConfig::get('wf_scanLastStatusTime', 0) + $threshold) ? wfConfig::get('wf_scanLastStatusTime', 0) : false;
 	}
 	
+	/**
+	 * Returns the singleton wfIssues.
+	 *
+	 * @return wfIssues
+	 */
+	public static function shared() {
+		static $_issues = null;
+		if ($_issues === null) {
+			$_issues = new wfIssues();
+		}
+		return $_issues;
+	}
+	
 	public function __sleep(){ //Same order here as vars above
 		return array('updateCalled', 'issuesTable', 'pendingIssuesTable', 'maxIssues', 'newIssues', 'totalIssues', 'totalCriticalIssues', 'totalWarningIssues', 'totalIgnoredIssues');
 	}
 	public function __construct(){
-		global $wpdb;
-		$this->issuesTable = $wpdb->base_prefix . 'wfIssues';
-		$this->pendingIssuesTable = $wpdb->base_prefix . 'wfPendingIssues';
+		$this->issuesTable = wfDB::networkTable('wfIssues');
+		$this->pendingIssuesTable = wfDB::networkTable('wfPendingIssues');
 		$this->maxIssues = wfConfig::get('scan_maxIssues', 0);
 	}
 	public function __wakeup(){
@@ -205,7 +271,7 @@ class wfIssues {
 		
 		if (isset($updateID)) {
 			$this->getDB()->queryWrite(
-				"UPDATE {$table} SET status = '%s', type = '%s', severity = %d, ignoreP = '%s', ignoreC = '%s', shortMsg = '%s', longMsg = '%s', data = '%s' WHERE id = %d",
+				"UPDATE {$table} SET lastUpdated = UNIX_TIMESTAMP(), status = '%s', type = '%s', severity = %d, ignoreP = '%s', ignoreC = '%s', shortMsg = '%s', longMsg = '%s', data = '%s' WHERE id = %d",
 				'new',
 				$type,
 				$severity,
@@ -218,7 +284,7 @@ class wfIssues {
 			return self::ISSUE_UPDATED;
 		}
 		
-		$this->getDB()->queryWrite("INSERT INTO {$table} (time, status, type, severity, ignoreP, ignoreC, shortMsg, longMsg, data) VALUES (unix_timestamp(), '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s')",
+		$this->getDB()->queryWrite("INSERT INTO {$table} (time, lastUpdated, status, type, severity, ignoreP, ignoreC, shortMsg, longMsg, data) VALUES (UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s')",
 			'new',
 			$type,
 			$severity,
@@ -246,9 +312,13 @@ class wfIssues {
 	public function ignoreAllNew(){
 		$this->getDB()->queryWrite("update " . $this->issuesTable . " set status='ignoreC' where status='new'");
 	}
-	public function emailNewIssues($timeLimitReached = false){
+	public function emailNewIssues($timeLimitReached = false, $scanController = false){
 		$level = wfConfig::getAlertLevel();
 		$emails = wfConfig::getAlertEmails();
+		if (!count($emails)) {
+			return;
+		}
+		
 		$shortSiteURL = preg_replace('/^https?:\/\//i', '', site_url());
 		$subject = "[Wordfence Alert] Problems found on $shortSiteURL";
 
@@ -304,9 +374,13 @@ class wfIssues {
 			'issuesNotShown' => $overflowCount,
 			'adminURL' => get_admin_url(),
 			'timeLimitReached' => $timeLimitReached,
+			'scanController' => ($scanController ? $scanController : wfScanner::shared()),
 			));
 		
-		wp_mail(implode(',', $emails), $subject, $content, 'Content-type: text/html');
+		foreach ($emails as $email) {
+			$uniqueContent = str_replace('<!-- ##UNSUBSCRIBE## -->', sprintf(__('No longer an administrator for this site? <a href="%s" target="_blank">Click here</a> to stop receiving security alerts.', 'wordfence'), wfUtils::getSiteBaseURL() . '?_wfsf=removeAlertEmail&jwt=' . wfUtils::generateJWT(array('email' => $email))), $content);
+			wp_mail($email, $subject, $uniqueContent, 'Content-type: text/html');
+		}
 	}
 	public function deleteIssue($id){ 
 		$this->getDB()->queryWrite("delete from " . $this->issuesTable . " where id=%d", $id);
@@ -332,18 +406,29 @@ class wfIssues {
 		}
 		return $result;
 	}
-	public function getIssues($offset = 0, $limit = 100){
+	public function getIssues($offset = 0, $limit = 100, $ignoredOffset = 0, $ignoredLimit = 100) {
 		/** @var wpdb $wpdb */
 		global $wpdb;
+		
+		$siteCleaningTypes = array('file', 'checkGSB', 'checkSpamIP', 'commentBadURL', 'dnsChange', 'knownfile', 'optionBadURL', 'postBadTitle', 'postBadURL', 'spamvertizeCheck', 'suspiciousAdminUsers');
+		$sortTagging = 'CASE';
+		foreach ($siteCleaningTypes as $index => $t) {
+			$sortTagging .= ' WHEN type = \'' . esc_sql($t) . '\' THEN ' . ((int) $index);
+		}
+		$sortTagging .= ' ELSE 999 END';
+		
 		$ret = array(
 			'new' => array(),
 			'ignored' => array()
 			);
 		$userIni = ini_get('user_ini.filename');
-		$q1 = $this->getDB()->querySelect("select * from " . $this->issuesTable . " order by time desc LIMIT %d,%d", $offset, $limit);
-		foreach($q1 as $i){
+		$q1 = $this->getDB()->querySelect("SELECT *, {$sortTagging} AS sortTag FROM " . $this->issuesTable . " WHERE status = 'new' ORDER BY severity ASC, sortTag ASC, type ASC, time DESC LIMIT %d,%d", $offset, $limit);
+		$q2 = $this->getDB()->querySelect("SELECT *, {$sortTagging} AS sortTag FROM " . $this->issuesTable . " WHERE status = 'ignoreP' OR status = 'ignoreC' ORDER BY severity ASC, sortTag ASC, type ASC, time DESC LIMIT %d,%d", $ignoredOffset, $ignoredLimit);
+		$q = array_merge($q1, $q2);
+		foreach($q as $i){
 			$i['data'] = unserialize($i['data']);
 			$i['timeAgo'] = wfUtils::makeTimeAgo(time() - $i['time']);
+			$i['displayTime'] = wfUtils::formatLocalTime(get_option('date_format') . ' ' . get_option('time_format'), $i['time']);
 			$i['longMsg'] = wp_kses($i['longMsg'], 'post');
 			if($i['status'] == 'new'){
 				$ret['new'][] = $i;
@@ -374,11 +459,14 @@ class wfIssues {
 				if ($issueList[$i]['type'] == 'database') {
 					$issueList[$i]['data']['optionExists'] = false;
 					if (!empty($issueList[$i]['data']['site_id'])) {
-						$prefix = $wpdb->get_blog_prefix($issueList[$i]['data']['site_id']);
-						$issueList[$i]['data']['optionExists'] = $wpdb->get_var($wpdb->prepare("SELECT count(*) FROM {$prefix}options WHERE option_name = %s", $issueList[$i]['data']['option_name'])) > 0;
+						$table_options = wfDB::blogTable('options', $issueList[$i]['data']['site_id']);
+						$issueList[$i]['data']['optionExists'] = $wpdb->get_var($wpdb->prepare("SELECT count(*) FROM {$table_options} WHERE option_name = %s", $issueList[$i]['data']['option_name'])) > 0;
 					}
 				}
 				$issueList[$i]['issueIDX'] = $i;
+				if (isset($issueList[$i]['data']['cType'])) {
+					$issueList[$i]['data']['ucType'] = ucwords($issueList[$i]['data']['cType']);
+				}
 			}
 		}
 		return $ret; //array of lists of issues by status
@@ -392,11 +480,38 @@ class wfIssues {
 		}
 		return $issues;
 	}
+	public function getFixableIssueCount() {
+		global $wpdb;
+		$issues = $this->getDB()->querySelect("SELECT * FROM {$this->issuesTable} WHERE data LIKE '%s:6:\"canFix\";b:1;%'");
+		$count = 0;
+		foreach ($issues as $i) {
+			$i['data'] = unserialize($i['data']);
+			if (isset($i['data']['canFix']) && $i['data']['canFix']) {
+				$count++;
+			}
+		}
+		return $count;
+	}
+	public function getDeleteableIssueCount() {
+		global $wpdb;
+		$issues = $this->getDB()->querySelect("SELECT * FROM {$this->issuesTable} WHERE data LIKE '%s:9:\"canDelete\";b:1;%'");
+		$count = 0;
+		foreach ($issues as $i) {
+			$i['data'] = unserialize($i['data']);
+			if (isset($i['data']['canDelete']) && $i['data']['canDelete']) {
+				$count++;
+			}
+		}
+		return $count;
+	}
 	public function getIssueCount() {
 		return (int) $this->getDB()->querySingle("select COUNT(*) from " . $this->issuesTable . " WHERE status = 'new'");
 	}
 	public function getPendingIssueCount() {
 		return (int) $this->getDB()->querySingle("select COUNT(*) from " . $this->pendingIssuesTable . " WHERE status = 'new'");
+	}
+	public function getLastIssueUpdateTimestamp() {
+		return (int) $this->getDB()->querySingle("select MAX(lastUpdated) from " . $this->issuesTable);
 	}
 	public function reconcileUpgradeIssues($report = null, $useCachedValued = false) {
 		if ($report === null) {
@@ -453,77 +568,6 @@ class wfIssues {
 		
 		wfScanEngine::refreshScanNotification($this);
 	}
-	public function updateSummaryItem($key, $val){
-		$arr = wfConfig::get_ser('wf_summaryItems', array());
-		$arr[$key] = $val;
-		$arr['lastUpdate'] = time();
-		wfConfig::set_ser('wf_summaryItems', $arr);
-	}
-	public function getSummaryItem($key){
-		$arr = wfConfig::get_ser('wf_summaryItems', array());
-		if(array_key_exists($key, $arr)){
-			return $arr[$key];
-		} else { return ''; }
-	}
-	public function summaryUpdateRequired(){
-		$last = $this->getSummaryItem('lastUpdate');
-		if( (! $last) || (time() - $last > (86400 * 7))){
-			return true;
-		}
-		return false;
-	}
-	public function getSummaryItems(){
-		if(! $this->updateCalled){
-			$this->updateCalled = true;
-			$this->updateSummaryItems();
-		}
-		$arr = wfConfig::get_ser('wf_summaryItems', array());
-		//$arr['scanTimeAgo'] = wfUtils::makeTimeAgo(sprintf('%.0f', time() - $arr['scanTime']));
-		$arr['scanRunning'] = wfUtils::isScanRunning() ? '1' : '0';
-		$arr['scheduledScansEnabled'] = wfConfig::get('scheduledScansEnabled');
-		$secsToGo = wp_next_scheduled('wordfence_scheduled_scan') - time();
-		if($secsToGo < 1){
-			$nextRun = 'now';
-		} else {
-			$nextRun = wfUtils::makeTimeAgo($secsToGo) . ' from now';
-		}
-		$arr['nextRun'] = $nextRun;
-
-		$arr['totalCritical'] = $this->getDB()->querySingle("select count(*) as cnt from " . $this->issuesTable . " where status='new' and severity=1");
-		$arr['totalWarning'] = $this->getDB()->querySingle("select count(*) as cnt from " . $this->issuesTable . " where status='new' and severity=2");
-
-		return $arr;
-	}
-	private function updateSummaryItems(){
-		global $wpdb;
-		$dat = array();
-		$users = $wpdb->get_col("SELECT $wpdb->users.ID FROM $wpdb->users");
-		$dat['totalUsers'] = sizeof($users);
-		$res1 = $wpdb->get_col("SELECT count(*) as cnt FROM $wpdb->posts where post_type='page' and post_status NOT IN ('auto-draft')"); $dat['totalPages'] = $res1['0'];
-		$res1 = $wpdb->get_col("SELECT count(*) as cnt FROM $wpdb->posts where post_type='post' and post_status NOT IN ('auto-draft')"); $dat['totalPosts'] = $res1['0'];
-		$res1 = $wpdb->get_col("SELECT count(*) as cnt FROM $wpdb->comments"); $dat['totalComments'] = $res1['0'];
-		$res1 = $wpdb->get_col("SELECT count(*) as cnt FROM $wpdb->term_taxonomy where taxonomy='category'"); $dat['totalCategories'] = $res1['0'];
-		$res1 = $wpdb->get_col("SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE()"); $dat['totalTables'] = sizeof($res1);
-		$totalRows = 0;
-		foreach($res1 as $table){
-			$res2 = $wpdb->get_col("select count(*) from `$table`");
-			if(isset($res2[0]) ){
-				$totalRows += $res2[0];
-			}
-		}
-		$dat['totalRows'] = $totalRows;
-		$arr = wfConfig::get_ser('wf_summaryItems', array());
-		foreach($dat as $key => $val){
-			$arr[$key] = $val;
-		}
-		wfConfig::set_ser('wf_summaryItems', $arr);
-	}
-	public function setScanTimeNow(){
-		$this->updateSummaryItem('scanTime', microtime(true));
-	}
-	public function getScanTime(){
-		return $this->getSummaryItem('scanTime');
-	}
 	private function getDB(){
 		if(! $this->db){
 			$this->db = new wfDB();
@@ -531,5 +575,3 @@ class wfIssues {
 		return $this->db;
 	}
 }
-
-?>

@@ -4,7 +4,7 @@
 
 /**
  *
- * Copyright (c) 2012-5, David Anderson (https://www.simbahosting.co.uk).  All rights reserved.
+ * Copyright (c) 2012-9, David Anderson (https://www.simbahosting.co.uk).  All rights reserved.
  * Portions copyright (c) 2011, Donovan Schönknecht.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,6 +58,8 @@ class UpdraftPlus_S3_Compat {
 	private $__access_key = null; // AWS Access key
 
 	private $__secret_key = null; // AWS Secret key
+	
+	private $__session_token = null;
 
 	private $__ssl_key = null;
 
@@ -80,7 +82,7 @@ class UpdraftPlus_S3_Compat {
 
 	// SSL CURL SSL options - only needed if you are experiencing problems with your OpenSSL configuration
 	public $ssl_key = null;
-
+	
 	public $ssl_cert = null;
 
 	public $ssl_ca_cert = null;
@@ -91,16 +93,18 @@ class UpdraftPlus_S3_Compat {
 	/**
 	 * Constructor - if you're not using the class statically
 	 *
-	 * @param string         $access_key  Access key
-	 * @param string         $secret_key  Secret key
-	 * @param boolean        $use_ssl     Enable SSL
-	 * @param string|boolean $ssl_ca_cert Certificate authority (true = bundled Guzzle version; false = no verify, 'system' = system version; otherwise, path)
-	 * @param Null|String	 $endpoint    Endpoint (if omitted, it will be set by the SDK using the region)
+	 * @param string         $access_key    Access key
+	 * @param string         $secret_key    Secret key
+	 * @param boolean        $use_ssl       Enable SSL
+	 * @param string|boolean $ssl_ca_cert   Certificate authority (true = bundled Guzzle version; false = no verify, 'system' = system version; otherwise, path)
+	 * @param Null|String    $endpoint      Endpoint (if omitted, it will be set by the SDK using the region)
+	 * @param Null|String    $session_token The session token returned by AWS for temporary credentials access
+	 * @param Null|String    $region        Region. Currently unused, but harmonised with UpdraftPlus_S3 class
 	 * @return void
 	 */
-	public function __construct($access_key = null, $secret_key = null, $use_ssl = true, $ssl_ca_cert = true, $endpoint = null) {
+	public function __construct($access_key = null, $secret_key = null, $use_ssl = true, $ssl_ca_cert = true, $endpoint = null, $session_token = null, $region = null) {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		if (null !== $access_key && null !== $secret_key)
-			$this->setAuth($access_key, $secret_key);
+			$this->setAuth($access_key, $secret_key, $session_token);
 
 		$this->use_ssl = $use_ssl;
 		$this->ssl_ca_cert = $ssl_ca_cert;
@@ -126,6 +130,10 @@ class UpdraftPlus_S3_Compat {
 			$opts['region'] = $this->region;
 		}
 
+		if ($session_token) {
+		  $opts['token'] = $session_token;
+		}
+	
 		if ($use_ssl) $opts['ssl.certificate_authority'] = $ssl_ca_cert;
 
 		$this->client = Aws\S3\S3Client::factory($opts);
@@ -134,13 +142,15 @@ class UpdraftPlus_S3_Compat {
 	/**
 	 * Set AWS access key and secret key
 	 *
-	 * @param string $access_key Access key
-	 * @param string $secret_key Secret key
+	 * @param string      $access_key    Access key
+	 * @param string      $secret_key    Secret key
+	 * @param null|string $session_token The session token returned by AWS for temporary credentials access
 	 * @return void
 	 */
-	public function setAuth($access_key, $secret_key) {
+	public function setAuth($access_key, $secret_key, $session_token = null) {
 		$this->__access_key = $access_key;
 		$this->__secret_key = $secret_key;
+		$this->__session_token = $session_token;
 	}
 
 	/**
@@ -224,10 +234,10 @@ class UpdraftPlus_S3_Compat {
 
 // $verify_peer = ($validate) ? true : false;
 // $verify_host = ($validate) ? 2 : 0;
-// 
+//
 // $this->config['scheme'] = 'https';
 // $this->client->setConfig($this->config);
-// 
+//
 // $this->client->setSslVerification($validate, $verify_peer, $verify_host);
 
 
@@ -250,7 +260,8 @@ class UpdraftPlus_S3_Compat {
 	 * @param string $ssl_ca_cert SSL CA cert (only required if you are having problems with your system CA cert)
 	 * @return void
 	 */
-	public function setSSLAuth($ssl_cert = null, $ssl_key = null, $ssl_ca_cert = null) {
+	public function setSSLAuth($ssl_cert = null, $ssl_key = null, $ssl_ca_cert = null) {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+
 		if (!$this->use_ssl) return;
 
 		if (!$this->use_ssl_validation) {
@@ -258,6 +269,8 @@ class UpdraftPlus_S3_Compat {
 		} else {
 			if (!$ssl_ca_cert) {
 				$client = $this->client;
+				// "Static class properties and methods, as well as class constants, could not be accessed using a dynamic (variable) classname in PHP 5.2 or earlier." But the present file is not loaded in PHP 5.2.
+				// @codingStandardsIgnoreLine
 				$this->config[$client::SSL_CERT_AUTHORITY] = false;
 				$this->client->setConfig($this->config);
 			} else {
@@ -348,7 +361,7 @@ class UpdraftPlus_S3_Compat {
 	 * @param  boolean $return_common_prefixes Set to true to return CommonPrefixes
 	 * @return array
 	 */
-	public function getBucket($bucket, $prefix = null, $marker = null, $max_keys = null, $delimiter = null, $return_common_prefixes = false) {
+	public function getBucket($bucket, $prefix = null, $marker = null, $max_keys = null, $delimiter = null, $return_common_prefixes = false) {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		try {
 			if (0 == $max_keys) $max_keys = null;
 			
@@ -487,7 +500,7 @@ class UpdraftPlus_S3_Compat {
 	 * @param constant $storage_class   Storage class constant
 	 * @return string | false
 	 */
-	public function initiateMultipartUpload($bucket, $uri, $acl = self::ACL_PRIVATE, $meta_headers = array(), $request_headers = array(), $storage_class = self::STORAGE_CLASS_STANDARD) {
+	public function initiateMultipartUpload($bucket, $uri, $acl = self::ACL_PRIVATE, $meta_headers = array(), $request_headers = array(), $storage_class = self::STORAGE_CLASS_STANDARD) {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		$vars = array(
 			'ACL' => $acl,
 			'Bucket' => $bucket,
@@ -659,7 +672,7 @@ class UpdraftPlus_S3_Compat {
 	 * @param string   $content_type Content type
 	 * @return boolean returns either true of false
 	 */
-	public function putObjectString($string, $bucket, $uri, $acl = self::ACL_PRIVATE, $meta_headers = array(), $content_type = 'text/plain') {
+	public function putObjectString($string, $bucket, $uri, $acl = self::ACL_PRIVATE, $meta_headers = array(), $content_type = 'text/plain') { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- legacy function
 		try {
 			$result = $this->client->putObject(array(
 				'Bucket' => $bucket,

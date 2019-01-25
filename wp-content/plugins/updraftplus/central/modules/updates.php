@@ -58,6 +58,55 @@ class UpdraftCentral_Updates_Commands extends UpdraftCentral_Commands {
 	}
 
 	/**
+	 * Updates a plugin. A facade method that exposes a private updates
+	 * feature for other modules to consume.
+	 *
+	 * @param string $plugin Specific plugin to be updated
+	 * @param string $slug   Unique key passed for updates
+	 *
+	 * @return array
+	 */
+	public function update_plugin($plugin, $slug) {
+		return $this->_update_plugin($plugin, $slug);
+	}
+
+	/**
+	 * Updates a theme. A facade method that exposes a private updates
+	 * feature for other modules to consume.
+	 *
+	 * @param string $theme Specific theme to be updated
+	 *
+	 * @return array
+	 */
+	public function update_theme($theme) {
+		return $this->_update_theme($theme);
+	}
+
+	/**
+	 * Gets available updates for a certain entity (e.g. plugin or theme). A facade method that
+	 * exposes a private updates feature for other modules to consume.
+	 *
+	 * @param string $entity The name of the entity that this request is intended for (e.g. themes or plugins)
+	 *
+	 * @return array
+	 */
+	public function get_item_updates($entity) {
+		$updates = array();
+		switch ($entity) {
+			case 'themes':
+				wp_update_themes();
+				$updates = $this->maybe_add_third_party_items(get_theme_updates(), 'theme');
+				break;
+			case 'plugins':
+				wp_update_plugins();
+				$updates = $this->maybe_add_third_party_items(get_plugin_updates(), 'plugin');
+				break;
+		}
+
+		return $updates;
+	}
+
+	/**
 	 * Mostly from wp_ajax_update_plugin() in wp-admin/includes/ajax-actions.php (WP 4.5.2)
 	 * Code-formatting style has been retained from the original, for ease of comparison/updating
 	 *

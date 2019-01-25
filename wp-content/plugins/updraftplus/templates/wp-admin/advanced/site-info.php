@@ -35,13 +35,20 @@
 	$updraftplus_admin->settings_debugrow('WP_PLUGIN_DIR:', htmlspecialchars(WP_PLUGIN_DIR));
 	$updraftplus_admin->settings_debugrow('Table prefix:', htmlspecialchars($updraftplus->get_table_prefix()));
 
-	$peak_memory_usage = memory_get_peak_usage(true)/1024/1024;
-	$memory_usage = memory_get_usage(true)/1024/1024;
+	$updraftplus_admin->settings_debugrow(__('Web-server disk space in use by UpdraftPlus', 'updraftplus').':', '<span class="updraft_diskspaceused">'.UpdraftPlus_Filesystem_Functions::get_disk_space_used('updraft').'</span> <a class="updraft_diskspaceused_update" href="'.UpdraftPlus::get_current_clean_url().'">'.__('refresh', 'updraftplus').'</a>');
+
+	$peak_memory_usage = memory_get_peak_usage(true)/1048576;
+	$memory_usage = memory_get_usage(true)/1048576;
 	$updraftplus_admin->settings_debugrow(__('Peak memory usage', 'updraftplus').':', $peak_memory_usage.' MB');
 	$updraftplus_admin->settings_debugrow(__('Current memory usage', 'updraftplus').':', $memory_usage.' MB');
 	$updraftplus_admin->settings_debugrow(__('Memory limit', 'updraftplus').':', htmlspecialchars(ini_get('memory_limit')));
 	$updraftplus_admin->settings_debugrow(sprintf(__('%s version:', 'updraftplus'), 'PHP'), htmlspecialchars(phpversion()).' - <a href="admin-ajax.php?page=updraftplus&amp;action=updraft_ajax&amp;subaction=phpinfo&amp;nonce='.wp_create_nonce('updraftplus-credentialtest-nonce').'" id="updraftplus-phpinfo">'.__('show PHP information (phpinfo)', 'updraftplus').'</a>');
-	$updraftplus_admin->settings_debugrow(sprintf(__('%s version:', 'updraftplus'), 'MySQL'), htmlspecialchars($wpdb->db_version()));
+	
+	$db_version = $wpdb->get_var('SELECT VERSION()');
+	// WPDB::db_version() uses mysqli_get_server_info() ; see: https://github.com/joomla/joomla-cms/issues/9062
+	if ('' == $db_version) $db_version = $wpdb->db_version();
+	
+	$updraftplus_admin->settings_debugrow(sprintf(__('%s version:', 'updraftplus'), 'MySQL'), htmlspecialchars($db_version));
 	if (function_exists('curl_version') && function_exists('curl_exec')) {
 		$cv = curl_version();
 		$cvs = $cv['version'].' / SSL: '.$cv['ssl_version'].' / libz: '.$cv['libz_version'];
@@ -52,7 +59,7 @@
 	$updraftplus_admin->settings_debugrow(sprintf(__('%s version:', 'updraftplus'), 'OpenSSL'), defined('OPENSSL_VERSION_TEXT') ? OPENSSL_VERSION_TEXT : '-');
 	$updraftplus_admin->settings_debugrow('MCrypt:', function_exists('mcrypt_encrypt') ? __('Yes') : __('No'));
 	
-	if (version_compare(phpversion(), '5.2.0', '>=') && extension_loaded('zip')) {
+	if (version_compare(PHP_VERSION, '5.2.0', '>=') && extension_loaded('zip')) {
 		$ziparchive_exists = __('Yes', 'updraftplus');
 	} else {
 		// First do class_exists, because method_exists still sometimes segfaults due to a rare PHP bug
@@ -88,13 +95,13 @@
 		$updraftplus_admin->settings_debugrow(__('Plugins for debugging:', 'updraftplus'), '<a href="'.wp_nonce_url(self_admin_url('update.php?action=install-plugin&amp;updraftplus_noautobackup=1&amp;plugin=wp-crontrol'), 'install-plugin_wp-crontrol').'">WP Crontrol</a> | <a href="'.wp_nonce_url(self_admin_url('update.php?action=install-plugin&amp;updraftplus_noautobackup=1&amp;plugin=sql-executioner'), 'install-plugin_sql-executioner').'">SQL Executioner</a> | <a href="'.wp_nonce_url(self_admin_url('update.php?action=install-plugin&amp;updraftplus_noautobackup=1&amp;plugin=advanced-code-editor'), 'install-plugin_advanced-code-editor').'">Advanced Code Editor</a> '.(current_user_can('edit_plugins') ? '<a href="'.self_admin_url('plugin-editor.php?file=updraftplus/updraftplus.php').'">(edit UpdraftPlus)</a>' : '').' | <a href="'.wp_nonce_url(self_admin_url('update.php?action=install-plugin&amp;updraftplus_noautobackup=1&amp;plugin=wp-filemanager'), 'install-plugin_wp-filemanager').'">WP Filemanager</a>');
 	}
 
-	$updraftplus_admin->settings_debugrow("HTTP Get: ", '<input id="updraftplus_httpget_uri" type="text" class="call-action"> <a href="#" id="updraftplus_httpget_go">'.__('Fetch', 'updraftplus').'</a> <a href="#" id="updraftplus_httpget_gocurl">'.__('Fetch', 'updraftplus').' (Curl)</a><p id="updraftplus_httpget_results"></p>');
+	$updraftplus_admin->settings_debugrow("HTTP Get: ", '<input id="updraftplus_httpget_uri" type="text" class="call-action"> <a href="'.UpdraftPlus::get_current_clean_url().'" id="updraftplus_httpget_go">'.__('Fetch', 'updraftplus').'</a> <a href="'.UpdraftPlus::get_current_clean_url().'" id="updraftplus_httpget_gocurl">'.__('Fetch', 'updraftplus').' (Curl)</a><p id="updraftplus_httpget_results"></p>');
 
-	$updraftplus_admin->settings_debugrow(__("Call WordPress action:", 'updraftplus'), '<input id="updraftplus_callwpaction" type="text" class="call-action"> <a href="#" id="updraftplus_callwpaction_go">'.__('Call', 'updraftplus').'</a><div id="updraftplus_callwpaction_results"></div>');
+	$updraftplus_admin->settings_debugrow(__("Call WordPress action:", 'updraftplus'), '<input id="updraftplus_callwpaction" type="text" class="call-action"> <a href="'.UpdraftPlus::get_current_clean_url().'" id="updraftplus_callwpaction_go">'.__('Call', 'updraftplus').'</a><div id="updraftplus_callwpaction_results"></div>');
 
-	$updraftplus_admin->settings_debugrow('Site ID:', '(used to identify any Vault connections) <span id="updraft_show_sid">'.htmlspecialchars($updraftplus->siteid()).'</span> - <a href="#" id="updraft_reset_sid">'.__('reset', 'updraftplus')."</a>");
+	$updraftplus_admin->settings_debugrow('Site ID:', '(used to identify any Vault connections) <span id="updraft_show_sid">'.htmlspecialchars($updraftplus->siteid()).'</span> - <a href="'.UpdraftPlus::get_current_clean_url().'" id="updraft_reset_sid">'.__('reset', 'updraftplus')."</a>");
 	
-	$updraftplus_admin->settings_debugrow('', '<a href="admin-ajax.php?page=updraftplus&amp;action=updraft_ajax&amp;subaction=backuphistoryraw&amp;nonce='.wp_create_nonce('updraftplus-credentialtest-nonce').'" id="updraftplus-rawbackuphistory">'.__('Show raw backup and file list', 'updraftplus').'</a>');
+	$updraftplus_admin->settings_debugrow('', '<a href="admin-ajax.php?page=updraftplus&amp;action=updraft_ajax&amp;subaction=backuphistoryraw&amp;nonce='.wp_create_nonce('updraftplus-credentialtest-nonce').'" id="updraftplus-rawbackuphistory">'.__('Show raw backup and file list', 'updraftplus').'</a><br><span class="hidden-in-updraftcentral"><a id="updraftplus-remote-rescan-debug" href="#">'.__('Rescan remote storage', 'updraftplus').' - '.__('log results to console', 'updraftplus').'</a></span>');
 	
 	?>
 	</table>

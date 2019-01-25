@@ -34,7 +34,7 @@
                     include_once(CPTPATH . '/include/class.walkers.php');
                     
                     add_action( 'admin_init',                               array(&$this, 'registerFiles'), 11 );
-                    add_action( 'admin_init',                               array(&$this, 'checkPost'), 10 );
+                    add_action( 'admin_init',                               array(&$this, 'admin_init'), 10 );
                     add_action( 'admin_menu',                               array(&$this, 'addMenu') );
                     
                     add_action('admin_menu',                                array(&$this, 'plugin_options_menu'));
@@ -150,6 +150,10 @@
                     if($ignore  === TRUE)
                         return $orderBy;
                     
+                    //ignore search
+                    if( $query->is_search()  &&  isset( $query->query['s'] )   &&  ! empty ( $query->query['s'] ) )
+                        return( $orderBy );
+                    
                     if (is_admin())
                             {
                                 
@@ -170,11 +174,7 @@
                                     }
                             }
                         else
-                            {
-                                //ignore search
-                                if($query->is_search())
-                                    return($orderBy);
-                                
+                            {   
                                 $order  =   '';
                                 if ($options['use_query_ASC_DESC'] == "1")
                                     $order  =   isset($query->query_vars['order'])  ?   " " . $query->query_vars['order'] : '';
@@ -303,7 +303,7 @@
                     wp_enqueue_style( 'CPTStyleSheets');
                 }
             
-            function checkPost() 
+            function admin_init() 
                 {
                     if ( isset($_GET['page']) && substr($_GET['page'], 0, 17) == 'order-post-types-' ) 
                         {
@@ -313,6 +313,10 @@
                                     wp_die('Invalid post type');
                                 }
                         }
+                        
+                    //add compatibility filters and code
+                    include_once(CPTPATH . '/compatibility/LiteSpeed_Cache.php');
+                    
                 }
             
             
@@ -336,37 +340,43 @@
                     parse_str($_POST['order'], $data);
                     
                     if (is_array($data))
-                    foreach($data as $key => $values ) 
                         {
-                            if ( $key == 'item' ) 
+                            foreach($data as $key => $values ) 
                                 {
-                                    foreach( $values as $position => $id ) 
+                                    if ( $key == 'item' ) 
                                         {
-                                            
-                                            //sanitize
-                                            $id =   (int)$id;
-                                            
-                                            $data = array('menu_order' => $position);
-                                            $data = apply_filters('post-types-order_save-ajax-order', $data, $key, $id);
-                                            
-                                            $wpdb->update( $wpdb->posts, $data, array('ID' => $id) );
+                                            foreach( $values as $position => $id ) 
+                                                {
+                                                    
+                                                    //sanitize
+                                                    $id =   (int)$id;
+                                                    
+                                                    $data = array('menu_order' => $position);
+                                                    $data = apply_filters('post-types-order_save-ajax-order', $data, $key, $id);
+                                                    
+                                                    $wpdb->update( $wpdb->posts, $data, array('ID' => $id) );
+                                                } 
                                         } 
-                                } 
-                            else 
-                                {
-                                    foreach( $values as $position => $id ) 
+                                    else 
                                         {
-                                            
-                                            //sanitize
-                                            $id =   (int)$id;
-                                            
-                                            $data = array('menu_order' => $position, 'post_parent' => str_replace('item_', '', $key));
-                                            $data = apply_filters('post-types-order_save-ajax-order', $data, $key, $id);
-                                            
-                                            $wpdb->update( $wpdb->posts, $data, array('ID' => $id) );
+                                            foreach( $values as $position => $id ) 
+                                                {
+                                                    
+                                                    //sanitize
+                                                    $id =   (int)$id;
+                                                    
+                                                    $data = array('menu_order' => $position, 'post_parent' => str_replace('item_', '', $key));
+                                                    $data = apply_filters('post-types-order_save-ajax-order', $data, $key, $id);
+                                                    
+                                                    $wpdb->update( $wpdb->posts, $data, array('ID' => $id) );
+                                                }
                                         }
                                 }
+                            
                         }
+                        
+                    //trigger action completed
+                    do_action('PTO/order_update_complete');
                 }
                 
                 
@@ -436,6 +446,9 @@
                             
                             $wpdb->update( $wpdb->posts, $data, array('ID' => $id) );
                         }
+                        
+                    //trigger action completed
+                    do_action('PTO/order_update_complete');
                                     
                 }
             

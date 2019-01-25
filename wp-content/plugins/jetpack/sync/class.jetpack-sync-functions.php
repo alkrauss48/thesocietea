@@ -66,7 +66,37 @@ class Jetpack_Sync_Functions {
 	public static function get_post_types() {
 		global $wp_post_types;
 
-		return $wp_post_types;
+		$post_types_without_callbacks = array();
+		foreach ( $wp_post_types as $post_type_name => $post_type ) {
+			$sanitized_post_type = self::sanitize_post_type( $post_type );
+			if ( ! empty( $sanitized_post_type ) ) {
+				$post_types_without_callbacks[ $post_type_name ] = $sanitized_post_type;
+			} else {
+				error_log( 'Jetpack: Encountered a recusive post_type:' . $post_type_name );
+			}
+		}
+		return $post_types_without_callbacks;
+	}
+
+	public static function sanitize_post_type( $post_type ) {
+		// Lets clone the post type object instead of modifing the global one.
+		$sanitized_post_type = array();
+		foreach ( Jetpack_Sync_Defaults::$default_post_type_attributes as $attribute_key => $default_value ) {
+			if ( isset( $post_type->{ $attribute_key } ) ) {
+				$sanitized_post_type[ $attribute_key ] = $post_type->{ $attribute_key };
+			}
+		}
+		return (object) $sanitized_post_type;
+	}
+
+	public static function expand_synced_post_type( $sanitized_post_type, $post_type ) {
+		$post_type = sanitize_key( $post_type );
+		$post_type_object = new WP_Post_Type( $post_type, $sanitized_post_type );
+		$post_type_object->add_supports();
+		$post_type_object->add_rewrite_rules();
+		$post_type_object->add_hooks();
+		$post_type_object->register_taxonomies();
+		return (object) $post_type_object;
 	}
 
 	public static function get_post_type_features() {
@@ -135,6 +165,11 @@ class Jetpack_Sync_Functions {
 		}
 
 		ob_start();
+
+		if ( ! function_exists( 'request_filesystem_credentials' ) ) {
+			require_once( ABSPATH . 'wp-admin/includes/file.php' );
+		}
+
 		$filesystem_credentials_are_stored = request_filesystem_credentials( self_admin_url() );
 		ob_end_clean();
 		if ( $filesystem_credentials_are_stored ) {
@@ -175,7 +210,7 @@ class Jetpack_Sync_Functions {
 		/**
 		 * Allows overriding of the home_url value that is synced back to WordPress.com.
 		 *
-		 * @since 5.2
+		 * @since 5.2.0
 		 *
 		 * @param string $home_url
 		 */
@@ -188,7 +223,7 @@ class Jetpack_Sync_Functions {
 		/**
 		 * Allows overriding of the site_url value that is synced back to WordPress.com.
 		 *
-		 * @since 5.2
+		 * @since 5.2.0
 		 *
 		 * @param string $site_url
 		 */
@@ -306,12 +341,12 @@ class Jetpack_Sync_Functions {
 		return $wp_version;
 	}
 
-	public static function site_icon_url() {
+	public static function site_icon_url( $size = 512 ) {
 		if ( ! function_exists( 'get_site_icon_url' ) || ! has_site_icon() ) {
 			return get_option( 'jetpack_site_icon_url' );
 		}
 
-		return get_site_icon_url();
+		return get_site_icon_url( $size );
 	}
 
 	public static function roles() {
@@ -319,4 +354,34 @@ class Jetpack_Sync_Functions {
 		return $wp_roles->roles;
 	}
 
+	/**
+	* Determine time zone from WordPress' options "timezone_string"
+	* and "gmt_offset".
+	*
+	* 1. Check if `timezone_string` is set and return it.
+	* 2. Check if `gmt_offset` is set, formats UTC-offset from it and return it.
+	* 3. Default to "UTC+0" if nothing is set.
+	*
+	* @return string
+	*/
+	public static function get_timezone() {
+		$timezone_string = get_option( 'timezone_string' );
+
+		if ( ! empty( $timezone_string ) ) {
+			return str_replace( '_', ' ', $timezone_string );
+		}
+
+		$gmt_offset = get_option( 'gmt_offset', 0 );
+
+		$formatted_gmt_offset = sprintf( '%+g', floatval( $gmt_offset ) );
+
+		$formatted_gmt_offset = str_replace(
+			array( '.25', '.5', '.75' ),
+			array( ':15', ':30', ':45' ),
+			(string) $formatted_gmt_offset
+		);
+
+		/* translators: %s is UTC offset, e.g. "+1" */
+		return sprintf( __( 'UTC%s', 'jetpack' ), $formatted_gmt_offset );
+	}
 }

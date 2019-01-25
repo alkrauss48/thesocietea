@@ -32,6 +32,10 @@ class Akismet_Admin {
 		if ( isset( $_POST['action'] ) && $_POST['action'] == 'enter-key' ) {
 			self::enter_api_key();
 		}
+
+		if ( ! empty( $_GET['akismet_comment_form_privacy_notice'] ) && empty( $_GET['settings-updated']) ) {
+			self::set_form_privacy_notice_option( $_GET['akismet_comment_form_privacy_notice'] );
+		}
 	}
 
 	public static function init_hooks() {
@@ -65,11 +69,26 @@ class Akismet_Admin {
 		add_filter( 'wxr_export_skip_commentmeta', array( 'Akismet_Admin', 'exclude_commentmeta_from_export' ), 10, 3 );
 		
 		add_filter( 'all_plugins', array( 'Akismet_Admin', 'modify_plugin_description' ) );
+
+		if ( class_exists( 'Jetpack' ) ) {
+			add_filter( 'akismet_comment_form_privacy_notice_url_display',  array( 'Akismet_Admin', 'jetpack_comment_form_privacy_notice_url' ) );
+			add_filter( 'akismet_comment_form_privacy_notice_url_hide',     array( 'Akismet_Admin', 'jetpack_comment_form_privacy_notice_url' ) );
+		}
+
+		// priority=1 because we need ours to run before core's comment anonymizer runs, and that's registered at priority=10
+		add_filter( 'wp_privacy_personal_data_erasers', array( 'Akismet_Admin', 'register_personal_data_eraser' ), 1 );
 	}
 
 	public static function admin_init() {
 		load_plugin_textdomain( 'akismet' );
 		add_meta_box( 'akismet-status', __('Comment History', 'akismet'), array( 'Akismet_Admin', 'comment_status_meta_box' ), 'comment', 'normal' );
+
+		if ( function_exists( 'wp_add_privacy_policy_content' ) ) {
+			wp_add_privacy_policy_content(
+				__( 'Akismet', 'akismet' ),
+				__( 'We collect information about visitors who comment on Sites that use our Akismet anti-spam service. The information we collect depends on how the User sets up Akismet for the Site, but typically includes the commenter\'s IP address, user agent, referrer, and Site URL (along with other information directly provided by the commenter such as their name, username, email address, and the comment itself).', 'akismet' )
+			);
+		}
 	}
 
 	public static function admin_menu() {
@@ -260,7 +279,13 @@ class Akismet_Admin {
 		foreach( array( 'akismet_strictness', 'akismet_show_user_comments_approved' ) as $option ) {
 			update_option( $option, isset( $_POST[$option] ) && (int) $_POST[$option] == 1 ? '1' : '0' );
 		}
-		
+
+		if ( ! empty( $_POST['akismet_comment_form_privacy_notice'] ) ) {
+			self::set_form_privacy_notice_option( $_POST['akismet_comment_form_privacy_notice'] );
+		} else {
+			self::set_form_privacy_notice_option( 'hide' );
+		}
+
 		if ( Akismet::predefined_api_key() ) {
 			return false; //shouldn't have option to save key if already defined
 		}
@@ -725,9 +750,23 @@ class Akismet_Admin {
 		return self::check_server_connectivity( $cache_timeout );
 	}
 
-	public static function get_number_spam_waiting() {
-		global $wpdb;
-		return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->commentmeta} WHERE meta_key = 'akismet_error'" );
+	/**
+	 * Find out whether any comments in the Pending queue have not yet been checked by Akismet.
+	 *
+	 * @return bool
+	 */
+	public static function are_any_comments_waiting_to_be_checked() {
+		return !! get_comments( array(
+			// Exclude comments that are not pending. This would happen if someone manually approved or spammed a comment
+			// that was waiting to be checked. The akismet_error meta entry will eventually be removed by the cron recheck job.
+			'status' => 'hold',
+			
+			// This is the commentmeta that is saved when a comment couldn't be checked.
+			'meta_key' => 'akismet_error',
+			
+			// We only need to know whether at least one comment is waiting for a check.
+			'number' => 1,
+		) );
 	}
 
 	public static function get_page_url( $page = 'config' ) {
@@ -811,10 +850,18 @@ class Akismet_Admin {
 		) );
 	}
 
+	public static function display_privacy_notice_control_warning() {
+		if ( !current_user_can( 'manage_options' ) )
+			return;
+		Akismet::view( 'notice', array(
+			'type' => 'privacy',
+		) );
+	}
+
 	public static function display_spam_check_warning() {
 		Akismet::fix_scheduled_recheck();
 
-		if ( wp_next_scheduled('akismet_schedule_cron_recheck') > time() && self::get_number_spam_waiting() > 0 ) {
+		if ( wp_next_scheduled('akismet_schedule_cron_recheck') > time() && self::are_any_comments_waiting_to_be_checked() ) {
 			$link_text = apply_filters( 'akismet_spam_check_warning_link_text', sprintf( __( 'Please check your <a href="%s">Akismet configuration</a> and contact your web host if problems persist.', 'akismet'), esc_url( self::get_page_url() ) ) );
 			Akismet::view( 'notice', array( 'type' => 'spam-check', 'link_text' => $link_text ) );
 		}
@@ -944,6 +991,10 @@ class Akismet_Admin {
 			$notices[] = array( 'type' => $akismet_user->status );
 		}
 
+		if ( false === get_option( 'akismet_comment_form_privacy_notice' ) ) {
+			$notices[] = array( 'type' => 'privacy' );
+		}
+
 		/*
 		// To see all variants when testing.
 		$notices[] = array( 'type' => 'active-notice', 'time_saved' => 'Cleaning up spam takes time. Akismet has saved you 1 minute!' );
@@ -1001,7 +1052,7 @@ class Akismet_Admin {
 				$message .= ' ';
 			
 				if ( $spam_count === 0 ) {
-					$message .= __( 'No comments were caught as spam.' );
+					$message .= __( 'No comments were caught as spam.', 'akismet' );
 				}
 				else {
 					$message .= sprintf( _n( '%s comment was caught as spam.', '%s comments were caught as spam.', $spam_count, 'akismet' ), number_format( $spam_count ) );
@@ -1009,6 +1060,14 @@ class Akismet_Admin {
 			}
 			
 			echo '<div class="notice notice-success"><p>' . esc_html( $message ) . '</p></div>';
+		}
+
+		$akismet_comment_form_privacy_notice_option = get_option( 'akismet_comment_form_privacy_notice' );
+		if ( ! in_array( $akismet_comment_form_privacy_notice_option, array( 'hide', 'display' ) ) ) {
+			$api_key = Akismet::get_api_key();
+			if ( ! empty( $api_key ) ) {
+				self::display_privacy_notice_control_warning();
+			}
 		}
 	}
 
@@ -1113,5 +1172,73 @@ class Akismet_Admin {
 		}
 		
 		return $all_plugins;
+	}
+
+	private static function set_form_privacy_notice_option( $state ) {
+		if ( in_array( $state, array( 'display', 'hide' ) ) ) {
+			update_option( 'akismet_comment_form_privacy_notice', $state );
+		}
+	}
+
+	public static function jetpack_comment_form_privacy_notice_url( $url ) {
+		return str_replace( 'options-general.php', 'admin.php', $url );
+	}
+	
+	public static function register_personal_data_eraser( $erasers ) {
+		$erasers['akismet'] = array(
+			'eraser_friendly_name' => __( 'Akismet', 'akismet' ),
+			'callback' => array( 'Akismet_Admin', 'erase_personal_data' ),
+		);
+
+		return $erasers;
+	}
+	
+	/**
+	 * When a user requests that their personal data be removed, Akismet has a duty to discard
+	 * any personal data we store outside of the comment itself. Right now, that is limited
+	 * to the copy of the comment we store in the akismet_as_submitted commentmeta.
+	 *
+	 * FWIW, this information would be automatically deleted after 15 days.
+	 * 
+	 * @param $email_address string The email address of the user who has requested erasure.
+	 * @param $page int This function can (and will) be called multiple times to prevent timeouts,
+	 *                  so this argument is used for pagination.
+	 * @return array
+	 * @see https://developer.wordpress.org/plugins/privacy/adding-the-personal-data-eraser-to-your-plugin/
+	 */
+	public static function erase_personal_data( $email_address, $page = 1 ) {
+		$items_removed = false;
+		
+		$number = 50;
+		$page = (int) $page;
+
+		$comments = get_comments(
+			array(
+				'author_email' => $email_address,
+				'number'       => $number,
+				'paged'        => $page,
+				'order_by'     => 'comment_ID',
+				'order'        => 'ASC',
+			)
+		);
+
+		foreach ( (array) $comments as $comment ) {
+			$comment_as_submitted = get_comment_meta( $comment->comment_ID, 'akismet_as_submitted', true );
+			
+			if ( $comment_as_submitted ) {
+				delete_comment_meta( $comment->comment_ID, 'akismet_as_submitted' );
+				$items_removed = true;
+			}
+		}
+
+		// Tell core if we have more comments to work on still
+		$done = count( $comments ) < $number;
+		
+		return array(
+			'items_removed' => $items_removed,
+			'items_retained' => false, // always false in this example
+			'messages' => array(), // no messages in this example
+			'done' => $done,
+		);
 	}
 }

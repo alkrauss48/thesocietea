@@ -1,65 +1,83 @@
 <?php
 require_once('wfDB.php');
 class wfSchema {
-	private $tables = array(
-"wfBadLeechers" => "(
-	eMin int UNSIGNED NOT NULL,
-	IP int UNSIGNED NOT NULL,
-	hits int UNSIGNED NOT NULL,
-	PRIMARY KEY k1(eMin, IP)
-) default charset=latin1",
-"wfVulnScanners" => "(
-	IP int UNSIGNED PRIMARY KEY,
-	ctime int UNSIGNED NOT NULL,
-	hits int UNSIGNED NOT NULL
-)",
-"wfBlocks" => "(
-	IP int UNSIGNED PRIMARY KEY,
-	blockedTime int UNSIGNED NOT NULL,
-	reason varchar(255) NOT NULL,
-	lastAttempt int UNSIGNED default 0,
-	blockedHits int UNSIGNED default 0,
-	wfsn tinyint UNSIGNED default 0,
-	permanent tinyint UNSIGNED default 0,
-	KEY k1(wfsn)
-) default charset=utf8",
+	const TABLE_CASE_OPTION = 'wordfence_case'; //false is camel case, true is lower
+	
+	private static $_usingLowercase = null;
+	private static $deprecatedTables = array(
+		'wfBlocks',
+		'wfBlocksAdv',
+		'wfLockedOut',
+		'wfThrottleLog',
+		'wfNet404s',
+		'wfBlockedCommentLog',
+		'wfVulnScanners',
+		'wfBadLeechers',
+		'wfLeechers',
+		'wfScanners',
+	);
+	
+	private static $tables = array(
+"wfBlocks7" => "(
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `type` int(10) unsigned NOT NULL DEFAULT '0',
+  `IP` binary(16) NOT NULL DEFAULT '\\\0\\\0\\\0\\\0\\\0\\\0\\\0\\\0\\\0\\\0\\\0\\\0\\\0\\\0\\\0\\\0',
+  `blockedTime` bigint(20) NOT NULL,
+  `reason` varchar(255) NOT NULL,
+  `lastAttempt` int(10) unsigned DEFAULT '0',
+  `blockedHits` int(10) unsigned DEFAULT '0',
+  `expiration` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `parameters` text,
+  PRIMARY KEY (`id`),
+  KEY `type` (`type`),
+  KEY `IP` (`IP`),
+  KEY `expiration` (`expiration`)
+) DEFAULT CHARSET=utf8",
 "wfConfig" => "(
   `name` varchar(100) NOT NULL,
   `val` longblob,
   `autoload` enum('no','yes') NOT NULL DEFAULT 'yes',
   PRIMARY KEY (`name`)
-) default charset=utf8",
+) DEFAULT CHARSET=utf8",
 "wfCrawlers" => "(
-	IP INT UNSIGNED NOT NULL,
-	patternSig binary(16) NOT NULL,
-	status char(8) NOT NULL,
-	lastUpdate int UNSIGNED NOT NULL,
-	PTR varchar(255) default '',
-	PRIMARY KEY k1(IP, patternSig)
-) default charset=latin1",
+  `IP` binary(16) NOT NULL DEFAULT '\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0',
+  `patternSig` binary(16) NOT NULL,
+  `status` char(8) NOT NULL,
+  `lastUpdate` int(10) unsigned NOT NULL,
+  `PTR` varchar(255) DEFAULT '',
+  PRIMARY KEY (`IP`,`patternSig`)
+) DEFAULT CHARSET=utf8",
 "wfFileChanges" => "(
-	filenameHash char(64) NOT NULL PRIMARY KEY,
-	file varchar(1000) NOT NULL,
-	md5 char(32) NOT NULL
-) default charset=utf8",
+  `filenameHash` char(64) NOT NULL,
+  `file` varchar(1000) NOT NULL,
+  `md5` char(32) NOT NULL,
+  PRIMARY KEY (`filenameHash`)
+) CHARSET=utf8",
 "wfHits" => "(
-	id int UNSIGNED auto_increment PRIMARY KEY,
-	ctime DOUBLE(17,6) UNSIGNED NOT NULL,
-	IP int UNSIGNED NOT NULL,
-	jsRun tinyint default 0,
-	statusCode int NOT NULL default 200,
-	isGoogle tinyint NOT NULL,
-	userID int UNSIGNED NOT NULL,
-	newVisit tinyint UNSIGNED NOT NULL,
-	URL text,
-	referer text,
-	UA text,
-	KEY k1(ctime),
-	KEY k2(IP, ctime)
-) default charset=latin1",
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `attackLogTime` double(17,6) unsigned NOT NULL,
+  `ctime` double(17,6) unsigned NOT NULL,
+  `IP` binary(16) DEFAULT NULL,
+  `jsRun` tinyint(4) DEFAULT '0',
+  `statusCode` int(11) NOT NULL DEFAULT '200',
+  `isGoogle` tinyint(4) NOT NULL,
+  `userID` int(10) unsigned NOT NULL,
+  `newVisit` tinyint(3) unsigned NOT NULL,
+  `URL` text,
+  `referer` text,
+  `UA` text,
+  `action` varchar(64) NOT NULL DEFAULT '',
+  `actionDescription` text,
+  `actionData` text,
+  PRIMARY KEY (`id`),
+  KEY `k1` (`ctime`),
+  KEY `k2` (`IP`,`ctime`),
+  KEY `attackLogTime` (`attackLogTime`)
+) DEFAULT CHARSET=utf8",
 "wfIssues" => "(
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `time` int(10) unsigned NOT NULL,
+  `lastUpdated` int(10) unsigned NOT NULL,
   `status` varchar(10) NOT NULL,
   `type` varchar(20) NOT NULL,
   `severity` tinyint(3) unsigned NOT NULL,
@@ -68,11 +86,16 @@ class wfSchema {
   `shortMsg` varchar(255) NOT NULL,
   `longMsg` text,
   `data` text,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `lastUpdated` (`lastUpdated`),
+  KEY `status` (`status`),
+  KEY `ignoreP` (`ignoreP`),
+  KEY `ignoreC` (`ignoreC`)
 ) DEFAULT CHARSET=utf8",
 "wfPendingIssues" => "(
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `time` int(10) unsigned NOT NULL,
+  `lastUpdated` int(10) unsigned NOT NULL,
   `status` varchar(10) NOT NULL,
   `type` varchar(20) NOT NULL,
   `severity` tinyint(3) unsigned NOT NULL,
@@ -81,117 +104,88 @@ class wfSchema {
   `shortMsg` varchar(255) NOT NULL,
   `longMsg` text,
   `data` text,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `lastUpdated` (`lastUpdated`),
+  KEY `status` (`status`),
+  KEY `ignoreP` (`ignoreP`),
+  KEY `ignoreC` (`ignoreC`)
 ) DEFAULT CHARSET=utf8",
-"wfLeechers" => "(
-	eMin int UNSIGNED NOT NULL,
-	IP int UNSIGNED NOT NULL,
-	hits int UNSIGNED NOT NULL,
-	PRIMARY KEY k1(eMin, IP)
-) default charset=latin1",
-"wfLockedOut" => "(
-	IP int UNSIGNED PRIMARY KEY,
-	blockedTime int UNSIGNED NOT NULL,
-	reason varchar(255) NOT NULL,
-	lastAttempt int UNSIGNED default 0,
-	blockedHits int UNSIGNED default 0
-) default charset=utf8",
+"wfTrafficRates" => "(
+  `eMin` int(10) unsigned NOT NULL,
+  `IP` binary(16) NOT NULL DEFAULT '\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0',
+  `hitType` enum('hit','404') NOT NULL DEFAULT 'hit',
+  `hits` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`eMin`,`IP`,`hitType`)
+) DEFAULT CHARSET=utf8",
 "wfLocs" => "(
-	IP int UNSIGNED NOT NULL PRIMARY KEY,
-	ctime int UNSIGNED NOT NULL,
-	failed tinyint UNSIGNED NOT NULL,
-	city varchar(255) default '',
-	region varchar(255) default '',
-	countryName varchar(255) default '',
-	countryCode char(2) default '',
-	lat float(10,7) default 0,
-	lon float(10,7) default 0
-) default charset=utf8",
+  `IP` binary(16) NOT NULL DEFAULT '\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0',
+  `ctime` int(10) unsigned NOT NULL,
+  `failed` tinyint(3) unsigned NOT NULL,
+  `city` varchar(255) DEFAULT '',
+  `region` varchar(255) DEFAULT '',
+  `countryName` varchar(255) DEFAULT '',
+  `countryCode` char(2) DEFAULT '',
+  `lat` float(10,7) DEFAULT '0.0000000',
+  `lon` float(10,7) DEFAULT '0.0000000',
+  PRIMARY KEY (`IP`)
+) DEFAULT CHARSET=utf8",
 "wfLogins" => "(
-	id int UNSIGNED auto_increment PRIMARY KEY,
-	ctime DOUBLE(17,6) UNSIGNED NOT NULL,
-	fail tinyint UNSIGNED NOT NULL,
-	action varchar(40) NOT NULL,
-	username varchar(255) NOT NULL,
-	userID int UNSIGNED NOT NULL,
-	IP int UNSIGNED NOT NULL,
-	UA text,
-	KEY k1(IP, fail)
-) default charset=utf8",
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `hitID` int(11) DEFAULT NULL,
+  `ctime` double(17,6) unsigned NOT NULL,
+  `fail` tinyint(3) unsigned NOT NULL,
+  `action` varchar(40) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `userID` int(10) unsigned NOT NULL,
+  `IP` binary(16) DEFAULT NULL,
+  `UA` text,
+  PRIMARY KEY (`id`),
+  KEY `k1` (`IP`,`fail`),
+  KEY `hitID` (`hitID`)
+) DEFAULT CHARSET=utf8",
 "wfReverseCache" => "(
-	IP int UNSIGNED PRIMARY KEY,
-	host varchar(255) NOT NULL,
-	lastUpdate int UNSIGNED NOT NULL
-) default charset=latin1",
-"wfScanners" => "(
-	eMin int UNSIGNED NOT NULL,
-	IP int UNSIGNED NOT NULL,
-	hits smallint UNSIGNED NOT NULL,
-	PRIMARY KEY k1(eMin, IP)
-) default charset=latin1",
-"wfThrottleLog" => "(
-	IP int UNSIGNED NOT NULL PRIMARY KEY,
-	startTime int UNSIGNED NOT NULL,
-	endTime int UNSIGNED NOT NULL,
-	timesThrottled int UNSIGNED NOT NULL,
-	lastReason varchar(255) NOT NULL,
-	KEY k2(endTime)
-) default charset=utf8",
+  `IP` binary(16) NOT NULL DEFAULT '\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0',
+  `host` varchar(255) NOT NULL,
+  `lastUpdate` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`IP`)
+) DEFAULT CHARSET=utf8",
 "wfStatus" => "(
-	id bigint UNSIGNED NOT NULL auto_increment PRIMARY KEY,
-	ctime DOUBLE(17,6) UNSIGNED NOT NULL,
-	level tinyint UNSIGNED NOT NULL,
-	type char(5) NOT NULL,
-	msg varchar(1000) NOT NULL,
-	KEY k1(ctime),
-	KEY k2(type)
-) default charset=utf8",
-'wfNet404s' => "(
-	sig binary(16) NOT NULL PRIMARY KEY,
-	ctime int UNSIGNED NOT NULL,
-	URI varchar(1000) NOT NULL,
-	KEY k1(ctime)
-) default charset=utf8",
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `ctime` double(17,6) unsigned NOT NULL,
+  `level` tinyint(3) unsigned NOT NULL,
+  `type` char(5) NOT NULL,
+  `msg` varchar(1000) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `k1` (`ctime`),
+  KEY `k2` (`type`)
+) DEFAULT CHARSET=utf8",
 'wfHoover' => "(
-	id int UNSIGNED auto_increment PRIMARY KEY,
-	owner text,
-	host text,
-	path text,
-	hostKey varbinary(124),
-	KEY k2(hostKey)
-) default charset=utf8",
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `owner` text,
+  `host` text,
+  `path` text,
+  `hostKey` varbinary(124) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `k2` (`hostKey`)
+) DEFAULT CHARSET=utf8",
 'wfFileMods' => "(
-	filenameMD5 binary(16) NOT NULL PRIMARY KEY,
-	filename varchar(1000) NOT NULL,
-	knownFile tinyint UNSIGNED NOT NULL,
-	oldMD5 binary(16) NOT NULL,
-	newMD5 binary(16) NOT NULL,
-	stoppedOnSignature varchar(255) NOT NULL DEFAULT '',
-	stoppedOnPosition int(10) unsigned NOT NULL DEFAULT '0'
-) default charset=utf8",
-'wfBlocksAdv' => "(
-	id int UNSIGNED NOT NULL auto_increment PRIMARY KEY,
-	blockType char(2) NOT NULL,
-	blockString varchar(255) NOT NULL,
-	ctime int UNSIGNED NOT NULL,
-	reason varchar(255) NOT NULL,
-	totalBlocked int UNSIGNED default 0,
-	lastBlocked int UNSIGNED default 0
-) default charset=utf8",
+  `filenameMD5` binary(16) NOT NULL,
+  `filename` varchar(1000) NOT NULL,
+  `knownFile` tinyint(3) unsigned NOT NULL,
+  `oldMD5` binary(16) NOT NULL,
+  `newMD5` binary(16) NOT NULL,
+  `SHAC` binary(32) NOT NULL DEFAULT '\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0',
+  `stoppedOnSignature` varchar(255) NOT NULL DEFAULT '',
+  `stoppedOnPosition` int(10) unsigned NOT NULL DEFAULT '0',
+  `isSafeFile` varchar(1) NOT NULL DEFAULT '?',
+  PRIMARY KEY (`filenameMD5`)
+) DEFAULT CHARSET=utf8",
 'wfBlockedIPLog' => "(
-  `IP` binary(16) NOT NULL DEFAULT '\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0',
+  `IP` binary(16) NOT NULL DEFAULT '\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0',
   `countryCode` varchar(2) NOT NULL,
   `blockCount` int(10) unsigned NOT NULL DEFAULT '0',
   `unixday` int(10) unsigned NOT NULL,
   `blockType` varchar(50) NOT NULL DEFAULT 'generic',
-  PRIMARY KEY (`IP`,`unixday`,`blockType`)
-) DEFAULT CHARSET=utf8",
-'wfBlockedCommentLog' => "(
-  `IP` binary(16) NOT NULL DEFAULT '\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0',
-  `countryCode` varchar(2) NOT NULL,
-  `blockCount` int(10) unsigned NOT NULL DEFAULT '0',
-  `unixday` int(10) unsigned NOT NULL,
-  `blockType` varchar(50) NOT NULL DEFAULT 'gsb',
   PRIMARY KEY (`IP`,`unixday`,`blockType`)
 ) DEFAULT CHARSET=utf8",
 'wfSNIPCache' => "(
@@ -220,7 +214,14 @@ class wfSchema {
   `html` text NOT NULL,
   `links` text NOT NULL,
   PRIMARY KEY (`id`)
-) DEFAULT CHARSET=utf8;"
+) DEFAULT CHARSET=utf8;",
+'wfLiveTrafficHuman' => "(
+  `IP` binary(16) NOT NULL DEFAULT '\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0',
+  `identifier` binary(32) NOT NULL DEFAULT '\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0',
+  `expiration` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`IP`,`identifier`),
+  KEY `expiration` (`expiration`)
+) DEFAULT CHARSET=utf8;",
 /*
 'wfPerfLog' => "(
 	id int UNSIGNED NOT NULL auto_increment PRIMARY KEY,
@@ -244,33 +245,72 @@ class wfSchema {
 */
 );
 	private $db = false;
-	private $prefix = 'wp_';
 	public function __construct($dbhost = false, $dbuser = false, $dbpassword = false, $dbname = false){
-		/*
-		if($dbhost){ //for testing
-			$this->db = new wfDB(false, $dbhost, $dbuser, $dbpassword, $dbname);
-			$this->prefix = 'wp_';
-		} else {
-		*/
-		global $wpdb;
 		$this->db = new wfDB();
-		$this->prefix = $wpdb->base_prefix;
 	}
 	public function dropAll(){
-		foreach($this->tables as $table => $def){
-			$this->db->queryWrite("drop table if exists " . $this->prefix . $table);
+		foreach(self::$tables as $table => $def) {
+			$originalTable = wfDB::networkPrefix() . $table;
+			$convertedTable = wfDB::networkPrefix() . strtolower($table);
+			
+			$this->db->queryWrite("DROP TABLE IF EXISTS {$convertedTable}");
+			$this->db->queryWrite("DROP TABLE IF EXISTS {$originalTable}");
+		}
+		
+		foreach (self::$deprecatedTables as $table) {
+			$originalTable = wfDB::networkTable($table, false);
+			$convertedTable = wfDB::networkTable($table);
+			
+			$this->db->queryWrite("DROP TABLE IF EXISTS {$convertedTable}");
+			if ($originalTable !== $convertedTable) {
+				$this->db->queryWrite("DROP TABLE IF EXISTS {$originalTable}");
+			}
 		}
 	}
-	public function createAll(){
-		foreach($this->tables as $table => $def){
-			$this->db->queryWrite("create table IF NOT EXISTS " . $this->prefix . $table . " " . $def);
+	public function createAll() {
+		foreach(self::$tables as $table => $def){
+			$this->db->queryWrite("CREATE TABLE IF NOT EXISTS " . wfDB::networkTable($table) . " " . $def);
 		}
 	}
-	public function create($table){
-		$this->db->queryWrite("create table IF NOT EXISTS " . $this->prefix . $table . " " . $this->tables[$table]);
+	public function create($table) {
+		$this->db->queryWrite("CREATE TABLE IF NOT EXISTS " . wfDB::networkTable($table) . " " . self::$tables[$table]);
 	}
-	public function drop($table){
-		$this->db->queryWrite("drop table if exists " . $this->prefix . $table);
+	public function drop($table) {
+		$originalTable = wfDB::networkTable($table, false);
+		$convertedTable = wfDB::networkTable($table);
+		
+		$this->db->queryWrite("DROP TABLE IF EXISTS {$convertedTable}");
+		if ($originalTable !== $convertedTable) {
+			$this->db->queryWrite("DROP TABLE IF EXISTS {$originalTable}");
+		}
+	}
+	
+	public static function tableList() {
+		return array_keys(self::$tables);
+	}
+	
+	public static function updateTableCase() {
+		global $wpdb;
+		$hasCamelCaseTable = !!$wpdb->get_var($wpdb->prepare('SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=%s', wfDB::networkTable('wfConfig', false)));
+		if (is_multisite() && function_exists('update_network_option')) {
+			update_network_option(null, self::TABLE_CASE_OPTION, !$hasCamelCaseTable);
+			self::$_usingLowercase = !$hasCamelCaseTable;
+		}
+		else {
+			update_option(self::TABLE_CASE_OPTION, !$hasCamelCaseTable);
+			self::$_usingLowercase = !$hasCamelCaseTable;
+		}
+	}
+	
+	public static function usingLowercase() {
+		if (self::$_usingLowercase === null) {
+			if (is_multisite() && function_exists('update_network_option')) {
+				self::$_usingLowercase = !!get_network_option(null, self::TABLE_CASE_OPTION);
+			}
+			else {
+				self::$_usingLowercase = !!get_option(self::TABLE_CASE_OPTION);
+			}
+		}
+		return self::$_usingLowercase;
 	}
 }
-?>

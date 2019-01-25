@@ -9,7 +9,9 @@ require_once(UPDRAFTPLUS_DIR.'/methods/s3.php');
  */
 class UpdraftPlus_BackupModule_s3generic extends UpdraftPlus_BackupModule_s3 {
 
-	protected function set_region($obj, $region = '', $bucket_name = '') {
+	protected $use_v4 = false;
+
+	protected function set_region($obj, $region = '', $bucket_name = '') {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		$config = $this->get_config();
 		$endpoint = ('' != $region && 'n/a' != $region) ? $region : $config['endpoint'];
 		$log_message = "Set endpoint: $endpoint";
@@ -31,7 +33,7 @@ class UpdraftPlus_BackupModule_s3generic extends UpdraftPlus_BackupModule_s3 {
 	 */
 	public function get_supported_features() {
 		// This options format is handled via only accessing options via $this->get_options()
-		return array('multi_options', 'config_templates');
+		return array('multi_options', 'config_templates', 'multi_storage');
 	}
 
 	/**
@@ -51,14 +53,25 @@ class UpdraftPlus_BackupModule_s3generic extends UpdraftPlus_BackupModule_s3 {
 	/**
 	 * Retrieve specific options for this remote storage module
 	 *
+	 * @param Boolean $force_refresh - if set, and if relevant, don't use cached credentials, but get them afresh
+	 *
 	 * @return Array - an array of options
 	 */
-	protected function get_config() {
+	protected function get_config($force_refresh = false) {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		$opts = $this->get_options();
 		$opts['whoweare'] = 'S3';
 		$opts['whoweare_long'] = __('S3 (Compatible)', 'updraftplus');
 		$opts['key'] = 's3generic';
 		return $opts;
+	}
+
+	/**
+	 * Get the pre configuration template
+	 *
+	 * @return String - the template
+	 */
+	public function get_pre_configuration_template() {
+		$this->get_pre_configuration_template_engine('s3generic', 'S3', __('S3 (Compatible)', 'updraftplus'), 'S3', '', '');
 	}
 
 	/**
@@ -92,7 +105,8 @@ class UpdraftPlus_BackupModule_s3generic extends UpdraftPlus_BackupModule_s3 {
 		return '<tr class="'.$this->get_css_classes().'">
 					<th>'.sprintf(__('%s end-point', 'updraftplus'), 'S3').'</th>
 					<td>
-						<input data-updraft_settings_test="endpoint" type="text" style="width: 360px" '.$this->output_settings_field_name_and_id('endpoint', true).' value="{{endpoint}}" />
+						<input data-updraft_settings_test="endpoint" type="text" class="updraft_input--wide" '.$this->output_settings_field_name_and_id('endpoint', true).' value="{{endpoint}}" />
+					</td>
 				</tr>';
 	}
 

@@ -67,7 +67,7 @@ class UpdraftPlus_BackupModule_cloudfiles_opencloudsdk extends UpdraftPlus_Backu
 	 */
 	public function get_supported_features() {
 		// This options format is handled via only accessing options via $this->get_options()
-		return array('multi_options', 'config_templates');
+		return array('multi_options', 'config_templates', 'multi_storage');
 	}
 
 	/**
@@ -84,6 +84,23 @@ class UpdraftPlus_BackupModule_cloudfiles_opencloudsdk extends UpdraftPlus_Backu
 			'region' => null
 		);
 	}
+
+	/**
+	 * Get the pre configuration template
+	 *
+	 * @return String - the template
+	 */
+	public function get_pre_configuration_middlesection_template() {
+
+		global $updraftplus_admin;
+
+		$classes = $this->get_css_classes();
+
+		if (!function_exists('json_last_error')) {
+			$updraftplus_admin->show_double_warning('<strong>'.__('Warning', 'updraftplus').':</strong> '.sprintf(__('Your web server\'s PHP installation does not included a required module (%s). Please contact your web hosting provider\'s support.', 'updraftplus'), 'json').' '.sprintf(__("UpdraftPlus's %s module <strong>requires</strong> %s. Please do not file any support requests; there is no alternative.", 'updraftplus'), 'Cloud Files', 'json'), 'cloudfiles', false);
+		}
+		echo '<p>' . __('Get your API key <a href="https://mycloud.rackspace.com/" target="_blank">from your Rackspace Cloud console</a> (read instructions <a href="http://www.rackspace.com/knowledge_center/article/rackspace-cloud-essentials-1-generating-your-api-key" target="_blank">here</a>), then pick a container name to use for storage. This container will be created for you if it does not already exist.', 'updraftplus').' <a href="'.apply_filters("updraftplus_com_link", "https://updraftplus.com/faqs/there-appear-to-be-lots-of-extra-files-in-my-rackspace-cloud-files-container/").'" target="_blank">'.__('Also, you should read this important FAQ.', 'updraftplus').'</a></p>';
+	}
 	
 	/**
 	 * This gives the partial template string to the settings page for the CloudFiles  settings.
@@ -94,15 +111,6 @@ class UpdraftPlus_BackupModule_cloudfiles_opencloudsdk extends UpdraftPlus_Backu
 		global $updraftplus_admin;
 		$classes = $this->get_css_classes();
 		$template_str = '
-		<tr class="'.$classes.'">
-		<th></th>
-			<td>';
-				if (!function_exists('json_last_error')) {
-			$template_str .= $updraftplus_admin->show_double_warning('<strong>'.__('Warning', 'updraftplus').':</strong> '.sprintf(__('Your web server\'s PHP installation does not included a required module (%s). Please contact your web hosting provider\'s support.', 'updraftplus'), 'json').' '.sprintf(__("UpdraftPlus's %s module <strong>requires</strong> %s. Please do not file any support requests; there is no alternative.", 'updraftplus'), 'Cloud Files', 'json'), 'cloudfiles', false);
-				}
-				$template_str .= __('Get your API key <a href="https://mycloud.rackspace.com/">from your Rackspace Cloud console</a> (read instructions <a href="http://www.rackspace.com/knowledge_center/article/rackspace-cloud-essentials-1-generating-your-api-key">here</a>), then pick a container name to use for storage. This container will be created for you if it does not already exist.', 'updraftplus').' <a href="'.apply_filters("updraftplus_com_link", "https://updraftplus.com/faqs/there-appear-to-be-lots-of-extra-files-in-my-rackspace-cloud-files-container/").'">'.__('Also, you should read this important FAQ.', 'updraftplus').'</a></p>
-			</td>
-		</tr>
 		<tr class="'.$classes.'">
 			<th title="'.__('Accounts created at rackspacecloud.com are US accounts; accounts created at rackspace.co.uk are UK accounts.', 'updraftplus').'">'.__('US or UK-based Rackspace Account', 'updraftplus').':</th>
 			<td>
@@ -124,20 +132,20 @@ class UpdraftPlus_BackupModule_cloudfiles_opencloudsdk extends UpdraftPlus_Backu
 		</tr>
 		<tr class="'.$classes.'">
 			<th>'.__('Cloud Files Username', 'updraftplus').':</th>
-			<td><input data-updraft_settings_test="user" type="text" autocomplete="off" style="width: 282px" '.$this->output_settings_field_name_and_id('user', true).' value="{{user}}" />
+			<td><input data-updraft_settings_test="user" type="text" autocomplete="off" class="updraft_input--wide" '.$this->output_settings_field_name_and_id('user', true).' value="{{user}}" />
 			<div style="clear:both;">
-				'.apply_filters('updraft_cloudfiles_apikeysetting', '<a href="'.apply_filters("updraftplus_com_link", "https://updraftplus.com/shop/cloudfiles-enhanced/").'"><em>'.__('To create a new Rackspace API sub-user and API key that has access only to this Rackspace container, use this add-on.', 'updraftplus').'</em></a>').'
+				'.apply_filters('updraft_cloudfiles_apikeysetting', '<a href="'.apply_filters("updraftplus_com_link", "https://updraftplus.com/shop/cloudfiles-enhanced/").'" target="_blank"><em>'.__('To create a new Rackspace API sub-user and API key that has access only to this Rackspace container, use this add-on.', 'updraftplus').'</em></a>').'
 			</div>
 			</td>
 		</tr>
 		<tr class="'.$classes.'">
 			<th>'.__('Cloud Files API Key', 'updraftplus').':</th>
-			<td><input data-updraft_settings_test="apikey" type="'.apply_filters('updraftplus_admin_secret_field_type', 'password').'" autocomplete="off" style="width: 282px" '.$this->output_settings_field_name_and_id('apikey', true).' value="{{apikey}}" />
+			<td><input data-updraft_settings_test="apikey" type="'.apply_filters('updraftplus_admin_secret_field_type', 'password').'" autocomplete="off" class="updraft_input--wide" '.$this->output_settings_field_name_and_id('apikey', true).' value="{{apikey}}" />
 			</td>
 		</tr>
 		<tr class="'.$classes.'">
 			<th>'.apply_filters('updraftplus_cloudfiles_location_description', __('Cloud Files Container', 'updraftplus')).':</th>
-			<td><input data-updraft_settings_test="path" type="text" style="width: 282px" '.$this->output_settings_field_name_and_id('path', true).' value="{{path}}" /></td>
+			<td><input data-updraft_settings_test="path" type="text" class="updraft_input--wide" '.$this->output_settings_field_name_and_id('path', true).' value="{{path}}" /></td>
 		</tr>';
 		return $template_str;
 	}
@@ -150,13 +158,13 @@ class UpdraftPlus_BackupModule_cloudfiles_opencloudsdk extends UpdraftPlus_Backu
 	 */
 	public function transform_options_for_template($opts) {
 		$opts['regions'] = array(
-									'DFW' => __('Dallas (DFW) (default)', 'updraftplus'),
-									'SYD' => __('Sydney (SYD)', 'updraftplus'),
-									'ORD' => __('Chicago (ORD)', 'updraftplus'),
-									'IAD' => __('Northern Virginia (IAD)', 'updraftplus'),
-									'HKG' => __('Hong Kong (HKG)', 'updraftplus'),
-									'LON' => __('London (LON)', 'updraftplus')
-								);
+			'DFW' => __('Dallas (DFW) (default)', 'updraftplus'),
+			'SYD' => __('Sydney (SYD)', 'updraftplus'),
+			'ORD' => __('Chicago (ORD)', 'updraftplus'),
+			'IAD' => __('Northern Virginia (IAD)', 'updraftplus'),
+			'HKG' => __('Hong Kong (HKG)', 'updraftplus'),
+			'LON' => __('London (LON)', 'updraftplus')
+		);
 		$opts['region'] = (empty($opts['region'])) ? 'DFW' : $opts['region'];
 		if (isset($opts['apikey'])) {
 			$opts['apikey'] = trim($opts['apikey']);
@@ -165,6 +173,11 @@ class UpdraftPlus_BackupModule_cloudfiles_opencloudsdk extends UpdraftPlus_Backu
 		return $opts;
 	}
 
+	/**
+	 * Perform a test of user-supplied credentials, and echo the result
+	 *
+	 * @param Array $posted_settings - settings to test
+	 */
 	public function credentials_test($posted_settings) {
 
 		if (empty($posted_settings['apikey'])) {
@@ -179,7 +192,7 @@ class UpdraftPlus_BackupModule_cloudfiles_opencloudsdk extends UpdraftPlus_Backu
 
 		$opts = array(
 			'user' => $posted_settings['user'],
-			'apikey' => stripslashes($posted_settings['apikey']),
+			'apikey' => $posted_settings['apikey'],
 			'authurl' => $posted_settings['authurl'],
 			'region' => (empty($posted_settings['region'])) ? null : $posted_settings['region']
 		);

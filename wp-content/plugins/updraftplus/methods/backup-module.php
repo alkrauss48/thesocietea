@@ -48,7 +48,7 @@ abstract class UpdraftPlus_BackupModule {
 		
 		global $updraftplus;
 		
-		$current_db_options = $updraftplus->update_remote_storage_options_format($this->get_id());
+		$current_db_options = UpdraftPlus_Storage_Methods_Interface::update_remote_storage_options_format($this->get_id());
 
 		if (is_wp_error($current_db_options)) {
 			throw new Exception('save_options(): options fetch/update failed ('.$current_db_options->get_error_code().': '.$current_db_options->get_error_message().')');
@@ -102,6 +102,15 @@ abstract class UpdraftPlus_BackupModule {
 	}
 
 	/**
+	 * This method should only be called if the feature 'multi storage' is supported. In that case, it returns a template with information about the remote storage. The code below is a placeholder, and methods supporting the feature should always over-ride it.
+	 *
+	 * @return String - HTML template
+	 */
+	public function get_pre_configuration_template() {
+		return $this->get_id().": called, but not implemented in the child class (coding error)";
+	}
+
+	/**
 	 * This method should only be called if the feature 'config templates' is supported. In that case, it returns a template with appropriate placeholders for specific settings. The code below is a placeholder, and methods supporting the feature should always over-ride it.
 	 *
 	 * @return String - HTML template
@@ -125,7 +134,7 @@ abstract class UpdraftPlus_BackupModule {
 	 * @return Object - the stored remote storage client
 	 */
 	public function get_storage() {
-		return $this->_storage;
+		if (!empty($this->_storage)) return $this->_storage;
 	}
 	
 	/**
@@ -190,11 +199,29 @@ abstract class UpdraftPlus_BackupModule {
 		ob_start();
 		// Allow methods to not use this hidden field, if they do not output any settings (to prevent their saved settings being over-written by just this hidden field)
 		if ($this->print_shared_settings_fields()) {
-			?><input type="hidden" name="updraft_<?php echo $this->get_id();?>[version]" value="1"><?php
+			?><tr class="<?php echo $this->get_css_classes(); ?>"><input type="hidden" name="updraft_<?php echo $this->get_id();?>[version]" value="1"></tr><?php
 		}
 		
 		if ($this->supports_feature('config_templates')) {
+			?>
+			{{#if first_instance}}
+			<?php
+				
+				$this->get_pre_configuration_template();
+				
+				if ($this->supports_feature('multi_storage')) {
+					do_action('updraftplus_config_print_add_multi_storage', $this->get_id(), $this);
+				}
+				
+			?>
+			{{/if}}
+			<?php
 			do_action('updraftplus_config_print_before_storage', $this->get_id(), $this);
+
+			if ($this->supports_feature('multi_storage')) {
+					do_action('updraftplus_config_print_add_instance_label', $this->get_id(), $this);
+			}
+
 			$template = ob_get_clean();
 			$template .= $this->get_configuration_template();
 		} else {
@@ -254,10 +281,13 @@ abstract class UpdraftPlus_BackupModule {
 	/**
 	 * Returns a space-separated list of CSS classes suitable for rows in the configuration section
 	 *
+	 * @param Boolean $include_instance - a boolean value to indicate if we want to include the instance_id in the css class, we may not want to include the instance if it's for a UI element that we don't want to be removed along with other UI elements that do include a instance id.
+	 *
 	 * @returns String - the list of CSS classes
 	 */
-	public function get_css_classes() {
+	public function get_css_classes($include_instance = true) {
 		$classes = 'updraftplusmethod '.$this->get_id();
+		if (!$include_instance) return $classes;
 		if ($this->supports_feature('multi_options')) {
 			if ($this->supports_feature('config_templates')) {
 				$classes .= ' '.$this->get_id().'-{{instance_id}}';
@@ -299,6 +329,21 @@ abstract class UpdraftPlus_BackupModule {
 		return substr($class, 25);
 	}
 	
+	/**
+	 * Get the backup method description for this class
+	 *
+	 * @return String - the identifier
+	 */
+	public function get_description() {
+		global $updraftplus;
+
+		$methods = $updraftplus->backup_methods;
+
+		$id = $this->get_id();
+
+		return $methods[$id];
+	}
+
 	/**
 	 * Sets the instance ID - for supporting multi_options
 	 *
@@ -366,7 +411,7 @@ abstract class UpdraftPlus_BackupModule {
 			if ($supports_multi_options) {
 
 				if (!isset($options['version'])) {
-					$options_full = $updraftplus->update_remote_storage_options_format($this->get_id());
+					$options_full = UpdraftPlus_Storage_Methods_Interface::update_remote_storage_options_format($this->get_id());
 					
 					if (is_wp_error($options_full)) {
 						$updraftplus->log("Options retrieval failure: ".$options_full->get_error_code().": ".$options_full->get_error_message()." (".json_encode($options_full->get_error_data()).")");
@@ -474,5 +519,153 @@ abstract class UpdraftPlus_BackupModule {
 		
 		if (is_string($legacy_key)) $updraftplus->jobdata_delete($legacy_key);
 		
+	}
+
+	/**
+	 * This method will either return or echo the constructed auth link for the remote storage method
+	 *
+	 * @param Boolean $echo_instead_of_return     - a boolean to indicate if the authentication link should be echo or returned
+	 * @param Boolean $template_instead_of_notice - a boolean to indicate if the authentication link is for a template or a notice
+	 * @return Void|String                        - returns a string or nothing depending on the parameters
+	 */
+	public function get_authentication_link($echo_instead_of_return = true, $template_instead_of_notice = true) {
+		if (!$echo_instead_of_return) {
+			ob_start();
+		}
+
+		$account_warning = '';
+		$id = $this->get_id();
+		$description = $this->get_description();
+
+		if ($this->output_account_warning()) {
+			$account_warning = __('Ensure you are logged into the correct account before continuing.', 'updraftplus');
+		}
+
+		if ($template_instead_of_notice) {
+			$instance_id = "{{instance_id}}";
+			$text = sprintf(__("<strong>After</strong> you have saved your settings (by clicking 'Save Changes' below), then come back here once and click this link to complete authentication with %s.", 'updraftplus'), $description);
+		} else {
+			$instance_id = $this->get_instance_id();
+			$text = sprintf(__('Follow this link to authorize access to your %s account (you will not be able to backup to %s without it).', 'updraftplus'), $description, $description);
+		}
+
+		echo $account_warning . ' <a class="updraft_authlink" href="'.UpdraftPlus_Options::admin_page_url().'?&action=updraftmethod-'.$id.'-auth&page=updraftplus&updraftplus_'.$id.'auth=doit&updraftplus_instance='.$instance_id.'" data-instance_id="'.$instance_id.'" data-remote_method="'.$id.'">'.$text.'</a>';
+
+		if (!$echo_instead_of_return) {
+			return ob_get_clean();
+		}
+	}
+	
+	/**
+	 * Check the authentication is valid before proceeding to call the authentication method
+	 */
+	public function action_authenticate_storage() {
+		if (isset($_GET['updraftplus_'.$this->get_id().'auth']) && 'doit' == $_GET['updraftplus_'.$this->get_id().'auth'] && !empty($_GET['updraftplus_instance'])) {
+			$this->authenticate_storage((string) $_GET['updraftplus_instance']);
+		}
+	}
+	
+	/**
+	 * Authenticate the remote storage and save settings
+	 *
+	 * @param String $instance_id - The remote storage instance id
+	 */
+	public function authenticate_storage($instance_id) {
+		if (method_exists($this, 'do_authenticate_storage')) {
+			$this->do_authenticate_storage($instance_id);
+		} else {
+			error_log($this->get_id().": module does not have an authenticate storage method (coding bug)");
+		}
+	}
+	
+	/**
+	 * This method will either return or echo the constructed deauth link for the remote storage method
+	 *
+	 * @param  boolean $echo_instead_of_return - a boolean to indicate if the deauthentication link should be echo or returned
+	 * @return Void|String                     - returns a string or nothing depending on the parameters
+	 */
+	public function get_deauthentication_link($echo_instead_of_return = true) {
+		if (!$echo_instead_of_return) {
+			ob_start();
+		}
+		
+		$id = $this->get_id();
+		$description = $this->get_description();
+
+		echo ' <a class="updraft_deauthlink" href="'.UpdraftPlus_Options::admin_page_url().'?action=updraftmethod-'.$id.'-auth&page=updraftplus&updraftplus_'.$id.'auth=deauth&nonce='.wp_create_nonce($id.'_deauth_nonce').'&updraftplus_instance={{instance_id}}" data-instance_id="{{instance_id}}" data-remote_method="'.$id.'">'.sprintf(__("Follow this link to remove these settings for %s.", 'updraftplus'), $description).'</a>';
+
+		if (!$echo_instead_of_return) {
+			return ob_get_clean();
+		}
+	}
+	
+	/**
+	 * Check the deauthentication is valid before proceeding to call the deauthentication method
+	 */
+	public function action_deauthenticate_storage() {
+		if (isset($_GET['updraftplus_'.$this->get_id().'auth']) && 'deauth' == $_GET['updraftplus_'.$this->get_id().'auth'] && !empty($_GET['nonce']) && !empty($_GET['updraftplus_instance']) && wp_verify_nonce($_GET['nonce'], $this->get_id().'_deauth_nonce')) {
+			$this->deauthenticate_storage($_GET['updraftplus_instance']);
+		}
+	}
+	
+	/**
+	 * Deauthenticate the remote storage and remove the saved settings
+	 *
+	 * @param String $instance_id - The remote storage instance id
+	 */
+	public function deauthenticate_storage($instance_id) {
+		if (method_exists($this, 'do_deauthenticate_storage')) {
+			$this->do_deauthenticate_storage($instance_id);
+		}
+		$opts = $this->get_default_options();
+		$this->set_options($opts, true, $instance_id);
+	}
+
+	/**
+	 * Over-ride this to allow methods to output extra information about using the correct account for OAuth storage methods
+	 *
+	 * @return Boolean - return false so that no extra information is output
+	 */
+	public function output_account_warning() {
+		return false;
+	}
+
+	/**
+	 * This function is a wrapper and will call $updraftplus->log(), the backup modules should use this so we can add information to the log lines to do with the remote storage and instance settings.
+	 *
+	 * @param string  $line       - the log line
+	 * @param string  $level      - the log level: notice, warning, error. If suffixed with a hypen and a destination, then the default destination is changed too.
+	 * @param boolean $uniq_id    - each of these will only be logged once
+	 * @param boolean $skip_dblog - if true, then do not write to the database
+	 *
+	 * @return void
+	 */
+	public function log($line, $level = 'notice', $uniq_id = false, $skip_dblog = false) {
+		global $updraftplus;
+
+		$prefix = $this->get_storage_label();
+
+		$updraftplus->log("$prefix: $line", $level = 'notice', $uniq_id = false, $skip_dblog = false);
+	}
+
+	/**
+	 * This function will build and return the remote storage instance label
+	 *
+	 * @return string - the remote storage instance label
+	 */
+	private function get_storage_label() {
+		
+		$opts = $this->get_options();
+		$label = isset($opts['instance_label']) ? $opts['instance_label'] : '';
+
+		$description = $this->get_description();
+
+		if (!empty($label)) {
+			$prefix = (false !== strpos($label, $description)) ? $label : "$description: $label";
+		} else {
+			$prefix = $description;
+		}
+
+		return $prefix;
 	}
 }

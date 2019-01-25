@@ -949,7 +949,6 @@ button.ui-button::-moz-focus-inner {
 	position: absolute;
 	z-index: 9999;
 	max-width: 300px;
-	-webkit-box-shadow: 0 0 5px #AAA;
 	box-shadow: 0 0 5px #AAA;
 }
 
@@ -1004,8 +1003,8 @@ body .ui-tooltip {
 .ui-widget-header .ui-state-default {
 	border: 1px solid #CCC;
 	background: #F6F6F6 url("images/ui-bg_glass_100_f6f6f6_1x400.png") 50% 50% repeat-x;
-	font-weight: bold;
-	color: #1C94C4;
+	font-weight: normal;
+	color: #2B2B2B;
 }
 
 .ui-state-default a,
@@ -1021,10 +1020,10 @@ body .ui-tooltip {
 .ui-state-focus,
 .ui-widget-content .ui-state-focus,
 .ui-widget-header .ui-state-focus {
-	border: 1px solid #FBCB09;
-	background: #FDF5CE url("images/ui-bg_glass_100_fdf5ce_1x400.png") 50% 50% repeat-x;
-	font-weight: bold;
-	color: #C77405;
+	border: 1px solid #C5C5C5;
+	background: #F6F6F6;
+	font-weight: normal;
+	color: #454545;
 }
 
 .ui-state-hover a,
@@ -1042,10 +1041,10 @@ body .ui-tooltip {
 .ui-state-active,
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
-	border: 1px solid #FBD850;
-	background: #FFF url("images/ui-bg_glass_65_ffffff_1x400.png") 50% 50% repeat-x;
-	font-weight: bold;
-	color: #EB8F00;
+	border: 1px solid #C5C5C5;
+	background: #F6F6F6;
+	font-weight: normal;
+	color: #454545;
 }
 
 .ui-state-active a,
@@ -1136,16 +1135,16 @@ body .ui-tooltip {
 }
 
 .ui-state-default .ui-icon {
-	background-image: url("images/ui-icons_ef8c08_256x240.png");
+	background-image: url("images/ui-icons_222222_256x240.png");
 }
 
 .ui-state-hover .ui-icon,
 .ui-state-focus .ui-icon {
-	background-image: url("images/ui-icons_ef8c08_256x240.png");
+	background-image: url("images/ui-icons_222222_256x240.png");
 }
 
 .ui-state-active .ui-icon {
-	background-image: url("images/ui-icons_ef8c08_256x240.png");
+	background-image: url("images/ui-icons_222222_256x240.png");
 }
 
 .ui-state-highlight .ui-icon {

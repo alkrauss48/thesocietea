@@ -80,7 +80,7 @@ class wordfenceURLHoover {
 		}
 		global $wpdb;
 		if(isset($wpdb)){
-			$this->table = $wpdb->base_prefix . 'wfHoover';
+			$this->table = wfDB::networkTable('wfHoover');
 		} else {
 			$this->table = 'wp_wfHoover';
 		}
@@ -96,7 +96,7 @@ class wordfenceURLHoover {
 	
 	public function hoover($id, $data, $excludedHosts = array()) {
 		$this->currentHooverID = $id;
-		$this->_foundSome = false;
+		$this->_foundSome = 0;
 		$this->_excludedHosts = $excludedHosts;
 		@preg_replace_callback('/\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’]))/i', array($this, 'captureURL'), $data);
 		$this->writeHosts();
@@ -122,6 +122,8 @@ class wordfenceURLHoover {
 		if (!filter_var($url, FILTER_VALIDATE_URL)) {
 			return;
 		}
+		
+		$this->_foundSome++;
 		
 		$host = (isset($components['host']) ? $components['host'] : '');
 		$path = (isset($components['path']) && !empty($components['path']) ? $components['path'] : '/');
@@ -165,8 +167,6 @@ class wordfenceURLHoover {
 			}
 			$this->hostsToAdd->collectGarbage();
 		}
-		
-		$this->_foundSome = true;
 	}
 	public function getBaddies() {
 		wordfence::status(4, 'info', "Gathering host keys.");
@@ -174,7 +174,7 @@ class wordfenceURLHoover {
 		if ($this->useDB) {
 			global $wpdb;
 			$dbh = $wpdb->dbh;
-			$useMySQLi = (is_object($dbh) && $wpdb->use_mysqli);
+			$useMySQLi = (is_object($dbh) && $wpdb->use_mysqli && wfConfig::get('allowMySQLi', true) && WORDFENCE_ALLOW_DIRECT_MYSQLI);
 			if ($useMySQLi) { //If direct-access MySQLi is available, we use it to minimize the memory footprint instead of letting it fetch everything into an array first
 				wordfence::status(4, 'info', "Using MySQLi directly.");
 				$result = $dbh->query("SELECT DISTINCT hostKey FROM {$this->table} ORDER BY hostKey ASC LIMIT 100000"); /* We limit to 100,000 prefixes since more than that cannot be reliably checked within the default max_execution_time */
@@ -597,4 +597,3 @@ class wordfenceURLHoover {
 		return $array[count($array) - 1];
 	}
 }
-?>

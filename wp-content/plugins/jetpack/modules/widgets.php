@@ -29,7 +29,7 @@ function jetpack_load_widgets() {
 	$widgets_include = apply_filters( 'jetpack_widgets_to_include', $widgets_include );
 
 	foreach( $widgets_include as $include ) {
-		include $include;
+		include_once $include;
 	}
 
 	include_once dirname( __FILE__ ) . '/widgets/migrate-to-core/image-widget.php';
@@ -41,6 +41,7 @@ add_action( 'jetpack_modules_loaded', 'jetpack_widgets_loaded' );
 function jetpack_widgets_loaded() {
 	Jetpack::enable_module_configurable( __FILE__ );
 	Jetpack::module_configuration_load( __FILE__, 'jetpack_widgets_configuration_load' );
+	add_filter( 'jetpack_module_configuration_url_widgets', 'jetpack_widgets_configuration_url' );
 }
 
 function jetpack_widgets_configuration_load() {
@@ -49,14 +50,14 @@ function jetpack_widgets_configuration_load() {
 }
 
 /**
- * Add the "(Jetpack)" suffix to the widget names
+ * Overrides default configuration url
+ *
+ * @uses admin_url
+ * @return string module settings URL
  */
-function jetpack_widgets_add_suffix( $widget_name ) {
-	return sprintf( __( '%s (Jetpack)', 'jetpack' ), $widget_name );
+function jetpack_widgets_configuration_url() {
+	return admin_url( 'customize.php?autofocus[panel]=widgets' );
 }
-add_filter( 'jetpack_widget_name', 'jetpack_widgets_add_suffix' );
-
-
 
 jetpack_load_widgets();
 
