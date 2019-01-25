@@ -110,7 +110,7 @@ get_header(); ?>
 >
     <p>I don't work only on the back-end though; I've used a bunch of <span class="hi">HTML5</span>, <span class="hi">Sass</span>,
       <span class="hi">Javascript</span>, <span class="hi">build automation</span>, CMSs like <span class="hi">Wordpress</span>,
-      <span class="hi">ModX</span>, <span class="hi">Umbraco</span>, and <span class="hi">Craft CMS</span>, and some enterprise web app development using <span class="hi">.NET</span>, <span class="hi">Rails</span>, and <span class="hi">Angular</span> and <span class="hi">React</span>. I use <span class="hi">Foundation</span> and
+      <span class="hi">ModX</span>, <span class="hi">Umbraco</span>, and <span class="hi">Craft CMS</span>, and some enterprise web app development using <span class="hi">.NET</span>, <span class="hi">Rails</span>, <span class="hi">Angular</span>, and <span class="hi">React</span>. I use <span class="hi">Foundation</span> and
       <span class="hi">Bootstrap</span> when I need to, but I usually opt to build completely custom styles.
       Check out my projects to see what I’ve been working on!</p>
   </div>
