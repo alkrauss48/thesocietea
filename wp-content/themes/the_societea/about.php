@@ -30,9 +30,9 @@ get_header(); ?>
     data-700="left: 0px; opacity: 1;"
     data-850="left: 75px; opacity: 0;"
 >
-          My name is Aaron Krauss. I’m a Full Stack developer based out of Edmond, Oklahoma (near Oklahoma City).
+          My name is Aaron Krauss. I’m a full stack developer based out of Edmond, Oklahoma (near Oklahoma City).
           I was born in Germany in 1990, grew up in a German culture for 6 years, and still speak moderately fluent German.
-          I currently work at Clevyr as a senior web developer, and engage in miscellaneous development on my own time.
+          I currently work at Clevyr as a senior software engineer, and engage in miscellaneous development on my own time.
         </p>
     </div>
   </div>
@@ -108,9 +108,9 @@ get_header(); ?>
     data-2700="top: -8em; opacity: 1;"
     data-2900="top: -14em; opacity: 0;"
 >
-    <p>Recently I’ve been doing a lot of full-stack development, getting my hands dirty with a bunch of <span class="hi">HTML5</span>, <span class="hi">Sass</span>,
+    <p>I don't work only on the back-end though; I've used a bunch of <span class="hi">HTML5</span>, <span class="hi">Sass</span>,
       <span class="hi">Javascript</span>, <span class="hi">build automation</span>, CMSs like <span class="hi">Wordpress</span>,
-      <span class="hi">ModX</span>, <span class="hi">Umbraco</span>, and <span class="hi">Craft</span>, and some enterprise web app development using <span class="hi">.NET</span>, <span class="hi">Rails</span>, and <span class="hi">Angular</span>. I use <span class="hi">Foundation</span> and
+      <span class="hi">ModX</span>, <span class="hi">Umbraco</span>, and <span class="hi">Craft CMS</span>, and some enterprise web app development using <span class="hi">.NET</span>, <span class="hi">Rails</span>, and <span class="hi">Angular</span> and <span class="hi">React</span>. I use <span class="hi">Foundation</span> and
       <span class="hi">Bootstrap</span> when I need to, but I usually opt to build completely custom styles.
       Check out my projects to see what I’ve been working on!</p>
   </div>
@@ -186,7 +186,7 @@ get_header(); ?>
     data-4600="opacity: 0;top: -8em; left: -8em;"
     data-4800="opacity: 1;top: 0em; left: 0em;"
 >
-        <p>I love <span class="hi">Layla</span>. We have been dating for over 11 years, and are currently engaged!
+        <p>I love <span class="hi">Layla</span>. We have been dating for over 12 years, and recently got married!
           She's the coolest, most down-to-earth person I've ever met, and it's so awesome to be the lucky guy who gets to have her.
           I couldn’t imagine a life without her, and hanging out with her – doing anything – is always my favorite thing to do. I love her.
           She’s an incredibly talented dietitian too!</p>
