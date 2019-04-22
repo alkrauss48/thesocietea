@@ -29,21 +29,9 @@
     </footer>
 
     <script src="/assets/js/min/scripts.min.js"></script>
-    <!--[if lt IE 9]>
-      <script src="/assets/js/ie/ie.js"></script>
-    <![endif]-->
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-    <!-- <script> -->
-    <!--   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ -->
-    <!--   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), -->
-    <!--   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) -->
-    <!--   })(window,document,'script','//www.google&#45;analytics.com/analytics.js','ga'); -->
-    <!--   ga('create', 'UA&#45;38589428&#45;1', 'thesocietea.org'); -->
-    <!--   ga('send', 'pageview'); -->
-    <!-- </script> -->
     <script>
       window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-      ga('create', 'UA-38589428-1', 'thesocietea.org');
+      ga('create', 'UA-38589428-1', 'thecodeboss.dev');
       ga('require', 'autotrack');
       ga('send', 'pageview');
     </script>
