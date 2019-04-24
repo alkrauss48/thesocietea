@@ -21,6 +21,31 @@
       <?php echo CFS()->get('pre_post_content'); ?>
     </div>
     <?php the_content(); ?>
+    <div class="post-post-content">
+      <h2>A Genuine Request</h2>
+      <p>
+        Hello there - thank you for reading my post! If you enjoyed it, I'd
+        love it if you considered supporting me. I'm not asking for money
+        or any of that "buy me a beer" crap; I would just love it if you
+        would consider downloading (and using) the Brave browser using
+        <a href="https://brave.com/the124">my referral code</a>!
+      </p>
+      <p>
+        <img class="brave-icon" src="/assets/images/dist/brave.png" alt="The Brave Browser" />
+        <a href="https://brave.com/">Brave</a> has a focus on
+        security and privacy - and is hardcore against ads.
+        That means that sites like mine wouldn't generate any revenue
+        if you viewed them in Brave - but that's okay; I only make about
+        $10 / month with ads, and that goes right to hosting. If you use
+        my referral code to download Brave and minimally use it for 30 days though,
+        I get about $5 with Brave's currency - Basic Attention Token, or
+        BAT for short.
+      </p>
+      <p>
+        Whether you consider using it or not, I'm just glad you read this post. Thanks again!
+      </p>
+      <p>Referral Code: <a href="https://brave.com/the124">https://brave.com/the124</a></p>
+    </div>
  <?php
 // 	wp_link_pages( array(
 // 		'before' => '<div class="page-links">' . __( 'Pages:', 'the_societea' ),

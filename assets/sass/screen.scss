@@ -19,6 +19,7 @@ $teal: #00e7ad;
 $blue: #1470e7;
 $orange: #ff5f00;
 $light-orange: #ff9e00;
+$yellow: #ffffc4;
 
 $opaque-orange: rgba(255, 95, 0, .8);
 
@@ -1755,5 +1756,27 @@ h2.home-projects-title {
   text-align: center;
   img {
     width: 50px;
+  }
+}
+
+.post-post-content {
+  background-color: $yellow;
+  padding: 1em;
+
+  h2:first-child {
+    margin-top: 0;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.brave-icon {
+  float: right;
+  width: 175px;
+
+  @media screen and (max-width: $first-breakpoint){
+    width: 130px;
   }
 }
