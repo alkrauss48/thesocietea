@@ -37,7 +37,7 @@
         That means that sites like mine wouldn't generate any revenue
         if you viewed them in Brave - but that's okay; I only make about
         $10 / month with ads, and that goes right to hosting. If you use
-        my referral code to download Brave and minimally use it for 30 days though,
+        my referral code to download Brave and use it for a bit though,
         I get about $5 with Brave's currency - Basic Attention Token, or
         BAT for short.
       </p>
