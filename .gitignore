@@ -14,3 +14,5 @@ bower_components/
 wp-config.php
 .sql
 backup.sql
+log.*.txt
+config-synced.php
