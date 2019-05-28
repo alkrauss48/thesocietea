@@ -77,7 +77,9 @@
     <header class="spanner sticky mini affixed">
       <div class="container-padding">
         <div class="container">
-          <a href="/"><img src="/assets/images/dist/ak_logo_trimmed.png" alt="" /></a>
+          <a href="/">
+            <img src="/assets/images/dist/ak_logo_trimmed.png" alt="The Code Boss - Home" />
+          </a>
           <div class="nav-wrapper" id="navigation">
             <nav class="nav">
               <?php wp_nav_menu(array(
