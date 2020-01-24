@@ -16,3 +16,4 @@ wp-config.php
 backup.sql
 log.*.txt
 config-synced.php
+wp-content/updraft/
