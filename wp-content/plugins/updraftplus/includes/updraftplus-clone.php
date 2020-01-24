@@ -104,6 +104,7 @@ class UpdraftPlus_Clone extends UpdraftPlus_Login {
 
 		$action = 'updraftplus_clone_create';
 		if (empty($data['site_url'])) $data['site_url'] = trailingslashit(network_site_url());
+		if (empty($data['label'])) $data['label'] = sprintf(__('Clone of %s', 'updraftplus'), trailingslashit(network_site_url()));
 		if (empty($data['install_info']['table_prefix'])) $data['install_info']['table_prefix'] = $table_prefix;
 		$subdirectory = parse_url(network_site_url(), PHP_URL_PATH);
 		if (empty($data['install_info']['subdirectory'])) $data['install_info']['subdirectory'] = !empty($subdirectory) ? $subdirectory : '/';
@@ -115,7 +116,7 @@ class UpdraftPlus_Clone extends UpdraftPlus_Login {
 		}
 		if (is_multisite()) {
 			$data['install_info']['multisite'] = true;
-			$data['install_info']['multisite_subdomain_install'] = is_subdomain_install();
+			$data['install_info']['multisite_type'] = is_subdomain_install() ? 'subdomain' : 'subfolder';
 		}
 
 		$response = $this->send_remote_request($data, $action);
@@ -167,6 +168,10 @@ class UpdraftPlus_Clone extends UpdraftPlus_Login {
 	public function clone_checkin($data) {
 		$action = 'updraftplus_clone_checkin';
 		if (empty($data['site_url'])) $data['site_url'] = trailingslashit(network_site_url());
+		if (!empty($data['log_contents'])) {
+			$data['log_contents'] = base64_encode(gzcompress($data['log_contents']));
+			$data['format'] = 'gzcompress';
+		}
 
 		$response = $this->send_remote_request($data, $action);
 

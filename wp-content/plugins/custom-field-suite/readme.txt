@@ -1,8 +1,8 @@
 === Custom Field Suite ===
 Contributors: mgibbs189
 Tags: custom fields, fields, postmeta, relationship, repeater, file upload
-Requires at least: 4.7
-Tested up to: 4.9.5
+Requires at least: 4.9
+Tested up to: 5.2
 Stable tag: trunk
 License: GPLv2
 
@@ -45,6 +45,21 @@ Custom Field Suite (CFS) lets you add custom fields to your posts. It's lightwei
 * [Github →](https://github.com/mgibbs189/custom-field-suite)
 
 == Changelog ==
+
+= 2.5.16
+* Fix: added nonce check as an added security measure (props wp.org plugins team)
+
+= 2.5.15 =
+* Fix: prevent possible XSS for logged-in editors or admins (props reddy.io)
+
+= 2.5.14 =
+* Fix: PHP notice introduced in 2.5.13
+
+= 2.5.13 =
+* New: ability to filter IDs before deleting associated meta (props @chrisvanpatten)
+* Fix: nested loops count validation (props @felipeelia)
+* Fix: PHP 7.1+ compatibility in api.php (props @adrianwaler)
+* Fix: change the priority of the `duplicate_post` hook
 
 = 2.5.12 =
 * Fix: WP 4.9+ TinyMCE javascript issue

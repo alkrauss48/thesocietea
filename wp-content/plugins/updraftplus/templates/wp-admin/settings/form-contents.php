@@ -22,9 +22,9 @@ foreach ($default_options as $k => $v) {
 		<th><?php _e('Files backup schedule', 'updraftplus'); ?>:</th>
 		<td class="js-file-backup-schedule">
 			<div>
-				<select class="updraft_interval" name="updraft_interval">
+				<select title="<?php echo __('Files backup interval', 'updraftplus'); ?>" class="updraft_interval" name="updraft_interval">
 				<?php
-				$intervals = $updraftplus_admin->get_intervals();
+				$intervals = $updraftplus_admin->get_intervals('files');
 				$selected_interval = UpdraftPlus_Options::get_updraft_option('updraft_interval', 'manual');
 				foreach ($intervals as $cronsched => $descrip) {
 					echo "<option value=\"$cronsched\" ";
@@ -39,7 +39,7 @@ foreach ($default_options as $k => $v) {
 
 					$updraft_retain = max((int) UpdraftPlus_Options::get_updraft_option('updraft_retain', 2), 1);
 
-					$retain_files_config = __('and retain this many scheduled backups', 'updraftplus').': <input type="number" min="1" step="1" name="updraft_retain" value="'.$updraft_retain.'" class="retain-files" />';
+					$retain_files_config = __('and retain this many scheduled backups', 'updraftplus').': <input type="number" min="1" step="1" title="'.__('Retain this many scheduled file backups', 'updraftplus').'" name="updraft_retain" value="'.$updraft_retain.'" class="retain-files" />';
 
 					echo $retain_files_config;
 
@@ -59,8 +59,9 @@ foreach ($default_options as $k => $v) {
 		</th>
 		<td class="js-database-backup-schedule">
 		<div>
-			<select class="updraft_interval_database" name="updraft_interval_database">
+			<select class="updraft_interval_database" title="<?php echo __('Database backup interval', 'updraftplus'); ?>" name="updraft_interval_database">
 			<?php
+			$intervals = $updraftplus_admin->get_intervals('db');
 			$selected_interval_db = UpdraftPlus_Options::get_updraft_option('updraft_interval_database', UpdraftPlus_Options::get_updraft_option('updraft_interval'));
 			foreach ($intervals as $cronsched => $descrip) {
 				echo "<option value=\"$cronsched\" ";
@@ -72,7 +73,7 @@ foreach ($default_options as $k => $v) {
 
 			<?php
 				$updraft_retain_db = max((int) UpdraftPlus_Options::get_updraft_option('updraft_retain_db', $updraft_retain), 1);
-				$retain_dbs_config = __('and retain this many scheduled backups', 'updraftplus').': <input type="number" min="1" step="1" name="updraft_retain_db" value="'.$updraft_retain_db.'" class="retain-files" />';
+				$retain_dbs_config = __('and retain this many scheduled backups', 'updraftplus').': <input type="number" min="1" step="1" title="'.__('Retain this many scheduled database backups', 'updraftplus').'" name="updraft_retain_db" value="'.$updraft_retain_db.'" class="retain-files" />';
 
 				echo $retain_dbs_config;
 			?>
@@ -135,7 +136,7 @@ foreach ($default_options as $k => $v) {
 	</tr>
 </table>
 
-<hr class="updraft_separator width-900">
+<hr class="updraft_separator">
 
 <h2 class="updraft_settings_sectionheading"><?php _e('File Options', 'updraftplus');?></h2>
 
@@ -306,7 +307,7 @@ foreach ($default_options as $k => $v) {
 
 	<tr class="expertmode updraft-hidden" style="display:none;">
 		<th><?php _e('Split archives every:', 'updraftplus');?></th>
-		<td><input type="text" name="updraft_split_every" class="updraft_split_every" value="<?php echo $split_every_mb; ?>" size="5" /> MB<br><?php echo sprintf(__('UpdraftPlus will split up backup archives when they exceed this file size. The default value is %s megabytes. Be careful to leave some margin if your web-server has a hard size limit (e.g. the 2 GB / 2048 MB limit on some 32-bit servers/file systems).', 'updraftplus'), 400); ?></td>
+		<td><input type="text" name="updraft_split_every" class="updraft_split_every" value="<?php echo $split_every_mb; ?>" size="5" /> MB<br><?php echo sprintf(__('UpdraftPlus will split up backup archives when they exceed this file size. The default value is %s megabytes. Be careful to leave some margin if your web-server has a hard size limit (e.g. the 2 GB / 2048 MB limit on some 32-bit servers/file systems).', 'updraftplus'), 400).' '.__('The higher the value, the more server resources are required to create the archive.', 'updraftplus'); ?></td>
 	</tr>
 
 	<tr class="deletelocal expertmode updraft-hidden" style="display:none;">

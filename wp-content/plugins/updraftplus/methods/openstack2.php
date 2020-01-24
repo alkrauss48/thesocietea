@@ -134,7 +134,7 @@ class UpdraftPlus_BackupModule_openstack extends UpdraftPlus_BackupModule_openst
 
 		<tr class="<?php echo $classes; ?>">
 			<th><?php echo ucfirst(__('authentication URI', 'updraftplus'));?>:</th>
-			<td><input data-updraft_settings_test="authurl" type="text" autocomplete="off" class="updraft_input--wide" <?php $this->output_settings_field_name_and_id('authurl');?> value="{{authurl}}" />
+			<td><input title="<?php echo _x('This needs to be a v2 (Keystone) authentication URI; v1 (Swauth) is not supported.', 'Keystone and swauth are technical terms which cannot be translated', 'updraftplus');?>" data-updraft_settings_test="authurl" type="text" autocomplete="off" class="updraft_input--wide" <?php $this->output_settings_field_name_and_id('authurl');?> value="{{authurl}}" />
 			<br>
 			<em><?php echo _x('This needs to be a v2 (Keystone) authentication URI; v1 (Swauth) is not supported.', 'Keystone and swauth are technical terms which cannot be translated', 'updraftplus');?></em>
 			</td>
@@ -148,7 +148,7 @@ class UpdraftPlus_BackupModule_openstack extends UpdraftPlus_BackupModule_openst
 
 		<tr class="<?php echo $classes; ?>">
 			<th><?php _e('Region', 'updraftplus');?>:</th>
-			<td><input data-updraft_settings_test="region" type="text" autocomplete="off" class="updraft_input--wide" <?php $this->output_settings_field_name_and_id('region');?> value="{{region}}" />
+			<td><input title="<?php _e('Leave this blank, and a default will be chosen.', 'updraftplus');?>" data-updraft_settings_test="region" type="text" autocomplete="off" class="updraft_input--wide" <?php $this->output_settings_field_name_and_id('region');?> value="{{region}}" />
 			<br>
 			<em><?php _e('Leave this blank, and a default will be chosen.', 'updraftplus');?></em>
 			</td>
@@ -205,5 +205,17 @@ class UpdraftPlus_BackupModule_openstack extends UpdraftPlus_BackupModule_openst
 		);
 
 		$this->credentials_test_go($opts, $posted_settings['path'], $posted_settings['useservercerts'], $posted_settings['disableverify']);
+	}
+
+	/**
+	 * Check whether options have been set up by the user, or not
+	 *
+	 * @param Array $opts - the potential options
+	 *
+	 * @return Boolean
+	 */
+	public function options_exist($opts) {
+		if (is_array($opts) && $opts['user'] && '' !== $opts['user'] && !empty($opts['authurl'])) return true;
+		return false;
 	}
 }

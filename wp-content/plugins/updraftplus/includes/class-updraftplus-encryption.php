@@ -17,7 +17,7 @@ class UpdraftPlus_Encryption {
 	
 		global $updraftplus;
 	
-		$ensure_phpseclib = $updraftplus->ensure_phpseclib('Crypt_Rijndael', 'Crypt/Rijndael');
+		$ensure_phpseclib = $updraftplus->ensure_phpseclib('Crypt_Rijndael');
 		
 		if (is_wp_error($ensure_phpseclib)) {
 			$updraftplus->log("Failed to load phpseclib classes (".$ensure_phpseclib->get_error_code()."): ".$ensure_phpseclib->get_error_message());
@@ -149,7 +149,7 @@ class UpdraftPlus_Encryption {
 		}
 
 		// include Rijndael library from phpseclib
-		$ensure_phpseclib = $updraftplus->ensure_phpseclib('Crypt_Rijndael', 'Crypt/Rijndael');
+		$ensure_phpseclib = $updraftplus->ensure_phpseclib('Crypt_Rijndael');
 		
 		if (is_wp_error($ensure_phpseclib)) {
 			$updraftplus->log("Failed to load phpseclib classes (".$ensure_phpseclib->get_error_code()."): ".$ensure_phpseclib->get_error_message());
@@ -244,7 +244,7 @@ class UpdraftPlus_Encryption {
 			if (!$resumption) {
 				$updraftplus->log("Could not resume the encryption will now try to start again");
 				// remove the existing encrypted file as it's no good to us now
-				@unlink($encrypted_path);
+				@unlink($encrypted_path);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 				// reset the data encrypted so that the loop can be entered
 				$data_encrypted = 0;
 				// setup encryption to reset the IV

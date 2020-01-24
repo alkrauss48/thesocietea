@@ -547,7 +547,7 @@ class UpdraftPlus_Backup_History {
 				$backup_times_by_nonce[$nonce] = $btime;
 			}
 			if ($btime <= 100) continue;
-			$file_size = @filesize($updraft_dir.'/'.$entry);
+			$file_size = @filesize($updraft_dir.'/'.$entry);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 
 			if (!isset($backup_nonces_by_filename[$entry])) {
 				$changes = true;
@@ -741,11 +741,6 @@ class UpdraftPlus_Backup_History {
 		return '';
 	}
 
-	/**
-	 * This function will look through the backup history and return the nonce of the latest backup that can be used for an incremental backup (this will exclude full backups sent to another site, e.g. for a migration or clone)
-	 *
-	 * @return String - the backup nonce of a full backup or an empty string if none are found
-	 */
 	/**
 	 * This function will look through the backup history and return the nonce of the latest backup that can be used for an incremental backup (this will exclude full backups sent to another site, e.g. for a migration or clone)
 	 *
