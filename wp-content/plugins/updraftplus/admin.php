@@ -18,8 +18,6 @@ class UpdraftPlus_Admin {
 	private $auth_instance_ids = array('dropbox' => array(), 'onedrive' => array(), 'googledrive' => array(), 'googlecloud' => array());
 
 	private $php_versions = array('5.4', '5.5', '5.6', '7.0', '7.1', '7.2', '7.3', '7.4');
-	
-	private $regions = array('London', 'New York', 'San Francisco', 'Amsterdam', 'Singapore', 'Frankfurt', 'Toronto', 'Bangalore');
 
 	private $storage_service_without_settings;
 
@@ -824,7 +822,7 @@ class UpdraftPlus_Admin {
 			'errordata' => __('Error data:', 'updraftplus'),
 			'error' => __('Error:', 'updraftplus'),
 			'errornocolon' => __('Error', 'updraftplus'),
-			'existing_backups' => __('Existing Backups', 'updraftplus'),
+			'existing_backups' => __('Existing backups', 'updraftplus'),
 			'fileready' => __('File ready.', 'updraftplus'),
 			'actions' => __('Actions', 'updraftplus'),
 			'deletefromserver' => __('Delete from your web server', 'updraftplus'),
@@ -986,6 +984,9 @@ class UpdraftPlus_Admin {
 			'preparing_backup_files' => __('Preparing backup files', 'updraftplus'),
 			'ajax_restore_contact_failed' => __('Attempts by the browser to contact the website failed.', 'updraftplus'),
 			'ajax_restore_error' => __('Restore error:', 'updraftplus'),
+			'ajax_restore_404_detected' => '<div class="notice notice-warning" style="margin: 0px; padding: 5px;"><p><span class="dashicons dashicons-warning"></span> <strong>'. __('Warning:', 'updraftplus') . '</strong></p><p>' . __('Attempts by the browser to access some pages have returned a "not found (404)" error. This could mean that your .htaccess file has incorrect contents, is missing, or that your webserver is missing an equivalent mechanism.', 'updraftplus'). '</p><p>'.__('Missing pages:', 'updraftplus').'</p><ul class="updraft_missing_pages"></ul><a target="_blank" href="https://updraftplus.com/faqs/migrating-site-front-page-works-pages-give-404-error/">'.__('Follow this link for more information', 'updraftplus').'.</a></div>',
+			'delete_error_log_prompt' => __('Please check the error log for more details', 'updraftplus'),
+			'existing_backups_limit' => defined('UPDRAFTPLUS_EXISTING_BACKUPS_LIMIT') ? UPDRAFTPLUS_EXISTING_BACKUPS_LIMIT : 100,
 		));
 	}
 	
@@ -1650,9 +1651,6 @@ class UpdraftPlus_Admin {
 				));
 				die;
 			}
-		} else {
-			// These can be removed after a few releases
-			include(UPDRAFTPLUS_DIR.'/includes/deprecated-actions.php');
 		}
 		
 		die;
@@ -1739,6 +1737,8 @@ class UpdraftPlus_Admin {
 		$local_deleted = 0;
 		$remote_deleted = 0;
 		$sets_removed = 0;
+		
+		$deletion_errors = array();
 
 		foreach ($timestamps as $i => $timestamp) {
 
@@ -1823,20 +1823,25 @@ class UpdraftPlus_Admin {
 								if ($remote_deleted == $remote_delete_limit) {
 									$timestamps_list = implode(',', $timestamps);
 
-									return $this->remove_backup_set_cleanup(false, $backups, $local_deleted, $remote_deleted, $sets_removed, $timestamps_list, $deleted_timestamps);
+									return $this->remove_backup_set_cleanup(false, $backups, $local_deleted, $remote_deleted, $sets_removed, $timestamps_list, $deleted_timestamps, $deletion_errors);
 								}
 
 								$deleted = $remote_obj->delete($files);
 
-								if (-1 === $deleted) {
-									// echo __('Did not know how to delete from this cloud service.', 'updraftplus');
-								} elseif (false !== $deleted) {
+								if (true === $deleted) {
 									$remote_deleted = $remote_deleted + count($files);
 
 									unset($backups[$timestamp][$key]);
 
 									// If we don't save the array back, then the above section will fire again for the same files - and the remote storage will be requested to delete already-deleted files, which then means no time is actually saved by the browser-backend loop method.
 									UpdraftPlus_Backup_History::save_history($backups);
+								} else {
+									// Handle abstracted error codes/return fail status. Including handle array/objects returned
+									if (is_object($deleted) || is_array($deleted)) $deleted = false;
+									
+									if (!array_key_exists($instance_id, $deletion_errors)) {
+										$deletion_errors[$instance_id] = array('error_code' => $deleted, 'service' => $service);
+									}
 								}
 
 								continue;
@@ -1845,15 +1850,20 @@ class UpdraftPlus_Admin {
 								if ($remote_deleted == $remote_delete_limit) {
 									$timestamps_list = implode(',', $timestamps);
 
-									return $this->remove_backup_set_cleanup(false, $backups, $local_deleted, $remote_deleted, $sets_removed, $timestamps_list, $deleted_timestamps);
+									return $this->remove_backup_set_cleanup(false, $backups, $local_deleted, $remote_deleted, $sets_removed, $timestamps_list, $deleted_timestamps, $deletion_errors);
 								}
 
 								$deleted = $remote_obj->delete($file);
 								
-								if (-1 === $deleted) {
-									// echo __('Did not know how to delete from this cloud service.', 'updraftplus');
-								} elseif (false !== $deleted) {
+								if (true === $deleted) {
 									$remote_deleted++;
+								} else {
+									// Handle abstracted error codes/return fail status. Including handle array/objects returned
+									if (is_object($deleted) || is_array($deleted)) $deleted = false;
+									
+									if (!array_key_exists($instance_id, $deletion_errors)) {
+										$deletion_errors[$instance_id] = array('error_code' => $deleted, 'service' => $service);
+									}
 								}
 								
 								$itext = $index ? (string) $index : '';
@@ -1889,7 +1899,7 @@ class UpdraftPlus_Admin {
 
 		$timestamps_list = implode(',', $timestamps);
 
-		return $this->remove_backup_set_cleanup(true, $backups, $local_deleted, $remote_deleted, $sets_removed, $timestamps_list, $deleted_timestamps);
+		return $this->remove_backup_set_cleanup(true, $backups, $local_deleted, $remote_deleted, $sets_removed, $timestamps_list, $deleted_timestamps, $deletion_errors);
 
 	}
 
@@ -1918,10 +1928,11 @@ class UpdraftPlus_Admin {
 	 * @param Integer $sets_removed       - how many complete sets were removed
 	 * @param String  $timestamps         - a csv of remaining timestamps
 	 * @param String  $deleted_timestamps - a csv of deleted timestamps
+	 * @param Array   $deletion_errors    - an array of abstracted deletion errors, consisting of [error_code, service, instance]. For user notification purposes only, main error logging occurs at service.
 	 *
 	 * @return Array - information on the status, suitable for returning to the UI
 	 */
-	public function remove_backup_set_cleanup($delete_complete, $backups, $local_deleted, $remote_deleted, $sets_removed, $timestamps, $deleted_timestamps) {
+	public function remove_backup_set_cleanup($delete_complete, $backups, $local_deleted, $remote_deleted, $sets_removed, $timestamps, $deleted_timestamps, $deletion_errors = array()) {
 
 		global $updraftplus;
 
@@ -1930,6 +1941,48 @@ class UpdraftPlus_Admin {
 		UpdraftPlus_Backup_History::save_history($backups);
 
 		$updraftplus->log("Local files deleted: $local_deleted. Remote files deleted: $remote_deleted");
+		
+		/*
+		Disable until next release
+		$error_messages = array();
+		$storage_details = array();
+
+		foreach ($deletion_errors as $instance => $entry) {
+			$service = $entry['service'];
+
+			if (!array_key_exists($service, $storage_details)) {
+				// As errors from multiple instances of a service can be present, store the service storage object for possible use later
+				$new_service = UpdraftPlus_Storage_Methods_Interface::get_storage_objects_and_ids(array($service));
+				$storage_details = array_merge($storage_details, $new_service);
+			}
+
+			$intance_label = !empty($storage_details[$service]['instance_settings'][$instance]['instance_label']) ? $storage_details[$service]['instance_settings'][$instance]['instance_label'] : $service;
+
+			switch ($entry['error_code']) {
+				case 'authentication_fail':
+					$error_messages[] = sprintf(__("The authentication failed for '%s'.", 'updraftplus').' '.__('Please check your credentials.', 'updraftplus'), $intance_label);
+					break;
+				case 'service_unavailable':
+					$error_messages[] = sprintf(__("We were unable to access '%s'.", 'updraftplus').' '.__('Service unavailable.', 'updraftplus'), $intance_label);
+					break;
+				case 'container_access_error':
+					$error_messages[] = sprintf(__("We were unable to access the folder/container for '%s'.", 'updraftplus').' '.__('Please check your permissions.', 'updraftplus'), $intance_label);
+					break;
+				case 'file_access_error':
+					$error_messages[] = sprintf(__("We were unable to access a file on '%s'.", 'updraftplus').' '.__('Please check your permissions.', 'updraftplus'), $intance_label);
+					break;
+				case 'file_delete_error':
+					$error_messages[] = sprintf(__("We were unable to delete a file on '%s'.", 'updraftplus').' '.__('The file may no longer exist or you may not have permission to delete.', 'updraftplus'), $intance_label);
+					break;
+				default:
+					$error_messages[] = sprintf(__("An error occurred while attempting to delete from '%s'.", 'updraftplus'), $intance_label);
+					break;
+			}
+		}
+		*/
+		
+		// $error_message_string = implode("\n", $error_messages);
+		$error_message_string = '';
 
 		if ($delete_complete) {
 			$set_message = __('Backup sets removed:', 'updraftplus');
@@ -1940,29 +1993,31 @@ class UpdraftPlus_Admin {
 				restore_error_handler();
 			}
 			
-			return array('result' => 'success', 'set_message' => $set_message, 'local_message' => $local_message, 'remote_message' => $remote_message, 'backup_sets' => $sets_removed, 'backup_local' => $local_deleted, 'backup_remote' => $remote_deleted);
+			return array('result' => 'success', 'set_message' => $set_message, 'local_message' => $local_message, 'remote_message' => $remote_message, 'backup_sets' => $sets_removed, 'backup_local' => $local_deleted, 'backup_remote' => $remote_deleted, 'error_messages' => $error_message_string);
 		} else {
 		
-			return array('result' => 'continue', 'backup_local' => $local_deleted, 'backup_remote' => $remote_deleted, 'backup_sets' => $sets_removed, 'timestamps' => $timestamps, 'deleted_timestamps' => $deleted_timestamps);
+			return array('result' => 'continue', 'backup_local' => $local_deleted, 'backup_remote' => $remote_deleted, 'backup_sets' => $sets_removed, 'timestamps' => $timestamps, 'deleted_timestamps' => $deleted_timestamps, 'error_messages' => $error_message_string);
 		}
 	}
 
 	/**
 	 * Get the history status HTML and other information
 	 *
-	 * @param Boolean $rescan	  - whether to rescan local storage first
-	 * @param Boolean $remotescan - whether to rescan remote storage first
-	 * @param Boolean $debug	  - whether to return debugging information also
+	 * @param Boolean $rescan       - whether to rescan local storage first
+	 * @param Boolean $remotescan   - whether to rescan remote storage first
+	 * @param Boolean $debug        - whether to return debugging information also
+	 * @param Integer $backup_count - a count of the total backups we want to display on the front end for use by UpdraftPlus_Backup_History::existing_backup_table()
 	 *
 	 * @return Array - the information requested
 	 */
-	public function get_history_status($rescan, $remotescan, $debug = false) {
+	public function get_history_status($rescan, $remotescan, $debug = false, $backup_count = 0) {
 	
 		global $updraftplus;
 	
 		if ($rescan) $messages = UpdraftPlus_Backup_History::rebuild($remotescan, false, $debug);
 		$backup_history = UpdraftPlus_Backup_History::get_history();
-		$output = UpdraftPlus_Backup_History::existing_backup_table($backup_history);
+		$output = UpdraftPlus_Backup_History::existing_backup_table($backup_history, $backup_count);
+		
 		$data = array();
 
 		if (!empty($messages) && is_array($messages)) {
@@ -1988,7 +2043,7 @@ class UpdraftPlus_Admin {
 		}
 		
 		return apply_filters('updraftplus_get_history_status_result', array(
-			'n' => __('Existing Backups', 'updraftplus').' <span class="updraft_existing_backups_count">'.count($backup_history).'</span>',
+			'n' => __('Existing backups', 'updraftplus').' <span class="updraft_existing_backups_count">'.count($backup_history).'</span>',
 			't' => $output,  // table
 			'data' => $data,
 			'cksum' => md5($output),
@@ -2139,11 +2194,11 @@ class UpdraftPlus_Admin {
 
 		if (!empty($request['incremental']) && !$incremental) {
 			$msg = array(
-				'error' => __('No suitable backup set (that already contains a full backup of all the requested file component types) was found, to add increments to. Aborting this backup.', 'updaftplus')
+				'error' => __('No suitable backup set (that already contains a full backup of all the requested file component types) was found, to add increments to. Aborting this backup.', 'updraftplus')
 			);
 			$abort_before_booting = true;
 		}
-		
+
 		if ($close_connection_callable && is_callable($close_connection_callable)) {
 			call_user_func($close_connection_callable, $msg);
 		} else {
@@ -3287,8 +3342,13 @@ class UpdraftPlus_Admin {
 		if (false !== $this_job_only && !$ret) {
 			$ret = $this->print_active_job($this_job_only);
 			if ('' == $ret) {
-				// The presence of the exact ID matters to the front-end - indicates that the backup job has at least begun
-				$ret = '<div class="active-jobs updraft_finished" id="updraft-jobid-'.$this_job_only.'"><em>'.__('The backup has finished running', 'updraftplus').'</em> - <a class="updraft-log-link" data-jobid="'.$this_job_only.'">'.__('View Log', 'updraftplus').'</a></div>';
+				global $updraftplus;
+				$log_file = $updraftplus->get_logfile_name($this_job_only);
+				// if the file exists, the backup was booted. Check if the information about completion is found in the log, or if it was modified at least 2 minutes ago.
+				if (file_exists($log_file) && ($updraftplus->found_backup_complete_in_logfile($this_job_only) || (time() - filemtime($log_file)) > 120)) {
+					// The presence of the exact ID matters to the front-end - indicates that the backup job has at least begun
+					$ret = '<div class="active-jobs updraft_finished" id="updraft-jobid-'.$this_job_only.'"><em>'.__('The backup has finished running', 'updraftplus').'</em> - <a class="updraft-log-link" data-jobid="'.$this_job_only.'">'.__('View Log', 'updraftplus').'</a></div>';
+				}
 			}
 		}
 
@@ -4272,7 +4332,7 @@ class UpdraftPlus_Admin {
 	}
 
 	/**
-	 * Get HTML for the 'Upload' button for a particular backup in the 'Existing Backups' tab
+	 * Get HTML for the 'Upload' button for a particular backup in the 'Existing backups' tab
 	 *
 	 * @param Integer	 $backup_time - backup timestamp (epoch time)
 	 * @param String	 $nonce       - backup nonce
@@ -4338,7 +4398,7 @@ class UpdraftPlus_Admin {
 	}
 
 	/**
-	 * Get HTML for the 'Delete' button for a particular backup in the 'Existing Backups' tab
+	 * Get HTML for the 'Delete' button for a particular backup in the 'Existing backups' tab
 	 *
 	 * @param Integer $backup_time - backup timestamp (epoch time)
 	 * @param String  $nonce	   - backup nonce
@@ -4870,6 +4930,15 @@ ENDHERE;
 		$pval = $updraftplus->have_addons ? 1 : 0;
 		$sval = (true === $restore_result) ? 1 : 0;
 
+		$pages = get_pages(array('number' => 2));
+		$page_urls = array(
+			'home' => get_home_url(),
+		);
+
+		foreach ($pages as $page_info) {
+			$page_urls[$page_info->post_name] = get_page_link($page_info->ID);
+		}
+
 		$updraftplus->log_restore_update(
 			array(
 				'type' => 'state',
@@ -4877,7 +4946,8 @@ ENDHERE;
 				'data' => array(
 					'actions' => array(
 						__('Return to UpdraftPlus configuration', 'updraftplus') => UpdraftPlus_Options::admin_page_url() . '?page=updraftplus&updraft_restore_success=' . $sval . '&pval=' . $pval
-					)
+					),
+					'urls' => $page_urls,
 				)
 			)
 		);
@@ -5599,10 +5669,14 @@ ENDHERE;
 	 *
 	 * @param boolean $is_admin_user         - a boolean to indicate if the user who requested the clone has clone management permissions
 	 * @param array   $supported_wp_versions - an array of supported WordPress versions
+	 * @param array   $supported_packages    - an array of supported clone packages
+	 * @param array   $supported_regions     - an array of supported clone regions
 	 *
 	 * @return string - the clone UI widget
 	 */
-	public function updraftplus_clone_ui_widget($is_admin_user = false, $supported_wp_versions) {
+	public function updraftplus_clone_ui_widget($is_admin_user = false, $supported_wp_versions, $supported_packages, $supported_regions) {
+		global $updraftplus;
+
 		$output = '<p class="updraftplus-option updraftplus-option-inline php-version">';
 		$output .= '<span class="updraftplus-option-label">'.sprintf(__('%s version:', 'updraftplus'), 'PHP').'</span> ';
 		$output .= $this->output_select_data($this->php_versions, 'php');
@@ -5613,9 +5687,9 @@ ENDHERE;
 		$output .= '</p>';
 		$output .= '<p class="updraftplus-option updraftplus-option-inline region">';
 		$output .= ' <span class="updraftplus-option-label">'.__('Clone region:', 'updraftplus').'</span> ';
-		$output .= $this->output_select_data($this->regions, 'region');
+		$output .= $this->output_select_data($supported_regions, 'region');
 		$output .= '</p>';
-				
+		
 		$backup_history = UpdraftPlus_Backup_History::get_history();
 		
 		foreach ($backup_history as $key => $backup) {
@@ -5633,15 +5707,26 @@ ENDHERE;
 
 		if (!empty($backup_history)) {
 			foreach ($backup_history as $key => $backup) {
+				$total_size = round($updraftplus->get_total_backup_size($backup) / 1073741824, 1);
 				$pretty_date = get_date_from_gmt(gmdate('Y-m-d H:i:s', (int) $key), 'M d, Y G:i');
 				$label = isset($backup['label']) ? ' ' . $backup['label'] : '';
-				$output .= '<option value="'.$key. '" data-nonce="'.$backup['nonce'].'" data-timestamp="'.$key.'">' . $pretty_date . $label . '</option>';
+				$output .= '<option value="'.$key. '" data-nonce="'.$backup['nonce'].'" data-timestamp="'.$key.'" data-size="'.$total_size.'">' . $pretty_date . $label . '</option>';
 			}
 		}
 		$output .= '</select>';
 		$output .= '</p>';
 
 		if ((defined('UPDRAFTPLUS_UPDRAFTCLONE_DEVELOPMENT') && UPDRAFTPLUS_UPDRAFTCLONE_DEVELOPMENT) || $is_admin_user) {
+			$output .= '<p class="updraftplus-option updraftplus-option-inline package">';
+			$output .= ' <span class="updraftplus-option-label">'.__('Clone package:', 'updraftplus').'</span> ';
+			$output .= '<select id="updraftplus_clone_package_options" name="updraftplus_clone_package_options" data-package_version="starter">';
+			foreach ($supported_packages as $key => $value) {
+				$output .= "<option value=\"$key\" data-size=\"$value\"";
+				if ('starter' == $key) $output .= 'selected="selected"';
+				$output .= ">".htmlspecialchars($key) . ('starter' == $key ? ' ' . __('(current version)', 'updraftplus') : '')."</option>\n";
+			}
+			$output .= '</select>';
+			$output .= '</p>';
 			$output .= '<p class="updraftplus-option updraftplus-option-inline updraftclone-branch">';
 			$output .= ' <span class="updraftplus-option-label">UpdraftClone Branch:</span> ';
 			$output .= '<input id="updraftplus_clone_updraftclone_branch" type="text" size="36" name="updraftplus_clone_updraftclone_branch" value="">';
@@ -5662,14 +5747,15 @@ ENDHERE;
 	/**
 	 * This function will output a select input using the passed in values.
 	 *
-	 * @param array  $data - the keys and values for the select
-	 * @param string $name - the name of the items in the select input
+	 * @param array  $data     - the keys and values for the select
+	 * @param string $name     - the name of the items in the select input
+	 * @param string $selected - the value we want selected by default
 	 *
-	 * @return string      - the output of the select input
+	 * @return string          - the output of the select input
 	 */
-	public function output_select_data($data, $name) {
+	public function output_select_data($data, $name, $selected = '') {
 		
-		$name_version = $this->get_current_version($name);
+		$name_version = empty($selected) ? $this->get_current_version($name) : $selected;
 		
 		$output = '<select id="updraftplus_clone_'.$name.'_options" name="updraftplus_clone_'.$name.'_options" data-'.$name.'_version="'.$name_version.'">';
 

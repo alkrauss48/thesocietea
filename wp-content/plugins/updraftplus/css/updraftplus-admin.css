@@ -1797,6 +1797,7 @@ tr.updraftplusmethod img {
 	font-size: 20px;
 	margin-left: -5px;
 	padding: 0;
+	transform: translatey(3px);
 }
 
 .updraft_saving_popup img {
@@ -2095,6 +2096,11 @@ small.ud_massactions-tip {
 #updraft_restorer_dboptions h4 {
 	margin: 0px 0px 6px 0px;
 	padding: 0px;
+}
+
+.updraftplus_restore_tables_options_container {
+	max-height: 250px;
+	overflow: auto;
 }
 
 .updraft_debugrow th {
@@ -2689,7 +2695,6 @@ small.ud_massactions-tip {
 
 .updraftplusmethod.updraftvault #updraftvault_settings_default .button-primary, .updraftplusmethod.updraftvault #updraftvault_settings_showoptions .button-primary {
 	font-size: 18px !important;
-	padding-bottom: 20px;
 }
 
 .updraftplusmethod.updraftvault #updraftvault_showoptions, .updraftplusmethod.updraftvault #updraftvault_connect {

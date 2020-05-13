@@ -46,8 +46,6 @@ abstract class UpdraftPlus_BackupModule {
 			throw new Exception('save_options() requires an instance ID, but was called without setting one (either directly or via set_instance_id())');
 		}
 		
-		global $updraftplus;
-		
 		$current_db_options = UpdraftPlus_Storage_Methods_Interface::update_remote_storage_options_format($this->get_id());
 
 		if (is_wp_error($current_db_options)) {
@@ -647,7 +645,7 @@ abstract class UpdraftPlus_BackupModule {
 
 		$prefix = $this->get_storage_label();
 
-		$updraftplus->log("$prefix: $line", $level, $uniq_id = false, $skip_dblog = false);
+		$updraftplus->log("$prefix: $line", $level, $uniq_id, $skip_dblog);
 	}
 
 	/**

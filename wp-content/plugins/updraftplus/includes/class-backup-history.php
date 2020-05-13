@@ -116,12 +116,13 @@ class UpdraftPlus_Backup_History {
 	 * Get the HTML for the table of existing backups
 	 *
 	 * @param Array|Boolean $backup_history - a list of backups to use, or false to get the current list from the database
+	 * @param Boolean       $backup_count   - the amount of backups currently displayed in the existing backups table
 	 *
 	 * @uses UpdraftPlus_Admin::include_template()
 	 *
 	 * @return String - HTML for the table
 	 */
-	public static function existing_backup_table($backup_history = false) {
+	public static function existing_backup_table($backup_history = false, $backup_count = 0) {
 
 		global $updraftplus, $updraftplus_admin;
 
@@ -129,13 +130,19 @@ class UpdraftPlus_Backup_History {
 		
 		if (!is_array($backup_history) || empty($backup_history)) return '<div class="postbox"><p class="updraft-no-backups-msg"><em>'.__('You have not yet made any backups.', 'updraftplus').'</em></p></div>';
 
+		if (empty($backup_count)) {
+			$backup_count = defined('UPDRAFTPLUS_EXISTING_BACKUPS_LIMIT') ? UPDRAFTPLUS_EXISTING_BACKUPS_LIMIT : 100;
+		}
+
 		// Reverse date sort - i.e. most recent first
 		krsort($backup_history);
 		
 		$pass_values = array(
 			'backup_history' => self::add_jobdata($backup_history),
 			'updraft_dir' => $updraftplus->backups_dir_location(),
-			'backupable_entities' => $updraftplus->get_backupable_file_entities(true, true)
+			'backupable_entities' => $updraftplus->get_backupable_file_entities(true, true),
+			'backup_count' => $backup_count,
+			'show_paging_actions' => false,
 		);
 		
 		return $updraftplus_admin->include_template('wp-admin/settings/existing-backups-table.php', true, $pass_values);
@@ -556,7 +563,7 @@ class UpdraftPlus_Backup_History {
 					if (isset($only_add_this_file['label'])) $backup_history[$btime]['label'] = $only_add_this_file['label'];
 					$backup_history[$btime]['native'] = false;
 				} elseif ('db' == $type && !$accepted_foreign) {
-					list ($mess, $warn, $err, $info) = $updraftplus->analyse_db_file(false, array(), $updraft_dir.'/'.$entry, true);
+					list ($mess, $warn, $err, $info) = $updraftplus->analyse_db_file(false, array(), $updraft_dir.'/'.$entry, true);// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 					if (!empty($info['label'])) {
 						$backup_history[$btime]['label'] = $info['label'];
 					}
@@ -647,7 +654,7 @@ class UpdraftPlus_Backup_History {
 				if (!isset($backup_history[$btime]['service']) || (is_array($backup_history[$btime]['service']) && $backup_history[$btime]['service'] !== $services) || (is_string($backup_history[$btime]['service']) && (1 != count($services) || $services[0] !== $backup_history[$btime]['service']))) {
 					$changes = true;
 					if (isset($backup_history[$btime]['service'])) {
-						$existing_services = is_array($backup_history[$btime]['service']) ? $backup_history[$btime]['service'] : array($existing_services);
+						$existing_services = is_array($backup_history[$btime]['service']) ? $backup_history[$btime]['service'] : array($backup_history[$btime]['service']);
 						$backup_history[$btime]['service'] = array_unique(array_merge($services, $existing_services));
 						foreach ($backup_history[$btime]['service'] as $k => $v) {
 							if ('none' === $v || '' == $v) unset($backup_history[$btime]['service'][$k]);
@@ -805,7 +812,6 @@ class UpdraftPlus_Backup_History {
 	 * @param Array	  $backup_array - the backup
 	 */
 	public static function save_backup($backup_time, $backup_array) {
-		global $updraftplus;
 		$backup_history = self::get_history();
 
 		$backup_history[$backup_time] = isset($backup_history[$backup_time]) ? apply_filters('updraftplus_merge_backup_history', $backup_array, $backup_history[$backup_time]) : $backup_array;

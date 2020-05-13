@@ -120,8 +120,7 @@ abstract class UpdraftPlus_RemoteStorage_Addons_Base_v2 extends UpdraftPlus_Back
 			return $this->do_listfiles($match);
 			
 		} catch (Exception $e) {
-			global $updraftplus;
-			$this->log('ERROR:'.$file.': Failed to list files: '.$e->getMessage().' (code: '.$e->getCode().', line: '.$e->getLine().', file: '.$e->getFile().')');
+			$this->log('ERROR: Failed to list files: '.$e->getMessage().' (code: '.$e->getCode().', line: '.$e->getLine().', file: '.$e->getFile().')');
 			return new WP_Error('list_failed', $this->description.': '.__('failed to list files', 'updraftplus'));
 		}
 
@@ -199,11 +198,12 @@ abstract class UpdraftPlus_RemoteStorage_Addons_Base_v2 extends UpdraftPlus_Back
 		foreach ($files as $file) {
 			$this->log("Delete remote: $file");
 			try {
-				if (!$this->do_delete($file)) {
-					$ret = false;
-					$this->log("Delete failed");
-				} else {
+				$ret = $this->do_delete($file);
+				
+				if (true === $ret) {
 					$this->log("$file: Delete succeeded");
+				} else {
+					$this->log("Delete failed");
 				}
 			} catch (Exception $e) {
 				$this->log('ERROR: '.$file.': Failed to delete file: '.$e->getMessage().' (code: '.$e->getCode().', line: '.$e->getLine().', file: '.$e->getFile().')');
@@ -274,7 +274,6 @@ abstract class UpdraftPlus_RemoteStorage_Addons_Base_v2 extends UpdraftPlus_Back
 	 * @return String - the template, ready for substitutions to be carried out
 	 */
 	public function get_configuration_template() {
-		$classes = $this->get_css_classes();
 		$template_str = '';
 
 		if (method_exists($this, 'do_get_configuration_template')) {
@@ -335,8 +334,6 @@ abstract class UpdraftPlus_RemoteStorage_Addons_Base_v2 extends UpdraftPlus_Back
 	 */
 	public function credentials_test($posted_settings) {
 	
-		global $updraftplus;
-
 		$required_test_parameters = $this->get_credentials_test_required_parameters();
 
 		foreach ($required_test_parameters as $param => $descrip) {
