@@ -3,6 +3,7 @@
  * Template Name: Posts
  */
 
+$title = strtolower(get_the_title());
 get_header(); ?>
 
 	<div id="primary" class="content-area">
@@ -36,10 +37,11 @@ get_header(); ?>
               <!-- </form> -->
             </div>
             <div class="blog__filter-wrapper">
-              <h2 class="blog-filter__heading">Filter Posts</h2>
+              <h2 class="blog-filter__heading">Filter
+                <?php echo $title == 'talks' ? 'Talks' : 'Posts'; ?>
+              </h2>
               <section class="blog-filter__list">
                 <a href="#" data-filter="*" class="blog-filter__list-item blog-filter__list-item--view-all">View All</a>
-                <a href="#" data-filter=".category-talks" class="blog-filter__list-item blog-filter__list-item--talks">Talks/Videos</a>
                 <a href="#" data-filter=".category-front-end" class="blog-filter__list-item blog-filter__list-item--front-end">Front End</a>
                 <a href="#" data-filter=".category-programming-concepts" class="blog-filter__list-item blog-filter__list-item--programming-concepts">Programming Concepts</a>
                 <a href="#" data-filter=".category-javascript" class="blog-filter__list-item blog-filter__list-item--javascript">Javascript</a>
@@ -57,7 +59,15 @@ get_header(); ?>
           <?php
             $post_type = CFS()->get('post_type');
             $paged = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
-            $args=array('post_type' => $post_type, 's' => $_GET['search'], 'posts_per_page' => 18, 'post_status' => 'publish', 'paged' => $paged, 'has_password' => false);
+            $args=array(
+              'post_type' => $post_type,
+              'tag' => $title == 'talks' ? 'talk' : 'blog',
+              's' => $_GET['search'],
+              'posts_per_page' => 18,
+              'post_status' => 'publish',
+              'paged' => $paged,
+              'has_password' => false
+            );
             $my_query = new WP_Query($args);
             if ( $my_query->have_posts() ) :
               while ( $my_query->have_posts() ) : $my_query->the_post();
