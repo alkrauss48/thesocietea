@@ -15,8 +15,8 @@ get_header(); ?>
         <span class="typed"><h3>I'm a <span class="orange">Developer<span></h3></span>
         <ul class="header-icons">
           <li><a class="icon-github" title="GitHub" target="github" href="https://github.com/alkrauss48"></a></li>
+          <li><a class="icon-linkedin" title="LinkedIn" target="linkedin"  href="https://www.linkedin.com/in/alkrauss48/"></a></li>
           <li><a class="icon-twitter" title="Twitter" target="twitter" href="https://twitter.com/thecodeboss"></a></li>
-          <li><a class="icon3-untappd" title="Untappd" target="untappd"  href="https://untappd.com/user/thecodeboss"></a></li>
           <li><a class="icon-uniE603" title="Email" href="mailto:alkrauss48@gmail.com"></a></li>
         </ul>
       </div>
@@ -36,8 +36,8 @@ get_header(); ?>
             <a class="design" href="<?php echo get_permalink(16); ?>">Blog</a>
           </div>
           <div class="home-offerings">
-            <div class="icon-wrapper"><i class="icon3-lab"></i></div>
-            <a class="training" href="http://labs.thesocietea.org">Labs</a>
+            <div class="icon-wrapper"><i class="icon2-users"></i></div>
+            <a class="training" href="<?php echo get_permalink(1951); ?>">Talks</a>
           </div>
         </div>
       </div>
@@ -60,11 +60,11 @@ get_header(); ?>
         <div class="down-triangle"></div>
         <h2 class="home-projects-title">This is where you may know me from</h2>
         <div class="container">
-          <a href="https://labs.thesocietea.org/carnegie-chart" class="home-popular-list popular-item-1">
+          <a href="https://labs.thesocietea.org/carnegie-chart" target="_blank" class="home-popular-list popular-item-1">
             <span>Dale Carnegie 30-Day Practice Chart</span>
           </a>
-          <a href="http://resumehaus.com" class="home-popular-list popular-item-2">
-            <span>Resume Haus</span>
+          <a href="https://www.youtube.com/c/Techlahoma/search?query=Aaron+Krauss" target="_blank" class="home-popular-list popular-item-2">
+            <span>Techlahoma's YouTube</span>
           </a>
           <a href="https://thesocietea.org/2016/07/my-interviews-with-amazon/" class="home-popular-list popular-item-3">
             <span>My Interviews with Amazon</span>

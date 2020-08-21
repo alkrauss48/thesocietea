@@ -813,8 +813,8 @@ $(document).ready( function()	{
     $(".typed span").empty();
     $(".typed span").typed({
       strings: [
-        "Beer Enthusiast",
-        "Dog Lover",
+        "Tea Enthusiast",
+        "Longboarder",
         "Blogger",
         "Developer"
       ],
