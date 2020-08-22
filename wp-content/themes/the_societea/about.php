@@ -30,9 +30,9 @@ get_header(); ?>
     data-700="left: 0px; opacity: 1;"
     data-850="left: 75px; opacity: 0;"
 >
-          My name is Aaron Krauss. I’m a full stack developer based out of OKC, Oklahoma.
+          I'm Aaron Krauss, and I’m a full stack developer based out of OKC, Oklahoma.
           I was born in Germany in 1990, grew up in a German culture for 6 years, and still speak moderately fluent German.
-          I currently work at Clevyr as a senior software engineer, and engage in miscellaneous development on my own time.
+          I currently work at <a style="color: white;" href="https://clevyr.com" target="_blank">Clevyr</a> as a senior software engineer, and engage in miscellaneous development on my own time.
           I'm a fan of Ruby, Python, JavaScript, C#, SQL - and honestly, just about anything.
         </p>
     </div>
@@ -75,11 +75,11 @@ get_header(); ?>
 >
     <p>
       My love of coding started when I was 14 in my first high school programming class, and I’ve become a major polyglot programmer since then.
-      Starting with <span class='hi'>Visual Basic</span> (anyone remember that?), I then went on to learn <span class="hi">Java</span>, <span class="hi">C</span>,
-      <span class="hi">C++</span>, <span class="hi">HTML</span>, <span class="hi">CSS</span>, <span class="hi">VB.NET</span>, <span class="hi">C#</span>,
+      Starting with <span class='hi'>Visual Basic</span> (anyone remember that?) and <span class="hi">Java</span>, I then went on to self-learn <span class="hi">C</span>,
+      <span class="hi">C++</span>, <span class="hi">HTML</span>, <span class="hi">CSS</span>, <span class="hi">C#</span>,
       <span class="hi"> Javascript</span>, <span class="hi">SQL</span>, <span class="hi">NoSQL DBs</span>, <span class="hi">Ruby</span>,
       <span class="hi">Python</span>, <span class="hi">PHP</span>, <span class="hi">Shell</span>, <span class="hi">Git</span>, <span class="hi">Io</span>,
-      <span class="hi">Prolog</span>…. The list goes  on and on.
+      <span class="hi">Prolog</span>... the list goes  on and on.
     </p>
   </div>
   <div class="content-2"
@@ -88,9 +88,11 @@ get_header(); ?>
     data-1800="top: 4em; opacity: 1;"
     data-2100="top: -5em; opacity: 0;"
 >
-    <p>I’ve gotten to work on some pretty cool things in my past, such as a Lego Mindstorm robotics project, a
-      Term Frequency/Inverse Document Frequency search engine, interactive web forms for the FAA, and that was all just while in college.
-      I’ve learned a ton more since then.</p>
+    <p>I have well over a decade of professional coding experience, and I've gotten
+to work on some pretty cool projects during that time, such as big data, detailed analytics,
+oil and gas, healthcare, pharmaceuticals, games, collaboration apps, and plenty more. You name it,
+I likely have some sort of experience with it.
+      </p>
   </div>
   <div class="content-3"
     data-1700="top: 0em; opacity: 0;"
@@ -109,17 +111,17 @@ get_header(); ?>
     data-2700="top: -8em; opacity: 1;"
     data-2900="top: -14em; opacity: 0;"
 >
-    <p>That said, I don't work only on the back-end though; I've used a bunch of <span class="hi">HTML5</span>, <span class="hi">Sass</span>,
-      and all the major <span class="hi">JavaScript</span> frameworks (<span class="hi">Vue</span>, <span class="hi">React</span>, <span class="hi">Angular</span>, and even <span class="hi">Ember</span>). I've also built plenty of projects using CMSs like <span class="hi">Wordpress</span>,
+    <p>That said, I don't work only on the back-end; I'm incredibly comfortable with <span class="hi">HTML5</span>, <span class="hi">CSS/Sass</span>,
+      and all the major <span class="hi">JavaScript</span> front-end frameworks (<span class="hi">Vue</span>, <span class="hi">React</span>, <span class="hi">Angular</span>, <span class="hi">jQuery</span>, and even <span class="hi">Ember</span>). I've also built plenty of projects using CMSs like <span class="hi">Wordpress</span>,
       <span class="hi">Craft</span>, <span class="hi">Umbraco</span>, and <span class="hi">ModX</span>. For styling, I use
       <span class="hi">Bootstrap</span> when it makes sense, but I really prefer to build completely custom styles.
-      Check out my <a style="color: white;" href="<?php echo get_permalink(30); ?>" target="_blank">projects</a> to see what I’ve been working on!</p>
+      Check out my <a style="color: white;" href="<?php echo get_permalink(30); ?>" target="_blank">projects</a> to see what I’ve worked on!</p>
   </div>
 </div>
 </div>
 
 </div>
-<div id="slide4" class="slide"  style="background-image: url('/assets/images/dist/Krauss-Carsyn-Abrams-Photography2-465.jpg');"
+<div id="slide4" class="slide"  style="background-image: url('/assets/images/dist/Krauss-Carsyn-Abrams-Photography2-465-optimized.jpg');"
   data-bottom-top="background-position: 50% 50%;"
   data-top-bottom="background-position: 50% 10%;"
 >
@@ -145,7 +147,7 @@ get_header(); ?>
 >
         <p>I love <span class="hi">tea</span>, and that's putting it lightly.
 I've been a tea enthusiast for over a decade now. My favorites
-are Japanese greens and Chinese oolongs, but I like to brew anything as long as it's good quality and got some history behind it.
+are Japanese greens and Chinese oolongs, but I like to brew anything as long as it's good quality and has some history behind it.
           </p>
       </div>
       <div class="interest-text-wrapper small-right"
@@ -176,8 +178,8 @@ No matter how old they get, they always play like puppies together.</p>
     data-4400="opacity: 1;top: 0em; left: 0em;"
 >
         <p>I love <span class='hi'>longboarding</span>. I got into it in college as
-a quick way to get between classes, and I just fell in love with it. I don't do any fancy tricks,
-I just enjoy cruising and carving down hills, and getting rid of any stress from the day. It's a fun way to walk my dogs too!
+a quick way to get between classes, and I just fell in love with it. I don't do any fancy tricks;
+I just enjoy cruising, carving down hills, and getting rid of any stress from the day. It's a fun way to walk my dogs too!
         </p>
       </div>
       <div class="interest-text-wrapper"
@@ -186,10 +188,10 @@ I just enjoy cruising and carving down hills, and getting rid of any stress from
 >
         <p>I love <span class="hi">craft beer</span> and <span class="hi">making cocktails</span>.
 If you've seen <a href="<?php echo get_permalink(836); ?>" target="_blank">My History with Beer</a>,
-then you know beer is a part of my heritage. I was born in Germany, after all.
-After I turned 21, it rocketed into a full-blown passion.
-As far as cocktails go, I've got a full at-home cocktail setup to craft whatever you can dream.
-It may take me 10 minutes to make a drink, but you bet it'll be made right!
+then you know beer is a part of my heritage. I was born in Germany, after all!
+After I turned 21, craft beer rocketed into a full-blown passion.
+As far as cocktails go, I have a full at-home cocktail setup to craft whatever you can dream.
+It may take me 10 minutes to make a drink, but you can bet it'll be made right!
           </p>
       </div>
       <div class="interest-text-wrapper small-left"
@@ -197,9 +199,9 @@ It may take me 10 minutes to make a drink, but you bet it'll be made right!
     data-4800="opacity: 1;top: 0em; left: 0em;"
 >
         <p>I love <span class="hi">Layla</span>. We've been together since 2006! She's my partner in crime when
-          it comes to travelling the globe, playing tennis, bingewatching TV series, and pretty much everything in between.
-          She's the sweetest, most thoughtful and honest person I know. I can't imagine a life without her. I love her.
-          She’s an incredibly talented dietitian too!</p>
+          it comes to traveling the globe, playing tennis, bingewatching TV series, and pretty much everything in between.
+          She's the sweetest, most thoughtful and honest person I know. I can't imagine a life without her. I love her, and
+          she’s an incredibly talented dietitian too!</p>
       </div>
       <img class="right" src="/assets/images/dist/Aaron-Layla-Carsyn-Abrams-Photography-35.jpg" alt=""
         data-4700="opacity: 0;top: -8em; left: 8em;transform: rotate(0deg);"
